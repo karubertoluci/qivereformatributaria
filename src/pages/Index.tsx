@@ -19,6 +19,10 @@ const Index = () => {
   const handleBackToSegments = () => {
     setSelectedSegment(null);
   };
+  
+  const handleBackToHome = () => {
+    setShowSegments(false);
+  };
 
   const handleSubmitCnae = (cnae: string) => {
     setCnae(cnae);
@@ -48,7 +52,10 @@ const Index = () => {
             onSelectSegment={handleDirectSegmentSelect}
           />
         ) : !selectedSegment ? (
-          <SegmentSelector onSelectSegment={handleSelectSegment} />
+          <SegmentSelector 
+            onSelectSegment={handleSelectSegment} 
+            onBackToHome={handleBackToHome}
+          />
         ) : (
           <Results segment={selectedSegment} onBackToSegments={handleBackToSegments} />
         )}

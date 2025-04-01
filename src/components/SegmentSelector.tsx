@@ -11,11 +11,14 @@ import {
   Stethoscope, 
   GraduationCap, 
   Banknote, 
-  Truck 
+  Truck,
+  ArrowLeft
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface SegmentSelectorProps {
   onSelectSegment: (segment: BusinessSegment) => void;
+  onBackToHome: () => void;
 }
 
 const segmentIcons: Record<string, React.ReactNode> = {
@@ -31,9 +34,20 @@ const segmentIcons: Record<string, React.ReactNode> = {
   "transporte": <Truck className="h-6 w-6" />,
 };
 
-const SegmentSelector: React.FC<SegmentSelectorProps> = ({ onSelectSegment }) => {
+const SegmentSelector: React.FC<SegmentSelectorProps> = ({ onSelectSegment, onBackToHome }) => {
   return (
     <div className="container mx-auto px-4 py-8">
+      <div className="mb-6">
+        <Button
+          variant="ghost"
+          className="flex items-center gap-2 hover:bg-secondary"
+          onClick={onBackToHome}
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Voltar para página inicial
+        </Button>
+      </div>
+      
       <div className="text-center mb-10">
         <h2 className="text-3xl font-bold mb-3">Selecione seu Segmento de Atuação</h2>
         <p className="text-gray-600 max-w-3xl mx-auto">
