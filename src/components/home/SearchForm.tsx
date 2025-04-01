@@ -82,7 +82,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
   };
 
   return (
-    <Card className="card-gradient p-8 shadow-xl mb-10">
+    <Card className="card-gradient p-6 shadow-xl mb-8">
       <Tabs defaultValue="cnae" className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-6 bg-white/60">
           <TabsTrigger value="cnae" className="data-[state=active]:bg-primary data-[state=active]:text-white">
@@ -95,7 +95,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
         
         <TabsContent value="cnae">
           <h2 className="text-2xl font-bold mb-4 text-center">Para evoluir insira seu CNAE</h2>
-          <p className="highlighted-text text-center mb-6">
+          <p className="highlighted-text text-center mb-4">
             Quando colocar o CNAE vamos carregar os artigos referente ao seu segmento de atuação.
           </p>
           
