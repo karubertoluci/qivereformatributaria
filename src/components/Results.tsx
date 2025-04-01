@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import ArticleCard from './ArticleCard';
 import { BusinessSegment } from '@/data/segments';
 import { Article, articles } from '@/data/articles';
-import { ArrowDown, ArrowUp, Search, Filter, BookOpen } from 'lucide-react';
+import { ArrowDown, ArrowUp, Search, Filter, BookOpen, BarChart } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import ArticlesPriorityChart from './ArticlesPriorityChart';
 
 interface ResultsProps {
   segment: BusinessSegment;
@@ -92,7 +93,7 @@ const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
   const [expandedArticleId, setExpandedArticleId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'positive' | 'negative'>('all');
-  const [viewMode, setViewMode] = useState<'list' | 'table'>('list');
+  const [viewMode, setViewMode] = useState<'list' | 'table' | 'chart'>('chart');
 
   // Filtrar artigos que afetam o segmento selecionado
   const relevantArticles = articles.filter(article => 
@@ -123,6 +124,21 @@ const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
   const negativeCount = relevantArticles.filter(article => 
     article.impacts.some(impact => impact.type === 'negative' && impact.segments.includes(segment.id))
   ).length;
+  
+  const handleArticleSelect = (articleId: string) => {
+    setExpandedArticleId(articleId);
+    // Scroll to the article if in list view
+    if (viewMode === 'chart') {
+      setViewMode('list');
+      // Give time for the view to switch before scrolling
+      setTimeout(() => {
+        const element = document.getElementById(`article-${articleId}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -173,6 +189,14 @@ const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
           <Button
             variant="outline"
             size="sm"
+            className={viewMode === 'chart' ? 'bg-primary text-primary-foreground' : ''}
+            onClick={() => setViewMode('chart')}
+          >
+            <BarChart className="h-4 w-4 mr-1" /> Prioridade
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             className={viewMode === 'list' ? 'bg-primary text-primary-foreground' : ''}
             onClick={() => setViewMode('list')}
           >
@@ -194,45 +218,33 @@ const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
           <p className="text-gray-500">Nenhum artigo encontrado com os filtros aplicados.</p>
         </div>
       ) : (
-        viewMode === 'list' ? (
-          <Tabs defaultValue="all" className="w-full">
-            <TabsList className="mb-4">
-              <TabsTrigger value="all">Todos os Artigos</TabsTrigger>
-              {topics.map(topic => (
-                <TabsTrigger key={topic.id} value={topic.id}>
-                  {topic.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            
-            <TabsContent value="all">
-              <div className="space-y-6">
-                {filteredArticles.map((article) => (
-                  <ArticleCard 
-                    key={article.id}
-                    article={article}
-                    segmentId={segment.id}
-                    expanded={expandedArticleId === article.id}
-                    onToggleExpand={() => {
-                      setExpandedArticleId(expandedArticleId === article.id ? null : article.id);
-                    }}
-                  />
+        <>
+          {viewMode === 'chart' && (
+            <div className="mb-8">
+              <ArticlesPriorityChart 
+                articles={filteredArticles}
+                segmentId={segment.id}
+                onSelectArticle={handleArticleSelect}
+              />
+            </div>
+          )}
+          
+          {viewMode === 'list' && (
+            <Tabs defaultValue="all" className="w-full">
+              <TabsList className="mb-4">
+                <TabsTrigger value="all">Todos os Artigos</TabsTrigger>
+                {topics.map(topic => (
+                  <TabsTrigger key={topic.id} value={topic.id}>
+                    {topic.name}
+                  </TabsTrigger>
                 ))}
-              </div>
-            </TabsContent>
-            
-            {topics.map(topic => (
-              <TabsContent key={topic.id} value={topic.id}>
-                <div className="mb-4">
-                  <h3 className="text-lg font-medium">{topic.name}</h3>
-                  <p className="text-sm text-gray-600">{topic.description}</p>
-                </div>
-                
+              </TabsList>
+              
+              <TabsContent value="all">
                 <div className="space-y-6">
-                  {articlesByTopic[topic.id].length > 0 ? (
-                    articlesByTopic[topic.id].map((article) => (
+                  {filteredArticles.map((article) => (
+                    <div key={article.id} id={`article-${article.id}`}>
                       <ArticleCard 
-                        key={article.id}
                         article={article}
                         segmentId={segment.id}
                         expanded={expandedArticleId === article.id}
@@ -240,66 +252,94 @@ const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
                           setExpandedArticleId(expandedArticleId === article.id ? null : article.id);
                         }}
                       />
-                    ))
-                  ) : (
-                    <p className="text-gray-500 text-center py-4">Nenhum artigo encontrado nesta categoria.</p>
-                  )}
+                    </div>
+                  ))}
                 </div>
               </TabsContent>
-            ))}
-          </Tabs>
-        ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Artigo</TableHead>
-                <TableHead>Título</TableHead>
-                <TableHead>Impacto</TableHead>
-                <TableHead className="w-[100px]">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredArticles.map((article) => {
-                const segmentImpacts = article.impacts.filter(impact => 
-                  impact.segments.includes(segment.id)
-                );
-                const hasPositiveImpact = segmentImpacts.some(impact => impact.type === 'positive');
-                const hasNegativeImpact = segmentImpacts.some(impact => impact.type === 'negative');
-                
-                return (
-                  <TableRow key={article.id}>
-                    <TableCell className="font-medium">{article.number}</TableCell>
-                    <TableCell>{article.title}</TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
-                        {hasPositiveImpact && (
-                          <Badge variant="outline" className="bg-positive text-positive-foreground">
-                            <ArrowUp className="h-3 w-3 mr-1" /> Positivo
-                          </Badge>
-                        )}
-                        {hasNegativeImpact && (
-                          <Badge variant="outline" className="bg-negative text-negative-foreground">
-                            <ArrowDown className="h-3 w-3 mr-1" /> Negativo
-                          </Badge>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className="text-primary hover:text-primary hover:bg-primary/10"
-                        onClick={() => setExpandedArticleId(expandedArticleId === article.id ? null : article.id)}
-                      >
-                        {expandedArticleId === article.id ? "Fechar" : "Ver mais"}
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        )
+              
+              {topics.map(topic => (
+                <TabsContent key={topic.id} value={topic.id}>
+                  <div className="mb-4">
+                    <h3 className="text-lg font-medium">{topic.name}</h3>
+                    <p className="text-sm text-gray-600">{topic.description}</p>
+                  </div>
+                  
+                  <div className="space-y-6">
+                    {articlesByTopic[topic.id].length > 0 ? (
+                      articlesByTopic[topic.id].map((article) => (
+                        <div key={article.id} id={`article-${article.id}`}>
+                          <ArticleCard 
+                            article={article}
+                            segmentId={segment.id}
+                            expanded={expandedArticleId === article.id}
+                            onToggleExpand={() => {
+                              setExpandedArticleId(expandedArticleId === article.id ? null : article.id);
+                            }}
+                          />
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-500 text-center py-4">Nenhum artigo encontrado nesta categoria.</p>
+                    )}
+                  </div>
+                </TabsContent>
+              ))}
+            </Tabs>
+          )}
+          
+          {viewMode === 'table' && (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Artigo</TableHead>
+                  <TableHead>Título</TableHead>
+                  <TableHead>Impacto</TableHead>
+                  <TableHead className="w-[100px]">Ações</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredArticles.map((article) => {
+                  const segmentImpacts = article.impacts.filter(impact => 
+                    impact.segments.includes(segment.id)
+                  );
+                  const hasPositiveImpact = segmentImpacts.some(impact => impact.type === 'positive');
+                  const hasNegativeImpact = segmentImpacts.some(impact => impact.type === 'negative');
+                  
+                  return (
+                    <TableRow key={article.id}>
+                      <TableCell className="font-medium">{article.number}</TableCell>
+                      <TableCell>{article.title}</TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          {hasPositiveImpact && (
+                            <Badge variant="outline" className="bg-positive text-positive-foreground">
+                              <ArrowUp className="h-3 w-3 mr-1" /> Positivo
+                            </Badge>
+                          )}
+                          {hasNegativeImpact && (
+                            <Badge variant="outline" className="bg-negative text-negative-foreground">
+                              <ArrowDown className="h-3 w-3 mr-1" /> Negativo
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          className="text-primary hover:text-primary hover:bg-primary/10"
+                          onClick={() => setExpandedArticleId(expandedArticleId === article.id ? null : article.id)}
+                        >
+                          {expandedArticleId === article.id ? "Fechar" : "Ver mais"}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          )}
+        </>
       )}
       
       {expandedArticleId && viewMode === 'table' && (

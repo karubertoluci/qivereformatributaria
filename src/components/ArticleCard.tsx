@@ -6,6 +6,7 @@ import { Article } from '@/data/articles';
 import { ArrowDown, ArrowUp, BookOpen, Info, Lightbulb, Tag } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import ArticleImportanceChart from './ArticleImportanceChart';
 
 interface ArticleCardProps {
   article: Article;
@@ -59,6 +60,10 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
         <div className="text-sm text-gray-700 mb-4">
           {expanded ? article.simplifiedText : article.simplifiedText.substring(0, 120) + "..."}
         </div>
+
+        {!expanded && (
+          <ArticleImportanceChart article={article} segmentId={segmentId} className="mt-2" />
+        )}
         
         {expanded && (
           <div className="border-t border-gray-200 pt-4 mt-4 space-y-4">
@@ -71,6 +76,10 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
                 {article.simplifiedText}
               </div>
             </div>
+            
+            <Separator />
+            
+            <ArticleImportanceChart article={article} segmentId={segmentId} className="my-4" />
             
             <Separator />
             
