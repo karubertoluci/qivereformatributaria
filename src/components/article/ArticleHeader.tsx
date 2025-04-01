@@ -31,12 +31,12 @@ const ArticleHeader: React.FC<ArticleHeaderProps> = ({ article, segmentId }) => 
       </div>
       <div className="flex gap-2">
         {hasPositiveImpact && (
-          <Badge variant="outline" className="bg-positive text-positive-foreground flex gap-1">
+          <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300 flex gap-1">
             <ArrowUp className="h-4 w-4" /> Impacto Positivo
           </Badge>
         )}
         {hasNegativeImpact && (
-          <Badge variant="outline" className="bg-negative text-negative-foreground flex gap-1">
+          <Badge variant="outline" className="bg-red-100 text-red-800 border-red-300 flex gap-1">
             <ArrowDown className="h-4 w-4" /> Impacto Negativo
           </Badge>
         )}

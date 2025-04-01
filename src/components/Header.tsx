@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Book, Info, HelpCircle } from 'lucide-react';
+import { Info, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -11,16 +11,19 @@ import {
 
 const Header = () => {
   return (
-    <header className="bg-black border-b border-white/10 py-4 px-6 shadow-md">
+    <header className="bg-white border-b border-gray-200 py-4 px-6 shadow-sm">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
         <div className="flex items-center mb-4 md:mb-0">
-          <Book size={32} className="mr-2" />
-          <h1 className="text-2xl font-bold">LegiScanAR</h1>
+          <img 
+            src="/lovable-uploads/3a0e3d3c-ea95-4482-8c76-047d5459213e.png" 
+            alt="Qive Reforma Tributária" 
+            className="h-12 mr-2"
+          />
         </div>
         <div className="flex items-center space-x-2 md:space-x-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="bg-white/10 text-white hover:bg-white/20 border-white/20">
+              <Button variant="outline" className="bg-gray-50 text-gray-800 hover:bg-gray-100 border-gray-200">
                 <Info size={16} className="mr-2" /> Sobre a Reforma
               </Button>
             </DropdownMenuTrigger>
@@ -50,13 +53,13 @@ const Header = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="bg-white/10 text-white hover:bg-white/20 border-white/20">
+              <Button variant="outline" className="bg-gray-50 text-gray-800 hover:bg-gray-100 border-gray-200">
                 <HelpCircle size={16} className="mr-2" /> Ajuda
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-96">
               <div className="p-4">
-                <h3 className="font-bold mb-2">Como usar o LegiScanAR</h3>
+                <h3 className="font-bold mb-2">Como usar o Qive Reforma Tributária</h3>
                 <ol className="text-sm space-y-2">
                   <li>1. <span className="font-medium">Selecione seu segmento</span> na página inicial para identificar os artigos relevantes para o seu negócio.</li>
                   <li>2. <span className="font-medium">Explore os artigos</span> organizados por tópicos ou utilize a barra de pesquisa.</li>
@@ -64,7 +67,7 @@ const Header = () => {
                   <li>4. <span className="font-medium">Clique em "Mostrar mais"</span> para ler detalhes sobre cada artigo relevante.</li>
                 </ol>
                 <p className="text-xs mt-3">
-                  LegiScanAR é uma ferramenta informativa e não substitui a consultoria profissional especializada.
+                  Qive Reforma Tributária é uma ferramenta informativa e não substitui a consultoria profissional especializada.
                 </p>
               </div>
             </DropdownMenuContent>

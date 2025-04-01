@@ -26,10 +26,10 @@ const ArticleHighlights: React.FC<ArticleHighlightsProps> = ({
             <div 
               key={highlight.id} 
               className={`p-3 rounded-md border ${
-                highlight.color === 'yellow' ? 'bg-yellow-900 border-yellow-700' :
-                highlight.color === 'green' ? 'bg-green-900 border-green-700' :
-                highlight.color === 'blue' ? 'bg-blue-900 border-blue-700' :
-                'bg-pink-900 border-pink-700'
+                highlight.color === 'yellow' ? 'bg-yellow-50 border-yellow-300' :
+                highlight.color === 'green' ? 'bg-green-50 border-green-300' :
+                highlight.color === 'blue' ? 'bg-blue-50 border-blue-300' :
+                'bg-pink-50 border-pink-300'
               }`}
             >
               <div className="text-sm">{highlight.text}</div>
@@ -50,7 +50,7 @@ const ArticleHighlights: React.FC<ArticleHighlightsProps> = ({
         </div>
       )}
       
-      <div className="bg-secondary p-3 rounded-md mt-4">
+      <div className="bg-gray-50 p-3 rounded-md mt-4">
         <h5 className="text-xs font-semibold mb-2">Como criar destaques</h5>
         <ol className="text-xs text-muted-foreground list-decimal pl-4 space-y-1">
           <li>Navegue até a aba "Conteúdo"</li>
