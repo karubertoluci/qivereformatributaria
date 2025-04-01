@@ -60,9 +60,9 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+    <div className="bg-orange-50 rounded-lg shadow-md p-6 mb-8">
       <h2 className="text-2xl font-bold text-center mb-2">Para evoluir insira seu CNAE</h2>
-      <p className="bg-orange-50 text-orange-600 p-3 rounded-md text-center mb-6 border border-orange-200">
+      <p className="bg-amber-50 text-orange-600 p-3 rounded-md text-center mb-6 border border-orange-200">
         Quando colocar o CNAE vamos carregar os artigos referente ao seu segmento de atuação.
       </p>
       
