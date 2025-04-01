@@ -29,6 +29,13 @@ const Index = () => {
     setShowSegments(true);
   };
 
+  const handleDirectSegmentSelect = (segment: BusinessSegment | null) => {
+    if (segment) {
+      setSelectedSegment(segment);
+      setShowSegments(true); // Skip the segment selection screen
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
@@ -38,6 +45,7 @@ const Index = () => {
           <HomePage 
             onCnaeSubmit={handleSubmitCnae}
             onBrowseBySegment={handleBrowseBySegment}
+            onSelectSegment={handleDirectSegmentSelect}
           />
         ) : !selectedSegment ? (
           <SegmentSelector onSelectSegment={handleSelectSegment} />

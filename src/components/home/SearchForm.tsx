@@ -9,14 +9,30 @@ import { Form, FormField, FormItem, FormControl } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { Building, LayoutGrid } from 'lucide-react';
-import { businessSegments } from '@/data/segments';
+import { businessSegments, BusinessSegment } from '@/data/segments';
+
+// Map of CNAE codes to business segment IDs
+// This is a simplified example - in a real application, this would be more comprehensive
+const cnaeToSegmentMap: Record<string, string> = {
+  "47": "comercio_varejo",    // Comércio varejista
+  "10": "industria",          // Indústria de alimentos
+  "62": "tecnologia",         // Desenvolvimento de software
+  "01": "agronegocio",        // Agricultura
+  "41": "construcao",         // Construção de edifícios
+  "85": "educacao",           // Educação
+  "86": "saude",              // Atividades de atenção à saúde humana
+  "64": "financeiro",         // Serviços financeiros
+  "49": "transporte",         // Transporte terrestre
+  "56": "servicos"            // Serviços de alimentação
+};
 
 interface SearchFormProps {
   onCnaeSubmit: (cnae: string) => void;
   onBrowseBySegment: () => void;
+  onSelectSegment: (segment: BusinessSegment | null) => void;
 }
 
-const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment }) => {
+const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment, onSelectSegment }) => {
   const form = useForm({
     defaultValues: {
       cnae: '',
@@ -29,8 +45,26 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
       return;
     }
     
-    onCnaeSubmit(data.cnae);
-    toast.success(`CNAE ${data.cnae} selecionado com sucesso!`);
+    // Get first two digits of CNAE to identify the segment
+    const cnaeDivision = data.cnae.substring(0, 2);
+    const segmentId = cnaeToSegmentMap[cnaeDivision];
+    
+    if (segmentId) {
+      // Find the segment that corresponds to this CNAE
+      const segment = businessSegments.find(seg => seg.id === segmentId);
+      if (segment) {
+        toast.success(`CNAE ${data.cnae} identificado como ${segment.name}`);
+        onSelectSegment(segment);
+      } else {
+        // This shouldn't happen if our map and segments are aligned
+        onCnaeSubmit(data.cnae);
+        toast.success(`CNAE ${data.cnae} selecionado com sucesso!`);
+      }
+    } else {
+      // If no mapping found, just proceed with the CNAE
+      onCnaeSubmit(data.cnae);
+      toast.info(`CNAE ${data.cnae} não foi mapeado automaticamente para um segmento específico.`);
+    }
   };
 
   return (
