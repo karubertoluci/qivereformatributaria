@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Highlight, X } from 'lucide-react';
+import { Highlighter, X } from 'lucide-react';
 import { HighlightType } from './types';
 
 interface HighlightToolbarProps {
@@ -27,7 +27,7 @@ const HighlightToolbar: React.FC<HighlightToolbarProps> = ({
         className="h-8 w-8 p-0 bg-yellow-100 hover:bg-yellow-200"
         onClick={() => onHighlight('yellow')}
       >
-        <Highlight className="h-4 w-4" />
+        <Highlighter className="h-4 w-4" />
       </Button>
       
       <Button 
@@ -36,7 +36,7 @@ const HighlightToolbar: React.FC<HighlightToolbarProps> = ({
         className="h-8 w-8 p-0 bg-green-100 hover:bg-green-200"
         onClick={() => onHighlight('green')}
       >
-        <Highlight className="h-4 w-4" />
+        <Highlighter className="h-4 w-4" />
       </Button>
       
       <Button 
@@ -45,7 +45,7 @@ const HighlightToolbar: React.FC<HighlightToolbarProps> = ({
         className="h-8 w-8 p-0 bg-blue-100 hover:bg-blue-200"
         onClick={() => onHighlight('blue')}
       >
-        <Highlight className="h-4 w-4" />
+        <Highlighter className="h-4 w-4" />
       </Button>
       
       <Button 
@@ -54,7 +54,7 @@ const HighlightToolbar: React.FC<HighlightToolbarProps> = ({
         className="h-8 w-8 p-0 bg-pink-100 hover:bg-pink-200"
         onClick={() => onHighlight('pink')}
       >
-        <Highlight className="h-4 w-4" />
+        <Highlighter className="h-4 w-4" />
       </Button>
       
       <Button 
