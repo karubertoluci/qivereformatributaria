@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { HighlightType } from './types';
 import HighlightToolbar from './HighlightToolbar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface HighlightedTextProps {
   text: string;
@@ -54,9 +55,10 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
         
+        // Posicionamento melhorado para a toolbar aparecer acima da seleção
         setToolbarPosition({
-          x: rect.left + window.scrollX,
-          y: rect.top - 40 + window.scrollY // Position above the selection
+          x: rect.left + (rect.width / 2), // Centro da seleção
+          y: rect.top - 10 // Ligeiramente acima da seleção
         });
         
         setIsToolbarVisible(true);
@@ -86,17 +88,23 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({
         {renderHighlightedText()}
       </div>
       
-      <div style={{ 
-        position: 'absolute', 
-        left: `${toolbarPosition.x}px`, 
-        top: `${toolbarPosition.y}px` 
-      }}>
-        <HighlightToolbar 
-          isVisible={isToolbarVisible}
-          onHighlight={handleHighlight}
-          onCancelHighlight={resetHighlightState}
-        />
-      </div>
+      {isToolbarVisible && (
+        <div 
+          style={{ 
+            position: 'fixed',
+            top: `${toolbarPosition.y}px`,
+            left: `${toolbarPosition.x}px`,
+            transform: 'translateX(-50%)',
+            zIndex: 1000
+          }}
+        >
+          <HighlightToolbar 
+            isVisible={isToolbarVisible}
+            onHighlight={handleHighlight}
+            onCancelHighlight={resetHighlightState}
+          />
+        </div>
+      )}
     </div>
   );
 };
