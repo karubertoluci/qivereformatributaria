@@ -73,7 +73,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
               <BookOpen className="h-5 w-5 mr-2 text-primary" />
               {article.number}
             </CardTitle>
-            <CardDescription className="text-lg font-medium mt-1">
+            <CardDescription className="text-lg font-medium mt-1 text-foreground">
               {article.title}
             </CardDescription>
           </div>
@@ -92,7 +92,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
         </div>
       </CardHeader>
       <CardContent>
-        <div className="text-sm text-gray-700 mb-4">
+        <div className="text-sm text-foreground mb-4">
           {expanded ? (
             <HighlightedText 
               text={article.simplifiedText} 
@@ -110,7 +110,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
         )}
         
         {expanded && (
-          <div className="border-t border-gray-200 pt-4 mt-4 space-y-4">
+          <div className="border-t border-border pt-4 mt-4 space-y-4">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="w-full">
                 <TabsTrigger value="content" className="flex-1">
@@ -118,11 +118,11 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
                 </TabsTrigger>
                 <TabsTrigger value="comments" className="flex-1">
                   <MessageSquare className="h-4 w-4 mr-2" /> 
-                  Comentários {comments.length > 0 && <span className="ml-1 text-xs bg-primary text-white rounded-full w-5 h-5 inline-flex items-center justify-center">{comments.length}</span>}
+                  Comentários {comments.length > 0 && <span className="ml-1 text-xs bg-primary text-primary-foreground rounded-full w-5 h-5 inline-flex items-center justify-center">{comments.length}</span>}
                 </TabsTrigger>
                 <TabsTrigger value="highlights" className="flex-1">
                   <Highlighter className="h-4 w-4 mr-2" /> 
-                  Destaques {highlights.length > 0 && <span className="ml-1 text-xs bg-primary text-white rounded-full w-5 h-5 inline-flex items-center justify-center">{highlights.length}</span>}
+                  Destaques {highlights.length > 0 && <span className="ml-1 text-xs bg-primary text-primary-foreground rounded-full w-5 h-5 inline-flex items-center justify-center">{highlights.length}</span>}
                 </TabsTrigger>
               </TabsList>
               
@@ -132,7 +132,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
                     <Lightbulb className="h-4 w-4 mr-1 text-amber-500" />
                     Tradução Simplificada
                   </h4>
-                  <div className="text-sm p-3 bg-secondary/30 rounded-md">
+                  <div className="text-sm p-3 bg-secondary rounded-md">
                     <HighlightedText 
                       text={article.simplifiedText} 
                       highlights={highlights}
@@ -153,7 +153,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
                     <Info className="h-4 w-4 mr-1 text-blue-500" />
                     Texto Original
                   </h4>
-                  <div className="text-xs text-gray-500 italic p-3 bg-gray-50 rounded-md border border-gray-100">
+                  <div className="text-xs p-3 bg-muted rounded-md">
                     {article.originalText}
                   </div>
                 </div>
@@ -170,9 +170,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
                       <li 
                         key={index} 
                         className={`text-sm p-3 rounded-md flex items-start ${
-                          impact.type === 'positive' ? 'bg-green-50 text-green-800 border-l-4 border-green-500' :
-                          impact.type === 'negative' ? 'bg-red-50 text-red-800 border-l-4 border-red-500' :
-                          'bg-gray-50 text-gray-800 border-l-4 border-gray-500'
+                          impact.type === 'positive' ? 'bg-green-950 text-green-100 border-l-4 border-green-500' :
+                          impact.type === 'negative' ? 'bg-red-950 text-red-100 border-l-4 border-red-500' :
+                          'bg-gray-800 text-gray-100 border-l-4 border-gray-500'
                         }`}
                       >
                         <div className="mt-0.5 mr-2">
@@ -209,10 +209,10 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
                         <div 
                           key={highlight.id} 
                           className={`p-3 rounded-md border ${
-                            highlight.color === 'yellow' ? 'bg-yellow-100 border-yellow-300' :
-                            highlight.color === 'green' ? 'bg-green-100 border-green-300' :
-                            highlight.color === 'blue' ? 'bg-blue-100 border-blue-300' :
-                            'bg-pink-100 border-pink-300'
+                            highlight.color === 'yellow' ? 'bg-yellow-900 border-yellow-700' :
+                            highlight.color === 'green' ? 'bg-green-900 border-green-700' :
+                            highlight.color === 'blue' ? 'bg-blue-900 border-blue-700' :
+                            'bg-pink-900 border-pink-700'
                           }`}
                         >
                           <div className="text-sm">{highlight.text}</div>
@@ -228,14 +228,14 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
                       ))}
                     </div>
                   ) : (
-                    <div className="text-sm text-gray-500 italic">
+                    <div className="text-sm text-muted-foreground italic">
                       Selecione qualquer texto no conteúdo do artigo para criar um destaque.
                     </div>
                   )}
                   
-                  <div className="bg-secondary/30 p-3 rounded-md mt-4">
+                  <div className="bg-secondary p-3 rounded-md mt-4">
                     <h5 className="text-xs font-semibold mb-2">Como criar destaques</h5>
-                    <ol className="text-xs text-gray-600 list-decimal pl-4 space-y-1">
+                    <ol className="text-xs text-muted-foreground list-decimal pl-4 space-y-1">
                       <li>Navegue até a aba "Conteúdo"</li>
                       <li>Selecione qualquer texto para destacá-lo</li>
                       <li>Escolha uma cor quando aparecer a barra de ferramentas</li>
