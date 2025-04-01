@@ -3,15 +3,16 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Article } from '@/data/articles';
-import { ArrowDown, ArrowUp, BookOpen, Info, Lightbulb, Tag, MessageSquare, Highlighter } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import { Lightbulb, MessageSquare, Highlighter } from 'lucide-react';
 import ArticleImportanceChart from './ArticleImportanceChart';
 import { v4 as uuidv4 } from 'uuid';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CommentSection from './results/CommentSection';
 import HighlightedText from './results/HighlightedText';
 import { CommentType, HighlightType } from './results/types';
+import ArticleContent from './article/ArticleContent';
+import ArticleHighlights from './article/ArticleHighlights';
+import ArticleHeader from './article/ArticleHeader';
 
 interface ArticleCardProps {
   article: Article;
@@ -29,10 +30,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
     impact.segments.includes(segmentId)
   );
   
+  // Identificar o tipo principal de impacto para o card
   const hasPositiveImpact = segmentImpacts.some(impact => impact.type === 'positive');
   const hasNegativeImpact = segmentImpacts.some(impact => impact.type === 'negative');
-  
-  // Identificar o tipo principal de impacto para o card
   const primaryImpactType = hasNegativeImpact ? 'negative' : (hasPositiveImpact ? 'positive' : 'neutral');
 
   const handleAddComment = (text: string) => {
@@ -61,35 +61,17 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
     setHighlights([...highlights, newHighlight]);
   };
   
+  const handleRemoveHighlight = (id: string) => {
+    setHighlights(highlights.filter(h => h.id !== id));
+  };
+  
   return (
     <Card className={`mb-4 transition-all ${expanded ? 'border-primary border-2' : ''} ${
       primaryImpactType === 'positive' ? 'border-l-4 border-l-green-500' : 
       primaryImpactType === 'negative' ? 'border-l-4 border-l-red-500' : ''
     }`}>
       <CardHeader className="pb-2">
-        <div className="flex justify-between items-start">
-          <div>
-            <CardTitle className="flex items-center">
-              <BookOpen className="h-5 w-5 mr-2 text-primary" />
-              {article.number}
-            </CardTitle>
-            <CardDescription className="text-lg font-medium mt-1 text-foreground">
-              {article.title}
-            </CardDescription>
-          </div>
-          <div className="flex gap-2">
-            {hasPositiveImpact && (
-              <Badge variant="outline" className="bg-positive text-positive-foreground flex gap-1">
-                <ArrowUp className="h-4 w-4" /> Impacto Positivo
-              </Badge>
-            )}
-            {hasNegativeImpact && (
-              <Badge variant="outline" className="bg-negative text-negative-foreground flex gap-1">
-                <ArrowDown className="h-4 w-4" /> Impacto Negativo
-              </Badge>
-            )}
-          </div>
-        </div>
+        <ArticleHeader article={article} segmentId={segmentId} />
       </CardHeader>
       <CardContent>
         <div className="text-sm text-foreground mb-4">
@@ -126,67 +108,13 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
                 </TabsTrigger>
               </TabsList>
               
-              <TabsContent value="content" className="mt-4 space-y-4">
-                <div>
-                  <h4 className="text-sm font-bold flex items-center mb-2">
-                    <Lightbulb className="h-4 w-4 mr-1 text-amber-500" />
-                    Tradução Simplificada
-                  </h4>
-                  <div className="text-sm p-3 bg-secondary rounded-md">
-                    <HighlightedText 
-                      text={article.simplifiedText} 
-                      highlights={highlights}
-                      articleId={article.id}
-                      onAddHighlight={handleAddHighlight}
-                    />
-                  </div>
-                </div>
-                
-                <Separator />
-                
-                <ArticleImportanceChart article={article} segmentId={segmentId} className="my-4" />
-                
-                <Separator />
-                
-                <div>
-                  <h4 className="text-sm font-bold flex items-center mb-2">
-                    <Info className="h-4 w-4 mr-1 text-blue-500" />
-                    Texto Original
-                  </h4>
-                  <div className="text-xs p-3 bg-muted rounded-md">
-                    {article.originalText}
-                  </div>
-                </div>
-                
-                <Separator />
-                
-                <div>
-                  <h4 className="text-sm font-bold flex items-center mb-3">
-                    <Tag className="h-4 w-4 mr-1 text-primary" />
-                    Impactos para seu Segmento
-                  </h4>
-                  <ul className="space-y-3">
-                    {segmentImpacts.map((impact, index) => (
-                      <li 
-                        key={index} 
-                        className={`text-sm p-3 rounded-md flex items-start ${
-                          impact.type === 'positive' ? 'bg-green-950 text-green-100 border-l-4 border-green-500' :
-                          impact.type === 'negative' ? 'bg-red-950 text-red-100 border-l-4 border-red-500' :
-                          'bg-gray-800 text-gray-100 border-l-4 border-gray-500'
-                        }`}
-                      >
-                        <div className="mt-0.5 mr-2">
-                          {impact.type === 'positive' && <ArrowUp className="h-4 w-4" />}
-                          {impact.type === 'negative' && <ArrowDown className="h-4 w-4" />}
-                          {impact.type === 'neutral' && <Info className="h-4 w-4" />}
-                        </div>
-                        <div>
-                          {impact.description}
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+              <TabsContent value="content" className="mt-4">
+                <ArticleContent 
+                  article={article}
+                  segmentId={segmentId}
+                  highlights={highlights}
+                  onAddHighlight={handleAddHighlight}
+                />
               </TabsContent>
 
               <TabsContent value="comments" className="mt-4">
@@ -198,51 +126,10 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
               </TabsContent>
 
               <TabsContent value="highlights" className="mt-4">
-                <div className="space-y-4">
-                  <h4 className="text-sm font-bold flex items-center">
-                    <Highlighter className="h-4 w-4 mr-1 text-primary" />
-                    Destaques
-                  </h4>
-                  {highlights.length > 0 ? (
-                    <div className="space-y-3">
-                      {highlights.map((highlight) => (
-                        <div 
-                          key={highlight.id} 
-                          className={`p-3 rounded-md border ${
-                            highlight.color === 'yellow' ? 'bg-yellow-900 border-yellow-700' :
-                            highlight.color === 'green' ? 'bg-green-900 border-green-700' :
-                            highlight.color === 'blue' ? 'bg-blue-900 border-blue-700' :
-                            'bg-pink-900 border-pink-700'
-                          }`}
-                        >
-                          <div className="text-sm">{highlight.text}</div>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="mt-2 h-7 text-xs"
-                            onClick={() => setHighlights(highlights.filter(h => h.id !== highlight.id))}
-                          >
-                            Remover
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-sm text-muted-foreground italic">
-                      Selecione qualquer texto no conteúdo do artigo para criar um destaque.
-                    </div>
-                  )}
-                  
-                  <div className="bg-secondary p-3 rounded-md mt-4">
-                    <h5 className="text-xs font-semibold mb-2">Como criar destaques</h5>
-                    <ol className="text-xs text-muted-foreground list-decimal pl-4 space-y-1">
-                      <li>Navegue até a aba "Conteúdo"</li>
-                      <li>Selecione qualquer texto para destacá-lo</li>
-                      <li>Escolha uma cor quando aparecer a barra de ferramentas</li>
-                      <li>Seus destaques serão salvos nesta aba</li>
-                    </ol>
-                  </div>
-                </div>
+                <ArticleHighlights 
+                  highlights={highlights}
+                  onRemoveHighlight={handleRemoveHighlight}
+                />
               </TabsContent>
             </Tabs>
           </div>
