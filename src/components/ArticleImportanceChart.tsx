@@ -2,8 +2,8 @@
 import React from 'react';
 import { Article } from '@/data/articles';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
 import { cn } from '@/lib/utils';
+import { ChartBarIcon } from 'lucide-react';
 
 interface ArticleImportanceChartProps {
   article: Article;
@@ -43,7 +43,6 @@ const ArticleImportanceChart: React.FC<ArticleImportanceChartProps> = ({
     {
       name: 'Importância',
       relevance: importanceScore,
-      fill: getScoreColor(importanceScore),
     }
   ];
   
@@ -63,10 +62,15 @@ const ArticleImportanceChart: React.FC<ArticleImportanceChartProps> = ({
     return 'Informativo';
   };
   
+  const barColor = getScoreColor(importanceScore);
+  
   return (
     <div className={cn("flex flex-col", className)}>
       <div className="flex justify-between items-center mb-2">
-        <h4 className="text-sm font-medium">Índice de Relevância</h4>
+        <h4 className="text-sm font-medium flex items-center gap-1.5">
+          <ChartBarIcon className="h-4 w-4 text-primary" />
+          Índice de Relevância
+        </h4>
         <span 
           className={cn(
             "text-xs font-semibold px-2 py-0.5 rounded",
@@ -81,26 +85,10 @@ const ArticleImportanceChart: React.FC<ArticleImportanceChartProps> = ({
       </div>
       
       <div className="w-full h-14">
-        <ChartContainer
-          config={{
-            relevance: {
-              theme: {
-                light: getScoreColor(importanceScore),
-                dark: getScoreColor(importanceScore),
-              }
-            },
-          }}
-        >
+        <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} layout="vertical" barCategoryGap={1}>
             <XAxis type="number" domain={[0, 100]} hide />
             <YAxis type="category" dataKey="name" hide />
-            <Bar 
-              dataKey="relevance" 
-              fill="var(--color-relevance)"
-              radius={4} 
-              barSize={14}
-              background={{ fill: '#f3f4f6' }}
-            />
             <Tooltip
               content={
                 ({ active, payload }) => {
@@ -120,8 +108,15 @@ const ArticleImportanceChart: React.FC<ArticleImportanceChartProps> = ({
                 }
               }
             />
+            <Bar 
+              dataKey="relevance" 
+              fill={barColor}
+              radius={4} 
+              barSize={14}
+              background={{ fill: '#f3f4f6', radius: 4 }}
+            />
           </BarChart>
-        </ChartContainer>
+        </ResponsiveContainer>
       </div>
     </div>
   );
