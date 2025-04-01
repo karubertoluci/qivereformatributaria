@@ -3,6 +3,8 @@ import React from 'react';
 import Hero from './Hero';
 import SearchForm from './SearchForm';
 import HowItWorks from './HowItWorks';
+import ProductFeatures from './ProductFeatures';
+import AboutQive from './AboutQive';
 import { BusinessSegment } from '@/data/segments';
 
 interface HomePageProps {
@@ -23,6 +25,8 @@ const HomePage: React.FC<HomePageProps> = ({ onCnaeSubmit, onBrowseBySegment, on
         />
       </div>
       <HowItWorks />
+      <ProductFeatures />
+      <AboutQive />
     </div>
   );
 };
