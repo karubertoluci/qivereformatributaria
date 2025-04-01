@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -7,7 +8,18 @@ import { Label } from '@/components/ui/label';
 import { Form, FormField, FormItem, FormControl } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { Building } from 'lucide-react';
+import { 
+  Building, 
+  Store, 
+  Factory, 
+  Briefcase, 
+  Leaf, 
+  ChartBar, 
+  Hospital, 
+  GraduationCap, 
+  Banknote, 
+  Truck 
+} from 'lucide-react';
 import { businessSegments, BusinessSegment } from '@/data/segments';
 
 const cnaeToSegmentMap: Record<string, string> = {
