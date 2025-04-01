@@ -23,7 +23,7 @@ const SegmentSelector: React.FC<SegmentSelectorProps> = ({ onSelectSegment }) =>
         {businessSegments.map((segment) => (
           <Card 
             key={segment.id} 
-            className="hover:shadow-lg transition-shadow cursor-pointer border-2 hover:border-primary"
+            className="card-gradient hover:shadow-lg transition-all cursor-pointer border-2 hover:border-primary"
             onClick={() => onSelectSegment(segment)}
           >
             <CardHeader className="pb-2">
