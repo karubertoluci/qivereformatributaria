@@ -5,32 +5,32 @@ import { Search, FileText, LineChart } from 'lucide-react';
 
 const HowItWorks = () => {
   return (
-    <section className="py-12 bg-gray-50 text-gray-900">
+    <section className="py-6 bg-gray-50 text-gray-900">
       <div className="container mx-auto px-4 max-w-5xl">
-        <h2 className="text-3xl font-bold text-center mb-8">Como Funciona</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card className="bg-white border-gray-200 p-6 rounded-lg shadow-sm text-center hover:shadow-md transition-shadow">
-            <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-              <Search className="h-7 w-7 text-orange-500" />
+        <h2 className="text-2xl font-bold text-center mb-6">Como Funciona</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="bg-white border-gray-200 p-4 rounded-lg shadow-sm text-center hover:shadow-md transition-shadow">
+            <div className="bg-orange-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+              <Search className="h-5 w-5 text-orange-500" />
             </div>
-            <h3 className="text-xl font-medium mb-2">Insira seu CNAE</h3>
-            <p className="text-gray-600">Digite o código CNAE da sua empresa para análise personalizada</p>
+            <h3 className="text-lg font-medium mb-1">Insira seu CNAE</h3>
+            <p className="text-gray-600 text-sm">Digite o código CNAE da sua empresa</p>
           </Card>
           
-          <Card className="bg-white border-gray-200 p-6 rounded-lg shadow-sm text-center hover:shadow-md transition-shadow">
-            <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-              <FileText className="h-7 w-7 text-orange-500" />
+          <Card className="bg-white border-gray-200 p-4 rounded-lg shadow-sm text-center hover:shadow-md transition-shadow">
+            <div className="bg-orange-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+              <FileText className="h-5 w-5 text-orange-500" />
             </div>
-            <h3 className="text-xl font-medium mb-2">Analise os Artigos</h3>
-            <p className="text-gray-600">Veja os artigos mais relevantes para o seu segmento de atuação</p>
+            <h3 className="text-lg font-medium mb-1">Analise os Artigos</h3>
+            <p className="text-gray-600 text-sm">Veja os artigos mais relevantes para você</p>
           </Card>
           
-          <Card className="bg-white border-gray-200 p-6 rounded-lg shadow-sm text-center hover:shadow-md transition-shadow">
-            <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-              <LineChart className="h-7 w-7 text-orange-500" />
+          <Card className="bg-white border-gray-200 p-4 rounded-lg shadow-sm text-center hover:shadow-md transition-shadow">
+            <div className="bg-orange-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+              <LineChart className="h-5 w-5 text-orange-500" />
             </div>
-            <h3 className="text-xl font-medium mb-2">Tome Decisões</h3>
-            <p className="text-gray-600">Planeje-se com base em análises claras e objetivas da reforma tributária</p>
+            <h3 className="text-lg font-medium mb-1">Tome Decisões</h3>
+            <p className="text-gray-600 text-sm">Planeje-se com base em análises claras</p>
           </Card>
         </div>
       </div>
