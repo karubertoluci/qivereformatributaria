@@ -11,7 +11,7 @@ import {
 
 const Header = () => {
   return (
-    <header className="bg-primary text-primary-foreground py-4 px-6 shadow-md">
+    <header className="bg-black border-b border-white/10 py-4 px-6 shadow-md">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
         <div className="flex items-center mb-4 md:mb-0">
           <Book size={32} className="mr-2" />
@@ -20,7 +20,7 @@ const Header = () => {
         <div className="flex items-center space-x-2 md:space-x-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
+              <Button variant="outline" className="bg-white/10 text-white hover:bg-white/20 border-white/20">
                 <Info size={16} className="mr-2" /> Sobre a Reforma
               </Button>
             </DropdownMenuTrigger>
@@ -50,7 +50,7 @@ const Header = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
+              <Button variant="outline" className="bg-white/10 text-white hover:bg-white/20 border-white/20">
                 <HelpCircle size={16} className="mr-2" /> Ajuda
               </Button>
             </DropdownMenuTrigger>
