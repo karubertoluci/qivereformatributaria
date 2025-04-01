@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -100,13 +99,12 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
       </Form>
       
       <div className="mt-6 text-center">
-        <Button 
-          variant="link" 
-          className="text-gray-600 hover:text-primary transition-colors text-sm"
+        <button 
           onClick={onBrowseBySegment}
+          className="text-primary underline hover:text-primary/80 transition-colors text-sm cursor-pointer"
         >
           Navegar por segmento
-        </Button>
+        </button>
       </div>
     </div>
   );
