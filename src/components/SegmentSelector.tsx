@@ -1,10 +1,35 @@
 
 import React from 'react';
 import { businessSegments, BusinessSegment } from '@/data/segments';
+import { 
+  Building, 
+  Store, 
+  Factory, 
+  Briefcase, 
+  Leaf, 
+  BarChart, 
+  Stethoscope, 
+  GraduationCap, 
+  Banknote, 
+  Truck 
+} from 'lucide-react';
 
 interface SegmentSelectorProps {
   onSelectSegment: (segment: BusinessSegment) => void;
 }
+
+const segmentIcons: Record<string, React.ReactNode> = {
+  "comercio_varejo": <Store className="h-6 w-6" />,
+  "industria": <Factory className="h-6 w-6" />,
+  "servicos": <Briefcase className="h-6 w-6" />,
+  "agronegocio": <Leaf className="h-6 w-6" />,
+  "construcao": <Building className="h-6 w-6" />,
+  "tecnologia": <BarChart className="h-6 w-6" />,
+  "saude": <Stethoscope className="h-6 w-6" />,
+  "educacao": <GraduationCap className="h-6 w-6" />,
+  "financeiro": <Banknote className="h-6 w-6" />,
+  "transporte": <Truck className="h-6 w-6" />,
+};
 
 const SegmentSelector: React.FC<SegmentSelectorProps> = ({ onSelectSegment }) => {
   return (
@@ -25,7 +50,7 @@ const SegmentSelector: React.FC<SegmentSelectorProps> = ({ onSelectSegment }) =>
             onClick={() => onSelectSegment(segment)}
           >
             <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
-              {segment.emoji}
+              {segmentIcons[segment.id]}
               {segment.name}
             </h3>
             <p className="text-gray-600 mb-6">{segment.description}</p>

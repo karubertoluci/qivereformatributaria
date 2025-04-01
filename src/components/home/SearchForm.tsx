@@ -14,8 +14,8 @@ import {
   Factory, 
   Briefcase, 
   Leaf, 
-  ChartBar, 
-  Hospital, 
+  BarChart, // Changed from ChartBar to BarChart as it's correct in lucide-react
+  Stethoscope, // Changed from Hospital to Stethoscope as it's more recognizable for health
   GraduationCap, 
   Banknote, 
   Truck 
@@ -41,8 +41,8 @@ const segmentIcons: Record<string, React.ReactNode> = {
   "servicos": <Briefcase className="h-5 w-5" />,
   "agronegocio": <Leaf className="h-5 w-5" />,
   "construcao": <Building className="h-5 w-5" />,
-  "tecnologia": <ChartBar className="h-5 w-5" />,
-  "saude": <Hospital className="h-5 w-5" />,
+  "tecnologia": <BarChart className="h-5 w-5" />,
+  "saude": <Stethoscope className="h-5 w-5" />,
   "educacao": <GraduationCap className="h-5 w-5" />,
   "financeiro": <Banknote className="h-5 w-5" />,
   "transporte": <Truck className="h-5 w-5" />,
@@ -151,7 +151,9 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
                 className="bg-white hover:bg-primary/10 border-primary/20 text-foreground hover:text-primary flex flex-col h-auto py-4 transition-all duration-200 shadow-sm"
                 onClick={() => onSelectSegment(segment)}
               >
-                <span className="text-xl mb-1">{segment.emoji}</span>
+                <span className="text-xl mb-1">
+                  {segmentIcons[segment.id] || segment.id}
+                </span>
                 <span className="mt-1">{segment.name}</span>
               </Button>
             ))}
