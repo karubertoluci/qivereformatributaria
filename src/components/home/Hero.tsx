@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Robot } from 'lucide-react';
+import { Bot } from 'lucide-react';
 
 const Hero = () => {
   return (
@@ -9,7 +9,7 @@ const Hero = () => {
       <div className="container mx-auto max-w-4xl">
         <div className="flex justify-center mb-6">
           <Badge variant="outline" className="py-2 px-4 flex items-center gap-2 text-sm bg-white border border-gray-200 shadow-sm">
-            <Robot className="h-4 w-4" /> 
+            <Bot className="h-4 w-4" /> 
             É importante você saber que o conteúdo aqui é feito utilizando inteligência artificial.
           </Badge>
         </div>
