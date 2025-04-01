@@ -5,9 +5,8 @@ import { Search, FileText, LineChart } from 'lucide-react';
 
 const HowItWorks = () => {
   return (
-    <section className="py-6 bg-gray-50 text-gray-900">
+    <section className="pb-8 pt-2 bg-white">
       <div className="container mx-auto px-4 max-w-5xl">
-        <h2 className="text-2xl font-bold text-center mb-6">Como Funciona</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card className="bg-white border-gray-200 p-4 rounded-lg shadow-sm text-center hover:shadow-md transition-shadow">
             <div className="bg-orange-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">

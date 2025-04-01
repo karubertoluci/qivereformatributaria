@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -72,7 +73,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
             name="cnae"
             render={({ field }) => (
               <FormItem>
-                <Label htmlFor="cnae" className="block mb-2">CNAE:</Label>
+                <Label htmlFor="cnae" className="block mb-2 font-medium">CNAE:</Label>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <div className="flex-1">
                     <FormControl>
@@ -101,7 +102,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
       <div className="mt-6 text-center">
         <button 
           onClick={onBrowseBySegment}
-          className="text-primary underline hover:text-primary/80 transition-colors text-sm cursor-pointer"
+          className="text-orange-600 underline hover:text-orange-700 transition-colors text-sm cursor-pointer"
         >
           Navegar por segmento
         </button>

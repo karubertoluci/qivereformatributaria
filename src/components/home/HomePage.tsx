@@ -17,14 +17,16 @@ const HomePage: React.FC<HomePageProps> = ({ onCnaeSubmit, onBrowseBySegment, on
   return (
     <div className="flex flex-col min-h-[calc(100vh-12rem)]">
       <Hero />
-      <HowItWorks />
-      <div className="container mx-auto max-w-4xl px-4 -mt-6 relative z-10">
+      
+      <div className="container mx-auto max-w-4xl px-4 -mt-2 relative z-10 mb-10">
         <SearchForm 
           onCnaeSubmit={onCnaeSubmit} 
           onBrowseBySegment={onBrowseBySegment} 
           onSelectSegment={onSelectSegment}
         />
       </div>
+      
+      <HowItWorks />
       <ProductFeatures />
       <AboutQive />
     </div>

@@ -5,7 +5,7 @@ import { Bot } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section className="bg-white py-12 md:py-16 px-4">
+    <section className="bg-white pt-12 pb-6 md:pt-16 md:pb-8 px-4">
       <div className="container mx-auto max-w-4xl">
         <div className="flex justify-center mb-6">
           <Badge variant="outline" className="py-2 px-4 flex items-center gap-2 text-sm bg-white border border-gray-200 shadow-sm">
