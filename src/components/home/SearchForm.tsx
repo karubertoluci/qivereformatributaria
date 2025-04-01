@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -8,11 +7,9 @@ import { Label } from '@/components/ui/label';
 import { Form, FormField, FormItem, FormControl } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { Building, LayoutGrid, Store, Factory, Briefcase, GraduationCap, Hospital, Leaf, Truck, Banknote, ChartBar } from 'lucide-react';
+import { Building } from 'lucide-react';
 import { businessSegments, BusinessSegment } from '@/data/segments';
 
-// Map of CNAE codes to business segment IDs
-// This is a simplified example - in a real application, this would be more comprehensive
 const cnaeToSegmentMap: Record<string, string> = {
   "47": "comercio_varejo",    // Comércio varejista
   "10": "industria",          // Indústria de alimentos
@@ -26,7 +23,6 @@ const cnaeToSegmentMap: Record<string, string> = {
   "56": "servicos"            // Serviços de alimentação
 };
 
-// Map of segment IDs to icons
 const segmentIcons: Record<string, React.ReactNode> = {
   "comercio_varejo": <Store className="h-5 w-5" />,
   "industria": <Factory className="h-5 w-5" />,
@@ -59,23 +55,19 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
       return;
     }
     
-    // Get first two digits of CNAE to identify the segment
     const cnaeDivision = data.cnae.substring(0, 2);
     const segmentId = cnaeToSegmentMap[cnaeDivision];
     
     if (segmentId) {
-      // Find the segment that corresponds to this CNAE
       const segment = businessSegments.find(seg => seg.id === segmentId);
       if (segment) {
         toast.success(`CNAE ${data.cnae} identificado como ${segment.name}`);
         onSelectSegment(segment);
       } else {
-        // This shouldn't happen if our map and segments are aligned
         onCnaeSubmit(data.cnae);
         toast.success(`CNAE ${data.cnae} selecionado com sucesso!`);
       }
     } else {
-      // If no mapping found, just proceed with the CNAE
       onCnaeSubmit(data.cnae);
       toast.info(`CNAE ${data.cnae} não foi mapeado automaticamente para um segmento específico.`);
     }
@@ -147,8 +139,8 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
                 className="bg-white hover:bg-primary/10 border-primary/20 text-foreground hover:text-primary flex flex-col h-auto py-4 transition-all duration-200 shadow-sm"
                 onClick={() => onSelectSegment(segment)}
               >
-                {segmentIcons[segment.id]}
-                <span className="mt-2">{segment.name}</span>
+                <span className="text-xl mb-1">{segment.emoji}</span>
+                <span className="mt-1">{segment.name}</span>
               </Button>
             ))}
           </div>
@@ -160,7 +152,6 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
                 className="bg-white border-primary/20 text-foreground hover:bg-primary/10 hover:text-primary transition-all duration-200"
                 onClick={onBrowseBySegment}
               >
-                <LayoutGrid className="mr-2 h-4 w-4" />
                 Ver todos os segmentos
               </Button>
             </div>
