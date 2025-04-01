@@ -17,7 +17,7 @@ const HomePage: React.FC<HomePageProps> = ({ onCnaeSubmit, onBrowseBySegment, on
   return (
     <div className="flex flex-col min-h-[calc(100vh-12rem)]">
       <Hero />
-      <div className="container mx-auto max-w-4xl px-4">
+      <div className="container mx-auto max-w-4xl px-4 -mt-6 relative z-10">
         <SearchForm 
           onCnaeSubmit={onCnaeSubmit} 
           onBrowseBySegment={onBrowseBySegment} 
