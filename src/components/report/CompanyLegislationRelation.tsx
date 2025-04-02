@@ -54,8 +54,8 @@ const CompanyLegislationRelation: React.FC<CompanyLegislationRelationProps> = ({
           Relação com seu Negócio
         </CardTitle>
       </CardHeader>
-      <CardContent className="">
-        <div className="grid md:grid-cols-2 gap-6">
+      <CardContent className="bg-slate-00 bg-zinc-50">
+        <div className="grid md:grid-cols-2 gap-6 py-[20px]">
           {/* Lado Esquerdo - Análise Específica */}
           <div className="space-y-5">
             <h3 className="font-semibold text-lg text-slate-950">Análise Específica para seu Negócio</h3>
