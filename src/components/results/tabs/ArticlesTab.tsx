@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
@@ -9,6 +8,7 @@ import ArticleTableView from '../ArticleTableView';
 import ArticleTopicsView from '../ArticleTopicsView';
 import LegislationBooks from '../../report/LegislationBooks';
 import { Book } from 'lucide-react';
+import ArticlesPriorityChart from '@/components/ArticlesPriorityChart';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
