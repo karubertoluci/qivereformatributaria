@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Hero from './Hero';
-import SearchForm from './SearchForm';
+import SearchForm from './search-form';
 import HowItWorks from './HowItWorks';
 import ProductFeatures from './ProductFeatures';
 import AboutQive from './AboutQive';
