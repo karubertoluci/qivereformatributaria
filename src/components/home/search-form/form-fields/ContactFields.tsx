@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { UseFormReturn } from 'react-hook-form';
 import { FormValues } from '../FormDialog';
+import { Mail, Phone, HelpCircle } from 'lucide-react';
 
 interface ContactFieldsProps {
   form: UseFormReturn<FormValues>;
@@ -19,7 +20,10 @@ const ContactFields: React.FC<ContactFieldsProps> = ({ form }) => {
         name="email"
         render={({ field }) => (
           <FormItem>
-            <Label htmlFor="email" className="block mb-2 font-medium">E-mail corporativo:</Label>
+            <Label htmlFor="email" className="block mb-2 font-medium flex items-center">
+              <Mail className="h-4 w-4 mr-2 text-orange-500" />
+              E-mail corporativo:
+            </Label>
             <FormControl>
               <Input
                 id="email"
@@ -39,7 +43,10 @@ const ContactFields: React.FC<ContactFieldsProps> = ({ form }) => {
         name="telefone"
         render={({ field }) => (
           <FormItem>
-            <Label htmlFor="telefone" className="block mb-2 font-medium">Telefone (opcional):</Label>
+            <Label htmlFor="telefone" className="block mb-2 font-medium flex items-center">
+              <Phone className="h-4 w-4 mr-2 text-orange-500" />
+              Telefone (opcional):
+            </Label>
             <FormControl>
               <Input
                 id="telefone"
@@ -58,7 +65,10 @@ const ContactFields: React.FC<ContactFieldsProps> = ({ form }) => {
         name="desafios"
         render={({ field }) => (
           <FormItem>
-            <Label htmlFor="desafios" className="block mb-2 font-medium">Quais são suas maiores dúvidas sobre a reforma tributária? (opcional)</Label>
+            <Label htmlFor="desafios" className="block mb-2 font-medium flex items-center">
+              <HelpCircle className="h-4 w-4 mr-2 text-orange-500" />
+              Quais são suas maiores dúvidas sobre a reforma tributária? (opcional)
+            </Label>
             <FormControl>
               <Textarea
                 id="desafios"

@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { UseFormReturn } from 'react-hook-form';
 import { FormValues } from '../FormDialog';
+import { Building2, Briefcase, BookOpen } from 'lucide-react';
 
 interface CompanyFieldsProps {
   form: UseFormReturn<FormValues>;
@@ -19,7 +20,10 @@ const CompanyFields: React.FC<CompanyFieldsProps> = ({ form }) => {
           name="cnpj"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="cnpj" className="block mb-2 font-medium">CNPJ da empresa:</Label>
+              <Label htmlFor="cnpj" className="block mb-2 font-medium flex items-center">
+                <Building2 className="h-4 w-4 mr-2 text-orange-500" />
+                CNPJ da empresa:
+              </Label>
               <FormControl>
                 <Input
                   id="cnpj"
@@ -38,7 +42,10 @@ const CompanyFields: React.FC<CompanyFieldsProps> = ({ form }) => {
           name="cnae"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="cnae" className="block mb-2 font-medium">CNAE:</Label>
+              <Label htmlFor="cnae" className="block mb-2 font-medium flex items-center">
+                <BookOpen className="h-4 w-4 mr-2 text-orange-500" />
+                CNAE:
+              </Label>
               <FormControl>
                 <Input
                   id="cnae"
@@ -58,7 +65,10 @@ const CompanyFields: React.FC<CompanyFieldsProps> = ({ form }) => {
         name="razaoSocial"
         render={({ field }) => (
           <FormItem>
-            <Label htmlFor="razaoSocial" className="block mb-2 font-medium">Razão Social:</Label>
+            <Label htmlFor="razaoSocial" className="block mb-2 font-medium flex items-center">
+              <Briefcase className="h-4 w-4 mr-2 text-orange-500" />
+              Razão Social:
+            </Label>
             <FormControl>
               <Input
                 id="razaoSocial"

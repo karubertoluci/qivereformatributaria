@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { UseFormReturn } from 'react-hook-form';
 import { FormValues } from '../FormDialog';
+import { User, BadgeCheck } from 'lucide-react';
 
 interface PersonalFieldsProps {
   form: UseFormReturn<FormValues>;
@@ -18,7 +19,10 @@ const PersonalFields: React.FC<PersonalFieldsProps> = ({ form }) => {
         name="nome"
         render={({ field }) => (
           <FormItem>
-            <Label htmlFor="nome" className="block mb-2 font-medium">Seu nome:</Label>
+            <Label htmlFor="nome" className="block mb-2 font-medium flex items-center">
+              <User className="h-4 w-4 mr-2 text-orange-500" />
+              Seu nome:
+            </Label>
             <FormControl>
               <Input
                 id="nome"
@@ -37,7 +41,10 @@ const PersonalFields: React.FC<PersonalFieldsProps> = ({ form }) => {
         name="cargo"
         render={({ field }) => (
           <FormItem>
-            <Label htmlFor="cargo" className="block mb-2 font-medium">Seu cargo:</Label>
+            <Label htmlFor="cargo" className="block mb-2 font-medium flex items-center">
+              <BadgeCheck className="h-4 w-4 mr-2 text-orange-500" />
+              Seu cargo:
+            </Label>
             <FormControl>
               <Input
                 id="cargo"

@@ -7,6 +7,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
+import { Building2, FileSpreadsheet, BarChart4, Lightbulb, FileCheck } from 'lucide-react';
 
 interface LoadingDialogProps {
   open: boolean;
@@ -41,25 +42,35 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
             </div>
           </div>
           
-          <div className="space-y-2">
+          <div className="space-y-3">
             <p className="text-sm font-medium flex items-center">
-              <span className={`mr-2 ${progress >= 20 ? 'text-green-500' : 'text-gray-400'}`}>✓</span>
+              <span className={`mr-2 flex items-center justify-center w-6 h-6 rounded-full ${progress >= 20 ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
+                {progress >= 20 ? <span>✓</span> : <Building2 size={14} />}
+              </span>
               Identificando seu segmento de atuação
             </p>
             <p className="text-sm font-medium flex items-center">
-              <span className={`mr-2 ${progress >= 40 ? 'text-green-500' : 'text-gray-400'}`}>✓</span>
+              <span className={`mr-2 flex items-center justify-center w-6 h-6 rounded-full ${progress >= 40 ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
+                {progress >= 40 ? <span>✓</span> : <FileSpreadsheet size={14} />}
+              </span>
               Analisando artigos relevantes para {razaoSocial || 'sua empresa'}
             </p>
             <p className="text-sm font-medium flex items-center">
-              <span className={`mr-2 ${progress >= 60 ? 'text-green-500' : 'text-gray-400'}`}>✓</span>
+              <span className={`mr-2 flex items-center justify-center w-6 h-6 rounded-full ${progress >= 60 ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
+                {progress >= 60 ? <span>✓</span> : <BarChart4 size={14} />}
+              </span>
               Calculando impacto dos artigos no seu negócio
             </p>
             <p className="text-sm font-medium flex items-center">
-              <span className={`mr-2 ${progress >= 80 ? 'text-green-500' : 'text-gray-400'}`}>✓</span>
+              <span className={`mr-2 flex items-center justify-center w-6 h-6 rounded-full ${progress >= 80 ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
+                {progress >= 80 ? <span>✓</span> : <Lightbulb size={14} />}
+              </span>
               Personalizando recomendações
             </p>
             <p className="text-sm font-medium flex items-center">
-              <span className={`mr-2 ${progress >= 100 ? 'text-green-500' : 'text-gray-400'}`}>✓</span>
+              <span className={`mr-2 flex items-center justify-center w-6 h-6 rounded-full ${progress >= 100 ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
+                {progress >= 100 ? <span>✓</span> : <FileCheck size={14} />}
+              </span>
               Finalizando seu relatório
             </p>
           </div>

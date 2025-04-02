@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { FileText } from 'lucide-react';
+import { FileBarChart } from 'lucide-react';
 import { useFormDialogContext } from '../FormDialogContext';
 
 interface SearchFormButtonProps {
@@ -17,7 +17,7 @@ const SearchFormButton: React.FC<SearchFormButtonProps> = ({ className }) => {
       size="lg"
       onClick={openFormDialog}
     >
-      <FileText className="mr-2 h-6 w-6" />
+      <FileBarChart className="mr-2 h-6 w-6" />
       Gerar relatório personalizado para minha empresa
     </Button>
   );
