@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Article } from '@/data/articles';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Book, Filter } from 'lucide-react';
+import { Book, Filter, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface LegislationBooksProps {
