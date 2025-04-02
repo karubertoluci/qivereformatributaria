@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { useResultsData } from '@/hooks/useResultsData';
@@ -41,7 +42,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
       {hasCompanyData && <ReportActions companyData={formData} segment={segment} />}
       
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="mb-6 py-0 my-0">
+        <TabsList className="mb-6 py-0 my-0 flex justify-center w-full">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <FileText className="h-4 w-4" /> Visão Geral
           </TabsTrigger>
