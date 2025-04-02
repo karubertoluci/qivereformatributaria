@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
@@ -54,23 +53,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
 }) => {
   return (
     <div>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <FilterBar 
-          positiveCount={positiveCount}
-          negativeCount={negativeCount}
-          totalCount={relevantArticles.length}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          filterType={filterType}
-          setFilterType={setFilterType}
-        />
-        
-        <ViewSwitcher 
-          viewMode={viewMode}
-          setViewMode={setViewMode}
-        />
-      </div>
-
       {/* Charts Section - Added from Overview */}
       <div className="mb-8 grid md:grid-cols-2 gap-6">
         <LegislationBooks 
@@ -90,6 +72,24 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             onSelectArticle={setExpandedArticleId}
           />
         </div>
+      </div>
+      
+      {/* Moved FilterBar and ViewSwitcher below the charts */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <FilterBar 
+          positiveCount={positiveCount}
+          negativeCount={negativeCount}
+          totalCount={relevantArticles.length}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          filterType={filterType}
+          setFilterType={setFilterType}
+        />
+        
+        <ViewSwitcher 
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+        />
       </div>
       
       {viewMode === 'chart' && (
