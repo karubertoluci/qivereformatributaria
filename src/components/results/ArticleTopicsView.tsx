@@ -3,7 +3,7 @@ import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ArticleCard from '../ArticleCard';
 import { Article } from '@/data/articles';
-import { Topic } from './types';
+import { Topic, HighlightType } from './types';
 
 interface ArticleTopicsViewProps {
   filteredArticles: Article[];
@@ -12,6 +12,9 @@ interface ArticleTopicsViewProps {
   segmentId: string;
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
+  highlights?: HighlightType[];
+  onAddHighlight?: (text: string, color: HighlightType['color']) => void;
+  onRemoveHighlight?: (id: string) => void;
 }
 
 const ArticleTopicsView: React.FC<ArticleTopicsViewProps> = ({
@@ -20,7 +23,10 @@ const ArticleTopicsView: React.FC<ArticleTopicsViewProps> = ({
   topics,
   segmentId,
   expandedArticleId,
-  setExpandedArticleId
+  setExpandedArticleId,
+  highlights = [],
+  onAddHighlight = () => {},
+  onRemoveHighlight = () => {}
 }) => {
   return (
     <Tabs defaultValue="all" className="w-full">
@@ -44,6 +50,9 @@ const ArticleTopicsView: React.FC<ArticleTopicsViewProps> = ({
                 onToggleExpand={() => {
                   setExpandedArticleId(expandedArticleId === article.id ? null : article.id);
                 }}
+                highlights={highlights}
+                onAddHighlight={onAddHighlight}
+                onRemoveHighlight={onRemoveHighlight}
               />
             </div>
           ))}
@@ -68,6 +77,9 @@ const ArticleTopicsView: React.FC<ArticleTopicsViewProps> = ({
                     onToggleExpand={() => {
                       setExpandedArticleId(expandedArticleId === article.id ? null : article.id);
                     }}
+                    highlights={highlights}
+                    onAddHighlight={onAddHighlight}
+                    onRemoveHighlight={onRemoveHighlight}
                   />
                 </div>
               ))

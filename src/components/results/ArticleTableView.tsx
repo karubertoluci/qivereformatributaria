@@ -6,19 +6,26 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import ArticleCard from '../ArticleCard';
+import { HighlightType } from './types';
 
 interface ArticleTableViewProps {
   filteredArticles: Article[];
   segmentId: string;
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
+  highlights?: HighlightType[];
+  onAddHighlight?: (text: string, color: HighlightType['color']) => void;
+  onRemoveHighlight?: (id: string) => void;
 }
 
 const ArticleTableView: React.FC<ArticleTableViewProps> = ({
   filteredArticles,
   segmentId,
   expandedArticleId,
-  setExpandedArticleId
+  setExpandedArticleId,
+  highlights = [],
+  onAddHighlight = () => {},
+  onRemoveHighlight = () => {}
 }) => {
   return (
     <>
@@ -80,6 +87,9 @@ const ArticleTableView: React.FC<ArticleTableViewProps> = ({
             segmentId={segmentId}
             expanded={true}
             onToggleExpand={() => setExpandedArticleId(null)}
+            highlights={highlights}
+            onAddHighlight={onAddHighlight}
+            onRemoveHighlight={onRemoveHighlight}
           />
         </div>
       )}

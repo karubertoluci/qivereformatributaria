@@ -13,7 +13,7 @@ import ArticlesPriorityChart from '../ArticlesPriorityChart';
 import ResultsSummary from './ResultsSummary';
 import CompanyLegislationRelation from '../report/CompanyLegislationRelation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Book, List, FileText } from 'lucide-react';
+import { Book, List, FileText, Highlighter, X } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 interface ResultsContainerProps {
