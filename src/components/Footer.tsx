@@ -1,6 +1,6 @@
 import React from 'react';
 const Footer = () => {
-  return <footer className="border-t border-gray-200 mt-12 bg-zinc-950 py-[55px] my-0">
+  return <footer className="border-t border-gray-200 mt-12 bg-zinc-950 my-0 py-[36px]">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
