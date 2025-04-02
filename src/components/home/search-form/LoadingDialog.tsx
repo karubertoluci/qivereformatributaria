@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from '@/components/ui/dialog';
 import { CheckCircle2 } from 'lucide-react';
 
@@ -36,6 +35,16 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
 }) => {
   const [statusMessages, setStatusMessages] = useState<{message: string, completed: boolean}[]>([]);
   
+  // Function to truncate text if it's too long
+  const truncateText = (text: string, maxLength: number) => {
+    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+  };
+  
+  const displayName = truncateText(
+    companyData?.razaoSocial || companyData?.nomeFantasia || companyName || 'sua empresa',
+    40
+  );
+  
   // Atualiza as mensagens de status dinamicamente baseado no progresso e nos dados da empresa
   useEffect(() => {
     const messages: {message: string, completed: boolean}[] = [];
@@ -49,7 +58,7 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
     
     if (progress >= 20 && companyData?.razaoSocial) {
       messages.push({
-        message: `Razão Social encontrada: ${companyData.razaoSocial}`,
+        message: `Razão Social encontrada: ${truncateText(companyData.razaoSocial, 40)}`,
         completed: true
       });
     }
@@ -83,9 +92,7 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
       <DialogContent className="sm:max-w-md w-[90vw]">
         <DialogHeader>
           <DialogTitle>Gerando seu relatório personalizado</DialogTitle>
-          <DialogDescription>
-            Estamos analisando os impactos da reforma tributária para {companyData?.razaoSocial || companyData?.nomeFantasia || companyName || 'sua empresa'}.
-          </DialogDescription>
+          {/* Removed the DialogDescription component */}
         </DialogHeader>
         
         <div className="py-6">
@@ -116,11 +123,7 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
             ))}
           </div>
           
-          {progress >= 95 && (
-            <p className="text-sm text-gray-600 italic mt-6">
-              Seu relatório está quase pronto. Você será redirecionado em instantes...
-            </p>
-          )}
+          {/* Removed the "Seu relatório está quase pronto" text */}
         </div>
       </DialogContent>
     </Dialog>
