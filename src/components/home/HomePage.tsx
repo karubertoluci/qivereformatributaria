@@ -23,8 +23,10 @@ const HomePage: React.FC<HomePageProps> = ({ onCnaeSubmit, onBrowseBySegment, on
   
   return (
     <div className="flex flex-col min-h-[calc(100vh-12rem)]">
+      {/* Primeiro andar: Manchete + Subtítulo */}
       <Hero />
       
+      {/* Formulário de busca em destaque */}
       <div className="container mx-auto max-w-4xl px-4 -mt-2 relative z-10 mb-10">
         <SearchForm 
           onCnaeSubmit={(cnae) => {
@@ -47,8 +49,13 @@ const HomePage: React.FC<HomePageProps> = ({ onCnaeSubmit, onBrowseBySegment, on
         />
       </div>
       
+      {/* Segundo andar: Explicação sobre a reforma */}
       <HowItWorks />
+      
+      {/* Terceiro andar: O que oferecemos */}
       <ProductFeatures />
+      
+      {/* Quarto andar: Por que criamos a Qive */}
       <AboutQive />
     </div>
   );
