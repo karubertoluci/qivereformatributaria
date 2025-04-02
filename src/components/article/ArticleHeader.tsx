@@ -46,14 +46,14 @@ const ArticleHeader: React.FC<ArticleHeaderProps> = ({ article, segmentId }) => 
   
   return (
     <div className="flex flex-col mb-1">
-      <div className="flex justify-between items-start">
+      <div className="flex justify-between items-center">
         <CardTitle className="flex items-center">
           <FileText className="h-5 w-5 mr-2 text-primary" />
           <span className="bg-primary/10 px-2 py-0.5 rounded text-primary">{article.number}</span>
         </CardTitle>
         
-        {/* Relevance Indicator */}
-        <Badge variant="outline" className={cn("ml-2", colorClass)}>
+        {/* Relevance Indicator - now smaller and next to title */}
+        <Badge variant="outline" className={cn("text-xs py-0.5 px-2", colorClass)}>
           {importanceText}
         </Badge>
       </div>

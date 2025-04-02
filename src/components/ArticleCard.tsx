@@ -8,10 +8,14 @@ import ArticleHeader from './article/ArticleHeader';
 import { useToast } from '@/components/ui/use-toast';
 import ArticleCardContent from './article-card/ArticleCardContent';
 import ArticleCardActions from './article-card/ArticleCardActions';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Lightbulb, MessageSquare } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 import CommentSection from './results/CommentSection';
-import ArticleUsefulness from './article/ArticleUsefulness';
+import { 
+  Accordion, 
+  AccordionContent, 
+  AccordionItem, 
+  AccordionTrigger 
+} from '@/components/ui/accordion';
 
 interface ArticleCardProps {
   article: Article;
@@ -33,7 +37,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   onRemoveHighlight = () => {} 
 }) => {
   const [comments, setComments] = useState<CommentType[]>([]);
-  const [activeTab, setActiveTab] = useState<string>("content");
   const { toast } = useToast();
   
   // Filter highlights for this article
@@ -108,7 +111,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
               onAddHighlight={onAddHighlight}
             />
             
-            {/* Actions Section (Share and Invite) */}
+            {/* Actions Section (Share, Invite, and Usefulness) */}
             <div className="mt-6 border-t border-border pt-4">
               <ArticleCardActions 
                 articleId={article.id}
@@ -117,31 +120,30 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
               />
             </div>
             
-            {/* Tab Navigation for Content and Comments */}
-            <div className="mt-6 border-t border-border pt-4">
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="w-full mb-4">
-                  <TabsTrigger value="content" className="flex-1">
-                    <Lightbulb className="h-4 w-4 mr-2" /> Conteúdo
-                  </TabsTrigger>
-                  <TabsTrigger value="comments" className="flex-1">
-                    <MessageSquare className="h-4 w-4 mr-2" /> 
-                    Comentários {comments.length > 0 && <span className="ml-1 text-xs bg-primary text-primary-foreground rounded-full w-5 h-5 inline-flex items-center justify-center">{comments.length}</span>}
-                  </TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="content">
-                  <ArticleUsefulness articleId={article.id} />
-                </TabsContent>
-                
-                <TabsContent value="comments">
-                  <CommentSection
-                    articleId={article.id}
-                    comments={comments}
-                    onAddComment={handleAddComment}
-                  />
-                </TabsContent>
-              </Tabs>
+            {/* Comments Accordion */}
+            <div className="mt-4 border-t border-border pt-4">
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="comments" className="border-none">
+                  <AccordionTrigger className="py-2">
+                    <div className="flex items-center">
+                      <MessageSquare className="h-4 w-4 mr-2 text-primary" />
+                      <span>Comentários</span>
+                      {comments.length > 0 && (
+                        <span className="ml-2 text-xs bg-primary text-primary-foreground rounded-full w-5 h-5 inline-flex items-center justify-center">
+                          {comments.length}
+                        </span>
+                      )}
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <CommentSection
+                      articleId={article.id}
+                      comments={comments}
+                      onAddComment={handleAddComment}
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
           </>
         )}
