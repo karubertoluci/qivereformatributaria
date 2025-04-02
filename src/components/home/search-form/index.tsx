@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { businessSegments, BusinessSegment } from '@/data/segments';
@@ -74,35 +73,28 @@ const SearchForm: React.FC<SearchFormProps> = ({
     let cnaeCode = '';
     let companyInfo: CompanyData | undefined = undefined;
     
-    // Já salvar o nome da empresa para mostrar no loading desde o início
     setCompanyName(data.nome);
     
-    // Inicia o progresso simulado em etapas mais graduais
     const stages = [
       { progress: 5, delay: 500 },   // Inicio
       { progress: 20, delay: 1000 }, // Após buscar CNPJ
       { progress: 40, delay: 800 },  // Após identificar CNAE
       { progress: 60, delay: 1200 }, // Analisando impactos
-      { progress: 80, delay: 1000 }, // Personalizando relatório
-      { progress: 95, delay: 800 },  // Finalizando
-      { progress: 100, delay: 500 }  // Concluído
+      { progress: 95, delay: 1500 }, // Relatório pronto
+      { progress: 100, delay: 2000 } // Delay adicional antes de redirecionar
     ];
     
-    // Função para processar cada etapa
     const processStage = async (index: number) => {
       if (index >= stages.length) {
-        // Finaliza o processo
         setTimeout(() => {
           setShowLoadingDialog(false);
           
-          // Salva os dados da empresa obtidos da API
           const formDataWithCompanyInfo = {
             ...data,
             ...companyInfo
           };
           localStorage.setItem('formData', JSON.stringify(formDataWithCompanyInfo));
 
-          // Tenta identificar o segmento pelo CNAE
           if (cnaeCode) {
             const segmentId = cnaeToSegmentMap[cnaeCode];
             if (segmentId) {
@@ -115,7 +107,6 @@ const SearchForm: React.FC<SearchFormProps> = ({
             }
           }
 
-          // Se não encontrou segmento específico, seleciona o primeiro da lista como fallback
           const defaultSegment = businessSegments[0];
           toast.success(`Relatório para ${companyInfo?.razaoSocial || data.nome} gerado com sucesso!`);
           onSelectSegment(defaultSegment);
@@ -126,7 +117,6 @@ const SearchForm: React.FC<SearchFormProps> = ({
       const stage = stages[index];
       setLoadingProgress(stage.progress);
       
-      // Na etapa inicial, buscar dados do CNPJ
       if (index === 0) {
         try {
           companyInfo = await fetchCompanyData(data.cnpj);
@@ -134,7 +124,6 @@ const SearchForm: React.FC<SearchFormProps> = ({
             setCompanyData(companyInfo);
             setCompanyName(companyInfo.razaoSocial || data.nome);
             
-            // Extrai o CNAE principal para usar na seleção do segmento
             if (companyInfo.cnaePrincipal) {
               cnaeCode = companyInfo.cnaePrincipal.codigo.substring(0, 2);
             }
@@ -145,13 +134,11 @@ const SearchForm: React.FC<SearchFormProps> = ({
         }
       }
       
-      // Avança para a próxima etapa
       setTimeout(() => {
         processStage(index + 1);
       }, stage.delay);
     };
     
-    // Inicia o processamento das etapas
     processStage(0);
   };
 
@@ -159,10 +146,8 @@ const SearchForm: React.FC<SearchFormProps> = ({
     setIsLoading(true);
     setCompanyName(data.nome);
 
-    // Salva os dados do formulário
     localStorage.setItem('formData', JSON.stringify(data));
     
-    // Inicia o processo de geração do relatório
     setTimeout(() => {
       setIsLoading(false);
       simulateReportGeneration(data);
