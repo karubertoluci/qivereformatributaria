@@ -11,7 +11,7 @@ import { CheckCircle2 } from 'lucide-react';
 interface CompanyData {
   cnpj?: string;
   razaoSocial?: string;
-  nomeFantasia?: string;  // Adding nomeFantasia to the interface
+  nomeFantasia?: string;
   cnaePrincipal?: {
     codigo: string;
     descricao: string;
@@ -35,14 +35,15 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
 }) => {
   const [statusMessages, setStatusMessages] = useState<{message: string, completed: boolean}[]>([]);
   
-  // Function to truncate text if it's too long
+  // Function to truncate text if it's too long - ensure it never breaks into multiple lines
   const truncateText = (text: string, maxLength: number) => {
+    if (!text) return '';
     return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
   };
   
   const displayName = truncateText(
     companyData?.razaoSocial || companyData?.nomeFantasia || companyName || 'sua empresa',
-    40
+    30 // Reducing max length for better display
   );
   
   // Atualiza as mensagens de status dinamicamente baseado no progresso e nos dados da empresa
@@ -57,8 +58,9 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
     }
     
     if (progress >= 20 && companyData?.razaoSocial) {
+      // Using a shorter truncation for company names to prevent line breaks
       messages.push({
-        message: `Razão Social encontrada: ${truncateText(companyData.razaoSocial, 40)}`,
+        message: `Razão Social encontrada: ${truncateText(companyData.razaoSocial, 25)}`,
         completed: true
       });
     }
@@ -92,7 +94,6 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
       <DialogContent className="sm:max-w-md w-[90vw]">
         <DialogHeader>
           <DialogTitle>Gerando seu relatório personalizado</DialogTitle>
-          {/* Removed the DialogDescription component */}
         </DialogHeader>
         
         <div className="py-6">
@@ -116,14 +117,12 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
                     <div className="w-3 h-3 rounded-full border-2 border-orange-500 border-t-transparent animate-spin"></div>
                   )}
                 </div>
-                <p className={`text-base ${status.completed ? 'text-gray-800' : 'text-gray-600'}`}>
+                <p className={`text-base ${status.completed ? 'text-gray-800' : 'text-gray-600'} whitespace-nowrap overflow-hidden text-ellipsis`}>
                   {status.message}
                 </p>
               </div>
             ))}
           </div>
-          
-          {/* Removed the "Seu relatório está quase pronto" text */}
         </div>
       </DialogContent>
     </Dialog>
