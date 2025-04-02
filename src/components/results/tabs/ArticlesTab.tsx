@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
@@ -7,8 +8,9 @@ import ViewSwitcher from '../ViewSwitcher';
 import ArticleTableView from '../ArticleTableView';
 import ArticleTopicsView from '../ArticleTopicsView';
 import LegislationBooks from '../../report/LegislationBooks';
-import { Book } from 'lucide-react';
+import { Book, Filter, X } from 'lucide-react';
 import ArticlesPriorityChart from '@/components/ArticlesPriorityChart';
+import { Badge } from '@/components/ui/badge';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -67,16 +69,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       })
     : filteredArticles;
   
-  // Function to handle book selection from the chart
-  const handleBookSelection = (articleId: string) => {
-    // Check if this is a direct article selection or a book filter
-    if (articleId.startsWith('book:')) {
-      setSelectedBookFilter(articleId.replace('book:', ''));
-    } else {
-      setExpandedArticleId(articleId);
-    }
-  };
-
   // When filteredArticles changes (due to search or filter type), reset book filter
   useEffect(() => {
     setSelectedBookFilter(null);
@@ -89,6 +81,8 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         <LegislationBooks 
           articles={relevantArticles} 
           onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
+          selectedBook={selectedBookFilter}
+          onSelectBook={setSelectedBookFilter}
         />
         
         <div className="p-4 bg-card rounded-lg border shadow-sm">
@@ -107,15 +101,31 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       
       {/* Moved FilterBar and ViewSwitcher below the charts */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <FilterBar 
-          positiveCount={positiveCount}
-          negativeCount={negativeCount}
-          totalCount={relevantArticles.length}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          filterType={filterType}
-          setFilterType={setFilterType}
-        />
+        <div className="flex flex-wrap items-center gap-2">
+          <FilterBar 
+            positiveCount={positiveCount}
+            negativeCount={negativeCount}
+            totalCount={relevantArticles.length}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            filterType={filterType}
+            setFilterType={setFilterType}
+          />
+          
+          {selectedBookFilter && (
+            <Badge 
+              variant="outline" 
+              className="flex items-center gap-1 cursor-pointer hover:bg-secondary"
+              onClick={() => setSelectedBookFilter(null)}
+            >
+              <Filter className="h-3 w-3" />
+              Filtrando por: {selectedBookFilter === 'iva' ? 'Livro IVA' : 
+                             selectedBookFilter === 'cbs' ? 'Livro CBS' : 
+                             selectedBookFilter === 'ibs' ? 'Livro IBS' : 'Livro IS'}
+              <X className="h-3 w-3 ml-1" />
+            </Badge>
+          )}
+        </div>
         
         <ViewSwitcher 
           viewMode={viewMode}

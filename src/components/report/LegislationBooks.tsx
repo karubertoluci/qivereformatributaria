@@ -10,9 +10,16 @@ import { toast } from 'sonner';
 interface LegislationBooksProps {
   articles: Article[];
   onSelectArticle: (articleId: string) => void;
+  selectedBook?: string | null;
+  onSelectBook?: (bookId: string | null) => void;
 }
 
-const LegislationBooks: React.FC<LegislationBooksProps> = ({ articles, onSelectArticle }) => {
+const LegislationBooks: React.FC<LegislationBooksProps> = ({ 
+  articles, 
+  onSelectArticle,
+  selectedBook: externalSelectedBook,
+  onSelectBook
+}) => {
   // Define books of legislation
   const books = [
     { id: 'iva', name: 'Livro IVA', color: '#22c55e' },
@@ -21,8 +28,12 @@ const LegislationBooks: React.FC<LegislationBooksProps> = ({ articles, onSelectA
     { id: 'is', name: 'Livro IS', color: '#8b5cf6' }
   ];
   
-  // State to track which book is selected for filtering
-  const [selectedBook, setSelectedBook] = useState<string | null>(null);
+  // State to track which book is selected for filtering - use internal state if no external state provided
+  const [internalSelectedBook, setInternalSelectedBook] = useState<string | null>(null);
+  
+  // Use either external or internal state depending on what's provided
+  const selectedBook = externalSelectedBook !== undefined ? externalSelectedBook : internalSelectedBook;
+  const setSelectedBook = onSelectBook || setInternalSelectedBook;
   
   // For demonstration, let's assign articles to books based on their ID
   const getArticleBook = (article: Article): string => {
@@ -33,7 +44,7 @@ const LegislationBooks: React.FC<LegislationBooksProps> = ({ articles, onSelectA
     return 'is';
   };
   
-  // Count articles per book
+  // Count articles per book - more accurate counting
   const bookCounts: Record<string, number> = {};
   
   articles.forEach(article => {
@@ -41,7 +52,7 @@ const LegislationBooks: React.FC<LegislationBooksProps> = ({ articles, onSelectA
     bookCounts[bookId] = (bookCounts[bookId] || 0) + 1;
   });
   
-  // Create chart data
+  // Create chart data with exact counts
   const chartData = books.map(book => ({
     name: book.name,
     count: bookCounts[book.id] || 0,
