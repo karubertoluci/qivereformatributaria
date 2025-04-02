@@ -12,6 +12,7 @@ import { CheckCircle2 } from 'lucide-react';
 interface CompanyData {
   cnpj?: string;
   razaoSocial?: string;
+  nomeFantasia?: string;  // Adding nomeFantasia to the interface
   cnaePrincipal?: {
     codigo: string;
     descricao: string;
@@ -79,7 +80,7 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg w-[90vw]">
+      <DialogContent className="sm:max-w-md w-[90vw]">
         <DialogHeader>
           <DialogTitle>Gerando seu relatório personalizado</DialogTitle>
           <DialogDescription>
