@@ -5,6 +5,7 @@ import { Article } from '@/data/articles';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Book, Filter, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
 
 interface LegislationBooksProps {
   articles: Article[];
@@ -47,26 +48,22 @@ const LegislationBooks: React.FC<LegislationBooksProps> = ({ articles, onSelectA
     color: book.color,
     id: book.id
   })).sort((a, b) => b.count - a.count); // Sort by count (highest to lowest)
-  
-  // Group articles by book for the listing below the chart
-  const articlesByBook: Record<string, Article[]> = {};
-  articles.forEach(article => {
-    const bookId = getArticleBook(article);
-    if (!articlesByBook[bookId]) {
-      articlesByBook[bookId] = [];
-    }
-    articlesByBook[bookId].push(article);
-  });
-
-  // Filter articles based on selected book
-  const filteredArticles = selectedBook 
-    ? articles.filter(article => getArticleBook(article) === selectedBook)
-    : articles;
 
   // Handle click on chart bar
   const handleBarClick = (data: any) => {
-    if (data && data.id) {
-      setSelectedBook(data.id === selectedBook ? null : data.id);
+    if (data && data.activePayload && data.activePayload[0]) {
+      const clickedItem = data.activePayload[0].payload;
+      if (clickedItem && clickedItem.id) {
+        if (selectedBook === clickedItem.id) {
+          // If clicking the same book, remove the filter
+          setSelectedBook(null);
+          toast.info("Filtro removido");
+        } else {
+          // Apply the filter for the clicked book
+          setSelectedBook(clickedItem.id);
+          toast.info(`Filtrando por ${clickedItem.name}`);
+        }
+      }
     }
   };
 
@@ -95,6 +92,7 @@ const LegislationBooks: React.FC<LegislationBooksProps> = ({ articles, onSelectA
             <BarChart
               data={chartData}
               margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              onClick={handleBarClick}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis 
@@ -117,7 +115,6 @@ const LegislationBooks: React.FC<LegislationBooksProps> = ({ articles, onSelectA
                 dataKey="count" 
                 barSize={60}
                 className="cursor-pointer"
-                onClick={(data) => handleBarClick(data)}
               >
                 {chartData.map((entry, index) => (
                   <Cell 
@@ -132,46 +129,17 @@ const LegislationBooks: React.FC<LegislationBooksProps> = ({ articles, onSelectA
           </ResponsiveContainer>
         </div>
         
-        <div className="mt-6 space-y-4">
-          {(selectedBook ? [books.find(b => b.id === selectedBook)!] : books).map(book => {
-            const bookArticles = articlesByBook[book.id] || [];
-            if (bookArticles.length === 0) return null;
-            
-            return (
-              <div key={book.id}>
-                <h4 
-                  className="text-sm font-medium mb-2 flex items-center gap-1.5" 
-                  style={{ color: book.color }}
-                >
-                  <Book className="h-3 w-3" />
-                  {book.name} ({bookArticles.length})
-                </h4>
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {bookArticles.slice(0, 8).map(article => (
-                    <button
-                      key={article.id}
-                      onClick={() => onSelectArticle(article.id)}
-                      className="text-xs px-2 py-1 rounded-full border hover:bg-secondary transition-colors"
-                    >
-                      Art. {article.number}
-                    </button>
-                  ))}
-                  {bookArticles.length > 8 && (
-                    <span className="text-xs px-2 py-1 text-muted-foreground">
-                      +{bookArticles.length - 8} artigos
-                    </span>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+        <div className="mt-6 text-center">
+          {selectedBook ? (
+            <p className="text-sm text-primary font-medium">
+              Mostrando {bookCounts[selectedBook] || 0} artigos do {books.find(b => b.id === selectedBook)?.name}
+            </p>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Clique em uma barra para filtrar os artigos por livro
+            </p>
+          )}
         </div>
-        
-        {filteredArticles.length === 0 && (
-          <div className="my-8 text-center text-muted-foreground">
-            Nenhum artigo encontrado neste livro.
-          </div>
-        )}
         
         <div className="mt-6 pt-4 border-t text-sm text-muted-foreground">
           <p>
