@@ -61,7 +61,7 @@ const CompanyLegislationRelation: React.FC<CompanyLegislationRelationProps> = ({
       <CardHeader className="border-b bg-white bg-opacity-70">
         <CardTitle className="flex items-center gap-2 text-2xl">
           <Link className="h-6 w-6 text-primary" />
-          Relação com seu Segmento
+          Negócio
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-6">
