@@ -3,6 +3,7 @@ import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import ResultsContainer from './results/ResultsContainer';
 import ResultsHeader from './results/ResultsHeader';
+import { articles } from '@/data/articles';
 
 interface ResultsProps {
   segment: BusinessSegment;
@@ -11,7 +12,6 @@ interface ResultsProps {
 
 const Results: React.FC<ResultsProps> = ({ segment }) => {
   // Get the relevant articles to count positive and negative impacts
-  const { articles } = require('@/data/articles');
   const relevantArticles = articles.filter(article => 
     article.impacts.some(impact => impact.segments.includes(segment.id))
   );
