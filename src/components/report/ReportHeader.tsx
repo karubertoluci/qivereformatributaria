@@ -1,17 +1,14 @@
-
 import React from 'react';
 import { FileText, Download, Share2 } from 'lucide-react';
 import { BusinessSegment } from '@/data/segments';
 import { Button } from '@/components/ui/button';
 import ReportActions from './ReportActions';
-
 interface ReportHeaderProps {
   segment: BusinessSegment;
   companyName?: string;
   onBackToSegments?: () => void;
   showBackButton?: boolean;
 }
-
 const ReportHeader: React.FC<ReportHeaderProps> = ({
   segment,
   companyName,
@@ -19,9 +16,7 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
   showBackButton = true
 }) => {
   const displayName = companyName || "sua empresa";
-  
-  return (
-    <div className="flex flex-col space-y-4 mb-8 print:mb-6 border-b pb-6">
+  return <div className="flex flex-col space-y-4 mb-8 print:mb-6 border-b pb-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <img src="/lovable-uploads/3a0e3d3c-ea95-4482-8c76-047d5459213e.png" alt="Qive Reforma Tributária" className="h-12" />
@@ -50,20 +45,7 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
         </div>
       </div>
       
-      {showBackButton && onBackToSegments && (
-        <Button 
-          variant="ghost" 
-          className="self-start hover:bg-secondary flex items-center gap-1"
-          onClick={onBackToSegments}
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          Voltar para segmentos
-        </Button>
-      )}
-    </div>
-  );
+      {showBackButton && onBackToSegments}
+    </div>;
 };
-
 export default ReportHeader;
