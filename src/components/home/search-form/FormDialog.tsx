@@ -1,7 +1,6 @@
 
 import React from 'react';
 import {
-  Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -24,31 +23,27 @@ export const formSchema = z.object({
 export type FormValues = z.infer<typeof formSchema>;
 
 interface FormDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   onSubmit: (data: FormValues) => void;
   isLoading: boolean;
 }
 
 const FormDialog: React.FC<FormDialogProps> = ({ 
-  open, 
-  onOpenChange, 
   onSubmit, 
   isLoading 
 }) => {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Dados para seu relatório personalizado</DialogTitle>
-          <DialogDescription>
-            Forneça informações sobre sua empresa para gerarmos um relatório mais preciso sobre os impactos da reforma tributária.
-          </DialogDescription>
-        </DialogHeader>
-        
-        <CompanyInfoForm onSubmit={onSubmit} isLoading={isLoading} />
-      </DialogContent>
-    </Dialog>
+    <DialogContent className="sm:max-w-2xl">
+      <DialogHeader>
+        <DialogTitle>Dados para seu relatório personalizado</DialogTitle>
+        <DialogDescription>
+          Forneça informações sobre sua empresa para gerarmos um relatório mais preciso sobre os impactos da reforma tributária.
+        </DialogDescription>
+      </DialogHeader>
+      
+      <CompanyInfoForm onSubmit={onSubmit} isLoading={isLoading} />
+    </DialogContent>
   );
 };
 

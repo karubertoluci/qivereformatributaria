@@ -6,6 +6,7 @@ import SearchFormButton from './SearchFormButton';
 import FormDialog, { FormValues } from './FormDialog';
 import LoadingDialog from './LoadingDialog';
 import { cnaeToSegmentMap } from './utils';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 
 interface SearchFormProps {
   onCnaeSubmit: (cnae: string) => void;
@@ -72,14 +73,18 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
         </p>
         
         <div className="flex flex-col items-center">
-          <FormDialog 
-            open={isFormDialogOpen}
-            onOpenChange={setIsFormDialogOpen}
-            onSubmit={handleSubmit}
-            isLoading={isLoading}
-          />
-          
-          <SearchFormButton />
+          <Dialog open={isFormDialogOpen} onOpenChange={setIsFormDialogOpen}>
+            <DialogTrigger asChild>
+              <SearchFormButton />
+            </DialogTrigger>
+            
+            <FormDialog 
+              open={isFormDialogOpen}
+              onOpenChange={setIsFormDialogOpen}
+              onSubmit={handleSubmit}
+              isLoading={isLoading}
+            />
+          </Dialog>
           
           <p className="text-sm text-gray-500 mt-2">Relatório gratuito e sem compromisso</p>
           
