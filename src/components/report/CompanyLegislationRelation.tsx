@@ -2,7 +2,8 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BusinessSegment } from '@/data/segments';
-import { Link, CircleCheck, CircleX, Info } from 'lucide-react';
+import { Link, CircleCheck, CircleX, Info, ArrowRight } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 interface CompanyData {
   nome?: string;
@@ -56,6 +57,14 @@ const CompanyLegislationRelation: React.FC<CompanyLegislationRelationProps> = ({
     }
   ];
 
+  const recommendations = [
+    'Analise os impactos no fluxo de caixa durante o período de transição',
+    'Atualize seus sistemas fiscais para o novo modelo de tributação',
+    'Revise sua política de precificação considerando os efeitos da reforma',
+    'Avalie oportunidades de crédito fiscal no novo sistema',
+    'Prepare-se para potenciais mudanças nos requisitos de compliance'
+  ];
+
   return (
     <Card className="bg-gradient-to-br from-slate-50 to-slate-100 border shadow-lg">
       <CardHeader className="border-b bg-white bg-opacity-70">
@@ -66,15 +75,17 @@ const CompanyLegislationRelation: React.FC<CompanyLegislationRelationProps> = ({
       </CardHeader>
       <CardContent className="pt-6">
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <p className="text-muted-foreground">
+          {/* Lado Esquerdo - Análise Específica */}
+          <div className="space-y-5">
+            <h3 className="font-semibold text-lg text-primary">Análise Específica para seu Negócio</h3>
+            <p className="text-muted-foreground mb-4">
               Analisamos como a Reforma Tributária afeta especificamente o segmento {segment.name}
               {companyData?.cnaePrincipal && ` e empresas com CNAE ${companyData.cnaePrincipal.codigo}`}.
-              Abaixo estão os principais pontos de atenção para seu negócio:
+              Abaixo estão os principais pontos de atenção:
             </p>
             
             <div className="space-y-4">
-              {mainFocusAreas.slice(0, 3).map((area, index) => (
+              {mainFocusAreas.map((area, index) => (
                 <div key={index} className="flex items-start gap-3">
                   {area.applicable ? (
                     <CircleCheck className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
@@ -94,39 +105,31 @@ const CompanyLegislationRelation: React.FC<CompanyLegislationRelationProps> = ({
             </div>
           </div>
           
-          <div className="space-y-4">
-            <div className="space-y-4">
-              {mainFocusAreas.slice(3).map((area, index) => (
+          {/* Lado Direito - Recomendações */}
+          <div className="rounded-lg bg-gradient-to-r from-primary/10 to-primary/5 p-5 border border-primary/20">
+            <h3 className="font-semibold text-lg text-primary mb-4 flex items-center gap-2">
+              <Info className="h-5 w-5" />
+              Recomendações para seu Negócio
+            </h3>
+            
+            <Badge className="mb-3 bg-amber-500">Prioridades</Badge>
+            
+            <div className="space-y-3 mt-4">
+              {recommendations.map((rec, index) => (
                 <div key={index} className="flex items-start gap-3">
-                  {area.applicable ? (
-                    <CircleCheck className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  ) : (
-                    <CircleX className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
-                  )}
-                  <div>
-                    <h4 className={`font-medium ${area.applicable ? 'text-foreground' : 'text-muted-foreground'}`}>
-                      {area.name}
-                    </h4>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {area.description}
-                    </p>
-                  </div>
+                  <ArrowRight className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                  <p className="text-sm">
+                    {rec}
+                  </p>
                 </div>
               ))}
             </div>
             
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg mt-6">
-              <div className="flex gap-3">
-                <Info className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-medium text-amber-800">Recomendação para seu negócio</h4>
-                  <p className="text-sm text-amber-700 mt-1">
-                    Com base na sua atividade {companyData?.cnaePrincipal?.descricao ? `de ${companyData.cnaePrincipal.descricao}` : `no segmento ${segment.name}`}, 
-                    recomendamos atenção especial aos artigos sobre {getRecommendationForSegment(segment.id)}. 
-                    Esses pontos terão impacto direto na operação do seu negócio durante e após a transição para o novo sistema.
-                  </p>
-                </div>
-              </div>
+            <div className="mt-5 text-sm text-muted-foreground">
+              <p>
+                Com base na sua atividade {companyData?.cnaePrincipal?.descricao ? `de ${companyData.cnaePrincipal.descricao}` : `no segmento ${segment.name}`}, 
+                recomendamos atenção especial aos artigos sobre {getRecommendationForSegment(segment.id)}.
+              </p>
             </div>
           </div>
         </div>
