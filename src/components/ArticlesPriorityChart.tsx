@@ -66,7 +66,7 @@ const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
   };
   
   return (
-    <div className="bg-white p-4 rounded-lg border border-gray-100 shadow-sm">
+    <div className="bg-card rounded-lg border shadow-sm p-4">
       <div className="flex items-center gap-2 font-medium text-lg mb-4">
         <BarChartIcon className="h-5 w-5 text-primary" />
         <h3>Priorização de Leitura</h3>
