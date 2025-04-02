@@ -1,14 +1,11 @@
-
 import React from 'react';
 import { Bot } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-
 const Hero = () => {
-  return (
-    <section className="bg-white pt-16 pb-6 px-4">
+  return <section className="bg-white pt-16 pb-6 px-4">
       <div className="container mx-auto max-w-4xl">
         <div className="flex justify-center mb-6">
-          <Badge variant="outline" className="py-2 px-4 flex items-center gap-2 text-sm bg-white border border-gray-200 shadow-sm">
+          <Badge variant="outline" className="py-2 px-4 flex items-center gap-2 text-sm border border-gray-200 shadow-sm bg-gray-100">
             <Bot className="h-4 w-4" /> 
             Este conteúdo é gerado utilizando inteligência artificial
           </Badge>
@@ -24,8 +21,6 @@ const Hero = () => {
           </p>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default Hero;
