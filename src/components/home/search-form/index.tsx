@@ -12,7 +12,6 @@ import { fetchCNPJData } from '@/services/brasilApi';
 
 interface SearchFormProps {
   onCnaeSubmit: (cnae: string) => void;
-  onBrowseBySegment: () => void;
   onSelectSegment: (segment: BusinessSegment | null) => void;
 }
 
@@ -35,7 +34,6 @@ interface CompanyData {
 
 const SearchForm: React.FC<SearchFormProps> = ({
   onCnaeSubmit,
-  onBrowseBySegment,
   onSelectSegment
 }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -117,9 +115,10 @@ const SearchForm: React.FC<SearchFormProps> = ({
             }
           }
 
-          // Se não encontrou segmento específico, usa o CNAE informado
-          onCnaeSubmit(cnaeCode || data.cnpj.substring(0, 2));
+          // Se não encontrou segmento específico, seleciona o primeiro da lista como fallback
+          const defaultSegment = businessSegments[0];
           toast.success(`Relatório para ${companyInfo?.razaoSocial || data.nome} gerado com sucesso!`);
+          onSelectSegment(defaultSegment);
         }, 500);
         return;
       }
@@ -183,10 +182,6 @@ const SearchForm: React.FC<SearchFormProps> = ({
           <SearchFormButton />
           
           <p className="text-sm text-gray-500 mt-2">Relatório gratuito e sem compromisso</p>
-          
-          <div className="mt-6 text-center">
-            
-          </div>
         </div>
         
         <Dialog open={isFormDialogOpen} onOpenChange={closeFormDialog}>

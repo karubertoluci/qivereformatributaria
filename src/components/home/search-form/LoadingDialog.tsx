@@ -7,7 +7,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
-import { Building2, FileSpreadsheet, BarChart4, Lightbulb, FileCheck, Badge, CheckCircle2 } from 'lucide-react';
+import { Building2, FileSpreadsheet, BarChart4, Lightbulb, FileCheck, Badge as BadgeIcon, CheckCircle2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 interface CompanyData {
   cnpj?: string;
@@ -138,11 +139,11 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
           {progress >= 40 && companyData?.situacaoCadastral && (
             <div className="mt-6 pt-4 border-t border-gray-200">
               <div className="flex items-center space-x-2 mb-2">
-                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                <Badge className="bg-green-50 text-green-700 border-green-200">
                   {companyData.situacaoCadastral}
                 </Badge>
                 {companyData.naturezaJuridica && (
-                  <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                  <Badge className="bg-blue-50 text-blue-700 border-blue-200">
                     {companyData.naturezaJuridica}
                   </Badge>
                 )}

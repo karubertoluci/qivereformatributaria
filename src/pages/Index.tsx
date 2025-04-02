@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import SegmentSelector from '@/components/SegmentSelector';
 import Results from '@/components/Results';
 import { BusinessSegment } from '@/data/segments';
 import HomePage from '@/components/home/HomePage';
@@ -11,34 +10,21 @@ import { FormDialogProvider } from '@/components/home/FormDialogContext';
 const Index = () => {
   const [selectedSegment, setSelectedSegment] = useState<BusinessSegment | null>(null);
   const [cnae, setCnae] = useState<string>('');
-  const [showSegments, setShowSegments] = useState<boolean>(false);
   
-  const handleSelectSegment = (segment: BusinessSegment) => {
-    setSelectedSegment(segment);
-  };
-
-  const handleBackToSegments = () => {
-    setSelectedSegment(null);
-  };
-  
-  const handleBackToHome = () => {
-    setShowSegments(false);
+  const handleDirectSegmentSelect = (segment: BusinessSegment | null) => {
+    if (segment) {
+      setSelectedSegment(segment);
+    }
   };
 
   const handleSubmitCnae = (cnae: string) => {
     setCnae(cnae);
-    setShowSegments(true);
+    // Find a segment that matches the CNAE or use a default one
+    // This logic would be handled within the SearchForm component now
   };
 
-  const handleBrowseBySegment = () => {
-    setShowSegments(true);
-  };
-
-  const handleDirectSegmentSelect = (segment: BusinessSegment | null) => {
-    if (segment) {
-      setSelectedSegment(segment);
-      setShowSegments(true); // Skip the segment selection screen
-    }
+  const handleBackToHome = () => {
+    setSelectedSegment(null);
   };
 
   return (
@@ -47,19 +33,13 @@ const Index = () => {
         <Header />
         
         <main className="flex-grow">
-          {!showSegments ? (
+          {!selectedSegment ? (
             <HomePage 
               onCnaeSubmit={handleSubmitCnae}
-              onBrowseBySegment={handleBrowseBySegment}
               onSelectSegment={handleDirectSegmentSelect}
             />
-          ) : !selectedSegment ? (
-            <SegmentSelector 
-              onSelectSegment={handleSelectSegment} 
-              onBackToHome={handleBackToHome}
-            />
           ) : (
-            <Results segment={selectedSegment} onBackToSegments={handleBackToSegments} />
+            <Results segment={selectedSegment} onBackToSegments={handleBackToHome} />
           )}
         </main>
         

@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Store, Briefcase, Building, BarChart4, HeartPulse, GraduationCap, Banknote, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useFormDialogContext } from './FormDialogContext';
+import { businessSegments } from '@/data/segments';
 
 interface SectorCardProps {
   icon: React.ReactNode;
@@ -43,42 +44,50 @@ const SectorsImpact = () => {
     {
       icon: <Store className="h-8 w-8 text-orange-500" />,
       title: "Comércio e Varejo",
-      description: "Impacto nas alíquotas e fim da cumulatividade dos tributos, com potencial redução da carga tributária em produtos essenciais."
+      description: "Impacto nas alíquotas e fim da cumulatividade dos tributos, com potencial redução da carga tributária em produtos essenciais.",
+      segmentId: "comercio_varejo"
     },
     {
       icon: <Building className="h-8 w-8 text-orange-500" />,
       title: "Indústria",
-      description: "Simplificação do sistema e recuperação de créditos em toda cadeia produtiva, eliminando a tributação em cascata."
+      description: "Simplificação do sistema e recuperação de créditos em toda cadeia produtiva, eliminando a tributação em cascata.",
+      segmentId: "industria"
     },
     {
       icon: <Briefcase className="h-8 w-8 text-orange-500" />,
       title: "Prestação de Serviços",
-      description: "Mudanças significativas com a substituição do ISS pelo IBS, com regras de transição especiais para o setor."
+      description: "Mudanças significativas com a substituição do ISS pelo IBS, com regras de transição especiais para o setor.",
+      segmentId: "servicos"
     },
     {
       icon: <BarChart4 className="h-8 w-8 text-orange-500" />,
       title: "Tecnologia",
-      description: "Maior segurança jurídica e possibilidade de aproveitamento de créditos de bens e serviços utilizados na operação."
+      description: "Maior segurança jurídica e possibilidade de aproveitamento de créditos de bens e serviços utilizados na operação.",
+      segmentId: "tecnologia"
     },
     {
       icon: <HeartPulse className="h-8 w-8 text-orange-500" />,
       title: "Saúde",
-      description: "Tratamento diferenciado para medicamentos e serviços essenciais, com possível redução de custos ao consumidor final."
+      description: "Tratamento diferenciado para medicamentos e serviços essenciais, com possível redução de custos ao consumidor final.",
+      segmentId: "saude"
     },
     {
       icon: <GraduationCap className="h-8 w-8 text-orange-500" />,
       title: "Educação",
-      description: "Regime específico com alíquotas diferenciadas e regras especiais para instituições de ensino."
+      description: "Regime específico com alíquotas diferenciadas e regras especiais para instituições de ensino.",
+      segmentId: "educacao"
     },
     {
       icon: <Banknote className="h-8 w-8 text-orange-500" />,
       title: "Serviços Financeiros",
-      description: "Nova metodologia de tributação para operações financeiras, com impacto direto nos custos de transação bancária."
+      description: "Nova metodologia de tributação para operações financeiras, com impacto direto nos custos de transação bancária.",
+      segmentId: "financeiro"
     },
     {
       icon: <Truck className="h-8 w-8 text-orange-500" />,
       title: "Transporte e Logística",
-      description: "Mudanças na tributação interestadual e maior clareza para operações de transporte com o princípio do destino."
+      description: "Mudanças na tributação interestadual e maior clareza para operações de transporte com o princípio do destino.",
+      segmentId: "transporte"
     }
   ];
 

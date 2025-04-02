@@ -11,11 +11,10 @@ import { BusinessSegment } from '@/data/segments';
 
 interface HomePageProps {
   onCnaeSubmit: (cnae: string) => void;
-  onBrowseBySegment: () => void;
   onSelectSegment: (segment: BusinessSegment | null) => void;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ onCnaeSubmit, onBrowseBySegment, onSelectSegment }) => {
+const HomePage: React.FC<HomePageProps> = ({ onCnaeSubmit, onSelectSegment }) => {
   // Quando um usuário preenche o formulário com dados da empresa,
   // armazenamos isso no localStorage para usar na página de resultados
   React.useEffect(() => {
@@ -39,7 +38,6 @@ const HomePage: React.FC<HomePageProps> = ({ onCnaeSubmit, onBrowseBySegment, on
             }
             onCnaeSubmit(cnae);
           }} 
-          onBrowseBySegment={onBrowseBySegment} 
           onSelectSegment={(segment) => {
             // Salvamos os dados do formulário no localStorage antes de navegar
             const formData = JSON.parse(localStorage.getItem('formData') || '{}');
