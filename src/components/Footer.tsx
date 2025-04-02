@@ -1,4 +1,7 @@
+
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 const Footer = () => {
   return <footer className="border-t border-gray-200 mt-12 bg-zinc-950 my-0 py-[36px]">
       <div className="container mx-auto px-4">
@@ -14,6 +17,11 @@ const Footer = () => {
         </div>
         <div className="mt-4 text-center text-xs text-gray-500">
           <p className="text-slate-50">Este aplicativo não substitui a orientação profissional. Consulte um advogado para questões legais específicas.</p>
+        </div>
+        <div className="mt-4 text-center">
+          <Link to="/" className="text-orange-500 hover:text-orange-400 transition-colors text-sm font-medium">
+            Voltar para a página inicial
+          </Link>
         </div>
       </div>
     </footer>;
