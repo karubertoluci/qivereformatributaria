@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article, articles } from '@/data/articles';
 import { getArticlesByTopic } from '@/components/results/ArticlesByTopic';
+import { topics } from '@/components/results/ArticlesByTopic';
 import { CommentType, HighlightType } from '@/components/results/types';
 
 export const useResultsData = (segment: BusinessSegment) => {
@@ -48,7 +49,6 @@ export const useResultsData = (segment: BusinessSegment) => {
   
   const handleArticleSelect = (articleId: string) => {
     setExpandedArticleId(articleId);
-    setActiveTab('articles');
     
     // Scroll to the article if in list view
     if (viewMode === 'chart') {
@@ -81,7 +81,8 @@ export const useResultsData = (segment: BusinessSegment) => {
     articlesByTopic,
     positiveCount,
     negativeCount,
-    handleArticleSelect
+    handleArticleSelect,
+    topics
   };
 };
 
@@ -103,4 +104,3 @@ export type CompanyData = {
   situacaoCadastral?: string;
   naturezaJuridica?: string;
 };
-

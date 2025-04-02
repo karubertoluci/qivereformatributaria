@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Lightbulb } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import HighlightedText from '@/components/results/HighlightedText';
 import { HighlightType } from '@/components/results/types';
 
@@ -20,10 +20,10 @@ const ArticleSimplifiedText: React.FC<ArticleSimplifiedTextProps> = ({
   return (
     <div>
       <h4 className="text-sm font-bold flex items-center mb-2">
-        <Lightbulb className="h-4 w-4 mr-1 text-amber-500" />
+        <BookOpen className="h-4 w-4 mr-1 text-amber-500" />
         Tradução Simplificada
       </h4>
-      <div className="text-sm p-3 bg-secondary rounded-md">
+      <div className="text-sm p-3 bg-secondary rounded-md border border-secondary">
         <HighlightedText 
           text={text} 
           highlights={highlights}

@@ -9,7 +9,11 @@ interface ResultsProps {
 }
 
 const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
-  return <ResultsContainer segment={segment} onBackToSegments={onBackToSegments} />;
+  return (
+    <div className="print:bg-white">
+      <ResultsContainer segment={segment} onBackToSegments={onBackToSegments} />
+    </div>
+  );
 };
 
 export default Results;

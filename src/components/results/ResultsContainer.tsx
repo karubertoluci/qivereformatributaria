@@ -1,15 +1,17 @@
 
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, Book } from 'lucide-react';
-import { topics } from './ArticlesByTopic';
 import { useResultsData } from '@/hooks/useResultsData';
 
-import ResultsHeader from './ResultsHeader';
+import ReportHeader from '../report/ReportHeader';
 import ReportActions from '../report/ReportActions';
 import OverviewTabContent from './OverviewTabContent';
-import ArticlesTabContent from './ArticlesTabContent';
+import FilterBar from './FilterBar';
+import ViewSwitcher from './ViewSwitcher';
+import ArticleTopicsView from './ArticleTopicsView';
+import ArticleTableView from './ArticleTableView';
+import ArticlesPriorityChart from '../ArticlesPriorityChart';
+import ResultsSummary from './ResultsSummary';
 
 interface ResultsContainerProps {
   segment: BusinessSegment;
@@ -26,8 +28,6 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
     setFilterType,
     viewMode,
     setViewMode,
-    activeTab,
-    setActiveTab,
     formData,
     hasCompanyData,
     relevantArticles,
@@ -35,64 +35,113 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
     articlesByTopic,
     positiveCount,
     negativeCount,
-    handleArticleSelect
+    topics
   } = useResultsData(segment);
 
+  const companyName = formData?.razaoSocial || formData?.nomeFantasia || formData?.nome;
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <ResultsHeader 
+    <div className="container mx-auto px-4 py-8 print:p-0">
+      <ReportHeader 
         segment={segment}
-        positiveCount={positiveCount}
-        negativeCount={negativeCount}
+        companyName={companyName}
         onBackToSegments={onBackToSegments}
+        showBackButton={true}
       />
       
       {hasCompanyData && (
         <ReportActions companyData={formData} segment={segment} />
       )}
       
-      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'overview' | 'articles')} className="mt-6">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" /> 
-            Visão Geral
-          </TabsTrigger>
-          <TabsTrigger value="articles" className="flex items-center gap-2">
-            <Book className="h-4 w-4" /> 
-            Artigos e Impactos ({filteredArticles.length})
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="overview">
+      {/* Visão Geral */}
+      <div className="mt-8 mb-10 print:mb-6">
+        <h2 className="text-2xl font-bold mb-6 flex items-center">
+          <span className="bg-primary text-primary-foreground w-8 h-8 inline-flex items-center justify-center rounded-full mr-2 text-sm">1</span>
+          Visão Geral
+        </h2>
+        <div className="pl-10">
           <OverviewTabContent
             segment={segment}
             companyData={formData}
             hasCompanyData={hasCompanyData}
             relevantArticles={relevantArticles}
-            onSelectArticle={handleArticleSelect}
+            onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
           />
-        </TabsContent>
-        
-        <TabsContent value="articles">
-          <ArticlesTabContent
-            segment={segment}
-            filteredArticles={filteredArticles}
-            relevantArticles={relevantArticles}
+        </div>
+      </div>
+      
+      {/* Artigos e Impactos */}
+      <div className="mt-12 print:mt-8 page-break-before">
+        <h2 className="text-2xl font-bold mb-6 flex items-center">
+          <span className="bg-primary text-primary-foreground w-8 h-8 inline-flex items-center justify-center rounded-full mr-2 text-sm">2</span>
+          Artigos e Impactos
+        </h2>
+        <div className="pl-10">
+          <ResultsSummary 
+            totalArticles={relevantArticles.length}
             positiveCount={positiveCount}
             negativeCount={negativeCount}
-            viewMode={viewMode}
-            setViewMode={setViewMode}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            filterType={filterType}
-            setFilterType={setFilterType}
-            expandedArticleId={expandedArticleId}
-            setExpandedArticleId={setExpandedArticleId}
-            articlesByTopic={articlesByTopic}
-            topics={topics}
+            segmentName={segment.name}
           />
-        </TabsContent>
-      </Tabs>
+          
+          <div className="my-6">
+            <FilterBar 
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              filterType={filterType}
+              setFilterType={setFilterType}
+              positiveCount={positiveCount}
+              negativeCount={negativeCount}
+            />
+            
+            <ViewSwitcher viewMode={viewMode} setViewMode={setViewMode} />
+          </div>
+          
+          {filteredArticles.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-gray-500">Nenhum artigo encontrado com os filtros aplicados.</p>
+            </div>
+          ) : (
+            <>
+              {viewMode === 'chart' && (
+                <div className="mb-8">
+                  <ArticlesPriorityChart 
+                    articles={filteredArticles}
+                    segmentId={segment.id}
+                    onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
+                  />
+                </div>
+              )}
+              
+              {viewMode === 'list' && (
+                <ArticleTopicsView 
+                  filteredArticles={filteredArticles}
+                  articlesByTopic={articlesByTopic}
+                  topics={topics}
+                  segmentId={segment.id}
+                  expandedArticleId={expandedArticleId}
+                  setExpandedArticleId={setExpandedArticleId}
+                />
+              )}
+              
+              {viewMode === 'table' && (
+                <ArticleTableView 
+                  filteredArticles={filteredArticles}
+                  segmentId={segment.id}
+                  expandedArticleId={expandedArticleId}
+                  setExpandedArticleId={setExpandedArticleId}
+                />
+              )}
+            </>
+          )}
+        </div>
+      </div>
+      
+      {/* Rodapé do relatório */}
+      <div className="mt-16 pt-6 border-t text-center text-sm text-muted-foreground print:mt-8">
+        <p>Relatório gerado pela Qive Reforma Tributária 2025</p>
+        <p className="mt-1">© {new Date().getFullYear()} Qive. Todos os direitos reservados.</p>
+      </div>
     </div>
   );
 };

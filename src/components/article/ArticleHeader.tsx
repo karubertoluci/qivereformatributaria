@@ -2,7 +2,7 @@
 import React from 'react';
 import { CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, ArrowUp, ArrowDown } from 'lucide-react';
+import { BookOpen, ArrowUp, ArrowDown, FileText } from 'lucide-react';
 import { Article } from '@/data/articles';
 
 interface ArticleHeaderProps {
@@ -19,11 +19,11 @@ const ArticleHeader: React.FC<ArticleHeaderProps> = ({ article, segmentId }) => 
   const hasNegativeImpact = segmentImpacts.some(impact => impact.type === 'negative');
   
   return (
-    <div className="flex justify-between items-start">
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
       <div>
         <CardTitle className="flex items-center">
-          <BookOpen className="h-5 w-5 mr-2 text-primary" />
-          {article.number}
+          <FileText className="h-5 w-5 mr-2 text-primary" />
+          <span className="bg-primary/10 px-2 py-0.5 rounded text-primary">{article.number}</span>
         </CardTitle>
         <CardDescription className="text-lg font-medium mt-1 text-foreground">
           {article.title}
