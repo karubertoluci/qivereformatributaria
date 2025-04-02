@@ -28,11 +28,16 @@ export const fetchCNPJData = async (cnpj: string): Promise<CNPJResponse> => {
   try {
     // Remove caracteres não numéricos do CNPJ
     const formattedCNPJ = cnpj.replace(/\D/g, '');
+    
+    if (formattedCNPJ.length !== 14) {
+      throw new Error('CNPJ inválido: deve conter 14 dígitos');
+    }
 
     const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${formattedCNPJ}`);
     
     if (!response.ok) {
-      throw new Error('Erro ao consultar CNPJ');
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || `Erro ao consultar CNPJ: ${response.status}`);
     }
     
     return await response.json();

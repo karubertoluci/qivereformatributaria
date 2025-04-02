@@ -9,6 +9,7 @@ import {
 import CompanyInfoForm from './CompanyInfoForm';
 import { z } from 'zod';
 
+// Define the form schema
 export const formSchema = z.object({
   nome: z.string().min(2, { message: 'Por favor, informe seu nome' }),
   cargo: z.string().min(2, { message: 'Por favor, informe seu cargo' }),
@@ -18,7 +19,28 @@ export const formSchema = z.object({
   possuiContaQive: z.boolean().default(false),
 });
 
-export type FormValues = z.infer<typeof formSchema>;
+// Additional company data that will be fetched from the API
+export interface CompanyData {
+  cnpj?: string;
+  razaoSocial?: string;
+  nomeFantasia?: string;
+  endereco?: string;
+  cnaePrincipal?: {
+    codigo: string;
+    descricao: string;
+  };
+  cnaeSecundarios?: {
+    codigo: string;
+    descricao: string;
+  }[];
+  situacaoCadastral?: string;
+  naturezaJuridica?: string;
+}
+
+// Base form values
+export type FormValues = z.infer<typeof formSchema> & {
+  companyData?: CompanyData;
+};
 
 interface FormDialogProps {
   onSubmit: (data: FormValues) => void;

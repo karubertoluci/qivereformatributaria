@@ -30,9 +30,26 @@ const CompanyInfoForm: React.FC<CompanyInfoFormProps> = ({ onSubmit, isLoading }
     },
   });
 
+  // Handle form submit with any additional company data
+  const handleSubmit = (data: FormValues) => {
+    // Get additional company data from localStorage if available
+    const companyDataStr = localStorage.getItem('companyData');
+    
+    if (companyDataStr) {
+      const companyData = JSON.parse(companyDataStr);
+      // Merge form data with additional company data
+      onSubmit({
+        ...data,
+        companyData, // This won't be part of the form schema, but will be available in the onSubmit handler
+      });
+    } else {
+      onSubmit(data);
+    }
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 py-4">
         <CNPJField form={form} />
         <PersonalFields form={form} />
         <ContactFields form={form} />
