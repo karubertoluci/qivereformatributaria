@@ -6,6 +6,7 @@ import SegmentSelector from '@/components/SegmentSelector';
 import Results from '@/components/Results';
 import { BusinessSegment } from '@/data/segments';
 import HomePage from '@/components/home/HomePage';
+import { FormDialogProvider } from '@/components/home/FormDialogContext';
 
 const Index = () => {
   const [selectedSegment, setSelectedSegment] = useState<BusinessSegment | null>(null);
@@ -41,28 +42,30 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <Header />
-      
-      <main className="flex-grow">
-        {!showSegments ? (
-          <HomePage 
-            onCnaeSubmit={handleSubmitCnae}
-            onBrowseBySegment={handleBrowseBySegment}
-            onSelectSegment={handleDirectSegmentSelect}
-          />
-        ) : !selectedSegment ? (
-          <SegmentSelector 
-            onSelectSegment={handleSelectSegment} 
-            onBackToHome={handleBackToHome}
-          />
-        ) : (
-          <Results segment={selectedSegment} onBackToSegments={handleBackToSegments} />
-        )}
-      </main>
-      
-      <Footer />
-    </div>
+    <FormDialogProvider>
+      <div className="min-h-screen flex flex-col bg-background text-foreground">
+        <Header />
+        
+        <main className="flex-grow">
+          {!showSegments ? (
+            <HomePage 
+              onCnaeSubmit={handleSubmitCnae}
+              onBrowseBySegment={handleBrowseBySegment}
+              onSelectSegment={handleDirectSegmentSelect}
+            />
+          ) : !selectedSegment ? (
+            <SegmentSelector 
+              onSelectSegment={handleSelectSegment} 
+              onBackToHome={handleBackToHome}
+            />
+          ) : (
+            <Results segment={selectedSegment} onBackToSegments={handleBackToSegments} />
+          )}
+        </main>
+        
+        <Footer />
+      </div>
+    </FormDialogProvider>
   );
 };
 
