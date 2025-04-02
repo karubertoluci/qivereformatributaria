@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { businessSegments, BusinessSegment } from '@/data/segments';
@@ -6,7 +5,7 @@ import SearchFormButton from './SearchFormButton';
 import FormDialog, { FormValues } from './FormDialog';
 import LoadingDialog from './LoadingDialog';
 import { cnaeToSegmentMap } from './utils';
-import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog } from '@/components/ui/dialog';
 import { useFormDialogContext } from '../FormDialogContext';
 
 interface SearchFormProps {
@@ -74,16 +73,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
         </p>
         
         <div className="flex flex-col items-center">
-          <Dialog open={isFormDialogOpen} onOpenChange={closeFormDialog}>
-            <DialogTrigger asChild>
-              <SearchFormButton />
-            </DialogTrigger>
-            
-            <FormDialog 
-              onSubmit={handleSubmit}
-              isLoading={isLoading}
-            />
-          </Dialog>
+          <SearchFormButton />
           
           <p className="text-sm text-gray-500 mt-2">Relatório gratuito e sem compromisso</p>
           
@@ -96,6 +86,13 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
             </button>
           </div>
         </div>
+        
+        <Dialog open={isFormDialogOpen} onOpenChange={closeFormDialog}>
+          <FormDialog 
+            onSubmit={handleSubmit}
+            isLoading={isLoading}
+          />
+        </Dialog>
         
         <LoadingDialog 
           open={showLoadingDialog} 
