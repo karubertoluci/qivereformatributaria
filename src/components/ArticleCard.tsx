@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Article } from '@/data/articles';
-import { Lightbulb, MessageSquare, Highlighter } from 'lucide-react';
+import { Lightbulb, MessageSquare, Highlighter, Share2, ThumbsUp, ThumbsDown, UserPlus } from 'lucide-react';
 import ArticleImportanceChart from './ArticleImportanceChart';
 import { v4 as uuidv4 } from 'uuid';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,6 +13,9 @@ import { CommentType, HighlightType } from './results/types';
 import ArticleContent from './article/ArticleContent';
 import ArticleHighlights from './article/ArticleHighlights';
 import ArticleHeader from './article/ArticleHeader';
+import ArticleCitations from './article/ArticleCitations';
+import ArticleUsefulness from './article/ArticleUsefulness';
+import { useToast } from '@/components/ui/use-toast';
 
 interface ArticleCardProps {
   article: Article;
@@ -25,6 +28,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
   const [comments, setComments] = useState<CommentType[]>([]);
   const [highlights, setHighlights] = useState<HighlightType[]>([]);
   const [activeTab, setActiveTab] = useState<string>("content");
+  const { toast } = useToast();
 
   const segmentImpacts = article.impacts.filter(impact => 
     impact.segments.includes(segmentId)
@@ -49,6 +53,11 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
       articleId: article.id
     };
     setComments([...comments, newComment]);
+    
+    toast({
+      title: "Comentário adicionado",
+      description: "Seu comentário foi adicionado ao artigo."
+    });
   };
 
   const handleAddHighlight = (text: string, color: HighlightType['color']) => {
@@ -59,10 +68,32 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
       articleId: article.id
     };
     setHighlights([...highlights, newHighlight]);
+    
+    toast({
+      title: "Texto destacado",
+      description: "O texto selecionado foi destacado com sucesso."
+    });
   };
   
   const handleRemoveHighlight = (id: string) => {
     setHighlights(highlights.filter(h => h.id !== id));
+  };
+  
+  const handleShareArticle = () => {
+    // This would integrate with the share API or a modal in a real app
+    navigator.clipboard.writeText(window.location.href + '?article=' + article.id);
+    
+    toast({
+      title: "Link copiado!",
+      description: "O link para este artigo foi copiado para a área de transferência."
+    });
+  };
+  
+  const handleInviteToArticle = () => {
+    toast({
+      title: "Compartilhamento",
+      description: "Funcionalidade de convite para artigo específico será implementada em breve."
+    });
   };
   
   return (
@@ -93,6 +124,30 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
         
         {expanded && (
           <div className="border-t border-border pt-4 mt-4 space-y-4">
+            <div className="flex flex-wrap gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex items-center gap-1.5"
+                onClick={handleShareArticle}
+              >
+                <Share2 className="h-3.5 w-3.5" />
+                Compartilhar
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex items-center gap-1.5"
+                onClick={handleInviteToArticle}
+              >
+                <UserPlus className="h-3.5 w-3.5" />
+                Convidar para ler
+              </Button>
+            </div>
+            
+            <ArticleCitations articleId={article.id} />
+            
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="w-full">
                 <TabsTrigger value="content" className="flex-1">
@@ -115,6 +170,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
                   highlights={highlights}
                   onAddHighlight={handleAddHighlight}
                 />
+                <ArticleUsefulness articleId={article.id} />
               </TabsContent>
 
               <TabsContent value="comments" className="mt-4">
