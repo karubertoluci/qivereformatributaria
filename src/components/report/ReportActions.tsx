@@ -75,51 +75,9 @@ const ReportActions: React.FC<ReportActionsProps> = ({ companyData, segment }) =
 
   const companyName = companyData?.razaoSocial || companyData?.nomeFantasia || "sua empresa";
 
+  // Dialogs for sharing and inviting users
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mb-6 flex flex-wrap items-center justify-between gap-4">
-      <div>
-        <h2 className="text-xl font-bold">
-          Relatório Personalizado: Reforma Tributária
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          Análise de impactos para {companyName} no segmento {segment.name}
-        </p>
-      </div>
-      
-      <div className="flex items-center gap-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="flex items-center gap-2">
-              <Share2 className="h-4 w-4" />
-              <span className="hidden sm:inline">Compartilhar</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem onClick={() => setShowShareDialog(true)}>
-              <Mail className="mr-2 h-4 w-4" />
-              <span>Por e-mail</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleCopyLink}>
-              {copied ? (
-                <CheckCheck className="mr-2 h-4 w-4 text-green-600" />
-              ) : (
-                <Copy className="mr-2 h-4 w-4" />
-              )}
-              <span>Copiar link</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setShowInviteDialog(true)}>
-              <UserPlus className="mr-2 h-4 w-4" />
-              <span>Convidar colaborador</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        
-        <Button variant="default" className="flex items-center gap-2">
-          <Download className="h-4 w-4" />
-          <span className="hidden sm:inline">Baixar PDF</span>
-        </Button>
-      </div>
-      
+    <>
       <Dialog open={showShareDialog} onOpenChange={setShowShareDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -186,7 +144,7 @@ const ReportActions: React.FC<ReportActionsProps> = ({ companyData, segment }) =
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 };
 
