@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { formSchema, FormValues } from './FormDialog';
 
-// Import the new field components
+// Import the field components
 import CompanyFields from './form-fields/CompanyFields';
 import PersonalFields from './form-fields/PersonalFields';
 import ContactFields from './form-fields/ContactFields';
