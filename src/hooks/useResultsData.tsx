@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article, articles } from '@/data/articles';
 import { getArticlesByTopic } from '@/components/results/ArticlesByTopic';
@@ -10,8 +10,26 @@ export const useResultsData = (segment: BusinessSegment) => {
   const [expandedArticleId, setExpandedArticleId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'positive' | 'negative'>('all');
-  const [viewMode, setViewMode] = useState<'list' | 'table' | 'chart'>('chart');
+  const [viewMode, setViewMode] = useState<'list' | 'table' | 'chart'>('list');
   const [activeTab, setActiveTab] = useState<'overview' | 'articles'>('overview');
+  const [highlights, setHighlights] = useState<HighlightType[]>([]);
+  
+  // Load highlights from localStorage on mount
+  useEffect(() => {
+    const savedHighlights = localStorage.getItem('highlights');
+    if (savedHighlights) {
+      try {
+        setHighlights(JSON.parse(savedHighlights));
+      } catch (e) {
+        console.error('Failed to parse highlights from localStorage:', e);
+      }
+    }
+  }, []);
+
+  // Save highlights to localStorage on change
+  useEffect(() => {
+    localStorage.setItem('highlights', JSON.stringify(highlights));
+  }, [highlights]);
   
   // Get form data from localStorage
   const formData = JSON.parse(localStorage.getItem('formData') || '{}');
@@ -63,6 +81,22 @@ export const useResultsData = (segment: BusinessSegment) => {
     }
   };
 
+  // Handle adding a highlight
+  const handleAddHighlight = (text: string, color: HighlightType['color'], articleId: string) => {
+    const newHighlight: HighlightType = {
+      id: crypto.randomUUID(),
+      text,
+      color,
+      articleId
+    };
+    setHighlights([...highlights, newHighlight]);
+  };
+
+  // Handle removing a highlight
+  const handleRemoveHighlight = (id: string) => {
+    setHighlights(highlights.filter(h => h.id !== id));
+  };
+
   return {
     expandedArticleId,
     setExpandedArticleId,
@@ -82,7 +116,12 @@ export const useResultsData = (segment: BusinessSegment) => {
     positiveCount,
     negativeCount,
     handleArticleSelect,
-    topics
+    topics,
+    // New highlight-related state and functions
+    highlights,
+    setHighlights,
+    handleAddHighlight,
+    handleRemoveHighlight
   };
 };
 

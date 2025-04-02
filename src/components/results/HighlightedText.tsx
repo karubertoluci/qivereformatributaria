@@ -25,10 +25,14 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({
   const renderHighlightedText = () => {
     if (highlights.length === 0) return text;
 
+    // Create a copy of the text to work with
     let result = text;
-    // This is a simplified approach - for production, you'd need
-    // a more robust solution to handle overlapping highlights
-    highlights.forEach(highlight => {
+    
+    // Sort highlights by length (longest first) to avoid nested highlight issues
+    const sortedHighlights = [...highlights].sort((a, b) => b.text.length - a.text.length);
+    
+    // Apply each highlight
+    sortedHighlights.forEach(highlight => {
       const colorClasses = {
         yellow: 'bg-yellow-200',
         green: 'bg-green-200',
@@ -36,9 +40,13 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({
         pink: 'bg-pink-200'
       };
       
+      // Use a unique ID to avoid conflicts when replacing
+      const uniqueId = `highlight-${highlight.id}`;
+      
+      // Replace the text with a span containing the highlight
       result = result.replace(
         highlight.text, 
-        `<span class="${colorClasses[highlight.color]}">${highlight.text}</span>`
+        `<span class="${colorClasses[highlight.color]} rounded px-0.5" data-highlight-id="${highlight.id}">${highlight.text}</span>`
       );
     });
     
@@ -55,10 +63,10 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
         
-        // Posicionamento melhorado para a toolbar aparecer acima da seleção
+        // Position the toolbar above the selection
         setToolbarPosition({
-          x: rect.left + (rect.width / 2), // Centro da seleção
-          y: rect.top - 10 // Ligeiramente acima da seleção
+          x: rect.left + (rect.width / 2),
+          y: rect.top - 10
         });
         
         setIsToolbarVisible(true);

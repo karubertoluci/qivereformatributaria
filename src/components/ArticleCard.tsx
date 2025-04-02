@@ -10,6 +10,7 @@ import { useToast } from '@/components/ui/use-toast';
 import ArticleCardSummary from './article-card/ArticleCardSummary';
 import ArticleCardActions from './article-card/ArticleCardActions';
 import ArticleCardTabs from './article-card/ArticleCardTabs';
+import { useResultsData } from '@/hooks/useResultsData';
 
 interface ArticleCardProps {
   article: Article;
@@ -20,9 +21,18 @@ interface ArticleCardProps {
 
 const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded, onToggleExpand }) => {
   const [comments, setComments] = useState<CommentType[]>([]);
-  const [highlights, setHighlights] = useState<HighlightType[]>([]);
   const [activeTab, setActiveTab] = useState<string>("content");
   const { toast } = useToast();
+  
+  // Get highlights from the global state
+  const { highlights, handleAddHighlight, handleRemoveHighlight } = window.resultsData || {
+    highlights: [],
+    handleAddHighlight: () => {},
+    handleRemoveHighlight: () => {}
+  };
+  
+  // Filter highlights for this article
+  const articleHighlights = highlights.filter(h => h.articleId === article.id);
 
   // Identificar o tipo principal de impacto para o card
   const segmentImpacts = article.impacts.filter(impact => 
@@ -54,23 +64,13 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
     });
   };
 
-  const handleAddHighlight = (text: string, color: HighlightType['color']) => {
-    const newHighlight: HighlightType = {
-      id: crypto.randomUUID(),
-      text,
-      color,
-      articleId: article.id
-    };
-    setHighlights([...highlights, newHighlight]);
+  const onAddHighlight = (text: string, color: HighlightType['color']) => {
+    handleAddHighlight(text, color, article.id);
     
     toast({
       title: "Texto destacado",
       description: "O texto selecionado foi destacado com sucesso."
     });
-  };
-  
-  const handleRemoveHighlight = (id: string) => {
-    setHighlights(highlights.filter(h => h.id !== id));
   };
   
   const handleShareArticle = () => {
@@ -103,8 +103,8 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
           article={article}
           segmentId={segmentId}
           expanded={expanded}
-          highlights={highlights}
-          onAddHighlight={handleAddHighlight}
+          highlights={articleHighlights}
+          onAddHighlight={onAddHighlight}
         />
 
         {expanded && (
@@ -123,9 +123,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId, expanded,
               activeTab={activeTab}
               setActiveTab={setActiveTab}
               comments={comments}
-              highlights={highlights}
+              highlights={articleHighlights}
               onAddComment={handleAddComment}
-              onAddHighlight={handleAddHighlight}
+              onAddHighlight={onAddHighlight}
               onRemoveHighlight={handleRemoveHighlight}
             />
           </div>
