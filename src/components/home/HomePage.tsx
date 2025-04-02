@@ -3,7 +3,9 @@ import React from 'react';
 import Hero from './Hero';
 import SearchForm from './search-form';
 import HowItWorks from './HowItWorks';
+import SectorsImpact from './SectorsImpact';
 import ProductFeatures from './ProductFeatures';
+import ExpertQuotes from './ExpertQuotes';
 import AboutQive from './AboutQive';
 import { BusinessSegment } from '@/data/segments';
 
@@ -52,10 +54,16 @@ const HomePage: React.FC<HomePageProps> = ({ onCnaeSubmit, onBrowseBySegment, on
       {/* Segundo andar: Explicação sobre a reforma */}
       <HowItWorks />
       
-      {/* Terceiro andar: O que oferecemos */}
+      {/* Terceiro andar: Setores impactados pela reforma */}
+      <SectorsImpact />
+      
+      {/* Quarto andar: O que oferecemos */}
       <ProductFeatures />
       
-      {/* Quarto andar: Por que criamos a Qive */}
+      {/* Quinto andar: O que os especialistas dizem */}
+      <ExpertQuotes />
+      
+      {/* Sexto andar: Por que criamos a Qive */}
       <AboutQive />
     </div>
   );
