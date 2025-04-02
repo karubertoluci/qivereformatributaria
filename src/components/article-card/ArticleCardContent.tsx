@@ -25,6 +25,17 @@ const ArticleCardContent: React.FC<ArticleCardContentProps> = ({
   
   return (
     <div className="space-y-6 mt-4">
+      {/* Original Text */}
+      <div>
+        <h4 className="text-sm font-bold flex items-center mb-2">
+          <FileText className="h-4 w-4 mr-1 text-blue-500" />
+          Texto Original da Lei
+        </h4>
+        <div className="text-xs p-3 bg-muted rounded-md border border-muted">
+          {article.originalText}
+        </div>
+      </div>
+      
       {/* Simplified Translation */}
       <div>
         <h4 className="text-sm font-bold flex items-center mb-2">
@@ -38,17 +49,6 @@ const ArticleCardContent: React.FC<ArticleCardContentProps> = ({
             articleId={article.id}
             onAddHighlight={onAddHighlight}
           />
-        </div>
-      </div>
-      
-      {/* Original Text */}
-      <div>
-        <h4 className="text-sm font-bold flex items-center mb-2">
-          <FileText className="h-4 w-4 mr-1 text-blue-500" />
-          Texto Original da Lei
-        </h4>
-        <div className="text-xs p-3 bg-muted rounded-md border border-muted">
-          {article.originalText}
         </div>
       </div>
       
