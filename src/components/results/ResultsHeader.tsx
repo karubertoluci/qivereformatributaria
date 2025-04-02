@@ -19,9 +19,10 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
 }) => {
   return (
     <div className="flex justify-between items-center mb-8">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <Button 
           variant="ghost" 
+          size="sm"
           className="hover:bg-secondary flex items-center gap-1"
           onClick={onBackToSegments}
         >
@@ -29,12 +30,12 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
           Voltar
         </Button>
         
-        <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <BarChart className="h-6 w-6 text-primary" />
-            Resultados para {segment.name}
+        <div className="max-w-md sm:max-w-lg">
+          <h2 className="text-xl font-bold flex items-center gap-2 truncate">
+            <BarChart className="h-4 w-4 shrink-0 text-primary" />
+            <span className="truncate">Resultados para {segment.name}</span>
           </h2>
-          <p className="text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Total: {positiveCount + negativeCount} artigos • 
             <span className="text-positive"> {positiveCount} positivos</span> • 
             <span className="text-negative"> {negativeCount} negativos</span>
@@ -43,14 +44,21 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
       </div>
       
       <div className="flex items-center gap-2">
-        <Button variant="outline" className="flex items-center gap-1" size="sm">
-          <Share2 className="h-4 w-4" />
-          <span className="hidden sm:inline">Compartilhar</span>
+        <Button 
+          variant="outline" 
+          size="sm"
+          className="flex items-center gap-1 h-8 px-2 sm:px-3"
+        >
+          <Share2 className="h-3 w-3" />
+          <span className="hidden sm:inline text-xs">Compartilhar</span>
         </Button>
         
-        <Button className="flex items-center gap-1" size="sm">
-          <Download className="h-4 w-4" />
-          <span className="hidden sm:inline">Baixar PDF</span>
+        <Button 
+          size="sm"
+          className="flex items-center gap-1 h-8 px-2 sm:px-3"
+        >
+          <Download className="h-3 w-3" />
+          <span className="hidden sm:inline text-xs">Baixar PDF</span>
         </Button>
       </div>
     </div>
