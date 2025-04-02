@@ -87,25 +87,24 @@ export const fetchCNPJData = async (cnpj: string): Promise<CNPJResponse> => {
       throw new Error('CNPJ inválido: deve conter 14 dígitos');
     }
 
+    // Simula um delay para parecer uma chamada de API real
+    await new Promise(resolve => setTimeout(resolve, 800));
+
     // Se estamos usando dados simulados ou se ocorrer erro na API
     if (useMockData) {
       // Tenta encontrar o CNPJ no mockdata
       const mockData = mockCnpjData[formattedCNPJ];
       if (mockData) {
-        // Simula um delay para parecer uma chamada de API real
-        await new Promise(resolve => setTimeout(resolve, 1500));
         return mockData;
       }
       
       // Se não encontrar o CNPJ específico nos mocks, escolhe um aleatório
       const mockKeys = Object.keys(mockCnpjData);
-      const randomMock = mockCnpjData[mockKeys[Math.floor(Math.random() * mockKeys.length)]];
+      const randomMock = {...mockCnpjData[mockKeys[Math.floor(Math.random() * mockKeys.length)]]};
       
       // Personaliza o mock com o CNPJ informado
       randomMock.cnpj = formattedCNPJ.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
       
-      // Simula um delay para parecer uma chamada de API real
-      await new Promise(resolve => setTimeout(resolve, 1500));
       return randomMock;
     }
     

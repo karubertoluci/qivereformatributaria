@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
-import { Building2, FileSpreadsheet, BarChart4, Lightbulb, FileCheck, MapPin, Building, BookOpen, BadgeCheck } from 'lucide-react';
+import { Building2, FileSpreadsheet, BarChart4, Lightbulb, FileCheck, Badge, CheckCircle2 } from 'lucide-react';
 
 interface CompanyData {
   cnpj?: string;
@@ -41,38 +41,61 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
   companyName,
   companyData
 }) => {
-  const [statusMessages, setStatusMessages] = useState<string[]>([]);
-
+  const [statusMessages, setStatusMessages] = useState<{message: string, completed: boolean}[]>([]);
+  
   // Atualiza as mensagens de status dinamicamente baseado no progresso e nos dados da empresa
   useEffect(() => {
-    const messages: string[] = [];
+    const messages: {message: string, completed: boolean}[] = [];
     
-    if (progress >= 10) {
-      messages.push(`Identificando dados do CNPJ ${companyData?.cnpj || '...'}`);
+    if (progress >= 5) {
+      messages.push({
+        message: `Buscando dados do CNPJ ${companyData?.cnpj || '...'}`,
+        completed: progress >= 20
+      });
     }
     
     if (progress >= 20 && companyData?.razaoSocial) {
-      messages.push(`Encontrando informações sobre ${companyData.razaoSocial}`);
+      messages.push({
+        message: `Razão Social encontrada: ${companyData.razaoSocial}`,
+        completed: true
+      });
     }
     
-    if (progress >= 30 && companyData?.cnaePrincipal) {
-      messages.push(`CNAE principal identificado: ${companyData.cnaePrincipal.codigo} - ${companyData.cnaePrincipal.descricao.substring(0, 40)}${companyData.cnaePrincipal.descricao.length > 40 ? '...' : ''}`);
-    }
-    
-    if (progress >= 50 && companyData?.cnaeSecundarios && companyData?.cnaeSecundarios.length > 0) {
-      messages.push(`Analisando ${companyData.cnaeSecundarios.length} CNAEs secundários`);
+    if (progress >= 40 && companyData?.cnaePrincipal) {
+      messages.push({
+        message: `CNAE principal identificado: ${companyData.cnaePrincipal.codigo}`,
+        completed: true
+      });
+      
+      messages.push({
+        message: `Descrição: ${companyData.cnaePrincipal.descricao}`,
+        completed: true
+      });
     }
     
     if (progress >= 60) {
-      messages.push(`Buscando artigos relevantes para o setor de atuação`);
+      messages.push({
+        message: `Analisando impactos da Reforma Tributária para o setor...`,
+        completed: progress >= 80
+      });
     }
     
-    if (progress >= 70 && companyData?.razaoSocial) {
-      messages.push(`Calculando impactos da reforma tributária para ${companyData.razaoSocial}`);
+    if (progress >= 80) {
+      messages.push({
+        message: `Personalizando relatório para ${companyData?.razaoSocial || companyName}...`,
+        completed: progress >= 95
+      });
+    }
+    
+    if (progress >= 95) {
+      messages.push({
+        message: `Relatório pronto!`,
+        completed: progress >= 100
+      });
     }
     
     setStatusMessages(messages);
-  }, [progress, companyData]);
+  }, [progress, companyData, companyName]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -85,115 +108,52 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
         </DialogHeader>
         
         <div className="py-6">
-          <div className="mb-4">
-            <div className="h-2 w-full bg-gray-200 rounded-full">
+          <div className="mb-6">
+            <div className="h-2 w-full bg-gray-200 rounded-full mb-2">
               <div 
                 className="h-2 bg-orange-500 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
+            <p className="text-xs text-gray-500 text-right">{progress}%</p>
           </div>
           
-          <div className="space-y-3">
-            <p className="text-sm font-medium flex items-center">
-              <span className={`mr-2 flex items-center justify-center w-6 h-6 rounded-full ${progress >= 20 ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
-                {progress >= 20 ? <BadgeCheck size={14} /> : <Building2 size={14} />}
-              </span>
-              Identificando dados da empresa {companyData?.razaoSocial || companyName || 'sua empresa'}
-            </p>
-            
-            {statusMessages.length > 0 && (
-              <div className="bg-gray-50 p-3 rounded-md border border-gray-100 text-sm mb-4">
-                {statusMessages.map((message, index) => (
-                  <p key={index} className="text-xs text-gray-600 py-1">{message}</p>
-                ))}
-              </div>
-            )}
-            
-            {progress >= 30 && companyData?.razaoSocial && (
-              <div className="bg-gray-50 p-3 rounded-md border border-gray-100 text-sm">
-                <p className="flex items-center mb-1">
-                  <Building className="h-4 w-4 mr-2 text-orange-500" /> 
-                  <strong>Razão Social:</strong> {companyData.razaoSocial}
+          <div className="space-y-4 max-h-[50vh] overflow-auto pr-2">
+            {statusMessages.map((status, index) => (
+              <div key={index} className="flex items-start space-x-3">
+                <div className={`mt-0.5 flex-shrink-0 w-5 h-5 flex items-center justify-center rounded-full ${status.completed ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-500'}`}>
+                  {status.completed ? (
+                    <CheckCircle2 size={14} />
+                  ) : (
+                    <div className="w-3 h-3 rounded-full border-2 border-orange-500 border-t-transparent animate-spin"></div>
+                  )}
+                </div>
+                <p className={`text-sm ${status.completed ? 'text-gray-800' : 'text-gray-600'}`}>
+                  {status.message}
                 </p>
-                {companyData.nomeFantasia && (
-                  <p className="flex items-center mb-1">
-                    <Building2 className="h-4 w-4 mr-2 text-orange-500" /> 
-                    <strong>Nome Fantasia:</strong> {companyData.nomeFantasia}
-                  </p>
-                )}
-                {companyData.situacaoCadastral && (
-                  <p className="flex items-center mb-1">
-                    <FileCheck className="h-4 w-4 mr-2 text-orange-500" /> 
-                    <strong>Situação:</strong> {companyData.situacaoCadastral}
-                  </p>
-                )}
-                {companyData.endereco && (
-                  <p className="flex items-center mb-1">
-                    <MapPin className="h-4 w-4 mr-2 text-orange-500" /> 
-                    <strong>Endereço:</strong> {companyData.endereco}
-                  </p>
-                )}
               </div>
-            )}
-            
-            <p className="text-sm font-medium flex items-center">
-              <span className={`mr-2 flex items-center justify-center w-6 h-6 rounded-full ${progress >= 40 ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
-                {progress >= 40 ? <span>✓</span> : <BookOpen size={14} />}
-              </span>
-              Analisando CNAEs e atividades
-            </p>
-            
-            {progress >= 50 && companyData?.cnaePrincipal && (
-              <div className="bg-gray-50 p-3 rounded-md border border-gray-100 text-sm">
-                <p className="flex items-center mb-1">
-                  <BookOpen className="h-4 w-4 mr-2 text-orange-500" /> 
-                  <strong>CNAE Principal:</strong> {companyData.cnaePrincipal.codigo} - {companyData.cnaePrincipal.descricao}
-                </p>
-                {companyData.cnaeSecundarios && companyData.cnaeSecundarios.length > 0 && (
-                  <>
-                    <p className="mb-1"><strong>CNAEs Secundários:</strong></p>
-                    <ul className="list-disc list-inside ml-6 text-xs">
-                      {companyData.cnaeSecundarios.slice(0, 2).map((cnae, index) => (
-                        <li key={index}>{cnae.codigo} - {cnae.descricao}</li>
-                      ))}
-                      {companyData.cnaeSecundarios.length > 2 && (
-                        <li>+ {companyData.cnaeSecundarios.length - 2} outros CNAEs</li>
-                      )}
-                    </ul>
-                  </>
-                )}
-              </div>
-            )}
-            
-            <p className="text-sm font-medium flex items-center">
-              <span className={`mr-2 flex items-center justify-center w-6 h-6 rounded-full ${progress >= 60 ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
-                {progress >= 60 ? <span>✓</span> : <FileSpreadsheet size={14} />}
-              </span>
-              Analisando artigos relevantes para {companyData?.razaoSocial || companyName || 'sua empresa'}
-            </p>
-            
-            <p className="text-sm font-medium flex items-center">
-              <span className={`mr-2 flex items-center justify-center w-6 h-6 rounded-full ${progress >= 80 ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
-                {progress >= 80 ? <span>✓</span> : <BarChart4 size={14} />}
-              </span>
-              Calculando impacto dos artigos no seu negócio
-            </p>
-            
-            <p className="text-sm font-medium flex items-center">
-              <span className={`mr-2 flex items-center justify-center w-6 h-6 rounded-full ${progress >= 90 ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
-                {progress >= 90 ? <span>✓</span> : <Lightbulb size={14} />}
-              </span>
-              Personalizando recomendações
-            </p>
-            
-            <p className="text-sm font-medium flex items-center">
-              <span className={`mr-2 flex items-center justify-center w-6 h-6 rounded-full ${progress >= 100 ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
-                {progress >= 100 ? <span>✓</span> : <FileCheck size={14} />}
-              </span>
-              Finalizando seu relatório
-            </p>
+            ))}
           </div>
+          
+          {progress >= 40 && companyData?.situacaoCadastral && (
+            <div className="mt-6 pt-4 border-t border-gray-200">
+              <div className="flex items-center space-x-2 mb-2">
+                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                  {companyData.situacaoCadastral}
+                </Badge>
+                {companyData.naturezaJuridica && (
+                  <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                    {companyData.naturezaJuridica}
+                  </Badge>
+                )}
+              </div>
+              {progress >= 90 && (
+                <p className="text-sm text-gray-600 italic mt-2">
+                  Seu relatório está quase pronto. Você será redirecionado em instantes...
+                </p>
+              )}
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

@@ -66,28 +66,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
       };
     } catch (error) {
       console.error('Erro ao buscar dados do CNPJ:', error);
-      
-      // Para fins de demonstração, em caso de erro na API, cria dados fictícios
-      if (cnpj) {
-        return {
-          cnpj: cnpj,
-          razaoSocial: companyName || 'Empresa Exemplo Ltda',
-          nomeFantasia: 'Nome Fantasia Exemplo',
-          endereco: 'Rua Exemplo, 123, Centro, São Paulo - SP',
-          cnaePrincipal: {
-            codigo: '47.11-3',
-            descricao: 'Comércio varejista de mercadorias em geral'
-          },
-          cnaeSecundarios: [
-            { codigo: '47.21-1', descricao: 'Comércio varejista de produtos alimentícios' },
-            { codigo: '47.29-6', descricao: 'Comércio varejista de outros produtos alimentícios' }
-          ],
-          situacaoCadastral: 'ATIVA',
-          naturezaJuridica: 'Sociedade Empresária Limitada'
-        };
-      }
-      
-      return undefined;
+      throw error;
     }
   };
 
@@ -100,68 +79,81 @@ const SearchForm: React.FC<SearchFormProps> = ({
     // Já salvar o nome da empresa para mostrar no loading desde o início
     setCompanyName(data.nome);
     
-    // Inicia o progresso simulado
-    const interval = setInterval(async () => {
-      setLoadingProgress(prev => {
-        const newProgress = prev + 10;
-
-        // Quando chegar a 10%, começa a buscar os dados da empresa
-        if (prev === 0 && newProgress === 10) {
-          // Mostra mensagem de busca de CNPJ imediatamente
-          toast.info(`Consultando CNPJ ${data.cnpj}...`);
+    // Inicia o progresso simulado em etapas mais graduais
+    const stages = [
+      { progress: 5, delay: 500 },   // Inicio
+      { progress: 20, delay: 1000 }, // Após buscar CNPJ
+      { progress: 40, delay: 800 },  // Após identificar CNAE
+      { progress: 60, delay: 1200 }, // Analisando impactos
+      { progress: 80, delay: 1000 }, // Personalizando relatório
+      { progress: 95, delay: 800 },  // Finalizando
+      { progress: 100, delay: 500 }  // Concluído
+    ];
+    
+    // Função para processar cada etapa
+    const processStage = async (index: number) => {
+      if (index >= stages.length) {
+        // Finaliza o processo
+        setTimeout(() => {
+          setShowLoadingDialog(false);
           
-          // Busca os dados do CNPJ
-          fetchCompanyData(data.cnpj).then(result => {
-            if (result) {
-              // Atualiza os dados da empresa para exibição no loading
-              setCompanyData(result);
-              setCompanyName(result.razaoSocial || data.nome);
-              companyInfo = result;
-              
-              // Extrai o CNAE principal para usar na seleção do segmento
-              if (result.cnaePrincipal) {
-                cnaeCode = result.cnaePrincipal.codigo.substring(0, 2);
-                toast.success(`CNPJ encontrado: ${result.razaoSocial}`);
-              }
-            } else {
-              toast.error("Não foi possível obter dados detalhados do CNPJ");
-            }
-          });
-        }
-        
-        if (newProgress >= 100) {
-          clearInterval(interval);
-          setTimeout(() => {
-            setShowLoadingDialog(false);
+          // Salva os dados da empresa obtidos da API
+          const formDataWithCompanyInfo = {
+            ...data,
+            ...companyInfo
+          };
+          localStorage.setItem('formData', JSON.stringify(formDataWithCompanyInfo));
 
-            // Salva os dados da empresa obtidos da API
-            const formDataWithCompanyInfo = {
-              ...data,
-              ...companyInfo
-            };
-            localStorage.setItem('formData', JSON.stringify(formDataWithCompanyInfo));
-
-            // Tenta identificar o segmento pelo CNAE
-            if (cnaeCode) {
-              const segmentId = cnaeToSegmentMap[cnaeCode];
-              if (segmentId) {
-                const segment = businessSegments.find(seg => seg.id === segmentId);
-                if (segment) {
-                  toast.success(`Relatório para ${companyInfo?.razaoSocial || data.nome} gerado com sucesso!`);
-                  onSelectSegment(segment);
-                  return newProgress;
-                }
+          // Tenta identificar o segmento pelo CNAE
+          if (cnaeCode) {
+            const segmentId = cnaeToSegmentMap[cnaeCode];
+            if (segmentId) {
+              const segment = businessSegments.find(seg => seg.id === segmentId);
+              if (segment) {
+                toast.success(`Relatório para ${companyInfo?.razaoSocial || data.nome} gerado com sucesso!`);
+                onSelectSegment(segment);
+                return;
               }
             }
+          }
 
-            // Se não encontrou segmento específico, usa o CNAE informado
-            onCnaeSubmit(cnaeCode || data.cnpj.substring(0, 2));
-            toast.success(`Relatório para ${companyInfo?.razaoSocial || data.nome} gerado com sucesso!`);
-          }, 500);
+          // Se não encontrou segmento específico, usa o CNAE informado
+          onCnaeSubmit(cnaeCode || data.cnpj.substring(0, 2));
+          toast.success(`Relatório para ${companyInfo?.razaoSocial || data.nome} gerado com sucesso!`);
+        }, 500);
+        return;
+      }
+
+      const stage = stages[index];
+      setLoadingProgress(stage.progress);
+      
+      // Na etapa inicial, buscar dados do CNPJ
+      if (index === 0) {
+        try {
+          companyInfo = await fetchCompanyData(data.cnpj);
+          if (companyInfo) {
+            setCompanyData(companyInfo);
+            setCompanyName(companyInfo.razaoSocial || data.nome);
+            
+            // Extrai o CNAE principal para usar na seleção do segmento
+            if (companyInfo.cnaePrincipal) {
+              cnaeCode = companyInfo.cnaePrincipal.codigo.substring(0, 2);
+            }
+          }
+        } catch (error) {
+          console.error("Erro ao buscar dados do CNPJ:", error);
+          toast.error("Não foi possível obter dados detalhados do CNPJ");
         }
-        return newProgress;
-      });
-    }, 800); // Intervalo maior para dar tempo de buscar os dados da API
+      }
+      
+      // Avança para a próxima etapa
+      setTimeout(() => {
+        processStage(index + 1);
+      }, stage.delay);
+    };
+    
+    // Inicia o processamento das etapas
+    processStage(0);
   };
 
   const handleSubmit = async (data: FormValues) => {
@@ -176,7 +168,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
       setIsLoading(false);
       simulateReportGeneration(data);
       closeFormDialog();
-    }, 1000);
+    }, 500);
   };
 
   return (
