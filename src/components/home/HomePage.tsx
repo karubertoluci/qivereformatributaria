@@ -14,15 +14,36 @@ interface HomePageProps {
 }
 
 const HomePage: React.FC<HomePageProps> = ({ onCnaeSubmit, onBrowseBySegment, onSelectSegment }) => {
+  // Quando um usuário preenche o formulário com dados da empresa,
+  // armazenamos isso no localStorage para usar na página de resultados
+  React.useEffect(() => {
+    // Limpar os dados anteriores quando a página é carregada
+    localStorage.removeItem('companyData');
+  }, []);
+  
   return (
     <div className="flex flex-col min-h-[calc(100vh-12rem)]">
       <Hero />
       
       <div className="container mx-auto max-w-4xl px-4 -mt-2 relative z-10 mb-10">
         <SearchForm 
-          onCnaeSubmit={onCnaeSubmit} 
+          onCnaeSubmit={(cnae) => {
+            // Salvamos o CNAE e outros dados do formulário no localStorage
+            const formData = JSON.parse(localStorage.getItem('formData') || '{}');
+            if (formData) {
+              localStorage.setItem('companyData', JSON.stringify(formData));
+            }
+            onCnaeSubmit(cnae);
+          }} 
           onBrowseBySegment={onBrowseBySegment} 
-          onSelectSegment={onSelectSegment}
+          onSelectSegment={(segment) => {
+            // Salvamos os dados do formulário no localStorage antes de navegar
+            const formData = JSON.parse(localStorage.getItem('formData') || '{}');
+            if (formData) {
+              localStorage.setItem('companyData', JSON.stringify(formData));
+            }
+            onSelectSegment(segment);
+          }}
         />
       </div>
       

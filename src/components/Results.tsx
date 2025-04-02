@@ -12,6 +12,7 @@ import FilterBar from './results/FilterBar';
 import ViewSwitcher from './results/ViewSwitcher';
 import ArticleTopicsView from './results/ArticleTopicsView';
 import ArticleTableView from './results/ArticleTableView';
+import { useForm } from 'react-hook-form';
 
 interface ResultsProps {
   segment: BusinessSegment;
@@ -23,6 +24,10 @@ const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'positive' | 'negative'>('all');
   const [viewMode, setViewMode] = useState<'list' | 'table' | 'chart'>('chart');
+
+  // Obter informações da empresa do formulário (caso tenha sido preenchido)
+  const companyData = JSON.parse(localStorage.getItem('companyData') || '{}');
+  const hasCompanyData = Object.keys(companyData).length > 0;
 
   // Filtrar artigos que afetam o segmento selecionado
   const relevantArticles = articles.filter(article => 
@@ -71,6 +76,17 @@ const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {hasCompanyData && (
+        <div className="bg-orange-50 p-4 rounded-lg mb-6 border border-orange-200">
+          <h2 className="text-xl font-bold mb-2">Relatório Personalizado para {companyData.razaoSocial}</h2>
+          <p className="text-gray-700">
+            Olá {companyData.nome}, {companyData.cargo && `${companyData.cargo} da`} {companyData.razaoSocial}.
+            Seu relatório personalizado está pronto! Analisamos os impactos da reforma tributária para empresas 
+            do segmento <strong>{segment.name}</strong> com CNAE iniciando em <strong>{companyData.cnae.substring(0, 2)}</strong>.
+          </p>
+        </div>
+      )}
+      
       <ResultsHeader 
         segment={segment}
         positiveCount={positiveCount}
