@@ -2,7 +2,7 @@
 import React from 'react';
 import { Info, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,17 +11,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const Header = () => {
+  const location = useLocation();
+  
   return (
     <header className="bg-white border-b border-gray-200 py-4 px-6 shadow-sm">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
         <div className="flex items-center mb-4 md:mb-0">
-          <Link to="/">
+          <a href="/">
             <img 
               src="/lovable-uploads/3a0e3d3c-ea95-4482-8c76-047d5459213e.png" 
               alt="Qive Reforma Tributária" 
               className="h-12 mr-2 cursor-pointer"
             />
-          </Link>
+          </a>
         </div>
         
         <div className="flex items-center space-x-2 md:space-x-4">
