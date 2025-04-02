@@ -46,11 +46,6 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment }) => {
         <ReportActions companyData={formData} segment={segment} />
       )}
       
-      {/* Relação com seu segmento - full width */}
-      <div className="my-8">
-        <CompanyLegislationRelation segment={segment} companyData={formData} />
-      </div>
-      
       <Tabs defaultValue="overview" className="w-full">
         <TabsList className="mb-6">
           <TabsTrigger value="overview" className="flex items-center gap-2">

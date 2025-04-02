@@ -3,7 +3,7 @@ import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
 import { CompanyData } from '@/hooks/useResultsData';
-import { FileText, Book } from 'lucide-react';
+import { Book } from 'lucide-react';
 import ArticlesPriorityChart from '../ArticlesPriorityChart';
 import CompanyOverview from '../report/CompanyOverview';
 import ReformOverview from '../report/ReformOverview';
@@ -33,9 +33,10 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
       
       <ReformOverview segment={segment} />
       
+      <CompanyLegislationRelation segment={segment} companyData={companyData} />
+      
       <div className="grid md:grid-cols-2 gap-6">
         <LegislationBooks articles={relevantArticles} onSelectArticle={onSelectArticle} />
-        <CompanyLegislationRelation segment={segment} companyData={companyData} />
       </div>
       
       <div className="p-4 bg-card rounded-lg border shadow-sm">
@@ -52,7 +53,7 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
         
         <div className="mt-4 text-center">
           <button 
-            onClick={() => document.querySelector('[data-value="articles"]')?.dispatchEvent(new Event('click'))}
+            onClick={() => document.querySelector('[value="articles"]')?.dispatchEvent(new Event('click'))}
             className="text-primary hover:text-primary-dark underline text-sm"
           >
             Ver todos os {relevantArticles.length} artigos
