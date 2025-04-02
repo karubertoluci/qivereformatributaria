@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
-import { Building2, FileSpreadsheet, BarChart4, Lightbulb, FileCheck, MapPin, Building, BookOpen } from 'lucide-react';
+import { Building2, FileSpreadsheet, BarChart4, Lightbulb, FileCheck, MapPin, Building, BookOpen, BadgeCheck } from 'lucide-react';
 
 interface CompanyData {
   cnpj?: string;
@@ -41,13 +41,46 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
   companyName,
   companyData
 }) => {
+  const [statusMessages, setStatusMessages] = useState<string[]>([]);
+
+  // Atualiza as mensagens de status dinamicamente baseado no progresso e nos dados da empresa
+  useEffect(() => {
+    const messages: string[] = [];
+    
+    if (progress >= 10) {
+      messages.push(`Identificando dados do CNPJ ${companyData?.cnpj || '...'}`);
+    }
+    
+    if (progress >= 20 && companyData?.razaoSocial) {
+      messages.push(`Encontrando informações sobre ${companyData.razaoSocial}`);
+    }
+    
+    if (progress >= 30 && companyData?.cnaePrincipal) {
+      messages.push(`CNAE principal identificado: ${companyData.cnaePrincipal.codigo} - ${companyData.cnaePrincipal.descricao.substring(0, 40)}${companyData.cnaePrincipal.descricao.length > 40 ? '...' : ''}`);
+    }
+    
+    if (progress >= 50 && companyData?.cnaeSecundarios && companyData?.cnaeSecundarios.length > 0) {
+      messages.push(`Analisando ${companyData.cnaeSecundarios.length} CNAEs secundários`);
+    }
+    
+    if (progress >= 60) {
+      messages.push(`Buscando artigos relevantes para o setor de atuação`);
+    }
+    
+    if (progress >= 70 && companyData?.razaoSocial) {
+      messages.push(`Calculando impactos da reforma tributária para ${companyData.razaoSocial}`);
+    }
+    
+    setStatusMessages(messages);
+  }, [progress, companyData]);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Gerando seu relatório personalizado</DialogTitle>
           <DialogDescription>
-            Estamos analisando os impactos da reforma tributária para sua empresa.
+            Estamos analisando os impactos da reforma tributária para {companyData?.razaoSocial || companyData?.nomeFantasia || companyName || 'sua empresa'}.
           </DialogDescription>
         </DialogHeader>
         
@@ -64,10 +97,18 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
           <div className="space-y-3">
             <p className="text-sm font-medium flex items-center">
               <span className={`mr-2 flex items-center justify-center w-6 h-6 rounded-full ${progress >= 20 ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-400'}`}>
-                {progress >= 20 ? <span>✓</span> : <Building2 size={14} />}
+                {progress >= 20 ? <BadgeCheck size={14} /> : <Building2 size={14} />}
               </span>
-              Identificando dados da empresa {companyName || 'sua empresa'}
+              Identificando dados da empresa {companyData?.razaoSocial || companyName || 'sua empresa'}
             </p>
+            
+            {statusMessages.length > 0 && (
+              <div className="bg-gray-50 p-3 rounded-md border border-gray-100 text-sm mb-4">
+                {statusMessages.map((message, index) => (
+                  <p key={index} className="text-xs text-gray-600 py-1">{message}</p>
+                ))}
+              </div>
+            )}
             
             {progress >= 30 && companyData?.razaoSocial && (
               <div className="bg-gray-50 p-3 rounded-md border border-gray-100 text-sm">

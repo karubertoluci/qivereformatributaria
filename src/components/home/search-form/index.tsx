@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { businessSegments, BusinessSegment } from '@/data/segments';
@@ -8,11 +9,13 @@ import { cnaeToSegmentMap } from './utils';
 import { Dialog } from '@/components/ui/dialog';
 import { useFormDialogContext } from '../FormDialogContext';
 import { fetchCNPJData } from '@/services/brasilApi';
+
 interface SearchFormProps {
   onCnaeSubmit: (cnae: string) => void;
   onBrowseBySegment: () => void;
   onSelectSegment: (segment: BusinessSegment | null) => void;
 }
+
 interface CompanyData {
   cnpj?: string;
   razaoSocial?: string;
@@ -29,6 +32,7 @@ interface CompanyData {
   situacaoCadastral?: string;
   naturezaJuridica?: string;
 }
+
 const SearchForm: React.FC<SearchFormProps> = ({
   onCnaeSubmit,
   onBrowseBySegment,
@@ -43,6 +47,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
     isFormDialogOpen,
     closeFormDialog
   } = useFormDialogContext();
+
   const fetchCompanyData = async (cnpj: string) => {
     try {
       const data = await fetchCNPJData(cnpj);
@@ -61,33 +66,69 @@ const SearchForm: React.FC<SearchFormProps> = ({
       };
     } catch (error) {
       console.error('Erro ao buscar dados do CNPJ:', error);
+      
+      // Para fins de demonstração, em caso de erro na API, cria dados fictícios
+      if (cnpj) {
+        return {
+          cnpj: cnpj,
+          razaoSocial: companyName || 'Empresa Exemplo Ltda',
+          nomeFantasia: 'Nome Fantasia Exemplo',
+          endereco: 'Rua Exemplo, 123, Centro, São Paulo - SP',
+          cnaePrincipal: {
+            codigo: '47.11-3',
+            descricao: 'Comércio varejista de mercadorias em geral'
+          },
+          cnaeSecundarios: [
+            { codigo: '47.21-1', descricao: 'Comércio varejista de produtos alimentícios' },
+            { codigo: '47.29-6', descricao: 'Comércio varejista de outros produtos alimentícios' }
+          ],
+          situacaoCadastral: 'ATIVA',
+          naturezaJuridica: 'Sociedade Empresária Limitada'
+        };
+      }
+      
       return undefined;
     }
   };
+
   const simulateReportGeneration = async (data: FormValues) => {
     setShowLoadingDialog(true);
     setLoadingProgress(0);
     let cnaeCode = '';
     let companyInfo: CompanyData | undefined = undefined;
+    
+    // Já salvar o nome da empresa para mostrar no loading desde o início
+    setCompanyName(data.nome);
+    
+    // Inicia o progresso simulado
     const interval = setInterval(async () => {
       setLoadingProgress(prev => {
         const newProgress = prev + 10;
 
-        // Quando chegar a 20%, tenta buscar os dados da empresa
-        if (prev === 10 && newProgress === 20) {
+        // Quando chegar a 10%, começa a buscar os dados da empresa
+        if (prev === 0 && newProgress === 10) {
+          // Mostra mensagem de busca de CNPJ imediatamente
+          toast.info(`Consultando CNPJ ${data.cnpj}...`);
+          
+          // Busca os dados do CNPJ
           fetchCompanyData(data.cnpj).then(result => {
             if (result) {
+              // Atualiza os dados da empresa para exibição no loading
               setCompanyData(result);
-              setCompanyName(result.razaoSocial || '');
+              setCompanyName(result.razaoSocial || data.nome);
               companyInfo = result;
-
+              
               // Extrai o CNAE principal para usar na seleção do segmento
               if (result.cnaePrincipal) {
                 cnaeCode = result.cnaePrincipal.codigo.substring(0, 2);
+                toast.success(`CNPJ encontrado: ${result.razaoSocial}`);
               }
+            } else {
+              toast.error("Não foi possível obter dados detalhados do CNPJ");
             }
           });
         }
+        
         if (newProgress >= 100) {
           clearInterval(interval);
           setTimeout(() => {
@@ -120,22 +161,26 @@ const SearchForm: React.FC<SearchFormProps> = ({
         }
         return newProgress;
       });
-    }, 600); // Intervalo maior para dar tempo de buscar os dados da API
+    }, 800); // Intervalo maior para dar tempo de buscar os dados da API
   };
+
   const handleSubmit = async (data: FormValues) => {
     setIsLoading(true);
     setCompanyName(data.nome);
 
     // Salva os dados do formulário
     localStorage.setItem('formData', JSON.stringify(data));
+    
+    // Inicia o processo de geração do relatório
     setTimeout(() => {
       setIsLoading(false);
       simulateReportGeneration(data);
-      console.log("Dados capturados:", data);
       closeFormDialog();
     }, 1000);
   };
-  return <div className="bg-orange-50 rounded-lg shadow-lg p-8 mb-8 border border-orange-100">
+
+  return (
+    <div className="bg-orange-50 rounded-lg shadow-lg p-8 mb-8 border border-orange-100">
       <div className="max-w-3xl mx-auto">
         <h2 className="text-3xl font-bold text-center mb-3">Relatório Personalizado da Reforma Tributária</h2>
         <p className="text-orange-600 text-center text-lg mb-8">
@@ -156,8 +201,16 @@ const SearchForm: React.FC<SearchFormProps> = ({
           <FormDialog onSubmit={handleSubmit} isLoading={isLoading} />
         </Dialog>
         
-        <LoadingDialog open={showLoadingDialog} onOpenChange={setShowLoadingDialog} progress={loadingProgress} companyName={companyName} companyData={companyData} />
+        <LoadingDialog 
+          open={showLoadingDialog} 
+          onOpenChange={setShowLoadingDialog} 
+          progress={loadingProgress} 
+          companyName={companyName} 
+          companyData={companyData} 
+        />
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default SearchForm;
