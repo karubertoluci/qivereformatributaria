@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
@@ -9,22 +10,22 @@ interface ArticleTableViewProps {
   articles: Article[];
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
-  isTableView: boolean;
+  isTableView?: boolean;
   segment: BusinessSegment;
-  highlights: HighlightType[];
-  onAddHighlight: (text: string, color: HighlightType['color'], articleId: string) => void;
-  onRemoveHighlight: (id: string) => void;
+  highlights?: HighlightType[];
+  onAddHighlight?: (text: string, color: HighlightType['color'], articleId: string) => void;
+  onRemoveHighlight?: (id: string) => void;
 }
 
 const ArticleTableView: React.FC<ArticleTableViewProps> = ({
   articles,
   expandedArticleId,
   setExpandedArticleId,
-  isTableView,
+  isTableView = true,
   segment,
-  highlights,
-  onAddHighlight,
-  onRemoveHighlight
+  highlights = [],
+  onAddHighlight = () => {},
+  onRemoveHighlight = () => {}
 }) => {
   if (isTableView) {
     return (

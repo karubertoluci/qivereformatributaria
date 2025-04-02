@@ -61,6 +61,7 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
         setFilterType={setFilterType}
         positiveCount={positiveCount}
         negativeCount={negativeCount}
+        totalCount={relevantArticles.length} // Add the missing totalCount property
       />
       
       <ViewSwitcher viewMode={viewMode} setViewMode={setViewMode} />
@@ -89,13 +90,14 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
               segmentId={segment.id}
               expandedArticleId={expandedArticleId}
               setExpandedArticleId={setExpandedArticleId}
+              onSelectArticle={(id) => setExpandedArticleId(id)} // Add the missing onSelectArticle property
             />
           )}
           
           {viewMode === 'table' && (
             <ArticleTableView 
-              filteredArticles={filteredArticles}
-              segmentId={segment.id}
+              articles={filteredArticles} // Change filteredArticles to articles to match the prop name
+              segment={segment}
               expandedArticleId={expandedArticleId}
               setExpandedArticleId={setExpandedArticleId}
             />
