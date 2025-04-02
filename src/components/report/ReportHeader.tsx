@@ -19,7 +19,7 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
   return <div className="flex flex-col space-y-4 mb-8 print:mb-6 border-b pb-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <img src="/lovable-uploads/3a0e3d3c-ea95-4482-8c76-047d5459213e.png" alt="Qive Reforma Tributária" className="h-12" />
+          <img alt="Qive Reforma Tributária" className="h-12" src="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" />
           
           <div className="flex flex-col">
             <h2 className="text-2xl font-bold flex items-center gap-2">
