@@ -2,36 +2,24 @@
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, BarChart, Share2, Download } from 'lucide-react';
+import { BarChart, Share2, Download } from 'lucide-react';
 
 interface ResultsHeaderProps {
   segment: BusinessSegment;
   positiveCount: number;
   negativeCount: number;
-  onBackToSegments: () => void;
 }
 
 const ResultsHeader: React.FC<ResultsHeaderProps> = ({ 
   segment, 
   positiveCount, 
-  negativeCount, 
-  onBackToSegments 
+  negativeCount
 }) => {
   return (
     <div className="flex justify-between items-center mb-8">
       <div className="flex items-center gap-3">
-        <Button 
-          variant="ghost" 
-          size="sm"
-          className="hover:bg-secondary flex items-center gap-1"
-          onClick={onBackToSegments}
-        >
-          <ChevronLeft className="h-4 w-4" />
-          Voltar
-        </Button>
-        
-        <div className="max-w-md sm:max-w-lg">
-          <h2 className="text-xl font-bold flex items-center gap-2 truncate">
+        <div className="text-center mx-auto max-w-md sm:max-w-lg">
+          <h2 className="text-xl font-bold flex items-center gap-2 justify-center">
             <BarChart className="h-4 w-4 shrink-0 text-primary" />
             <span className="truncate">Resultados para {segment.name}</span>
           </h2>

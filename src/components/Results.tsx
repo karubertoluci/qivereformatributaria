@@ -8,10 +8,10 @@ interface ResultsProps {
   onBackToSegments: () => void;
 }
 
-const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
+const Results: React.FC<ResultsProps> = ({ segment }) => {
   return (
     <div className="print:bg-white">
-      <ResultsContainer segment={segment} onBackToSegments={onBackToSegments} />
+      <ResultsContainer segment={segment} onBackToSegments={() => {}} />
     </div>
   );
 };

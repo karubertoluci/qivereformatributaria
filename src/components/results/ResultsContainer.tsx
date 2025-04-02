@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { useResultsData } from '@/hooks/useResultsData';
@@ -18,7 +17,7 @@ interface ResultsContainerProps {
   onBackToSegments: () => void;
 }
 
-const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSegments }) => {
+const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment }) => {
   const {
     expandedArticleId,
     setExpandedArticleId,
@@ -45,8 +44,6 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
       <ReportHeader 
         segment={segment}
         companyName={companyName}
-        onBackToSegments={onBackToSegments}
-        showBackButton={true}
       />
       
       {hasCompanyData && (

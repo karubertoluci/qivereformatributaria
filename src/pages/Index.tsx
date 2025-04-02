@@ -51,7 +51,7 @@ const Index = () => {
   return (
     <FormDialogProvider>
       <div className="min-h-screen flex flex-col bg-background text-foreground">
-        <Header />
+        <Header/>
         
         <main className="flex-grow">
           {!selectedSegment ? (
