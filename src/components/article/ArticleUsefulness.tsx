@@ -50,7 +50,7 @@ const ArticleUsefulness: React.FC<ArticleUsefulnessProps> = ({ articleId }) => {
   };
 
   return (
-    <div className="mt-4 pt-4 border-t border-border">
+    <div className="py-2">
       <h4 className="text-sm font-medium mb-2">Este artigo foi útil para você?</h4>
       
       <div className="flex items-center gap-3">

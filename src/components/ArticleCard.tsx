@@ -1,14 +1,17 @@
+
 import React, { useState } from 'react';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Article } from '@/data/articles';
 import { CommentType, HighlightType } from './results/types';
 import ArticleHeader from './article/ArticleHeader';
-import ArticleCitations from './article/ArticleCitations';
 import { useToast } from '@/components/ui/use-toast';
-import ArticleCardSummary from './article-card/ArticleCardSummary';
+import ArticleCardContent from './article-card/ArticleCardContent';
 import ArticleCardActions from './article-card/ArticleCardActions';
-import ArticleCardTabs from './article-card/ArticleCardTabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Lightbulb, MessageSquare } from 'lucide-react';
+import CommentSection from './results/CommentSection';
+import ArticleUsefulness from './article/ArticleUsefulness';
 
 interface ArticleCardProps {
   article: Article;
@@ -87,40 +90,60 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
       primaryImpactType === 'positive' ? 'border-l-4 border-l-green-500' : 
       primaryImpactType === 'negative' ? 'border-l-4 border-l-red-500' : ''
     }`}>
-      <CardHeader className="pb-2">
+      <CardContent className="p-6">
+        {/* Article Header with Title and Relevance Indicator */}
         <ArticleHeader article={article} segmentId={segmentId} />
-      </CardHeader>
-      <CardContent>
-        <ArticleCardSummary 
-          article={article}
-          segmentId={segmentId}
-          expanded={expanded}
-          highlights={articleHighlights}
-          onAddHighlight={onAddHighlight}
-        />
-
-        {expanded && (
-          <div className="border-t border-border pt-4 mt-4 space-y-4">
-            <ArticleCardActions 
-              articleId={article.id}
-              onShareArticle={handleShareArticle}
-              onInviteToArticle={handleInviteToArticle}
-            />
-            
-            <ArticleCitations articleId={article.id} />
-            
-            <ArticleCardTabs 
+        
+        {/* Article Content (only full content when expanded) */}
+        {!expanded ? (
+          <div className="text-sm text-foreground my-4">
+            {article.simplifiedText.substring(0, 120) + "..."}
+          </div>
+        ) : (
+          <>
+            <ArticleCardContent
               article={article}
               segmentId={segmentId}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              comments={comments}
               highlights={articleHighlights}
-              onAddComment={handleAddComment}
               onAddHighlight={onAddHighlight}
-              onRemoveHighlight={onRemoveHighlight}
             />
-          </div>
+            
+            {/* Actions Section (Share and Invite) */}
+            <div className="mt-6 border-t border-border pt-4">
+              <ArticleCardActions 
+                articleId={article.id}
+                onShareArticle={handleShareArticle}
+                onInviteToArticle={handleInviteToArticle}
+              />
+            </div>
+            
+            {/* Tab Navigation for Content and Comments */}
+            <div className="mt-6 border-t border-border pt-4">
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsList className="w-full mb-4">
+                  <TabsTrigger value="content" className="flex-1">
+                    <Lightbulb className="h-4 w-4 mr-2" /> Conteúdo
+                  </TabsTrigger>
+                  <TabsTrigger value="comments" className="flex-1">
+                    <MessageSquare className="h-4 w-4 mr-2" /> 
+                    Comentários {comments.length > 0 && <span className="ml-1 text-xs bg-primary text-primary-foreground rounded-full w-5 h-5 inline-flex items-center justify-center">{comments.length}</span>}
+                  </TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="content">
+                  <ArticleUsefulness articleId={article.id} />
+                </TabsContent>
+                
+                <TabsContent value="comments">
+                  <CommentSection
+                    articleId={article.id}
+                    comments={comments}
+                    onAddComment={handleAddComment}
+                  />
+                </TabsContent>
+              </Tabs>
+            </div>
+          </>
         )}
       </CardContent>
       <CardFooter>

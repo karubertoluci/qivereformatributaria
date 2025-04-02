@@ -6,14 +6,16 @@ import ReportActions from '../report/ReportActions';
 import OverviewTabContent from './OverviewTabContent';
 import CompanyLegislationRelation from '../report/CompanyLegislationRelation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Book, FileText, Highlighter, X } from 'lucide-react';
+import { Book, FileText, Highlighter } from 'lucide-react';
 import ArticlesTab from './tabs/ArticlesTab';
 import HighlightsTab from './tabs/HighlightsTab';
 import ResultsFooter from './layout/ResultsFooter';
+
 interface ResultsContainerProps {
   segment: BusinessSegment;
   onBackToSegments: () => void;
 }
+
 const ResultsContainer: React.FC<ResultsContainerProps> = ({
   segment
 }) => {
@@ -38,7 +40,9 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
     handleAddHighlight,
     handleRemoveHighlight
   } = useResultsData(segment);
-  return <div className="container mx-auto print:p-0 px-[10px] my-0 py-0">
+
+  return (
+    <div className="container mx-auto print:p-0 px-[10px] my-0 py-0">
       {hasCompanyData && <ReportActions companyData={formData} segment={segment} />}
       
       <Tabs defaultValue="overview" className="w-full">
@@ -56,25 +60,57 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
         
         {/* Visão Geral Tab */}
         <TabsContent value="overview">
-          <OverviewTabContent segment={segment} companyData={formData} hasCompanyData={hasCompanyData} relevantArticles={relevantArticles} onSelectArticle={articleId => {
-          setExpandedArticleId(articleId);
-          document.querySelector('[value="articles"]')?.dispatchEvent(new Event('click'));
-        }} />
+          <OverviewTabContent 
+            segment={segment} 
+            companyData={formData} 
+            hasCompanyData={hasCompanyData} 
+            relevantArticles={relevantArticles} 
+            onSelectArticle={articleId => {
+              setExpandedArticleId(articleId);
+              document.querySelector('[value="articles"]')?.dispatchEvent(new Event('click'));
+            }} 
+          />
         </TabsContent>
         
         {/* Artigos e Impactos Tab */}
         <TabsContent value="articles">
-          <ArticlesTab segment={segment} filteredArticles={filteredArticles} relevantArticles={relevantArticles} positiveCount={positiveCount} negativeCount={negativeCount} topics={topics} viewMode={viewMode} setViewMode={setViewMode} searchTerm={searchTerm} setSearchTerm={setSearchTerm} filterType={filterType} setFilterType={setFilterType} expandedArticleId={expandedArticleId} setExpandedArticleId={setExpandedArticleId} articlesByTopic={articlesByTopic} highlights={highlights} onAddHighlight={handleAddHighlight} onRemoveHighlight={handleRemoveHighlight} />
+          <ArticlesTab 
+            segment={segment}
+            filteredArticles={filteredArticles}
+            relevantArticles={relevantArticles}
+            positiveCount={positiveCount}
+            negativeCount={negativeCount}
+            topics={topics}
+            viewMode={viewMode}
+            setViewMode={setViewMode}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            filterType={filterType}
+            setFilterType={setFilterType}
+            expandedArticleId={expandedArticleId}
+            setExpandedArticleId={setExpandedArticleId}
+            articlesByTopic={articlesByTopic}
+            highlights={highlights}
+            onAddHighlight={handleAddHighlight}
+            onRemoveHighlight={handleRemoveHighlight}
+          />
         </TabsContent>
         
-        {/* Meus Destaques Tab */}
+        {/* Meus Destaques Tab - Centralized at global level */}
         <TabsContent value="highlights">
-          <HighlightsTab highlights={highlights} relevantArticles={relevantArticles} setExpandedArticleId={setExpandedArticleId} handleRemoveHighlight={handleRemoveHighlight} />
+          <HighlightsTab 
+            highlights={highlights}
+            relevantArticles={relevantArticles}
+            setExpandedArticleId={setExpandedArticleId}
+            handleRemoveHighlight={handleRemoveHighlight}
+          />
         </TabsContent>
       </Tabs>
       
       {/* Rodapé do relatório */}
       <ResultsFooter />
-    </div>;
+    </div>
+  );
 };
+
 export default ResultsContainer;
