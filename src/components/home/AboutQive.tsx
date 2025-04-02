@@ -1,10 +1,7 @@
-
 import React from 'react';
 import { FileText, Shield, LightbulbIcon, BookOpen } from 'lucide-react';
-
 const AboutQive = () => {
-  return (
-    <section className="py-16 bg-gray-50">
+  return <section className="bg-gray-50 py-[56px]">
       <div className="container mx-auto px-4 max-w-5xl">
         <h2 className="text-3xl font-bold text-center mb-4">Por que Criamos a Qive Reforma Tributária</h2>
         
@@ -85,8 +82,6 @@ const AboutQive = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default AboutQive;
