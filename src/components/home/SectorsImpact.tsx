@@ -2,70 +2,89 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Store, Briefcase, Building, BarChart4, HeartPulse, GraduationCap, Banknote, Truck } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useFormDialogContext } from './FormDialogContext';
 
 interface SectorCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
+  onLearnMore: () => void;
 }
 
-const SectorCard: React.FC<SectorCardProps> = ({ icon, title, description }) => (
-  <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full">
+const SectorCard: React.FC<SectorCardProps> = ({ icon, title, description, onLearnMore }) => (
+  <Card className="border border-orange-100 shadow-sm hover:shadow-md transition-shadow h-full bg-gradient-to-br from-orange-50 to-white">
     <CardContent className="p-6 flex flex-col items-center h-full">
-      <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mb-4">
+      <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mb-4">
         {icon}
       </div>
       <h3 className="text-xl font-bold mb-3 text-center">{title}</h3>
-      <p className="text-gray-700 text-center">
+      <p className="text-gray-700 text-center mb-4">
         {description}
       </p>
+      <div className="mt-auto pt-2">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={onLearnMore}
+          className="text-orange-600 hover:text-orange-700 hover:bg-orange-50"
+        >
+          Saiba mais →
+        </Button>
+      </div>
     </CardContent>
   </Card>
 );
 
 const SectorsImpact = () => {
+  const { openFormDialog } = useFormDialogContext();
+  
   const sectors = [
     {
-      icon: <Store className="h-8 w-8 text-blue-600" />,
+      icon: <Store className="h-8 w-8 text-orange-500" />,
       title: "Comércio e Varejo",
       description: "Impacto nas alíquotas e fim da cumulatividade dos tributos, com potencial redução da carga tributária em produtos essenciais."
     },
     {
-      icon: <Building className="h-8 w-8 text-blue-600" />,
+      icon: <Building className="h-8 w-8 text-orange-500" />,
       title: "Indústria",
       description: "Simplificação do sistema e recuperação de créditos em toda cadeia produtiva, eliminando a tributação em cascata."
     },
     {
-      icon: <Briefcase className="h-8 w-8 text-blue-600" />,
+      icon: <Briefcase className="h-8 w-8 text-orange-500" />,
       title: "Prestação de Serviços",
       description: "Mudanças significativas com a substituição do ISS pelo IBS, com regras de transição especiais para o setor."
     },
     {
-      icon: <BarChart4 className="h-8 w-8 text-blue-600" />,
+      icon: <BarChart4 className="h-8 w-8 text-orange-500" />,
       title: "Tecnologia",
       description: "Maior segurança jurídica e possibilidade de aproveitamento de créditos de bens e serviços utilizados na operação."
     },
     {
-      icon: <HeartPulse className="h-8 w-8 text-blue-600" />,
+      icon: <HeartPulse className="h-8 w-8 text-orange-500" />,
       title: "Saúde",
       description: "Tratamento diferenciado para medicamentos e serviços essenciais, com possível redução de custos ao consumidor final."
     },
     {
-      icon: <GraduationCap className="h-8 w-8 text-blue-600" />,
+      icon: <GraduationCap className="h-8 w-8 text-orange-500" />,
       title: "Educação",
       description: "Regime específico com alíquotas diferenciadas e regras especiais para instituições de ensino."
     },
     {
-      icon: <Banknote className="h-8 w-8 text-blue-600" />,
+      icon: <Banknote className="h-8 w-8 text-orange-500" />,
       title: "Serviços Financeiros",
       description: "Nova metodologia de tributação para operações financeiras, com impacto direto nos custos de transação bancária."
     },
     {
-      icon: <Truck className="h-8 w-8 text-blue-600" />,
+      icon: <Truck className="h-8 w-8 text-orange-500" />,
       title: "Transporte e Logística",
       description: "Mudanças na tributação interestadual e maior clareza para operações de transporte com o princípio do destino."
     }
   ];
+
+  const handleLearnMore = () => {
+    openFormDialog();
+  };
 
   return (
     <section className="py-16 bg-white">
@@ -88,6 +107,7 @@ const SectorsImpact = () => {
               icon={sector.icon}
               title={sector.title}
               description={sector.description}
+              onLearnMore={handleLearnMore}
             />
           ))}
         </div>

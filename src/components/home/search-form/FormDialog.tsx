@@ -23,8 +23,6 @@ export const formSchema = z.object({
 export type FormValues = z.infer<typeof formSchema>;
 
 interface FormDialogProps {
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
   onSubmit: (data: FormValues) => void;
   isLoading: boolean;
 }

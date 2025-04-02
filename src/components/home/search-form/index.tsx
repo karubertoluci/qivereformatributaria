@@ -7,6 +7,7 @@ import FormDialog, { FormValues } from './FormDialog';
 import LoadingDialog from './LoadingDialog';
 import { cnaeToSegmentMap } from './utils';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { useFormDialogContext } from '../FormDialogContext';
 
 interface SearchFormProps {
   onCnaeSubmit: (cnae: string) => void;
@@ -18,8 +19,8 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
   const [isLoading, setIsLoading] = useState(false);
   const [showLoadingDialog, setShowLoadingDialog] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
   const [currentRazaoSocial, setCurrentRazaoSocial] = useState('');
+  const { isFormDialogOpen, closeFormDialog } = useFormDialogContext();
 
   const simulateReportGeneration = (data: FormValues) => {
     setShowLoadingDialog(true);
@@ -60,7 +61,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
       setIsLoading(false);
       simulateReportGeneration(data);
       console.log("Dados capturados:", data);
-      setIsFormDialogOpen(false);
+      closeFormDialog();
     }, 1000);
   };
 
@@ -73,14 +74,12 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
         </p>
         
         <div className="flex flex-col items-center">
-          <Dialog open={isFormDialogOpen} onOpenChange={setIsFormDialogOpen}>
+          <Dialog open={isFormDialogOpen} onOpenChange={closeFormDialog}>
             <DialogTrigger asChild>
               <SearchFormButton />
             </DialogTrigger>
             
             <FormDialog 
-              open={isFormDialogOpen}
-              onOpenChange={setIsFormDialogOpen}
               onSubmit={handleSubmit}
               isLoading={isLoading}
             />
