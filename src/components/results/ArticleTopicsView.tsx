@@ -12,6 +12,7 @@ interface ArticleTopicsViewProps {
   segmentId: string;
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
+  onSelectArticle: (id: string | null) => void;
   highlights?: HighlightType[];
   onAddHighlight?: (text: string, color: HighlightType['color']) => void;
   onRemoveHighlight?: (id: string) => void;
@@ -24,6 +25,7 @@ const ArticleTopicsView: React.FC<ArticleTopicsViewProps> = ({
   segmentId,
   expandedArticleId,
   setExpandedArticleId,
+  onSelectArticle,
   highlights = [],
   onAddHighlight = () => {},
   onRemoveHighlight = () => {}
@@ -67,7 +69,7 @@ const ArticleTopicsView: React.FC<ArticleTopicsViewProps> = ({
           </div>
           
           <div className="space-y-6">
-            {articlesByTopic[topic.id].length > 0 ? (
+            {articlesByTopic[topic.id]?.length > 0 ? (
               articlesByTopic[topic.id].map((article) => (
                 <div key={article.id} id={`article-${article.id}`}>
                   <ArticleCard 

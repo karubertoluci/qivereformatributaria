@@ -7,26 +7,34 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import ArticleCard from '../ArticleCard';
 import { HighlightType } from './types';
+import { BusinessSegment } from '@/data/segments';
 
 interface ArticleTableViewProps {
-  filteredArticles: Article[];
-  segmentId: string;
+  articles: Article[];
+  segment?: BusinessSegment;
+  segmentId?: string;
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
+  isTableView?: boolean;
   highlights?: HighlightType[];
   onAddHighlight?: (text: string, color: HighlightType['color']) => void;
   onRemoveHighlight?: (id: string) => void;
 }
 
 const ArticleTableView: React.FC<ArticleTableViewProps> = ({
-  filteredArticles,
+  articles,
+  segment,
   segmentId,
   expandedArticleId,
   setExpandedArticleId,
+  isTableView = true,
   highlights = [],
   onAddHighlight = () => {},
   onRemoveHighlight = () => {}
 }) => {
+  // Use segmentId from props or from segment object if provided
+  const actualSegmentId = segmentId || (segment ? segment.id : '');
+  
   return (
     <>
       <Table>
@@ -39,9 +47,9 @@ const ArticleTableView: React.FC<ArticleTableViewProps> = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredArticles.map((article) => {
+          {articles.map((article) => {
             const segmentImpacts = article.impacts.filter(impact => 
-              impact.segments.includes(segmentId)
+              impact.segments.includes(actualSegmentId)
             );
             const hasPositiveImpact = segmentImpacts.some(impact => impact.type === 'positive');
             const hasNegativeImpact = segmentImpacts.some(impact => impact.type === 'negative');
@@ -83,8 +91,8 @@ const ArticleTableView: React.FC<ArticleTableViewProps> = ({
       {expandedArticleId && (
         <div className="mt-6 p-4 border rounded-lg">
           <ArticleCard 
-            article={filteredArticles.find(a => a.id === expandedArticleId)!}
-            segmentId={segmentId}
+            article={articles.find(a => a.id === expandedArticleId)!}
+            segmentId={actualSegmentId}
             expanded={true}
             onToggleExpand={() => setExpandedArticleId(null)}
             highlights={highlights}

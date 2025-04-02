@@ -2,7 +2,7 @@
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
-import { HighlightType } from '../types';
+import { HighlightType, Topic } from '../types';
 import FilterBar from '../FilterBar';
 import ViewSwitcher from '../ViewSwitcher';
 import ArticleTableView from '../ArticleTableView';
@@ -14,7 +14,7 @@ interface ArticlesTabProps {
   relevantArticles: Article[];
   positiveCount: number;
   negativeCount: number;
-  topics: string[];
+  topics: Topic[];
   viewMode: 'list' | 'table' | 'chart';
   setViewMode: (mode: 'list' | 'table' | 'chart') => void;
   searchTerm: string;
@@ -53,7 +53,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
     <div>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <FilterBar 
-          totalCount={relevantArticles.length}
           positiveCount={positiveCount}
           negativeCount={negativeCount}
           searchTerm={searchTerm}
@@ -75,8 +74,11 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
           onSelectArticle={setExpandedArticleId}
           expandedArticleId={expandedArticleId}
           highlights={highlights}
-          onAddHighlight={onAddHighlight}
+          onAddHighlight={(text, color) => onAddHighlight(text, color, expandedArticleId || '')}
           onRemoveHighlight={onRemoveHighlight}
+          filteredArticles={filteredArticles}
+          segmentId={segment.id}
+          setExpandedArticleId={setExpandedArticleId}
         />
       )}
       
@@ -88,7 +90,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
           isTableView={viewMode === 'table'}
           segment={segment}
           highlights={highlights}
-          onAddHighlight={onAddHighlight}
+          onAddHighlight={(text, color) => onAddHighlight(text, color, expandedArticleId || '')}
           onRemoveHighlight={onRemoveHighlight}
         />
       )}
