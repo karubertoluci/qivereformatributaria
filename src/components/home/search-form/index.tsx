@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { businessSegments, BusinessSegment } from '@/data/segments';
@@ -7,6 +8,7 @@ import LoadingDialog from './LoadingDialog';
 import { cnaeToSegmentMap } from './utils';
 import { Dialog } from '@/components/ui/dialog';
 import { useFormDialogContext } from '../FormDialogContext';
+import { fetchCNPJData } from '@/services/brasilApi';
 
 interface SearchFormProps {
   onCnaeSubmit: (cnae: string) => void;
@@ -14,46 +16,121 @@ interface SearchFormProps {
   onSelectSegment: (segment: BusinessSegment | null) => void;
 }
 
+interface CompanyData {
+  cnpj?: string;
+  razaoSocial?: string;
+  nomeFantasia?: string;
+  endereco?: string;
+  cnaePrincipal?: {
+    codigo: string;
+    descricao: string;
+  };
+  cnaeSecundarios?: {
+    codigo: string;
+    descricao: string;
+  }[];
+  situacaoCadastral?: string;
+  naturezaJuridica?: string;
+}
+
 const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment, onSelectSegment }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showLoadingDialog, setShowLoadingDialog] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const [currentRazaoSocial, setCurrentRazaoSocial] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [companyData, setCompanyData] = useState<CompanyData | undefined>(undefined);
   const { isFormDialogOpen, closeFormDialog } = useFormDialogContext();
 
-  const simulateReportGeneration = (data: FormValues) => {
+  const fetchCompanyData = async (cnpj: string) => {
+    try {
+      const data = await fetchCNPJData(cnpj);
+      return {
+        cnpj: data.cnpj,
+        razaoSocial: data.razao_social,
+        nomeFantasia: data.nome_fantasia,
+        endereco: `${data.logradouro}, ${data.numero}, ${data.bairro}, ${data.municipio} - ${data.uf}`,
+        cnaePrincipal: {
+          codigo: data.cnae_fiscal.toString(),
+          descricao: data.cnae_fiscal_descricao,
+        },
+        cnaeSecundarios: data.cnaes_secundarios,
+        situacaoCadastral: data.situacao_cadastral,
+        naturezaJuridica: data.natureza_juridica,
+      };
+    } catch (error) {
+      console.error('Erro ao buscar dados do CNPJ:', error);
+      return undefined;
+    }
+  };
+
+  const simulateReportGeneration = async (data: FormValues) => {
     setShowLoadingDialog(true);
     setLoadingProgress(0);
     
-    const interval = setInterval(() => {
+    let cnaeCode = '';
+    let companyInfo: CompanyData | undefined = undefined;
+    
+    const interval = setInterval(async () => {
       setLoadingProgress(prev => {
         const newProgress = prev + 10;
+        
+        // Quando chegar a 20%, tenta buscar os dados da empresa
+        if (prev === 10 && newProgress === 20) {
+          fetchCompanyData(data.cnpj).then(result => {
+            if (result) {
+              setCompanyData(result);
+              setCompanyName(result.razaoSocial || '');
+              companyInfo = result;
+              
+              // Extrai o CNAE principal para usar na seleção do segmento
+              if (result.cnaePrincipal) {
+                cnaeCode = result.cnaePrincipal.codigo.substring(0, 2);
+              }
+            }
+          });
+        }
+        
         if (newProgress >= 100) {
           clearInterval(interval);
           setTimeout(() => {
             setShowLoadingDialog(false);
-            const segmentId = cnaeToSegmentMap[data.cnae.substring(0, 2)];
-            if (segmentId) {
-              const segment = businessSegments.find(seg => seg.id === segmentId);
-              if (segment) {
-                toast.success(`Relatório para ${data.razaoSocial} gerado com sucesso!`);
-                onSelectSegment(segment);
+            
+            // Salva os dados da empresa obtidos da API
+            const formDataWithCompanyInfo = {
+              ...data,
+              ...companyInfo,
+            };
+            
+            localStorage.setItem('formData', JSON.stringify(formDataWithCompanyInfo));
+            
+            // Tenta identificar o segmento pelo CNAE
+            if (cnaeCode) {
+              const segmentId = cnaeToSegmentMap[cnaeCode];
+              if (segmentId) {
+                const segment = businessSegments.find(seg => seg.id === segmentId);
+                if (segment) {
+                  toast.success(`Relatório para ${companyInfo?.razaoSocial || data.nome} gerado com sucesso!`);
+                  onSelectSegment(segment);
+                  return newProgress;
+                }
               }
-            } else {
-              onCnaeSubmit(data.cnae);
-              toast.success(`Relatório para ${data.razaoSocial} gerado com sucesso!`);
             }
+            
+            // Se não encontrou segmento específico, usa o CNAE informado
+            onCnaeSubmit(cnaeCode || data.cnpj.substring(0, 2));
+            toast.success(`Relatório para ${companyInfo?.razaoSocial || data.nome} gerado com sucesso!`);
           }, 500);
         }
         return newProgress;
       });
-    }, 300);
+    }, 600); // Intervalo maior para dar tempo de buscar os dados da API
   };
 
-  const handleSubmit = (data: FormValues) => {
+  const handleSubmit = async (data: FormValues) => {
     setIsLoading(true);
-    setCurrentRazaoSocial(data.razaoSocial);
+    setCompanyName(data.nome);
     
+    // Salva os dados do formulário
     localStorage.setItem('formData', JSON.stringify(data));
     
     setTimeout(() => {
@@ -98,7 +175,8 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onBrowseBySegment
           open={showLoadingDialog} 
           onOpenChange={setShowLoadingDialog}
           progress={loadingProgress}
-          razaoSocial={currentRazaoSocial}
+          companyName={companyName}
+          companyData={companyData}
         />
       </div>
     </div>

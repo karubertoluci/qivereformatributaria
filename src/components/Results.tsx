@@ -12,11 +12,29 @@ import FilterBar from './results/FilterBar';
 import ViewSwitcher from './results/ViewSwitcher';
 import ArticleTopicsView from './results/ArticleTopicsView';
 import ArticleTableView from './results/ArticleTableView';
-import { useForm } from 'react-hook-form';
 
 interface ResultsProps {
   segment: BusinessSegment;
   onBackToSegments: () => void;
+}
+
+interface CompanyData {
+  nome?: string;
+  cargo?: string;
+  cnpj?: string;
+  razaoSocial?: string;
+  nomeFantasia?: string;
+  endereco?: string;
+  cnaePrincipal?: {
+    codigo: string;
+    descricao: string;
+  };
+  cnaeSecundarios?: {
+    codigo: string;
+    descricao: string;
+  }[];
+  situacaoCadastral?: string;
+  naturezaJuridica?: string;
 }
 
 const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
@@ -26,7 +44,8 @@ const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
   const [viewMode, setViewMode] = useState<'list' | 'table' | 'chart'>('chart');
 
   // Obter informações da empresa do formulário (caso tenha sido preenchido)
-  const companyData = JSON.parse(localStorage.getItem('companyData') || '{}');
+  const formData = JSON.parse(localStorage.getItem('formData') || '{}');
+  const companyData: CompanyData = formData;
   const hasCompanyData = Object.keys(companyData).length > 0;
 
   // Filtrar artigos que afetam o segmento selecionado
@@ -78,12 +97,41 @@ const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
     <div className="container mx-auto px-4 py-8">
       {hasCompanyData && (
         <div className="bg-orange-50 p-4 rounded-lg mb-6 border border-orange-200">
-          <h2 className="text-xl font-bold mb-2">Relatório Personalizado para {companyData.razaoSocial}</h2>
-          <p className="text-gray-700">
-            Olá {companyData.nome}, {companyData.cargo && `${companyData.cargo} da`} {companyData.razaoSocial}.
-            Seu relatório personalizado está pronto! Analisamos os impactos da reforma tributária para empresas 
-            do segmento <strong>{segment.name}</strong> com CNAE iniciando em <strong>{companyData.cnae.substring(0, 2)}</strong>.
-          </p>
+          <h2 className="text-xl font-bold mb-2">
+            Relatório Personalizado para {companyData.razaoSocial || companyData.nome}
+          </h2>
+          <div className="text-gray-700">
+            <p>
+              Olá {companyData.nome}, 
+              {companyData.cargo && <span> {companyData.cargo} </span>}
+              {companyData.razaoSocial && <span>da empresa {companyData.razaoSocial}.</span>}
+            </p>
+            <p className="mt-2">
+              Seu relatório personalizado está pronto! Analisamos os impactos da reforma tributária para empresas 
+              do segmento <strong>{segment.name}</strong> 
+              {companyData.cnaePrincipal && (
+                <span> com CNAE principal <strong>{companyData.cnaePrincipal.codigo}</strong> - {companyData.cnaePrincipal.descricao}.</span>
+              )}
+            </p>
+            
+            {companyData.cnaeSecundarios && companyData.cnaeSecundarios.length > 0 && (
+              <div className="mt-2">
+                <details className="text-sm">
+                  <summary className="cursor-pointer text-orange-600 hover:text-orange-700">
+                    Ver CNAEs secundários ({companyData.cnaeSecundarios.length})
+                  </summary>
+                  <ul className="list-disc list-inside ml-4 mt-2">
+                    {companyData.cnaeSecundarios.slice(0, 5).map((cnae, i) => (
+                      <li key={i}>{cnae.codigo} - {cnae.descricao}</li>
+                    ))}
+                    {companyData.cnaeSecundarios.length > 5 && (
+                      <li>+ {companyData.cnaeSecundarios.length - 5} outros CNAEs</li>
+                    )}
+                  </ul>
+                </details>
+              </div>
+            )}
+          </div>
         </div>
       )}
       

@@ -3,10 +3,9 @@ import React from 'react';
 import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { UseFormReturn } from 'react-hook-form';
 import { FormValues } from '../FormDialog';
-import { Mail, Phone, HelpCircle } from 'lucide-react';
+import { Mail, Phone } from 'lucide-react';
 
 interface ContactFieldsProps {
   form: UseFormReturn<FormValues>;
@@ -14,7 +13,7 @@ interface ContactFieldsProps {
 
 const ContactFields: React.FC<ContactFieldsProps> = ({ form }) => {
   return (
-    <>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <FormField
         control={form.control}
         name="email"
@@ -59,29 +58,7 @@ const ContactFields: React.FC<ContactFieldsProps> = ({ form }) => {
           </FormItem>
         )}
       />
-      
-      <FormField
-        control={form.control}
-        name="desafios"
-        render={({ field }) => (
-          <FormItem>
-            <Label htmlFor="desafios" className="block mb-2 font-medium flex items-center">
-              <HelpCircle className="h-4 w-4 mr-2 text-orange-500" />
-              Quais são suas maiores dúvidas sobre a reforma tributária? (opcional)
-            </Label>
-            <FormControl>
-              <Textarea
-                id="desafios"
-                placeholder="Conte-nos quais aspectos da reforma tributária mais preocupam sua empresa..."
-                className="border-gray-300 focus-visible:ring-primary"
-                {...field}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-    </>
+    </div>
   );
 };
 
