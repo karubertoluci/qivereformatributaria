@@ -1,8 +1,8 @@
+
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { useResultsData } from '@/hooks/useResultsData';
 
-import ReportHeader from '../report/ReportHeader';
 import ReportActions from '../report/ReportActions';
 import OverviewTabContent from './OverviewTabContent';
 import FilterBar from './FilterBar';
@@ -37,15 +37,8 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment }) => {
     topics
   } = useResultsData(segment);
 
-  const companyName = formData?.razaoSocial || formData?.nomeFantasia || formData?.nome;
-
   return (
     <div className="container mx-auto px-4 py-8 print:p-0">
-      <ReportHeader 
-        segment={segment}
-        companyName={companyName}
-      />
-      
       {hasCompanyData && (
         <ReportActions companyData={formData} segment={segment} />
       )}

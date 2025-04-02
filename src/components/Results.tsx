@@ -25,12 +25,17 @@ const Results: React.FC<ResultsProps> = ({ segment }) => {
     article.impacts.some(impact => impact.type === 'negative' && impact.segments.includes(segment.id))
   ).length;
 
+  // Get company name from localStorage if available
+  const formData = JSON.parse(localStorage.getItem('formData') || '{}');
+  const companyName = formData?.razaoSocial || formData?.nomeFantasia || formData?.nome;
+
   return (
     <div className="print:bg-white">
       <ResultsHeader 
         segment={segment}
         positiveCount={positiveCount}
         negativeCount={negativeCount}
+        companyName={companyName}
       />
       <ResultsContainer segment={segment} onBackToSegments={() => {}} />
     </div>
