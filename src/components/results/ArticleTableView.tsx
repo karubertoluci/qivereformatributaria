@@ -1,107 +1,91 @@
-
 import React from 'react';
+import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ArrowUp, ArrowDown } from 'lucide-react';
+import { Table, TableBody, TableHead, TableHeader, TableRow, TableCell } from '@/components/ui/table';
 import ArticleCard from '../ArticleCard';
 import { HighlightType } from './types';
-import { BusinessSegment } from '@/data/segments';
 
 interface ArticleTableViewProps {
   articles: Article[];
-  segment?: BusinessSegment;
-  segmentId?: string;
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
-  isTableView?: boolean;
-  highlights?: HighlightType[];
-  onAddHighlight?: (text: string, color: HighlightType['color']) => void;
-  onRemoveHighlight?: (id: string) => void;
+  isTableView: boolean;
+  segment: BusinessSegment;
+  highlights: HighlightType[];
+  onAddHighlight: (text: string, color: HighlightType['color'], articleId: string) => void;
+  onRemoveHighlight: (id: string) => void;
 }
 
 const ArticleTableView: React.FC<ArticleTableViewProps> = ({
   articles,
-  segment,
-  segmentId,
   expandedArticleId,
   setExpandedArticleId,
-  isTableView = true,
-  highlights = [],
-  onAddHighlight = () => {},
-  onRemoveHighlight = () => {}
+  isTableView,
+  segment,
+  highlights,
+  onAddHighlight,
+  onRemoveHighlight
 }) => {
-  // Use segmentId from props or from segment object if provided
-  const actualSegmentId = segmentId || (segment ? segment.id : '');
-  
-  return (
-    <>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Artigo</TableHead>
-            <TableHead>Título</TableHead>
-            <TableHead>Impacto</TableHead>
-            <TableHead className="w-[100px]">Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {articles.map((article) => {
-            const segmentImpacts = article.impacts.filter(impact => 
-              impact.segments.includes(actualSegmentId)
-            );
-            const hasPositiveImpact = segmentImpacts.some(impact => impact.type === 'positive');
-            const hasNegativeImpact = segmentImpacts.some(impact => impact.type === 'negative');
-            
-            return (
+  if (isTableView) {
+    return (
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Artigo</TableHead>
+              <TableHead>Título</TableHead>
+              <TableHead>Impacto</TableHead>
+              <TableHead>Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {articles.map((article) => (
               <TableRow key={article.id}>
-                <TableCell className="font-medium">{article.number}</TableCell>
+                <TableCell>{article.number}</TableCell>
                 <TableCell>{article.title}</TableCell>
                 <TableCell>
-                  <div className="flex gap-2">
-                    {hasPositiveImpact && (
-                      <Badge variant="outline" className="bg-positive text-positive-foreground">
-                        <ArrowUp className="h-3 w-3 mr-1" /> Positivo
-                      </Badge>
-                    )}
-                    {hasNegativeImpact && (
-                      <Badge variant="outline" className="bg-negative text-negative-foreground">
-                        <ArrowDown className="h-3 w-3 mr-1" /> Negativo
-                      </Badge>
-                    )}
-                  </div>
+                  {article.impacts.filter(impact => impact.segments.includes(segment.id)).length}
                 </TableCell>
                 <TableCell>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    className="text-primary hover:text-primary hover:bg-primary/10"
-                    onClick={() => setExpandedArticleId(expandedArticleId === article.id ? null : article.id)}
+                  <button
+                    onClick={() => setExpandedArticleId(article.id)}
+                    className="text-primary hover:text-primary-dark underline text-sm"
                   >
-                    {expandedArticleId === article.id ? "Fechar" : "Ver mais"}
-                  </Button>
+                    Ver Detalhes
+                  </button>
                 </TableCell>
               </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-
-      {expandedArticleId && (
-        <div className="mt-6 p-4 border rounded-lg">
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="space-y-6">
+      {articles.map((article) => (
+        <div key={article.id} id={`article-${article.id}`}>
           <ArticleCard 
-            article={articles.find(a => a.id === expandedArticleId)!}
-            segmentId={actualSegmentId}
-            expanded={true}
-            onToggleExpand={() => setExpandedArticleId(null)}
+            article={article}
+            segmentId={segment.id}
+            expanded={expandedArticleId === article.id}
+            onToggleExpand={() => {
+              setExpandedArticleId(expandedArticleId === article.id ? null : article.id);
+            }}
             highlights={highlights}
-            onAddHighlight={onAddHighlight}
+            onAddHighlight={(text, color) => onAddHighlight(text, color, article.id)}
             onRemoveHighlight={onRemoveHighlight}
           />
         </div>
+      ))}
+      
+      {articles.length === 0 && (
+        <div className="text-center py-8 text-muted-foreground">
+          Nenhum artigo encontrado com os filtros atuais.
+        </div>
       )}
-    </>
+    </div>
   );
 };
 

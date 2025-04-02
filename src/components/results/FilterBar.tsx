@@ -1,48 +1,66 @@
 
 import React from 'react';
 import { Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { ArrowDown, ArrowUp } from 'lucide-react';
 
 interface FilterBarProps {
+  positiveCount: number;
+  negativeCount: number;
+  totalCount: number;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   filterType: 'all' | 'positive' | 'negative';
   setFilterType: (type: 'all' | 'positive' | 'negative') => void;
-  positiveCount: number;
-  negativeCount: number;
 }
 
 const FilterBar: React.FC<FilterBarProps> = ({
+  positiveCount,
+  negativeCount,
+  totalCount,
   searchTerm,
   setSearchTerm,
   filterType,
-  setFilterType,
-  positiveCount,
-  negativeCount
+  setFilterType
 }) => {
   return (
-    <>
-      <div className="mb-8 relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
+    <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+      <div className="relative">
+        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
-          className="pl-10 pr-4"
-          placeholder="Pesquisar artigos..."
+          placeholder="Buscar artigos..."
+          className="pl-8 w-full md:w-[200px]"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <Badge variant="outline" className={`${filterType === 'positive' ? 'bg-positive text-positive-foreground' : 'bg-secondary'} cursor-pointer px-3 py-1`} onClick={() => setFilterType(filterType === 'positive' ? 'all' : 'positive')}>
-          <ArrowUp className="h-4 w-4 mr-1" /> Positivos ({positiveCount})
-        </Badge>
-        <Badge variant="outline" className={`${filterType === 'negative' ? 'bg-negative text-negative-foreground' : 'bg-secondary'} cursor-pointer px-3 py-1`} onClick={() => setFilterType(filterType === 'negative' ? 'all' : 'negative')}>
-          <ArrowDown className="h-4 w-4 mr-1" /> Negativos ({negativeCount})
-        </Badge>
+      <div className="flex gap-1.5">
+        <Button
+          size="sm"
+          variant={filterType === 'all' ? "default" : "outline"}
+          onClick={() => setFilterType('all')}
+          className="text-xs whitespace-nowrap"
+        >
+          Todos ({totalCount})
+        </Button>
+        <Button
+          size="sm"
+          variant={filterType === 'positive' ? "default" : "outline"}
+          onClick={() => setFilterType('positive')}
+          className="text-xs whitespace-nowrap"
+        >
+          Positivos ({positiveCount})
+        </Button>
+        <Button
+          size="sm"
+          variant={filterType === 'negative' ? "default" : "outline"}
+          onClick={() => setFilterType('negative')}
+          className="text-xs whitespace-nowrap"
+        >
+          Negativos ({negativeCount})
+        </Button>
       </div>
-    </>
+    </div>
   );
 };
 

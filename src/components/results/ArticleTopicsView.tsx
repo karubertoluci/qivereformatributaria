@@ -14,7 +14,7 @@ interface ArticleTopicsViewProps {
   setExpandedArticleId: (id: string | null) => void;
   onSelectArticle: (id: string | null) => void;
   highlights?: HighlightType[];
-  onAddHighlight?: (text: string, color: HighlightType['color']) => void;
+  onAddHighlight?: (text: string, color: HighlightType['color'], articleId: string) => void;
   onRemoveHighlight?: (id: string) => void;
 }
 
@@ -51,9 +51,14 @@ const ArticleTopicsView: React.FC<ArticleTopicsViewProps> = ({
                 expanded={expandedArticleId === article.id}
                 onToggleExpand={() => {
                   setExpandedArticleId(expandedArticleId === article.id ? null : article.id);
+                  if (expandedArticleId !== article.id) {
+                    onSelectArticle(article.id);
+                  } else {
+                    onSelectArticle(null);
+                  }
                 }}
                 highlights={highlights}
-                onAddHighlight={onAddHighlight}
+                onAddHighlight={(text, color) => onAddHighlight(text, color, article.id)}
                 onRemoveHighlight={onRemoveHighlight}
               />
             </div>
@@ -78,9 +83,14 @@ const ArticleTopicsView: React.FC<ArticleTopicsViewProps> = ({
                     expanded={expandedArticleId === article.id}
                     onToggleExpand={() => {
                       setExpandedArticleId(expandedArticleId === article.id ? null : article.id);
+                      if (expandedArticleId !== article.id) {
+                        onSelectArticle(article.id);
+                      } else {
+                        onSelectArticle(null);
+                      }
                     }}
                     highlights={highlights}
-                    onAddHighlight={onAddHighlight}
+                    onAddHighlight={(text, color) => onAddHighlight(text, color, article.id)}
                     onRemoveHighlight={onRemoveHighlight}
                   />
                 </div>

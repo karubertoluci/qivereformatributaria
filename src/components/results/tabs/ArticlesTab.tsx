@@ -7,6 +7,9 @@ import FilterBar from '../FilterBar';
 import ViewSwitcher from '../ViewSwitcher';
 import ArticleTableView from '../ArticleTableView';
 import ArticleTopicsView from '../ArticleTopicsView';
+import ArticlesPriorityChart from '../../ArticlesPriorityChart';
+import LegislationBooks from '../../report/LegislationBooks';
+import { Book } from 'lucide-react';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -55,6 +58,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         <FilterBar 
           positiveCount={positiveCount}
           negativeCount={negativeCount}
+          totalCount={relevantArticles.length}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           filterType={filterType}
@@ -66,6 +70,27 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
           setViewMode={setViewMode}
         />
       </div>
+
+      {/* Charts Section - Added from Overview */}
+      <div className="mb-8 grid md:grid-cols-2 gap-6">
+        <LegislationBooks 
+          articles={relevantArticles} 
+          onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
+        />
+        
+        <div className="p-4 bg-card rounded-lg border shadow-sm">
+          <h3 className="text-xl font-medium mb-4 flex items-center gap-2">
+            <Book className="h-5 w-5 text-primary" />
+            Artigos Prioritários para seu Segmento
+          </h3>
+          
+          <ArticlesPriorityChart 
+            articles={relevantArticles}
+            segmentId={segment.id}
+            onSelectArticle={setExpandedArticleId}
+          />
+        </div>
+      </div>
       
       {viewMode === 'chart' && (
         <ArticleTopicsView 
@@ -74,7 +99,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
           onSelectArticle={setExpandedArticleId}
           expandedArticleId={expandedArticleId}
           highlights={highlights}
-          onAddHighlight={(text, color) => onAddHighlight(text, color, expandedArticleId || '')}
+          onAddHighlight={onAddHighlight}
           onRemoveHighlight={onRemoveHighlight}
           filteredArticles={filteredArticles}
           segmentId={segment.id}
@@ -90,7 +115,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
           isTableView={viewMode === 'table'}
           segment={segment}
           highlights={highlights}
-          onAddHighlight={(text, color) => onAddHighlight(text, color, expandedArticleId || '')}
+          onAddHighlight={onAddHighlight}
           onRemoveHighlight={onRemoveHighlight}
         />
       )}
