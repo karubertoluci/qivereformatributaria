@@ -1,13 +1,17 @@
+
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { BusinessSegment } from '@/data/segments';
 import { Button } from '@/components/ui/button';
 import { FileText, Share2, Download } from 'lucide-react';
+
 interface ResultsHeaderProps {
   segment: BusinessSegment;
   positiveCount: number;
   negativeCount: number;
   companyName?: string;
 }
+
 const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   segment,
   positiveCount,
@@ -15,9 +19,17 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   companyName
 }) => {
   const displayName = companyName || "Qive Comercial Ltda";
-  return <div className="flex justify-between items-center mb-8 font-lexend border-b pb-6 print:pb-4 my-[10px] px-[12px]">
+  
+  return (
+    <div className="flex justify-between items-center mb-8 font-lexend border-b pb-6 print:pb-4 my-[10px] px-[12px]">
       {/* Logo */}
-      <img alt="Qive Reforma Tributária" className="h-10" src="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" />
+      <Link to="/">
+        <img 
+          alt="Qive Reforma Tributária" 
+          className="h-10" 
+          src="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" 
+        />
+      </Link>
       
       {/* Center content with file icon, title and subtitle */}
       <div className="text-center mx-auto max-w-md sm:max-w-lg flex flex-col items-center">
@@ -42,6 +54,8 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
           <span className="hidden sm:inline text-xs">Baixar PDF</span>
         </Button>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default ResultsHeader;

@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FileText, Download, Share2 } from 'lucide-react';
 import { BusinessSegment } from '@/data/segments';
 import { Button } from '@/components/ui/button';
@@ -21,11 +22,13 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
     <div className="flex flex-col space-y-4 mb-8 print:mb-6 border-b pb-6">
       <div className="flex items-center justify-between">
         {/* Smaller logo */}
-        <img 
-          alt="Qive Reforma Tributária" 
-          className="h-10" 
-          src="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" 
-        />
+        <Link to="/">
+          <img 
+            alt="Qive Reforma Tributária" 
+            className="h-10" 
+            src="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" 
+          />
+        </Link>
         
         {/* Centered text with truncation */}
         <div className="flex flex-col text-center mx-auto max-w-md sm:max-w-lg">
