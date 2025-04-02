@@ -2,7 +2,6 @@
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import ResultsContainer from './results/ResultsContainer';
-import ResultsHeader from './results/ResultsHeader';
 import { articles } from '@/data/articles';
 
 interface ResultsProps {
@@ -31,12 +30,6 @@ const Results: React.FC<ResultsProps> = ({ segment }) => {
 
   return (
     <div className="print:bg-white">
-      <ResultsHeader 
-        segment={segment}
-        positiveCount={positiveCount}
-        negativeCount={negativeCount}
-        companyName={companyName}
-      />
       <ResultsContainer segment={segment} onBackToSegments={() => {}} />
     </div>
   );

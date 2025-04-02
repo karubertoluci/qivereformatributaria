@@ -22,15 +22,6 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   
   return (
     <div className="flex justify-between items-center mb-8 font-lexend border-b pb-6 print:pb-4 my-[10px] px-[12px]">
-      {/* Logo */}
-      <Link to="/">
-        <img 
-          alt="Qive Reforma Tributária" 
-          className="h-10" 
-          src="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" 
-        />
-      </Link>
-      
       {/* Center content with file icon, title and subtitle */}
       <div className="text-center mx-auto max-w-md sm:max-w-lg flex flex-col items-center">
         <h2 className="text-xl font-bold flex items-center gap-2 justify-center">
