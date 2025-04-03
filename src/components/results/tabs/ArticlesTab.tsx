@@ -7,7 +7,6 @@ import FilterBar from '../FilterBar';
 import ViewSwitcher from '../ViewSwitcher';
 import ArticleTableView from '../ArticleTableView';
 import ArticleTopicsView from '../ArticleTopicsView';
-import LegislationBooks from '../../report/LegislationBooks';
 import { Book, Filter, ListFilter, X, ArrowUp, ArrowDown } from 'lucide-react';
 import ArticlesPriorityChart from '@/components/ArticlesPriorityChart';
 import { Badge } from '@/components/ui/badge';
@@ -17,6 +16,8 @@ import ImpactDistributionChart from '@/components/report/ImpactDistributionChart
 import BookTitleRelevanceChart from '@/components/report/BookTitleRelevanceChart';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { InfoCircle } from 'lucide-react';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -98,6 +99,15 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   // Final filtered articles
   const displayedArticles = applyCustomFilters(filteredArticles);
   
+  // Check if we have critical scenarios (high negative impact)
+  const hasCriticalImpacts = relevantArticles.some(article => 
+    article.impacts.some(impact => 
+      impact.type === 'negative' && 
+      impact.segments.includes(segment.id) &&
+      impact.severity === 'high'
+    )
+  );
+  
   // Reset filters when search or filter type changes
   useEffect(() => {
     setSelectedBookFilter(null);
@@ -168,14 +178,17 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       {/* Charts Section */}
       {!chartsCollapsed && (
         <div className="space-y-6 mb-8">
-          {/* Top row charts */}
-          <div className="grid md:grid-cols-2 gap-6">
+          {/* GRÁFICO 1: Distribuição de artigos por livro (Full width) */}
+          <div className="w-full">
             <BookDistributionChart 
               articles={showAllArticles ? allArticles : relevantArticles} 
               onSelectBook={setSelectedBookFilter}
               selectedBook={selectedBookFilter}
             />
-            
+          </div>
+          
+          {/* GRÁFICO 2: Priorização de Leitura (Relevância) */}
+          <div className="w-full">
             <ArticlesPriorityChart 
               articles={relevantArticles}
               segmentId={segment.id}
@@ -183,12 +196,23 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             />
           </div>
           
-          {/* Middle row chart */}
-          <ImpactDistributionChart 
-            articles={showAllArticles ? allArticles : relevantArticles} 
-            segmentId={segment.id}
-            bookId={selectedBookFilter}
-          />
+          {/* GRÁFICO 3: Favorabilidade por Relevância */}
+          <div className="w-full">
+            {hasCriticalImpacts && (
+              <Alert variant="destructive" className="mb-4">
+                <InfoCircle className="h-4 w-4 mr-2" />
+                <AlertDescription>
+                  Atenção: Identificamos impactos altamente desfavoráveis para seu segmento. Recomendamos analisar com cuidado os artigos marcados como "Muito relevante" com impacto desfavorável.
+                </AlertDescription>
+              </Alert>
+            )}
+            
+            <ImpactDistributionChart 
+              articles={showAllArticles ? allArticles : relevantArticles} 
+              segmentId={segment.id}
+              bookId={selectedBookFilter}
+            />
+          </div>
           
           {/* Book Title Relevance Chart - show only when a book is selected */}
           {selectedBookFilter && (

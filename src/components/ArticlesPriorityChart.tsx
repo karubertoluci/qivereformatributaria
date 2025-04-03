@@ -3,7 +3,8 @@ import React from 'react';
 import { Article } from '@/data/articles';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { BarChartIcon, ArrowUp, ArrowDown } from 'lucide-react';
+import { BarChartIcon, ArrowUp, ArrowDown, HelpCircle } from 'lucide-react';
+import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ArticlesPriorityChartProps {
   articles: Article[];
@@ -76,13 +77,29 @@ const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
   return (
     <Card className="shadow-md">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <BarChartIcon className="h-5 w-5 text-primary" />
-          <span>Priorização de Leitura</span>
-        </CardTitle>
-        <CardDescription>
-          Artigos mais relevantes para seu segmento, ordenados por nível de importância
-        </CardDescription>
+        <div className="flex flex-row items-start justify-between">
+          <div>
+            <CardTitle className="text-xl flex items-center gap-2">
+              <BarChartIcon className="h-5 w-5 text-primary" />
+              <span>Priorização de Leitura</span>
+            </CardTitle>
+            <CardDescription className="text-sm text-muted-foreground mt-1">
+              Artigos mais relevantes para seu segmento, ordenados por nível de importância
+            </CardDescription>
+          </div>
+          
+          <TooltipProvider>
+            <UITooltip>
+              <TooltipTrigger asChild>
+                <HelpCircle className="h-5 w-5 text-muted-foreground cursor-help" />
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs">
+                <p>Este gráfico mostra os artigos mais importantes para seu segmento. 
+                Clique nas barras para visualizar detalhes de cada artigo.</p>
+              </TooltipContent>
+            </UITooltip>
+          </TooltipProvider>
+        </div>
       </CardHeader>
       
       <CardContent>

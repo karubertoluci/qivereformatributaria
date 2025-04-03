@@ -3,8 +3,9 @@ import React from 'react';
 import { Article } from '@/data/articles';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import { TrendingUp, HelpCircle } from 'lucide-react';
+import { TrendingUp, HelpCircle, AlertTriangle } from 'lucide-react';
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface ImpactDistributionChartProps {
   articles: Article[];
@@ -19,6 +20,7 @@ interface RelevanceGroup {
   negative: number;
   neutral: number;
   total: number;
+  hasCritical?: boolean;
 }
 
 const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
@@ -45,7 +47,7 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
       { name: 'Irrelevante', score: 0, positive: 0, negative: 0, neutral: 0, total: 0 },
       { name: 'Pouco relevante', score: 25, positive: 0, negative: 0, neutral: 0, total: 0 },
       { name: 'Moderadamente relevante', score: 50, positive: 0, negative: 0, neutral: 0, total: 0 },
-      { name: 'Muito relevante', score: 75, positive: 0, negative: 0, neutral: 0, total: 0 }
+      { name: 'Muito relevante', score: 75, positive: 0, negative: 0, neutral: 0, total: 0, hasCritical: false }
     ];
     
     // Calculate relevance score for each article
@@ -59,9 +61,17 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
       // Calculate score
       let score = 0;
       score += segmentImpacts.length * 10;
+      
+      let hasCriticalImpact = false;
+      
       segmentImpacts.forEach(impact => {
         if (impact.type === 'positive') score += 15;
-        if (impact.type === 'negative') score += 20;
+        if (impact.type === 'negative') {
+          score += 20;
+          if (impact.severity === 'high') {
+            hasCriticalImpact = true;
+          }
+        }
       });
       score = Math.min(score, 100);
       
@@ -72,6 +82,11 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
       else if (score >= 25) groupIndex = 1;
       
       groups[groupIndex].total += 1;
+      
+      // Mark group as critical if it contains at least one critical impact
+      if (hasCriticalImpact && groupIndex === 3) {
+        groups[groupIndex].hasCritical = true;
+      }
       
       // Count impacts by type
       segmentImpacts.forEach(impact => {
@@ -86,6 +101,9 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
   
   const data = calculateRelevanceGroups();
   
+  // Check if we have critical impacts in highly relevant articles
+  const hasCriticalImpacts = data.some(group => group.hasCritical);
+  
   // Calculate percentages for stacked bar chart
   const calculatePercentageData = () => {
     return data.map(group => {
@@ -96,7 +114,8 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
         neutral: 0, 
         unfavorable: 0,
         total: group.total,
-        count: `${group.total} artigos`
+        count: `${group.total} artigos`,
+        hasCritical: group.hasCritical
       };
       
       return {
@@ -105,7 +124,8 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
         neutral: Math.round((group.neutral / total) * 100),
         unfavorable: Math.round((group.negative / total) * 100),
         total: group.total,
-        count: `${group.total} artigos`
+        count: `${group.total} artigos`,
+        hasCritical: group.hasCritical
       };
     });
   };
@@ -113,7 +133,7 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
   const percentageData = calculatePercentageData();
   
   return (
-    <Card className="mt-6 shadow-md">
+    <Card className="shadow-md">
       <CardHeader>
         <div className="flex flex-row items-start justify-between">
           <div>
@@ -142,6 +162,16 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
       </CardHeader>
       
       <CardContent>
+        {hasCriticalImpacts && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>
+              Atenção! Existem artigos muito relevantes com impactos altamente desfavoráveis para seu segmento.
+              Recomendamos priorizar sua análise.
+            </AlertDescription>
+          </Alert>
+        )}
+        
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
@@ -164,6 +194,51 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
                   if (name === 'unfavorable') return [`${value}%`, 'Desfavorável'];
                   return [`${value}%`, name];
                 }}
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    const data = payload[0].payload;
+                    return (
+                      <div className="rounded-md border bg-background p-3 shadow-md">
+                        <div className="font-medium flex items-center gap-2">
+                          {data.name} 
+                          {data.hasCritical && (
+                            <span className="text-red-500 flex items-center">
+                              <AlertTriangle className="h-3 w-3 mr-1" /> 
+                              Crítico
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-sm mt-2 space-y-1">
+                          <div className="flex justify-between">
+                            <span className="flex items-center">
+                              <span className="h-2 w-2 bg-green-500 rounded-full inline-block mr-1"></span>
+                              Favorável:
+                            </span>
+                            <span>{data.favorable}%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="flex items-center">
+                              <span className="h-2 w-2 bg-gray-400 rounded-full inline-block mr-1"></span>
+                              Neutro:
+                            </span>
+                            <span>{data.neutral}%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="flex items-center">
+                              <span className="h-2 w-2 bg-red-500 rounded-full inline-block mr-1"></span>
+                              Desfavorável:
+                            </span>
+                            <span>{data.unfavorable}%</span>
+                          </div>
+                        </div>
+                        <div className="text-xs mt-2 text-muted-foreground">
+                          Total: {data.total} artigos
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
               />
               <Legend 
                 formatter={(value) => {
@@ -177,7 +252,16 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
               />
               <Bar dataKey="favorable" stackId="a" name="favorable" fill="#4ade80" />
               <Bar dataKey="neutral" stackId="a" name="neutral" fill="#d1d5db" />
-              <Bar dataKey="unfavorable" stackId="a" name="unfavorable" fill="#ef4444" />
+              <Bar dataKey="unfavorable" stackId="a" name="unfavorable">
+                {percentageData.map((entry, index) => (
+                  <Cell 
+                    key={`cell-${index}`}
+                    fill={entry.hasCritical ? '#dc2626' : '#ef4444'} // Brighter red for critical impacts
+                    strokeWidth={entry.hasCritical ? 1 : 0}
+                    stroke="#000"
+                  />
+                ))}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -198,7 +282,9 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
               <span><strong>Vermelho (Desfavorável):</strong> Impactos negativos que exigem atenção</span>
             </li>
           </ul>
-          <p className="mt-2 text-sm">Priorize a análise de artigos com alta relevância e impactos desfavoráveis.</p>
+          <div className="mt-3 border-t pt-2 border-muted-foreground/30">
+            <p className="text-sm font-medium text-center">Priorize a análise de artigos com alta relevância e impactos desfavoráveis</p>
+          </div>
         </div>
       </CardContent>
     </Card>
