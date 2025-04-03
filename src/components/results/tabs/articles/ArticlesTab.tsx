@@ -4,13 +4,12 @@ import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
 import { HighlightType, Topic } from '../../types';
 import { ListFilter } from 'lucide-react';
-import ActiveFilters from './ActiveFilters';
-import ChartSection from './ChartSection';
-import ArticlesFilters from './ArticlesFilters';
-import ArticlesContent from './ArticlesContent';
+import ActiveFilters from './articles/ActiveFilters';
+import ChartSection from './articles/ChartSection';
+import ArticlesFilters from './articles/ArticlesFilters';
+import ArticlesContent from './articles/ArticlesContent';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { BarChart3, FileText } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -92,7 +91,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
 
   return (
     <div className="space-y-8">
-      {/* Filtros ativos */}
       <ActiveFilters
         selectedBookFilter={selectedBookFilter}
         setSelectedBookFilter={setSelectedBookFilter}
@@ -100,18 +98,18 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         setShowAllArticles={setShowAllArticles}
       />
       
-      {/* Seção 1: Análise Visual - Gráficos e Visualização de Dados */}
-      <Card className="border border-muted p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <BarChart3 className="h-5 w-5 text-primary" />
-          <h2 className="text-2xl font-semibold">Análise Visual</h2>
-        </div>
-        <p className="text-muted-foreground mb-6">
-          Explore os dados da reforma tributária de forma visual e interativa. 
-          Clique nos elementos dos gráficos para filtrar os artigos relacionados ao seu segmento.
-        </p>
-      
-        <CardContent className="p-0">
+      {/* Seção 1: Análise Visual */}
+      <Card className="border shadow-sm">
+        <CardHeader>
+          <CardTitle className="text-xl flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bar-chart"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>
+            Análise Visual
+          </CardTitle>
+          <CardDescription>
+            Visualize os impactos da reforma tributária no seu segmento através de gráficos interativos
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           <ChartSection
             chartsCollapsed={chartsCollapsed}
             setChartsCollapsed={setChartsCollapsed}
@@ -132,17 +130,17 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       <Separator className="my-8" />
       
       {/* Seção 2: Artigos da Reforma */}
-      <Card className="border border-muted p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <FileText className="h-5 w-5 text-primary" />
-          <h2 className="text-2xl font-semibold">Artigos da Reforma</h2>
-        </div>
-        <p className="text-muted-foreground mb-6">
-          Visualize os artigos da reforma tributária relevantes para seu segmento. 
-          Use os filtros abaixo para refinar os resultados ou utilize as diferentes visualizações disponíveis.
-        </p>
-      
-        <CardContent className="p-0 pt-4">
+      <Card className="border shadow-sm">
+        <CardHeader>
+          <CardTitle className="text-xl flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-text"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
+            Artigos da Reforma
+          </CardTitle>
+          <CardDescription>
+            Explore os artigos relevantes para seu segmento, filtre por impacto e analise detalhadamente seus efeitos
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           <ArticlesFilters
             positiveCount={positiveCount}
             negativeCount={negativeCount}
