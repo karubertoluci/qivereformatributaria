@@ -4,10 +4,10 @@ import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
 import { HighlightType, Topic } from '../../types';
 import { ListFilter } from 'lucide-react';
-import ActiveFilters from './articles/ActiveFilters';
-import ChartSection from './articles/ChartSection';
-import ArticlesFilters from './articles/ArticlesFilters';
-import ArticlesContent from './articles/ArticlesContent';
+import ActiveFilters from './ActiveFilters';
+import ChartSection from './ChartSection';
+import ArticlesFilters from './ArticlesFilters';
+import ArticlesContent from './ArticlesContent';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 

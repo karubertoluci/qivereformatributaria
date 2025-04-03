@@ -7,7 +7,7 @@ import OverviewTabContent from './OverviewTabContent';
 import CompanyLegislationRelation from '../report/CompanyLegislationRelation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Book, FileText, Highlighter } from 'lucide-react';
-import ArticlesTab from './tabs/ArticlesTab';
+import ArticlesTab from './tabs/articles/ArticlesTab';
 import HighlightsTab from './tabs/HighlightsTab';
 import ResultsFooter from './layout/ResultsFooter';
 
