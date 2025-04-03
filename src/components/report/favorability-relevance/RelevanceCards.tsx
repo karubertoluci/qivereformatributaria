@@ -39,7 +39,7 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
         unfavorablePercent: 0
       };
       return <Card key={level} className={cn("border", relevanceFilter === level ? "border-primary bg-secondary/20" : "border-muted")}>
-            <CardContent className="p-4">
+            <CardContent className="p-4 mx-0 px-0 py-0 my-[16px]">
               <h4 className="text-lg py-[10px] font-semibold">{level}</h4>
               <div className="space-y-1 text-xs">
                 <div className="flex justify-between items-center">
