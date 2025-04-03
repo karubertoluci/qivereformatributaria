@@ -2,12 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
-import { HighlightType, Topic } from '../types';
-import { BarChart4, BookOpen, ListFilter } from 'lucide-react';
+import { HighlightType, Topic } from '../../types';
+import { ListFilter } from 'lucide-react';
 import ActiveFilters from './ActiveFilters';
 import ChartSection from './ChartSection';
 import ArticlesFilters from './ArticlesFilters';
 import ArticlesContent from './ArticlesContent';
+import { Separator } from '@/components/ui/separator';
+import { BarChart3, FileText } from 'lucide-react';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -96,17 +98,16 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         setShowAllArticles={setShowAllArticles}
       />
       
-      {/* Section 1: Análise Visual */}
-      <section className="mb-10">
-        <div className="flex items-center gap-2 mb-4">
-          <BarChart4 className="h-5 w-5 text-primary" />
+      {/* Seção 1: Análise Visual - Gráficos e Visualização de Dados */}
+      <div className="mb-10">
+        <div className="flex items-center gap-2 mb-6">
+          <BarChart3 className="h-5 w-5 text-primary" />
           <h2 className="text-2xl font-semibold">Análise Visual</h2>
         </div>
         <p className="text-muted-foreground mb-6">
-          Visualize e filtre os artigos da reforma tributária de acordo com sua relevância, favorabilidade e distribuição nos livros.
-          Clique nos elementos dos gráficos para aplicar filtros ou explorar detalhes específicos.
+          Explore os dados da reforma tributária de forma visual e interativa. Clique nos elementos dos gráficos para filtrar os artigos relacionados.
         </p>
-        
+      
         <ChartSection
           chartsCollapsed={chartsCollapsed}
           setChartsCollapsed={setChartsCollapsed}
@@ -121,19 +122,20 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
           hasCriticalImpacts={hasCriticalImpacts}
           setExpandedArticleId={setExpandedArticleId}
         />
-      </section>
+      </div>
       
-      {/* Section 2: Artigos */}
-      <section>
-        <div className="flex items-center gap-2 mb-4">
-          <BookOpen className="h-5 w-5 text-primary" />
+      <Separator className="my-8" />
+      
+      {/* Seção 2: Artigos da Reforma */}
+      <div>
+        <div className="flex items-center gap-2 mb-6">
+          <FileText className="h-5 w-5 text-primary" />
           <h2 className="text-2xl font-semibold">Artigos da Reforma</h2>
         </div>
         <p className="text-muted-foreground mb-6">
-          Consulte todos os artigos relevantes para seu segmento. Use os filtros abaixo para refinar sua busca 
-          ou explore os resultados por tópicos. Os filtros aplicados nos gráficos acima também afetam esta lista.
+          Visualize os artigos da reforma tributária relevantes para seu segmento. Use os filtros abaixo para refinar os resultados ou explore por visualizações diferentes.
         </p>
-        
+      
         <ArticlesFilters
           positiveCount={positiveCount}
           negativeCount={negativeCount}
@@ -163,7 +165,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
           articlesByTopic={articlesByTopic}
           topics={topics}
         />
-      </section>
+      </div>
     </div>
   );
 };
