@@ -34,10 +34,6 @@ const BookTitleRelevanceChart: React.FC<BookTitleRelevanceChartProps> = ({
       onSelectTitle(event.id);
     }
   };
-  return <Card className="mt-6 shadow-md">
-      
-      
-      
-    </Card>;
+  return;
 };
 export default BookTitleRelevanceChart;

@@ -39,9 +39,6 @@ const ImpactsSection: React.FC<ImpactsSectionProps> = ({
   if (!hasCriticalImpacts && positiveCount === 0 && negativeCount === 0) {
     return null;
   }
-  return <Card className="bg-card/50 shadow-sm border border-muted">
-      
-      
-    </Card>;
+  return;
 };
 export default ImpactsSection;
