@@ -6,6 +6,7 @@ import BookDistributionChart from '@/components/report/BookDistributionChart';
 import ArticlesPriorityChart from '@/components/ArticlesPriorityChart';
 import BookTitleRelevanceChart from '@/components/report/BookTitleRelevanceChart';
 import ImpactDistributionChart from '@/components/report/ImpactDistributionChart';
+import RelevanceDistributionChart from '@/components/report/RelevanceDistributionChart';
 import { toast } from 'sonner';
 import ChartExpandToggle from './components/ChartExpandToggle';
 import ViewModeCard from './components/ViewModeCard';
@@ -55,6 +56,8 @@ const ChartSection: React.FC<ChartSectionProps> = ({
     setSelectedRelevanceFilter(relevanceLevel);
     if (relevanceLevel) {
       toast.info(`Filtrando por relevância: ${relevanceLevel}`);
+    } else {
+      toast.info("Filtro de relevância removido");
     }
   };
   
@@ -66,10 +69,13 @@ const ChartSection: React.FC<ChartSectionProps> = ({
       />
       
       <div className="w-full">
-        <BookDistributionChart 
-          articles={showAllArticles ? allArticles : relevantArticles} 
+        <RelevanceDistributionChart
+          articles={showAllArticles ? allArticles : relevantArticles}
+          segmentId={segment.id}
           onSelectBook={setSelectedBookFilter}
           selectedBook={selectedBookFilter}
+          onSelectRelevance={handleRelevanceFilter}
+          selectedRelevance={selectedRelevanceFilter}
         />
       </div>
       
