@@ -5,6 +5,7 @@ import { Article } from '@/data/articles';
 import BookDistributionChart from '@/components/report/BookDistributionChart';
 import ArticlesPriorityChart from '@/components/ArticlesPriorityChart';
 import BookTitleRelevanceChart from '@/components/report/BookTitleRelevanceChart';
+import ImpactDistributionChart from '@/components/report/ImpactDistributionChart';
 import { toast } from 'sonner';
 import ChartExpandToggle from './components/ChartExpandToggle';
 import ViewModeCard from './components/ViewModeCard';
@@ -63,12 +64,24 @@ const ChartSection: React.FC<ChartSectionProps> = ({
         />
       </div>
       
-      <div className="w-full">
-        <ArticlesPriorityChart 
-          articles={relevantArticles}
-          segmentId={segment.id}
-          onSelectArticle={setExpandedArticleId}
-        />
+      {/* Side-by-side charts */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <ImpactDistributionChart 
+            articles={showAllArticles ? allArticles : relevantArticles}
+            segmentId={segment.id}
+            bookId={selectedBookFilter}
+          />
+        </div>
+        
+        <div>
+          <ArticlesPriorityChart 
+            articles={relevantArticles}
+            segmentId={segment.id}
+            onSelectArticle={setExpandedArticleId}
+            bookId={selectedBookFilter}
+          />
+        </div>
       </div>
       
       <ImpactsSection

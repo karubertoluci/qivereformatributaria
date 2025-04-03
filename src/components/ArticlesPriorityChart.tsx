@@ -10,13 +10,27 @@ interface ArticlesPriorityChartProps {
   articles: Article[];
   segmentId: string;
   onSelectArticle: (articleId: string) => void;
+  bookId?: string | null;
 }
 
 const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({ 
   articles,
   segmentId,
-  onSelectArticle
+  onSelectArticle,
+  bookId
 }) => {
+  // Filter articles by book if bookId is provided
+  const filteredArticles = bookId 
+    ? articles.filter(article => {
+        const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
+                          parseInt(article.id.replace(/\D/g, ''));
+        
+        if (bookId === 'I') return articleNum <= 180;
+        if (bookId === 'II') return articleNum > 180 && articleNum <= 300;
+        return articleNum > 300;
+      })
+    : articles;
+    
   // Calculate importance score for each article
   const calculateImportanceScore = (article: Article) => {
     const segmentImpacts = article.impacts.filter(impact => 
@@ -38,7 +52,7 @@ const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
   };
   
   // Create sorted chart data
-  const chartData = articles
+  const chartData = filteredArticles
     .map(article => ({
       id: article.id,
       name: article.number,
@@ -75,7 +89,7 @@ const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
   };
   
   return (
-    <Card className="shadow-md">
+    <Card className="shadow-md h-full">
       <CardHeader>
         <div className="flex flex-row items-start justify-between">
           <div>
@@ -85,6 +99,7 @@ const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
             </CardTitle>
             <CardDescription className="text-sm text-muted-foreground mt-1">
               Artigos mais relevantes para seu segmento, ordenados por nível de importância
+              {bookId && <span className="font-medium"> (Livro {bookId})</span>}
             </CardDescription>
           </div>
           
@@ -104,11 +119,11 @@ const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
       
       <CardContent>
         {chartData.length === 0 ? (
-          <div className="w-full h-80 flex items-center justify-center text-muted-foreground">
+          <div className="w-full h-48 md:h-60 flex items-center justify-center text-muted-foreground">
             Nenhum artigo com impacto relevante encontrado.
           </div>
         ) : (
-          <div className="w-full h-80">
+          <div className="w-full h-48 md:h-60">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart 
                 data={chartData} 
@@ -170,22 +185,21 @@ const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
           </div>
         )}
         
-        <div className="mt-4 p-3 bg-muted/50 rounded-md border border-muted">
-          <h4 className="font-medium mb-1 text-sm">Como usar este gráfico:</h4>
-          <p className="text-sm text-muted-foreground">
-            As barras representam os artigos mais relevantes para seu segmento, conforme seu impacto e importância.
-            <span className="block mt-1">
-              <span className="inline-block w-3 h-3 bg-red-500 rounded-sm mr-1"></span>
-              <strong>Vermelho:</strong> Impacto desfavorável - requer atenção especial
+        <div className="mt-2 p-2 bg-muted/50 rounded-md border border-muted text-xs">
+          <div className="flex items-center gap-1 mb-1">
+            <span className="inline-block w-2 h-2 rounded-full bg-orange-500"></span>
+            <span className="font-medium">Legenda:</span>
+          </div>
+          <div className="grid grid-cols-2 gap-1">
+            <span>
+              <span className="inline-block w-2 h-2 bg-red-500 rounded-sm mr-1"></span>
+              <strong>Vermelho:</strong> Desfavorável
             </span>
-            <span className="block mt-1">
-              <span className="inline-block w-3 h-3 bg-green-500 rounded-sm mr-1"></span>
-              <strong>Verde:</strong> Impacto favorável - oportunidades para seu negócio
+            <span>
+              <span className="inline-block w-2 h-2 bg-green-500 rounded-sm mr-1"></span>
+              <strong>Verde:</strong> Favorável
             </span>
-          </p>
-          <p className="text-xs text-center mt-2 font-medium">
-            Clique nas barras para expandir os artigos correspondentes
-          </p>
+          </div>
         </div>
       </CardContent>
     </Card>

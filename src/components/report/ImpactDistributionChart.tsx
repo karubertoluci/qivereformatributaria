@@ -41,7 +41,7 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
   const hasCriticalImpacts = checkForCriticalImpacts(relevanceGroups);
   
   return (
-    <Card className="shadow-md">
+    <Card className="shadow-md h-full">
       <CardHeader>
         <ChartHeader 
           title="Favorabilidade por Relevância"
@@ -55,37 +55,33 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
       <CardContent>
         {hasCriticalImpacts && (
           <ImpactAlert 
-            message="Atenção! Existem artigos muito relevantes com impactos altamente desfavoráveis para seu segmento. Recomendamos priorizar sua análise." 
+            message="Atenção! Existem artigos muito relevantes com impactos altamente desfavoráveis para seu segmento." 
           />
         )}
         
-        <ImpactBarChart data={percentageData} />
+        <div className="h-48 md:h-60">
+          <ImpactBarChart data={percentageData} />
+        </div>
         
-        <ChartLegendHelper 
-          title="Como interpretar este gráfico:"
-          items={[
-            { 
-              color: '#4ade80', 
-              label: 'Verde (Favorável)', 
-              description: 'Impactos positivos para seu segmento' 
-            },
-            { 
-              color: '#d1d5db', 
-              label: 'Cinza (Neutro)', 
-              description: 'Impactos neutros ou com efeito equilibrado' 
-            },
-            { 
-              color: '#ef4444', 
-              label: 'Vermelho (Desfavorável)', 
-              description: 'Impactos negativos que exigem atenção' 
-            }
-          ]}
-        />
-        
-        <div className="mt-3 border-t pt-2 border-muted-foreground/30">
-          <p className="text-sm font-medium text-center">
-            Priorize a análise de artigos com alta relevância e impactos desfavoráveis
-          </p>
+        <div className="mt-2 p-2 bg-muted/50 rounded-md border border-muted text-xs">
+          <div className="flex items-center gap-1 mb-1">
+            <span className="inline-block w-2 h-2 rounded-full bg-orange-500"></span>
+            <span className="font-medium">Legenda:</span>
+          </div>
+          <div className="grid grid-cols-3 gap-1">
+            <span>
+              <span className="inline-block w-2 h-2 bg-green-500 rounded-sm mr-1"></span>
+              <strong>Verde:</strong> Favorável
+            </span>
+            <span>
+              <span className="inline-block w-2 h-2 bg-gray-300 rounded-sm mr-1"></span>
+              <strong>Cinza:</strong> Neutro
+            </span>
+            <span>
+              <span className="inline-block w-2 h-2 bg-red-500 rounded-sm mr-1"></span>
+              <strong>Vermelho:</strong> Desfavorável
+            </span>
+          </div>
         </div>
       </CardContent>
     </Card>
