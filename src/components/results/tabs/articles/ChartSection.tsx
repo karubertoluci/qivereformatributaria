@@ -2,7 +2,7 @@
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
-import { PriorityScatterChart } from '@/components/priority-chart/PriorityScatterChart';
+import PriorityScatterChart from '@/components/priority-chart/PriorityScatterChart';
 import { Button } from '@/components/ui/button';
 import { BookOpen, LineChart } from 'lucide-react';
 import { toast } from 'sonner';

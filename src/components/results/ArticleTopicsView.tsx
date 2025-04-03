@@ -47,8 +47,13 @@ const ArticleTopicsView: React.FC<ArticleTopicsViewProps> = ({
     );
   }
 
-  // Organize topics by order
-  const sortedTopics = [...topics].sort((a, b) => a.order - b.order);
+  // Sort topics by name if there's no order property
+  const sortedTopics = [...topics].sort((a, b) => {
+    if ('order' in a && 'order' in b) {
+      return (a.order as number) - (b.order as number);
+    }
+    return a.name.localeCompare(b.name);
+  });
   
   return (
     <div>
@@ -65,7 +70,7 @@ const ArticleTopicsView: React.FC<ArticleTopicsViewProps> = ({
                 <Badge variant="outline" className="mr-2 bg-primary text-primary-foreground">
                   {topicArticles.length}
                 </Badge>
-                {topic.title}
+                {topic.name || topic.title}
               </h3>
               <p className="text-sm text-muted-foreground">{topic.description}</p>
             </div>

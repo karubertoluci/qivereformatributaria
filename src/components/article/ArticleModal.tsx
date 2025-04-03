@@ -22,7 +22,7 @@ interface ArticleModalProps {
   segmentId: string;
   highlights: HighlightType[];
   onAddHighlight: (text: string, color: HighlightType['color']) => void;
-  savedArticles: string[];
+  savedArticles?: string[];
   onToggleSaveArticle: (articleId: string) => void;
 }
 
@@ -33,7 +33,7 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
   segmentId,
   highlights,
   onAddHighlight,
-  savedArticles,
+  savedArticles = [],
   onToggleSaveArticle
 }) => {
   if (!article) return null;

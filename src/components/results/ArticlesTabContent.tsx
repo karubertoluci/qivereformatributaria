@@ -26,6 +26,13 @@ interface ArticlesTabContentProps {
   setExpandedArticleId: (id: string | null) => void;
   articlesByTopic: Record<string, Article[]>;
   topics: Topic[];
+  highlights: any[];
+  onAddHighlight: (text: string, color: string, articleId: string) => void;
+  onRemoveHighlight: (id: string) => void;
+  savedArticles?: string[];
+  onToggleSaveArticle?: (articleId: string) => void;
+  isCompactView?: boolean;
+  onOpenArticleModal?: (article: Article) => void;
 }
 
 const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
@@ -43,7 +50,14 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
   expandedArticleId,
   setExpandedArticleId,
   articlesByTopic,
-  topics
+  topics,
+  highlights = [],
+  onAddHighlight = () => {},
+  onRemoveHighlight = () => {},
+  savedArticles = [],
+  onToggleSaveArticle = () => {},
+  isCompactView = false,
+  onOpenArticleModal = () => {}
 }) => {
   return (
     <div className="space-y-6 mt-6">
@@ -61,7 +75,7 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
         setFilterType={setFilterType}
         positiveCount={positiveCount}
         negativeCount={negativeCount}
-        totalCount={relevantArticles.length} // Add the missing totalCount property
+        totalCount={relevantArticles.length}
       />
       
       <ViewSwitcher viewMode={viewMode} setViewMode={setViewMode} />
@@ -90,16 +104,29 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
               segmentId={segment.id}
               expandedArticleId={expandedArticleId}
               setExpandedArticleId={setExpandedArticleId}
-              onSelectArticle={(id) => setExpandedArticleId(id)} // Add the missing onSelectArticle property
+              onSelectArticle={(id) => setExpandedArticleId(id)}
+              highlights={highlights}
+              onAddHighlight={onAddHighlight}
+              onRemoveHighlight={onRemoveHighlight}
+              savedArticles={savedArticles}
+              onToggleSaveArticle={onToggleSaveArticle}
+              isCompactView={isCompactView}
+              onOpenArticleModal={onOpenArticleModal}
             />
           )}
           
           {viewMode === 'table' && (
             <ArticleTableView 
-              articles={filteredArticles} // Change filteredArticles to articles to match the prop name
+              articles={filteredArticles}
               segment={segment}
               expandedArticleId={expandedArticleId}
               setExpandedArticleId={setExpandedArticleId}
+              highlights={highlights}
+              onAddHighlight={onAddHighlight}
+              onRemoveHighlight={onRemoveHighlight}
+              savedArticles={savedArticles}
+              onToggleSaveArticle={onToggleSaveArticle}
+              onOpenArticleModal={onOpenArticleModal}
             />
           )}
         </>

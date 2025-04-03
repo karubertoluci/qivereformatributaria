@@ -12,7 +12,7 @@ import {
   ZAxis,
   Cell
 } from 'recharts';
-import { calculateScatterPoints } from './utils/chartCalculations';
+import { getArticlePriorityData, ArticlePriorityData } from './utils/chartCalculations';
 import PriorityChartTooltip from './PriorityChartTooltip';
 import PriorityChartLegend from './PriorityChartLegend';
 
@@ -33,7 +33,8 @@ const PriorityScatterChart: React.FC<PriorityScatterChartProps> = ({
 }) => {
   const [highlightedCategory, setHighlightedCategory] = useState<string | null>(null);
   
-  const chartData = calculateScatterPoints(articles, segmentId);
+  // Get data points
+  const chartData = getArticlePriorityData(articles, segmentId);
   
   // Colors for the scatter points
   const getColor = useCallback((category: string) => {
@@ -65,39 +66,39 @@ const PriorityScatterChart: React.FC<PriorityScatterChartProps> = ({
   }, [highlightedCategory, selectedRelevance]);
 
   const getCategoryFromPoint = (point: any) => {
-    const relevance = point.relevance; // high, medium, low
-    const impact = point.impact; // positive, negative, neutral
+    const relevance = point.relevance > 70 ? 'high' : point.relevance > 40 ? 'medium' : 'low';
+    const impact = point.isNegative ? 'negative' : 'positive';
     return `${relevance}_${impact}`;
   };
 
   return (
     <div className="h-full w-full">
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height={300}>
         <ScatterChart
           margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
         >
           <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
           <XAxis 
             type="number" 
-            dataKey="x" 
+            dataKey="relevance" 
             name="Relevância" 
-            domain={[0, 10]} 
+            domain={[0, 100]} 
             tick={false}
             axisLine={false}
           />
           <YAxis 
             type="number" 
-            dataKey="y" 
-            name="Impacto" 
-            domain={[0, 10]} 
+            dataKey="urgency" 
+            name="Urgência" 
+            domain={[0, 100]} 
             tick={false}
             axisLine={false}
           />
           <ZAxis type="number" range={[60, 60]} />
           <Tooltip content={<PriorityChartTooltip />} />
           <Scatter name="Articles" data={chartData} onClick={(data) => {
-            if (onDataPointClick && data && data.articleId) {
-              onDataPointClick(data.articleId);
+            if (onDataPointClick && data && data.id) {
+              onDataPointClick(data.id);
             }
           }}>
             {chartData.map((entry, index) => {
@@ -108,7 +109,7 @@ const PriorityScatterChart: React.FC<PriorityScatterChartProps> = ({
                   fill={getColor(category)} 
                   opacity={getOpacity(category)}
                 />
-              )
+              );
             })}
           </Scatter>
         </ScatterChart>

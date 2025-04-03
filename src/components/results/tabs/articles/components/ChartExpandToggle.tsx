@@ -8,20 +8,22 @@ interface ChartExpandToggleProps {
   setIsCollapsed: (collapsed: boolean) => void;
   collapsedLabel: string;
   expandedLabel: string;
+  className?: string;
 }
 
 const ChartExpandToggle: React.FC<ChartExpandToggleProps> = ({
   isCollapsed,
   setIsCollapsed,
   collapsedLabel,
-  expandedLabel
+  expandedLabel,
+  className = ''
 }) => {
   return (
     <Button 
       variant="outline" 
       size="sm"
       onClick={() => setIsCollapsed(!isCollapsed)}
-      className="flex items-center gap-1"
+      className={`flex items-center gap-1 ${className}`}
     >
       {isCollapsed ? (
         <>

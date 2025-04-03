@@ -6,15 +6,17 @@ interface ViewModeCardProps {
   title: string;
   icon: ReactNode;
   children: ReactNode;
+  className?: string;
 }
 
 const ViewModeCard: React.FC<ViewModeCardProps> = ({
   title,
   icon,
-  children
+  children,
+  className = ''
 }) => {
   return (
-    <Card className="border shadow-sm">
+    <Card className={`border shadow-sm ${className}`}>
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-medium flex items-center gap-2">
           {icon}
