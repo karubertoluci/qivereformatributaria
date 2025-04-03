@@ -69,14 +69,30 @@ const ChartDisplay: React.FC<ChartDisplayProps> = ({ data, selectedBook, onBarCl
               name="favorable"
               fill="#4ade80" 
               className="cursor-pointer"
-            />
+            >
+              {formattedData.map((entry, index) => (
+                <Cell 
+                  key={`favorable-cell-${index}`}
+                  stroke={entry.bookId === selectedBook ? '#000' : 'transparent'}
+                  strokeWidth={entry.bookId === selectedBook ? 2 : 0}
+                />
+              ))}
+            </Bar>
             <Bar 
               dataKey="neutral" 
               stackId="a" 
               name="neutral"
               fill="#d1d5db" 
               className="cursor-pointer"
-            />
+            >
+              {formattedData.map((entry, index) => (
+                <Cell 
+                  key={`neutral-cell-${index}`}
+                  stroke={entry.bookId === selectedBook ? '#000' : 'transparent'}
+                  strokeWidth={entry.bookId === selectedBook ? 2 : 0}
+                />
+              ))}
+            </Bar>
             <Bar 
               dataKey="unfavorable" 
               stackId="a" 
@@ -86,7 +102,7 @@ const ChartDisplay: React.FC<ChartDisplayProps> = ({ data, selectedBook, onBarCl
             >
               {formattedData.map((entry, index) => (
                 <Cell 
-                  key={`cell-${index}`} 
+                  key={`unfavorable-cell-${index}`}
                   stroke={entry.bookId === selectedBook ? '#000' : 'transparent'}
                   strokeWidth={entry.bookId === selectedBook ? 2 : 0}
                 />
