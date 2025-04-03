@@ -27,7 +27,7 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
     'Irrelevante': '#d1d5db' // light gray
   };
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-6 mb-14">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-10 mb-20">
       {relevanceLevels.map(level => {
         // Encontra os dados para este nível ou usa valores zerados
         const relevanceData = relevanceTotals.find(item => item.relevanceLevel === level) || {
