@@ -31,12 +31,22 @@ const ImpactBarChart: React.FC<ImpactBarChartProps> = ({ data, onRelevanceFilter
             layout="vertical"
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-            <XAxis type="number" domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
+            <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
+            <XAxis 
+              type="number" 
+              domain={[0, 100]} 
+              tickFormatter={(value) => `${value}%`}
+              tick={{ fill: '#64748b' }}
+              axisLine={{ stroke: '#e5e7eb' }}
+              tickLine={false}
+            />
             <YAxis 
               type="category" 
               dataKey="name" 
               width={150}
+              tick={{ fill: '#64748b' }}
+              axisLine={{ stroke: '#e5e7eb' }}
+              tickLine={false}
               tickFormatter={(value) => {
                 const item = data.find(d => d.name === value);
                 return `${value} (${item?.total || 0} artigos)`;
@@ -51,7 +61,7 @@ const ImpactBarChart: React.FC<ImpactBarChartProps> = ({ data, onRelevanceFilter
                 if (value === 'unfavorable') return 'Desfavorável';
                 return value;
               }}
-              iconSize={15}
+              iconSize={10}
               wrapperStyle={{ paddingTop: '10px' }}
             />
             <Bar dataKey="favorable" stackId="a" name="favorable" fill="#4ade80" />

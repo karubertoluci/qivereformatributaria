@@ -12,12 +12,24 @@ export interface FavorabilityRelevanceData {
   total: number;
 }
 
+export interface RelevanceTotalData {
+  relevanceLevel: string;
+  favorable: number;
+  neutral: number;
+  unfavorable: number;
+  total: number;
+  favorablePercent: number;
+  neutralPercent: number;
+  unfavorablePercent: number;
+}
+
 export const useFavorabilityRelevanceData = (
   articles: Article[], 
   segmentId: string,
   relevanceFilter: string | null
 ) => {
   const [bookData, setBookData] = useState<FavorabilityRelevanceData[]>([]);
+  const [relevanceTotals, setRelevanceTotals] = useState<RelevanceTotalData[]>([]);
   
   useEffect(() => {
     // Define book metadata
@@ -26,6 +38,20 @@ export const useFavorabilityRelevanceData = (
     
     // Initialize data structure
     const initialData: FavorabilityRelevanceData[] = [];
+    const relevanceTotalsMap: { [key: string]: RelevanceTotalData } = {};
+    
+    relevanceLevels.forEach(level => {
+      relevanceTotalsMap[level] = {
+        relevanceLevel: level,
+        favorable: 0,
+        neutral: 0,
+        unfavorable: 0,
+        total: 0,
+        favorablePercent: 0,
+        neutralPercent: 0,
+        unfavorablePercent: 0
+      };
+    });
     
     books.forEach(bookId => {
       relevanceLevels.forEach(level => {
@@ -43,15 +69,20 @@ export const useFavorabilityRelevanceData = (
     
     // Process articles
     articles.forEach(article => {
-      // Get the book ID based on article number
-      const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
-                       parseInt(article.id.replace(/\D/g, ''));
-      
+      // Get the book ID based on article number or metadata
       let bookId: string;
-      if (articleNum <= 180) bookId = 'I';
-      else if (articleNum <= 300) bookId = 'II';
-      else if (articleNum <= 450) bookId = 'III';
-      else bookId = 'IV';
+      
+      if (article.metadata?.bookId) {
+        bookId = article.metadata.bookId;
+      } else {
+        const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
+                         parseInt(article.id.replace(/\D/g, ''));
+        
+        if (articleNum <= 180) bookId = 'I';
+        else if (articleNum <= 300) bookId = 'II';
+        else if (articleNum <= 450) bookId = 'III';
+        else bookId = 'IV';
+      }
       
       // Calculate relevance for this article
       const segmentImpacts = article.impacts.filter(impact => 
@@ -97,30 +128,53 @@ export const useFavorabilityRelevanceData = (
         item => item.bookId === bookId && item.relevanceLevel === relevanceLevel
       );
       
-      if (!dataObject) return;
+      // Also update the relevance totals map
+      const relevanceTotal = relevanceTotalsMap[relevanceLevel];
+      
+      if (!dataObject || !relevanceTotal) return;
       
       // Update the data
-      dataObject.total += 1;
       dataObject.favorable += positiveCount;
       dataObject.neutral += neutralCount;
       dataObject.unfavorable += negativeCount;
+      dataObject.total += positiveCount + neutralCount + negativeCount;
+      
+      // Update relevance totals
+      relevanceTotal.favorable += positiveCount;
+      relevanceTotal.neutral += neutralCount;
+      relevanceTotal.unfavorable += negativeCount;
+      relevanceTotal.total += positiveCount + neutralCount + negativeCount;
     });
     
-    // Calculate percentages and filter out empty data
+    // Calculate percentages for book data
     const finalData = initialData
       .filter(item => item.total > 0)
       .map(item => {
         const total = item.favorable + item.neutral + item.unfavorable;
         return {
           ...item,
-          favorable: Math.round((item.favorable / total) * 100),
-          neutral: Math.round((item.neutral / total) * 100),
-          unfavorable: Math.round((item.unfavorable / total) * 100)
+          favorable: Math.round((item.favorable / (total || 1)) * 100),
+          neutral: Math.round((item.neutral / (total || 1)) * 100),
+          unfavorable: Math.round((item.unfavorable / (total || 1)) * 100)
+        };
+      });
+    
+    // Calculate percentages for relevance totals
+    const finalRelevanceTotals = Object.values(relevanceTotalsMap)
+      .filter(item => item.total > 0)
+      .map(item => {
+        const total = item.favorable + item.neutral + item.unfavorable;
+        return {
+          ...item,
+          favorablePercent: Math.round((item.favorable / (total || 1)) * 100),
+          neutralPercent: Math.round((item.neutral / (total || 1)) * 100),
+          unfavorablePercent: Math.round((item.unfavorable / (total || 1)) * 100)
         };
       });
     
     setBookData(finalData);
+    setRelevanceTotals(finalRelevanceTotals);
   }, [articles, segmentId, relevanceFilter]);
   
-  return { bookData };
+  return { bookData, relevanceTotals };
 };

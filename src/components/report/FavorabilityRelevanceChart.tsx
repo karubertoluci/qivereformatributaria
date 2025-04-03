@@ -9,6 +9,8 @@ import { ChartLegendHelper } from './charts/ChartLegendHelper';
 import { useFavorabilityRelevanceData } from './favorability-relevance/useFavorabilityRelevanceData';
 import ChartHeader from './charts/ChartHeader';
 import ChartHelp from './relevance-distribution/ChartHelp';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface FavorabilityRelevanceChartProps {
   articles: Article[];
@@ -33,14 +35,10 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
     setSelectedBook(bookId);
   }, [bookId]);
   
-  const { bookData } = useFavorabilityRelevanceData(articles, segmentId, relevanceFilter);
+  const { bookData, relevanceTotals } = useFavorabilityRelevanceData(articles, segmentId, relevanceFilter);
   
-  const handleBookToggle = (value: string) => {
-    const newValue = value === selectedBook ? null : value;
-    setSelectedBook(newValue);
-    if (onBookSelect) {
-      onBookSelect(newValue);
-    }
+  const handleRelevanceSelect = (relevance: string) => {
+    // Implementar no futuro caso necessário
   };
 
   // Filter data based on selected book - if no book is selected, show all data
@@ -48,29 +46,37 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
     ? bookData.filter(book => book.bookId === selectedBook)
     : bookData;
 
+  // Agora vamos criar os cards para cada nível de relevância
+  const relevanceLevels = ['Irrelevante', 'Pouco relevante', 'Moderadamente relevante', 'Muito relevante'];
+  
+  // Determine the title based on whether a book is selected
+  const chartTitle = selectedBook 
+    ? `Favorabilidade por Relevância: Livro ${selectedBook}` 
+    : "Favorabilidade por Relevância: Geral";
+
   return (
     <Card className="shadow-md">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <ChartHeader 
-            title="Favorabilidade por Relevância"
+            title={chartTitle}
             description="Distribuição de favorabilidade por nível de relevância em cada livro"
             icon={<Clock className="h-5 w-5 text-orange-500" />}
           />
           <ChartHelp 
             title="Sobre este gráfico"
-            description="Este gráfico mostra como se distribui a favorabilidade (positivo, neutro, negativo) dos artigos em relação ao seu nível de relevância em cada livro."
+            description="Este gráfico mostra como se distribui a favorabilidade (positivo, neutro, negativo) dos artigos em relação ao seu nível de relevância."
             usage={[
-              "Clique em um livro abaixo para filtrar",
               "Observe a proporção de impactos favoráveis vs desfavoráveis",
-              "Compare os livros para identificar onde estão os maiores desafios"
+              "Compare os níveis de relevância para identificar prioridades",
+              "Use os cards abaixo para filtrar por nível de relevância"
             ]}
           />
         </div>
       </CardHeader>
       
       <CardContent>
-        <div className="h-80">
+        <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={chartData}
@@ -88,7 +94,7 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
               />
               <YAxis 
                 type="category" 
-                dataKey="name" 
+                dataKey="relevanceLevel" 
                 width={150}
                 tick={{ fill: '#64748b' }}
                 axisLine={{ stroke: '#e5e7eb' }}
@@ -142,26 +148,58 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
           </ResponsiveContainer>
         </div>
 
-        {/* Book filters */}
-        <div className="mt-4">
-          <p className="text-sm font-medium mb-2">Filtrar por livro:</p>
-          <ToggleGroup type="single" value={selectedBook || ''} onValueChange={handleBookToggle}>
-            {bookData
-              .filter((book, index, self) => 
-                self.findIndex(b => b.bookId === book.bookId) === index
-              )
-              .map((book) => (
-                <ToggleGroupItem 
-                  key={book.bookId} 
-                  value={book.bookId} 
-                  variant="outline" 
-                  size="sm"
-                  className={`text-xs border-muted ${selectedBook === book.bookId ? 'bg-primary/20' : ''}`}
-                >
-                  Livro {book.bookId}
-                </ToggleGroupItem>
-              ))}
-          </ToggleGroup>
+        {/* Cards de Relevância */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+          {relevanceLevels.map((level) => {
+            const relevanceData = relevanceTotals.find(item => item.relevanceLevel === level);
+            if (!relevanceData || relevanceData.total === 0) return null;
+            
+            return (
+              <Card key={level} className={cn(
+                "border border-muted",
+                relevanceFilter === level ? "border-primary bg-secondary/20" : ""
+              )}>
+                <CardContent className="p-4">
+                  <h4 className="font-medium text-sm mb-2">{level}</h4>
+                  <div className="space-y-1 text-xs">
+                    <div className="flex justify-between">
+                      <span className="flex items-center">
+                        <span className="h-2 w-2 bg-[#4ade80] rounded-full mr-1.5"></span>
+                        Favoráveis:
+                      </span>
+                      <span className="font-medium">
+                        {relevanceData.favorablePercent}% ({relevanceData.favorable})
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="flex items-center">
+                        <span className="h-2 w-2 bg-[#d1d5db] rounded-full mr-1.5"></span>
+                        Neutros:
+                      </span>
+                      <span className="font-medium">
+                        {relevanceData.neutralPercent}% ({relevanceData.neutral})
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="flex items-center">
+                        <span className="h-2 w-2 bg-[#ef4444] rounded-full mr-1.5"></span>
+                        Desfavoráveis:
+                      </span>
+                      <span className="font-medium">
+                        {relevanceData.unfavorablePercent}% ({relevanceData.unfavorable})
+                      </span>
+                    </div>
+                  </div>
+                  <button 
+                    className="w-full mt-3 py-1 px-2 text-xs bg-muted hover:bg-muted/80 rounded"
+                    onClick={() => handleRelevanceSelect(level)}
+                  >
+                    Filtrar
+                  </button>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
         {/* Legend explanation */}
