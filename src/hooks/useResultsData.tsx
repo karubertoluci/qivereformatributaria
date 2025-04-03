@@ -13,6 +13,7 @@ export const useResultsData = (segment: BusinessSegment) => {
   const [viewMode, setViewMode] = useState<'list' | 'table' | 'chart'>('list');
   const [activeTab, setActiveTab] = useState<'overview' | 'articles'>('overview');
   const [highlights, setHighlights] = useState<HighlightType[]>([]);
+  const [savedArticles, setSavedArticles] = useState<string[]>([]);
   
   // Load highlights from localStorage on mount
   useEffect(() => {
@@ -24,12 +25,25 @@ export const useResultsData = (segment: BusinessSegment) => {
         console.error('Failed to parse highlights from localStorage:', e);
       }
     }
+    
+    const savedArticlesData = localStorage.getItem('savedArticles');
+    if (savedArticlesData) {
+      try {
+        setSavedArticles(JSON.parse(savedArticlesData));
+      } catch (e) {
+        console.error('Failed to parse saved articles from localStorage:', e);
+      }
+    }
   }, []);
 
-  // Save highlights to localStorage on change
+  // Save highlights and saved articles to localStorage on change
   useEffect(() => {
     localStorage.setItem('highlights', JSON.stringify(highlights));
   }, [highlights]);
+  
+  useEffect(() => {
+    localStorage.setItem('savedArticles', JSON.stringify(savedArticles));
+  }, [savedArticles]);
   
   // Get form data from localStorage
   const formData = JSON.parse(localStorage.getItem('formData') || '{}');
@@ -96,6 +110,15 @@ export const useResultsData = (segment: BusinessSegment) => {
   const handleRemoveHighlight = (id: string) => {
     setHighlights(highlights.filter(h => h.id !== id));
   };
+  
+  // Handle toggle save article
+  const handleToggleSaveArticle = (articleId: string) => {
+    if (savedArticles.includes(articleId)) {
+      setSavedArticles(savedArticles.filter(id => id !== articleId));
+    } else {
+      setSavedArticles([...savedArticles, articleId]);
+    }
+  };
 
   return {
     expandedArticleId,
@@ -117,11 +140,15 @@ export const useResultsData = (segment: BusinessSegment) => {
     negativeCount,
     handleArticleSelect,
     topics,
-    // New highlight-related state and functions
+    // Highlight-related state and functions
     highlights,
     setHighlights,
     handleAddHighlight,
-    handleRemoveHighlight
+    handleRemoveHighlight,
+    // Saved articles related state and functions
+    savedArticles,
+    setSavedArticles,
+    handleToggleSaveArticle
   };
 };
 

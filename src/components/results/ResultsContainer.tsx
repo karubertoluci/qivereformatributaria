@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { useResultsData } from '@/hooks/useResultsData';
@@ -7,7 +6,7 @@ import OverviewTabContent from './OverviewTabContent';
 import CompanyLegislationRelation from '../report/CompanyLegislationRelation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Book, FileText, Highlighter } from 'lucide-react';
-import ArticlesTab from './tabs/articles/ArticlesTab';
+import ArticlesTab from './tabs/ArticlesTab';
 import HighlightsTab from './tabs/HighlightsTab';
 import ResultsFooter from './layout/ResultsFooter';
 
@@ -38,7 +37,9 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
     topics,
     highlights,
     handleAddHighlight,
-    handleRemoveHighlight
+    handleRemoveHighlight,
+    savedArticles,
+    handleToggleSaveArticle
   } = useResultsData(segment);
 
   return (
@@ -58,7 +59,6 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
           </TabsTrigger>
         </TabsList>
         
-        {/* Visão Geral Tab */}
         <TabsContent value="overview">
           <OverviewTabContent 
             segment={segment} 
@@ -72,7 +72,6 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
           />
         </TabsContent>
         
-        {/* Artigos e Impactos Tab */}
         <TabsContent value="articles">
           <ArticlesTab 
             segment={segment}
@@ -96,18 +95,18 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
           />
         </TabsContent>
         
-        {/* Meus Destaques Tab - Centralized at global level */}
         <TabsContent value="highlights">
           <HighlightsTab 
             highlights={highlights}
             relevantArticles={relevantArticles}
             setExpandedArticleId={setExpandedArticleId}
             handleRemoveHighlight={handleRemoveHighlight}
+            savedArticles={savedArticles}
+            onToggleSaveArticle={handleToggleSaveArticle}
           />
         </TabsContent>
       </Tabs>
       
-      {/* Rodapé do relatório */}
       <ResultsFooter />
     </div>
   );

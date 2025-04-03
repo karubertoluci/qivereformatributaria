@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Book, ListFilter, X } from 'lucide-react';
+import { Book, ListFilter, X, Target } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ActiveFiltersProps {
@@ -9,15 +9,19 @@ interface ActiveFiltersProps {
   setSelectedBookFilter: (bookId: string | null) => void;
   showAllArticles: boolean;
   setShowAllArticles: (show: boolean) => void;
+  selectedRelevanceFilter?: string | null;
+  setSelectedRelevanceFilter?: (filter: string | null) => void;
 }
 
 const ActiveFilters: React.FC<ActiveFiltersProps> = ({
   selectedBookFilter,
   setSelectedBookFilter,
   showAllArticles,
-  setShowAllArticles
+  setShowAllArticles,
+  selectedRelevanceFilter,
+  setSelectedRelevanceFilter
 }) => {
-  if (!selectedBookFilter && !showAllArticles) {
+  if (!selectedBookFilter && !showAllArticles && !selectedRelevanceFilter) {
     return null;
   }
   
@@ -35,6 +39,23 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
             onClick={() => {
               setSelectedBookFilter(null);
               toast.info("Filtro de livro removido");
+            }}
+          />
+        </Badge>
+      )}
+      
+      {selectedRelevanceFilter && setSelectedRelevanceFilter && (
+        <Badge 
+          variant="secondary" 
+          className="flex items-center gap-1 px-2 py-1"
+        >
+          <Target className="h-3.5 w-3.5 mr-1" />
+          Relevância: {selectedRelevanceFilter}
+          <X 
+            className="h-3.5 w-3.5 ml-1 cursor-pointer hover:text-destructive" 
+            onClick={() => {
+              setSelectedRelevanceFilter(null);
+              toast.info("Filtro de relevância removido");
             }}
           />
         </Badge>

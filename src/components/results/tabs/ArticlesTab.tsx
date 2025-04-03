@@ -10,6 +10,8 @@ import ArticlesFilters from './articles/ArticlesFilters';
 import ArticlesContent from './articles/ArticlesContent';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { BookmarkIcon } from 'lucide-react';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -56,7 +58,29 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(null);
   const [showAllArticles, setShowAllArticles] = useState<boolean>(false);
   const [chartsCollapsed, setChartsCollapsed] = useState<boolean>(false);
+  const [selectedRelevanceFilter, setSelectedRelevanceFilter] = useState<string | null>(null);
+  const [isCompactView, setIsCompactView] = useState<boolean>(false);
+  const [savedArticles, setSavedArticles] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState<"all" | "saved">("all");
+  
   const allArticles = [...relevantArticles];
+
+  // Load saved articles from localStorage on mount
+  useEffect(() => {
+    const savedArticlesData = localStorage.getItem('savedArticles');
+    if (savedArticlesData) {
+      try {
+        setSavedArticles(JSON.parse(savedArticlesData));
+      } catch (e) {
+        console.error('Failed to parse saved articles from localStorage:', e);
+      }
+    }
+  }, []);
+
+  // Save articles to localStorage when changed
+  useEffect(() => {
+    localStorage.setItem('savedArticles', JSON.stringify(savedArticles));
+  }, [savedArticles]);
 
   const applyCustomFilters = (articlesToFilter: Article[]) => {
     let result = [...articlesToFilter];
@@ -75,6 +99,18 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   };
 
   const displayedArticles = applyCustomFilters(filteredArticles);
+  
+  const savedDisplayedArticles = displayedArticles.filter(article => 
+    savedArticles.includes(article.id)
+  );
+
+  const handleToggleSaveArticle = (articleId: string) => {
+    if (savedArticles.includes(articleId)) {
+      setSavedArticles(savedArticles.filter(id => id !== articleId));
+    } else {
+      setSavedArticles([...savedArticles, articleId]);
+    }
+  };
 
   const hasCriticalImpacts = relevantArticles.some(article => 
     article.impacts.some(impact => 
@@ -96,6 +132,8 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         setSelectedBookFilter={setSelectedBookFilter}
         showAllArticles={showAllArticles}
         setShowAllArticles={setShowAllArticles}
+        selectedRelevanceFilter={selectedRelevanceFilter}
+        setSelectedRelevanceFilter={setSelectedRelevanceFilter}
       />
       
       {/* Seção 1: Análise Visual */}
@@ -123,6 +161,8 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             setSelectedTitleFilter={setSelectedTitleFilter}
             hasCriticalImpacts={hasCriticalImpacts}
             setExpandedArticleId={setExpandedArticleId}
+            selectedRelevanceFilter={selectedRelevanceFilter}
+            setSelectedRelevanceFilter={setSelectedRelevanceFilter}
           />
         </CardContent>
       </Card>
@@ -141,35 +181,109 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ArticlesFilters
-            positiveCount={positiveCount}
-            negativeCount={negativeCount}
-            totalCount={relevantArticles.length}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            filterType={filterType}
-            setFilterType={setFilterType}
-            viewMode={viewMode}
-            setViewMode={setViewMode}
-          />
-          
-          <ArticlesContent
-            viewMode={viewMode}
-            displayedArticles={displayedArticles}
-            filteredArticles={filteredArticles}
-            selectedBookFilter={selectedBookFilter}
-            selectedTitleFilter={selectedTitleFilter}
-            setSelectedBookFilter={setSelectedBookFilter}
-            setSelectedTitleFilter={setSelectedTitleFilter}
-            expandedArticleId={expandedArticleId}
-            setExpandedArticleId={setExpandedArticleId}
-            segment={segment}
-            highlights={highlights}
-            onAddHighlight={onAddHighlight}
-            onRemoveHighlight={onRemoveHighlight}
-            articlesByTopic={articlesByTopic}
-            topics={topics}
-          />
+          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "all" | "saved")}>
+            <TabsList className="mb-6">
+              <TabsTrigger value="all" className="flex items-center gap-1">
+                Todos os Artigos
+              </TabsTrigger>
+              <TabsTrigger value="saved" className="flex items-center gap-1">
+                <BookmarkIcon size={16} />
+                Artigos Salvos ({savedArticles.length})
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="all">
+              <ArticlesFilters
+                positiveCount={positiveCount}
+                negativeCount={negativeCount}
+                totalCount={relevantArticles.length}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                filterType={filterType}
+                setFilterType={setFilterType}
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+                isCompactView={isCompactView}
+                setIsCompactView={setIsCompactView}
+              />
+              
+              <ArticlesContent
+                viewMode={viewMode}
+                displayedArticles={displayedArticles}
+                filteredArticles={filteredArticles}
+                selectedBookFilter={selectedBookFilter}
+                selectedTitleFilter={selectedTitleFilter}
+                setSelectedBookFilter={setSelectedBookFilter}
+                setSelectedTitleFilter={setSelectedTitleFilter}
+                expandedArticleId={expandedArticleId}
+                setExpandedArticleId={setExpandedArticleId}
+                segment={segment}
+                highlights={highlights}
+                onAddHighlight={onAddHighlight}
+                onRemoveHighlight={onRemoveHighlight}
+                articlesByTopic={articlesByTopic}
+                topics={topics}
+                isCompactView={isCompactView}
+                savedArticles={savedArticles}
+                onToggleSaveArticle={handleToggleSaveArticle}
+              />
+            </TabsContent>
+            
+            <TabsContent value="saved">
+              <ArticlesFilters
+                positiveCount={savedDisplayedArticles.filter(article => 
+                  article.impacts.some(impact => 
+                    impact.type === 'positive' && 
+                    impact.segments.includes(segment.id)
+                  )
+                ).length}
+                negativeCount={savedDisplayedArticles.filter(article => 
+                  article.impacts.some(impact => 
+                    impact.type === 'negative' && 
+                    impact.segments.includes(segment.id)
+                  )
+                ).length}
+                totalCount={savedDisplayedArticles.length}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                filterType={filterType}
+                setFilterType={setFilterType}
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+                isCompactView={isCompactView}
+                setIsCompactView={setIsCompactView}
+              />
+              
+              {savedDisplayedArticles.length === 0 ? (
+                <div className="text-center py-10 text-muted-foreground">
+                  <BookmarkIcon className="mx-auto mb-2" size={40} strokeWidth={1.5} />
+                  <p>Nenhum artigo salvo encontrado.</p>
+                  <p className="text-sm">Salve artigos para acessá-los rapidamente aqui.</p>
+                </div>
+              ) : (
+                <ArticlesContent
+                  viewMode={viewMode}
+                  displayedArticles={savedDisplayedArticles}
+                  filteredArticles={savedDisplayedArticles}
+                  selectedBookFilter={selectedBookFilter}
+                  selectedTitleFilter={selectedTitleFilter}
+                  setSelectedBookFilter={setSelectedBookFilter}
+                  setSelectedTitleFilter={setSelectedTitleFilter}
+                  expandedArticleId={expandedArticleId}
+                  setExpandedArticleId={setExpandedArticleId}
+                  segment={segment}
+                  highlights={highlights}
+                  onAddHighlight={onAddHighlight}
+                  onRemoveHighlight={onRemoveHighlight}
+                  articlesByTopic={articlesByTopic}
+                  topics={topics}
+                  isCompactView={isCompactView}
+                  savedArticles={savedArticles}
+                  onToggleSaveArticle={handleToggleSaveArticle}
+                />
+              )}
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
     </div>

@@ -7,6 +7,7 @@ import ArticleTopicsView from '../../ArticleTopicsView';
 import { Button } from '@/components/ui/button';
 import { Topic, HighlightType } from '../../types';
 import { toast } from 'sonner';
+import ArticleDialog from '../../../ArticleDialog';
 
 interface ArticlesContentProps {
   viewMode: 'list' | 'table' | 'chart';
@@ -24,6 +25,9 @@ interface ArticlesContentProps {
   onRemoveHighlight: (id: string) => void;
   articlesByTopic: Record<string, Article[]>;
   topics: Topic[];
+  isCompactView: boolean;
+  savedArticles: string[];
+  onToggleSaveArticle: (articleId: string) => void;
 }
 
 const ArticlesContent: React.FC<ArticlesContentProps> = ({
@@ -41,7 +45,10 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
   onAddHighlight,
   onRemoveHighlight,
   articlesByTopic,
-  topics
+  topics,
+  isCompactView,
+  savedArticles,
+  onToggleSaveArticle
 }) => {
   return (
     <div className="bg-muted/30 p-4 rounded-lg border">
@@ -64,6 +71,18 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
         )}
       </div>
       
+      {/* Dialog for displaying full article details */}
+      <ArticleDialog 
+        articleId={expandedArticleId}
+        onClose={() => setExpandedArticleId(null)}
+        segmentId={segment.id}
+        highlights={highlights}
+        onAddHighlight={onAddHighlight}
+        onRemoveHighlight={onRemoveHighlight}
+        isSaved={expandedArticleId ? savedArticles.includes(expandedArticleId) : false}
+        onToggleSave={expandedArticleId ? () => onToggleSaveArticle(expandedArticleId) : undefined}
+      />
+      
       {viewMode === 'table' ? (
         <ArticleTableView 
           articles={displayedArticles}
@@ -74,6 +93,8 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
           highlights={highlights}
           onAddHighlight={onAddHighlight}
           onRemoveHighlight={onRemoveHighlight}
+          savedArticles={savedArticles}
+          onToggleSaveArticle={onToggleSaveArticle}
         />
       ) : (
         <ArticleTopicsView 
@@ -87,6 +108,9 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
           filteredArticles={displayedArticles}
           segmentId={segment.id}
           setExpandedArticleId={setExpandedArticleId}
+          isCompactView={isCompactView}
+          savedArticles={savedArticles}
+          onToggleSaveArticle={onToggleSaveArticle}
         />
       )}
     </div>
