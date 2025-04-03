@@ -54,7 +54,7 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
               <div className="space-y-1 text-xs">
                 <div className="flex justify-between">
                   <span className="flex items-center gap-1.5">
-                    <div className="h-2 w-2 bg-[#4ade80] rounded-full"></div>
+                    <div className="h-2 w-2 rounded-sm bg-[#4ade80]"></div>
                     Favoráveis:
                   </span>
                   <span className="font-medium">
@@ -63,7 +63,7 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
                 </div>
                 <div className="flex justify-between">
                   <span className="flex items-center gap-1.5">
-                    <div className="h-2 w-2 bg-[#d1d5db] rounded-full"></div>
+                    <div className="h-2 w-2 rounded-sm bg-[#d1d5db]"></div>
                     Neutros:
                   </span>
                   <span className="font-medium">
@@ -72,7 +72,7 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
                 </div>
                 <div className="flex justify-between">
                   <span className="flex items-center gap-1.5">
-                    <div className="h-2 w-2 bg-[#ef4444] rounded-full"></div>
+                    <div className="h-2 w-2 rounded-sm bg-[#ef4444]"></div>
                     Desfavoráveis:
                   </span>
                   <span className="font-medium">
@@ -84,7 +84,7 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
             <CardFooter className="pt-0 px-4 pb-4">
               <Button 
                 variant={relevanceFilter === level ? "default" : "outline"} 
-                className="w-full text-sm"
+                className="w-full text-xs"
                 onClick={() => onRelevanceSelect(level)}
               >
                 {relevanceFilter === level ? 'Remover filtro' : 'Filtrar'}
