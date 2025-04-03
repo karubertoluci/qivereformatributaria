@@ -1,26 +1,11 @@
 
 import React from 'react';
-import { Article } from '@/data/articles';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import { BookOpen, HelpCircle } from 'lucide-react';
-import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-
-interface BookTitleRelevanceChartProps {
-  articles: Article[];
-  bookId: string;
-  segmentId: string;
-  onSelectTitle?: (titleId: string) => void;
-}
-
-interface TitleData {
-  id: string;
-  name: string;
-  irrelevante: number;
-  poucoRelevante: number;
-  moderadamenteRelevante: number;
-  muitoRelevante: number;
-}
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { useTitleRelevanceData } from './book-title-relevance/useTitleRelevanceData';
+import ChartHeader from './book-title-relevance/ChartHeader';
+import TitleBarChart from './book-title-relevance/TitleBarChart';
+import RelevanceLegend from './book-title-relevance/RelevanceLegend';
+import { BookTitleRelevanceChartProps } from './book-title-relevance/types';
 
 const BookTitleRelevanceChart: React.FC<BookTitleRelevanceChartProps> = ({
   articles,
@@ -28,78 +13,6 @@ const BookTitleRelevanceChart: React.FC<BookTitleRelevanceChartProps> = ({
   segmentId,
   onSelectTitle
 }) => {
-  // Filter articles by the specified book
-  const filterArticlesByBook = () => {
-    return articles.filter(article => {
-      const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
-                        parseInt(article.id.replace(/\D/g, ''));
-      
-      if (bookId === 'I') return articleNum <= 180;
-      if (bookId === 'II') return articleNum > 180 && articleNum <= 300;
-      return articleNum > 300;
-    });
-  };
-  
-  const bookArticles = filterArticlesByBook();
-  
-  // Group articles by title and count by relevance level
-  const getTitleData = () => {
-    // This would normally come from article metadata, using mock data for now
-    const titleMap = new Map<string, TitleData>();
-    
-    // Define mock titles for each book
-    const mockTitles: Record<string, string[]> = {
-      'I': ['NORMAS GERAIS', 'REG. REGIMES ESPECIAIS', 'REG. CASHBACK', 'REG. DIF. IBS', 'REG. ESP. IBS', 'REG. DIF. CBS', 'ADM. IBS', 'TRANS. IBS'],
-      'II': ['DISP. PRELIMINARES', 'NORMAS GERAIS IMPOSTO SELETIVO', 'IMPOSTO SELETIVO SOBRE IMPORTAÇÕES', 'DISP. FINAIS'],
-      'III': ['ZFM, ÁREAS LIVRE COMÉRCIO', 'GOV', 'DISP. TRANSITÓRIAS', 'DISP. FINAIS']
-    };
-    
-    // Initialize title data
-    mockTitles[bookId].forEach((title, index) => {
-      titleMap.set(title, {
-        id: `${bookId}.${index + 1}`,
-        name: title,
-        irrelevante: 0,
-        poucoRelevante: 0,
-        moderadamenteRelevante: 0,
-        muitoRelevante: 0
-      });
-    });
-    
-    // Count articles by relevance level for each title
-    bookArticles.forEach(article => {
-      // For demonstration, distribute articles among titles
-      const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
-      const titleIndex = articleNum % mockTitles[bookId].length;
-      const title = mockTitles[bookId][titleIndex];
-      
-      // Calculate relevance score
-      const segmentImpacts = article.impacts.filter(impact => impact.segments.includes(segmentId));
-      if (segmentImpacts.length === 0) return;
-      
-      let score = 0;
-      score += segmentImpacts.length * 10;
-      segmentImpacts.forEach(impact => {
-        if (impact.type === 'positive') score += 15;
-        if (impact.type === 'negative') score += 20;
-      });
-      score = Math.min(score, 100);
-      
-      // Update count based on relevance level
-      const titleData = titleMap.get(title);
-      if (titleData) {
-        if (score >= 75) titleData.muitoRelevante += 1;
-        else if (score >= 50) titleData.moderadamenteRelevante += 1;
-        else if (score >= 25) titleData.poucoRelevante += 1;
-        else titleData.irrelevante += 1;
-      }
-    });
-    
-    return Array.from(titleMap.values());
-  };
-  
-  const data = getTitleData();
-  
   // Colors for each relevance level
   const colors = {
     muitoRelevante: '#ef4444', // red
@@ -107,6 +20,8 @@ const BookTitleRelevanceChart: React.FC<BookTitleRelevanceChartProps> = ({
     poucoRelevante: '#eab308', // yellow
     irrelevante: '#65a30d' // green
   };
+
+  const { data } = useTitleRelevanceData({ articles, bookId, segmentId });
 
   const handleBarClick = (event: any) => {
     if (onSelectTitle && event && event.id) {
@@ -117,134 +32,20 @@ const BookTitleRelevanceChart: React.FC<BookTitleRelevanceChartProps> = ({
   return (
     <Card className="mt-6 shadow-md">
       <CardHeader>
-        <div className="flex flex-row items-start justify-between">
-          <div>
-            <CardTitle className="text-xl flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-primary" />
-              Distribuição de Artigos por Título do Livro {bookId}
-            </CardTitle>
-            <CardDescription className="text-sm text-muted-foreground mt-1">
-              Análise detalhada da relevância dos artigos em cada título do livro
-            </CardDescription>
-          </div>
-          
-          <TooltipProvider>
-            <UITooltip>
-              <TooltipTrigger asChild>
-                <HelpCircle className="h-5 w-5 text-muted-foreground cursor-help" />
-              </TooltipTrigger>
-              <TooltipContent className="max-w-xs">
-                <p>Este gráfico mostra a distribuição de artigos por níveis de relevância em cada título do Livro {bookId}.</p>
-              </TooltipContent>
-            </UITooltip>
-          </TooltipProvider>
-        </div>
+        <ChartHeader bookId={bookId} />
       </CardHeader>
       
       <CardContent>
-        <div className="h-96">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={data}
-              margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
-              barGap={0}
-              barCategoryGap={8}
-            >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis 
-                dataKey="name" 
-                height={80}
-                tick={(props) => {
-                  const { x, y, payload } = props;
-                  return (
-                    <g transform={`translate(${x},${y})`}>
-                      <text 
-                        x={0} 
-                        y={0} 
-                        dy={16} 
-                        textAnchor="end" 
-                        fill="#666" 
-                        transform="rotate(-45)"
-                        style={{ fontSize: 11 }}
-                      >
-                        {payload.value}
-                      </text>
-                    </g>
-                  );
-                }}
-              />
-              <YAxis label={{ value: 'Número de Artigos', angle: -90, position: 'insideLeft' }} />
-              <Tooltip 
-                formatter={(value, name) => {
-                  if (name === 'muitoRelevante') return [value, 'Muito Relevante'];
-                  if (name === 'moderadamenteRelevante') return [value, 'Moderadamente Relevante'];
-                  if (name === 'poucoRelevante') return [value, 'Pouco Relevante'];
-                  if (name === 'irrelevante') return [value, 'Irrelevante'];
-                  return [value, name];
-                }}
-              />
-              <Legend 
-                formatter={(value) => {
-                  if (value === 'muitoRelevante') return 'Muito Relevante';
-                  if (value === 'moderadamenteRelevante') return 'Moderadamente Relevante';
-                  if (value === 'poucoRelevante') return 'Pouco Relevante';
-                  if (value === 'irrelevante') return 'Irrelevante';
-                  return value;
-                }}
-                iconSize={15}
-                wrapperStyle={{ paddingTop: '10px' }}
-              />
-              <Bar 
-                dataKey="irrelevante" 
-                fill={colors.irrelevante} 
-                onClick={handleBarClick}
-                className="cursor-pointer"
-              />
-              <Bar 
-                dataKey="poucoRelevante" 
-                fill={colors.poucoRelevante} 
-                onClick={handleBarClick}
-                className="cursor-pointer"
-              />
-              <Bar 
-                dataKey="moderadamenteRelevante" 
-                fill={colors.moderadamenteRelevante} 
-                onClick={handleBarClick}
-                className="cursor-pointer"
-              />
-              <Bar 
-                dataKey="muitoRelevante" 
-                fill={colors.muitoRelevante} 
-                onClick={handleBarClick}
-                className="cursor-pointer"
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        <TitleBarChart 
+          data={data}
+          colors={colors}
+          onBarClick={handleBarClick} 
+        />
         
-        <div className="mt-6 p-3 bg-muted/50 rounded-md border border-muted">
-          <h4 className="font-medium mb-1">Legenda de relevância:</h4>
-          <div className="grid grid-cols-2 gap-3 mt-2 text-sm">
-            <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-sm" style={{backgroundColor: colors.irrelevante}}></span>
-              <span>Irrelevante: impacto mínimo no seu segmento</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-sm" style={{backgroundColor: colors.poucoRelevante}}></span>
-              <span>Pouco relevante: baixo impacto no seu segmento</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-sm" style={{backgroundColor: colors.moderadamenteRelevante}}></span>
-              <span>Moderadamente relevante: impacto significativo</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-sm" style={{backgroundColor: colors.muitoRelevante}}></span>
-              <span>Muito relevante: alto impacto no seu segmento</span>
-            </div>
-          </div>
-          <p className="mt-3 text-sm text-center text-muted-foreground">
-            Clique nas barras para filtrar artigos por título e nível de relevância
-          </p>
+        <RelevanceLegend colors={colors} />
+
+        <div className="mt-4">
+          <ChartHelp />
         </div>
       </CardContent>
     </Card>
