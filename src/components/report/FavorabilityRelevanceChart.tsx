@@ -3,13 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Article } from '@/data/articles';
 import { Clock } from 'lucide-react';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ChartLegendHelper } from './charts/ChartLegendHelper';
 import { useFavorabilityRelevanceData } from './favorability-relevance/useFavorabilityRelevanceData';
 import ChartHeader from './charts/ChartHeader';
 import ChartHelp from './relevance-distribution/ChartHelp';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 interface FavorabilityRelevanceChartProps {
@@ -46,10 +44,10 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
     ? bookData.filter(book => book.bookId === selectedBook)
     : bookData;
 
-  // Agora vamos criar os cards para cada nível de relevância
+  // Garante que temos todos os níveis de relevância no gráfico
   const relevanceLevels = ['Irrelevante', 'Pouco relevante', 'Moderadamente relevante', 'Muito relevante'];
   
-  // Determine the title based on whether a book is selected
+  // Determina o título com base no livro selecionado
   const chartTitle = selectedBook 
     ? `Favorabilidade por Relevância: Livro ${selectedBook}` 
     : "Favorabilidade por Relevância: Geral";
@@ -120,39 +118,27 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
                 iconSize={10}
                 wrapperStyle={{ paddingTop: '10px' }}
               />
-              <Bar dataKey="favorable" stackId="a" name="favorable" fill="#4ade80" isAnimationActive={false}>
-                {chartData.map((entry, index) => (
-                  <Cell 
-                    key={`favorable-cell-${index}`} 
-                    cursor="pointer"
-                  />
-                ))}
-              </Bar>
-              <Bar dataKey="neutral" stackId="a" name="neutral" fill="#d1d5db" isAnimationActive={false}>
-                {chartData.map((entry, index) => (
-                  <Cell 
-                    key={`neutral-cell-${index}`} 
-                    cursor="pointer"
-                  />
-                ))}
-              </Bar>
-              <Bar dataKey="unfavorable" stackId="a" name="unfavorable" fill="#ef4444" isAnimationActive={false}>
-                {chartData.map((entry, index) => (
-                  <Cell 
-                    key={`unfavorable-cell-${index}`} 
-                    cursor="pointer"
-                  />
-                ))}
-              </Bar>
+              <Bar dataKey="favorable" stackId="a" name="favorable" fill="#4ade80" isAnimationActive={false} />
+              <Bar dataKey="neutral" stackId="a" name="neutral" fill="#d1d5db" isAnimationActive={false} />
+              <Bar dataKey="unfavorable" stackId="a" name="unfavorable" fill="#ef4444" isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        {/* Cards de Relevância */}
+        {/* Cards de Relevância - Exibe todos os níveis, mesmo sem dados */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
           {relevanceLevels.map((level) => {
-            const relevanceData = relevanceTotals.find(item => item.relevanceLevel === level);
-            if (!relevanceData || relevanceData.total === 0) return null;
+            // Encontra os dados para este nível ou usa valores zerados
+            const relevanceData = relevanceTotals.find(item => item.relevanceLevel === level) || {
+              relevanceLevel: level,
+              favorable: 0,
+              neutral: 0,
+              unfavorable: 0,
+              total: 0,
+              favorablePercent: 0,
+              neutralPercent: 0,
+              unfavorablePercent: 0
+            };
             
             return (
               <Card key={level} className={cn(
@@ -202,7 +188,7 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
           })}
         </div>
 
-        {/* Legend explanation */}
+        {/* Explicação da legenda */}
         <ChartLegendHelper 
           items={[
             { color: '#4ade80', label: 'Favorável', description: 'Impactos positivos para seu segmento' },

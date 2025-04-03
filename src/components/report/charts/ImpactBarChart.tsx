@@ -22,12 +22,29 @@ const ImpactBarChart: React.FC<ImpactBarChartProps> = ({ data, onRelevanceFilter
     }
   };
 
+  // Garantir que todos os níveis de relevância estão presentes, mesmo que sem dados
+  const relevanceLevels = ['Irrelevante', 'Pouco relevante', 'Moderadamente relevante', 'Muito relevante'];
+  const allLevelsData = relevanceLevels.map(level => {
+    const existingData = data.find(item => item.name === level);
+    if (existingData) return existingData;
+    
+    // Se não existir, cria um item com valores zerados
+    return {
+      name: level,
+      favorable: 0,
+      neutral: 0,
+      unfavorable: 0,
+      total: 0,
+      hasCritical: false
+    };
+  });
+
   return (
     <div className="space-y-4">
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
-            data={data}
+            data={allLevelsData}
             layout="vertical"
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
@@ -48,8 +65,8 @@ const ImpactBarChart: React.FC<ImpactBarChartProps> = ({ data, onRelevanceFilter
               axisLine={{ stroke: '#e5e7eb' }}
               tickLine={false}
               tickFormatter={(value) => {
-                const item = data.find(d => d.name === value);
-                return `${value} (${item?.total || 0} artigos)`;
+                const item = allLevelsData.find(d => d.name === value);
+                return `${value} ${item?.total ? `(${item.total} artigos)` : '(0 artigos)'}`;
               }}
             />
             <Tooltip content={<ChartTooltipContent active={false} payload={[]} />} />
@@ -67,10 +84,10 @@ const ImpactBarChart: React.FC<ImpactBarChartProps> = ({ data, onRelevanceFilter
             <Bar dataKey="favorable" stackId="a" name="favorable" fill="#4ade80" />
             <Bar dataKey="neutral" stackId="a" name="neutral" fill="#d1d5db" />
             <Bar dataKey="unfavorable" stackId="a" name="unfavorable">
-              {data.map((entry, index) => (
+              {allLevelsData.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`}
-                  fill={entry.hasCritical ? '#dc2626' : '#ef4444'} // Brighter red for critical impacts
+                  fill={entry.hasCritical ? '#dc2626' : '#ef4444'} // Vermelho mais brilhante para impactos críticos
                   strokeWidth={entry.hasCritical ? 1 : 0}
                   stroke="#000"
                 />
@@ -80,15 +97,15 @@ const ImpactBarChart: React.FC<ImpactBarChartProps> = ({ data, onRelevanceFilter
         </ResponsiveContainer>
       </div>
 
-      {/* Relevance level filters */}
+      {/* Filtros de nível de relevância - exibindo todos os níveis, mesmo que sem dados */}
       {onRelevanceFilter && (
         <div className="mt-4">
           <p className="text-sm font-medium mb-2">Filtrar por nível de relevância:</p>
           <ToggleGroup type="single" value={selectedRelevance || ''} onValueChange={handleRelevanceSelect}>
-            {data.map((item) => (
-              <ToggleGroupItem key={item.name} value={item.name} variant="outline" size="sm"
-                className={`text-xs border-muted ${selectedRelevance === item.name ? 'bg-primary/20' : ''}`}>
-                {item.name}
+            {relevanceLevels.map((levelName) => (
+              <ToggleGroupItem key={levelName} value={levelName} variant="outline" size="sm"
+                className={`text-xs border-muted ${selectedRelevance === levelName ? 'bg-primary/20' : ''}`}>
+                {levelName}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>

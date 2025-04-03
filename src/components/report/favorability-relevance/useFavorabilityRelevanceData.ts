@@ -40,6 +40,7 @@ export const useFavorabilityRelevanceData = (
     const initialData: FavorabilityRelevanceData[] = [];
     const relevanceTotalsMap: { [key: string]: RelevanceTotalData } = {};
     
+    // Inicializar todos os níveis de relevância, mesmo que não tenham dados
     relevanceLevels.forEach(level => {
       relevanceTotalsMap[level] = {
         relevanceLevel: level,
@@ -148,7 +149,6 @@ export const useFavorabilityRelevanceData = (
     
     // Calculate percentages for book data
     const finalData = initialData
-      .filter(item => item.total > 0)
       .map(item => {
         const total = item.favorable + item.neutral + item.unfavorable;
         return {
@@ -159,18 +159,19 @@ export const useFavorabilityRelevanceData = (
         };
       });
     
-    // Calculate percentages for relevance totals
-    const finalRelevanceTotals = Object.values(relevanceTotalsMap)
-      .filter(item => item.total > 0)
-      .map(item => {
-        const total = item.favorable + item.neutral + item.unfavorable;
-        return {
-          ...item,
-          favorablePercent: Math.round((item.favorable / (total || 1)) * 100),
-          neutralPercent: Math.round((item.neutral / (total || 1)) * 100),
-          unfavorablePercent: Math.round((item.unfavorable / (total || 1)) * 100)
-        };
-      });
+    // Calculate percentages for relevance totals and convert to array
+    // Garantir que todos os níveis de relevância estejam no resultado, mesmo com contagem zero
+    const finalRelevanceTotals = relevanceLevels.map(level => {
+      const item = relevanceTotalsMap[level];
+      const total = item.favorable + item.neutral + item.unfavorable;
+      
+      return {
+        ...item,
+        favorablePercent: Math.round((item.favorable / (total || 1)) * 100),
+        neutralPercent: Math.round((item.neutral / (total || 1)) * 100),
+        unfavorablePercent: Math.round((item.unfavorable / (total || 1)) * 100)
+      };
+    });
     
     setBookData(finalData);
     setRelevanceTotals(finalRelevanceTotals);
