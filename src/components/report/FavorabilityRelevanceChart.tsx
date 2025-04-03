@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Article } from '@/data/articles';
 import { Clock } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ChartLegendHelper } from './charts/ChartLegendHelper';
 import { useFavorabilityRelevanceData } from './favorability-relevance/useFavorabilityRelevanceData';
 import ChartHeader from './charts/ChartHeader';
 import ChartHelp from './relevance-distribution/ChartHelp';
-import { cn } from '@/lib/utils';
+import FavorabilityBarChart from './favorability-relevance/FavorabilityBarChart';
+import RelevanceCards from './favorability-relevance/RelevanceCards';
 
 interface FavorabilityRelevanceChartProps {
   articles: Article[];
@@ -74,119 +74,16 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
       </CardHeader>
       
       <CardContent>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={chartData}
-              layout="vertical"
-              margin={{ top: 20, right: 30, left: 150, bottom: 20 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
-              <XAxis 
-                type="number" 
-                domain={[0, 100]} 
-                tickFormatter={(value) => `${value}%`} 
-                tick={{ fill: '#64748b' }}
-                axisLine={{ stroke: '#e5e7eb' }}
-                tickLine={false}
-              />
-              <YAxis 
-                type="category" 
-                dataKey="relevanceLevel" 
-                width={150}
-                tick={{ fill: '#64748b' }}
-                axisLine={{ stroke: '#e5e7eb' }}
-                tickLine={false}
-              />
-              <Tooltip 
-                formatter={(value: number) => [`${value}%`, 'Percentual']}
-                labelFormatter={(label) => `${label}`}
-                contentStyle={{
-                  borderRadius: '8px',
-                  border: '1px solid #e2e8f0',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
-                }}
-              />
-              <Legend 
-                iconType="square"
-                formatter={(value) => {
-                  if (value === 'favorable') return 'Favorável';
-                  if (value === 'neutral') return 'Neutro';
-                  if (value === 'unfavorable') return 'Desfavorável';
-                  return value;
-                }}
-                iconSize={10}
-                wrapperStyle={{ paddingTop: '10px' }}
-              />
-              <Bar dataKey="favorable" stackId="a" name="favorable" fill="#4ade80" isAnimationActive={false} />
-              <Bar dataKey="neutral" stackId="a" name="neutral" fill="#d1d5db" isAnimationActive={false} />
-              <Bar dataKey="unfavorable" stackId="a" name="unfavorable" fill="#ef4444" isAnimationActive={false} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        {/* Componente do Gráfico de Barras */}
+        <FavorabilityBarChart chartData={chartData} />
 
-        {/* Cards de Relevância - Exibe todos os níveis, mesmo sem dados */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-          {relevanceLevels.map((level) => {
-            // Encontra os dados para este nível ou usa valores zerados
-            const relevanceData = relevanceTotals.find(item => item.relevanceLevel === level) || {
-              relevanceLevel: level,
-              favorable: 0,
-              neutral: 0,
-              unfavorable: 0,
-              total: 0,
-              favorablePercent: 0,
-              neutralPercent: 0,
-              unfavorablePercent: 0
-            };
-            
-            return (
-              <Card key={level} className={cn(
-                "border border-muted",
-                relevanceFilter === level ? "border-primary bg-secondary/20" : ""
-              )}>
-                <CardContent className="p-4">
-                  <h4 className="font-medium text-sm mb-2">{level}</h4>
-                  <div className="space-y-1 text-xs">
-                    <div className="flex justify-between">
-                      <span className="flex items-center">
-                        <span className="h-2 w-2 bg-[#4ade80] rounded-full mr-1.5"></span>
-                        Favoráveis:
-                      </span>
-                      <span className="font-medium">
-                        {relevanceData.favorablePercent}% ({relevanceData.favorable})
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="flex items-center">
-                        <span className="h-2 w-2 bg-[#d1d5db] rounded-full mr-1.5"></span>
-                        Neutros:
-                      </span>
-                      <span className="font-medium">
-                        {relevanceData.neutralPercent}% ({relevanceData.neutral})
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="flex items-center">
-                        <span className="h-2 w-2 bg-[#ef4444] rounded-full mr-1.5"></span>
-                        Desfavoráveis:
-                      </span>
-                      <span className="font-medium">
-                        {relevanceData.unfavorablePercent}% ({relevanceData.unfavorable})
-                      </span>
-                    </div>
-                  </div>
-                  <button 
-                    className="w-full mt-3 py-1 px-2 text-xs bg-muted hover:bg-muted/80 rounded"
-                    onClick={() => handleRelevanceSelect(level)}
-                  >
-                    Filtrar
-                  </button>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+        {/* Componente dos Cards de Relevância */}
+        <RelevanceCards 
+          relevanceLevels={relevanceLevels}
+          relevanceTotals={relevanceTotals}
+          relevanceFilter={relevanceFilter}
+          onRelevanceSelect={handleRelevanceSelect}
+        />
 
         {/* Explicação da legenda */}
         <ChartLegendHelper 
