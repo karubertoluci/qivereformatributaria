@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Article } from '@/data/articles';
 import ChartHeader from './charts/ChartHeader';
@@ -24,7 +24,13 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
   relevanceFilter,
   onBookSelect
 }) => {
+  // Use the bookId prop as the initial value
   const [selectedBook, setSelectedBook] = useState<string | null>(bookId);
+  
+  // Update selectedBook when bookId prop changes
+  useEffect(() => {
+    setSelectedBook(bookId);
+  }, [bookId]);
   
   const { bookData } = useFavorabilityRelevanceData(articles, segmentId, relevanceFilter);
   
@@ -38,7 +44,7 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
 
   // Filter data based on selected book
   const chartData = selectedBook 
-    ? bookData.filter(book => book.id === selectedBook)
+    ? bookData.filter(book => book.bookId === selectedBook)
     : bookData;
 
   return (

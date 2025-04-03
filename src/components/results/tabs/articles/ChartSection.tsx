@@ -80,7 +80,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
         />
       </div>
       
-      {/* New Favorability vs Relevance Chart */}
+      {/* FavorabilityRelevanceChart - Connected to both filters */}
       <div className="w-full mt-6">
         <FavorabilityRelevanceChart
           articles={showAllArticles ? allArticles : relevantArticles}
