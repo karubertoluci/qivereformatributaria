@@ -49,7 +49,7 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
         <ChartHeader 
           title="Favorabilidade por Relevância"
           description="Análise da distribuição percentual de impactos por nível de relevância"
-          icon={<TrendingUp className="h-5 w-5 text-primary" />}
+          icon={<TrendingUp className="h-5 w-5" />}
           tooltipContent="Este gráfico mostra a proporção de impactos favoráveis, neutros e desfavoráveis em cada nível de relevância dos artigos para seu segmento."
           bookId={bookId}
         />

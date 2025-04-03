@@ -12,8 +12,8 @@ const ChartHeader: React.FC<ChartHeaderProps> = ({ bookId }) => {
   return (
     <div className="flex flex-row items-start justify-between">
       <div>
-        <CardTitle className="text-xl flex items-center gap-2">
-          <BookOpen className="h-5 w-5 text-primary" />
+        <CardTitle className="text-xl flex items-center gap-2 text-[#F97316]">
+          <BookOpen className="h-5 w-5 text-[#F97316]" />
           Distribuição de Artigos por Título do Livro {bookId}
         </CardTitle>
         <CardDescription className="text-sm text-muted-foreground mt-1">
