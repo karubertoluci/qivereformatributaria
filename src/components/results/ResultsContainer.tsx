@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { useResultsData } from '@/hooks/useResultsData';
@@ -35,7 +36,9 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
     savedArticles,
     handleToggleSaveArticle,
     isCompactView,
-    setIsCompactView
+    setIsCompactView,
+    formData,
+    hasCompanyData
   } = useResultsData(segment);
 
   return (

@@ -56,6 +56,8 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(null);
   const [showAllArticles, setShowAllArticles] = useState<boolean>(false);
   const [chartsCollapsed, setChartsCollapsed] = useState<boolean>(false);
+  const [selectedRelevanceFilter, setSelectedRelevanceFilter] = useState<string | null>(null);
+  const [isCompactView, setIsCompactView] = useState<boolean>(false);
   const allArticles = [...relevantArticles];
 
   const applyCustomFilters = (articlesToFilter: Article[]) => {
@@ -96,13 +98,15 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         setSelectedBookFilter={setSelectedBookFilter}
         showAllArticles={showAllArticles}
         setShowAllArticles={setShowAllArticles}
+        selectedRelevanceFilter={selectedRelevanceFilter}
+        setSelectedRelevanceFilter={setSelectedRelevanceFilter}
       />
       
       {/* Seção 1: Análise Visual */}
       <Card className="border shadow-sm">
         <CardHeader>
-          <CardTitle className="text-xl flex items-center gap-2 text-[#F97316]">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bar-chart text-[#F97316]"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>
+          <CardTitle className="text-xl flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bar-chart"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>
             Análise Visual
           </CardTitle>
           <CardDescription>
@@ -123,6 +127,8 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             setSelectedTitleFilter={setSelectedTitleFilter}
             hasCriticalImpacts={hasCriticalImpacts}
             setExpandedArticleId={setExpandedArticleId}
+            selectedRelevanceFilter={selectedRelevanceFilter} 
+            setSelectedRelevanceFilter={setSelectedRelevanceFilter}
           />
         </CardContent>
       </Card>
@@ -132,8 +138,8 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       {/* Seção 2: Artigos da Reforma */}
       <Card className="border shadow-sm">
         <CardHeader>
-          <CardTitle className="text-xl flex items-center gap-2 text-[#F97316]">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-text text-[#F97316]"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
+          <CardTitle className="text-xl flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-text"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
             Artigos da Reforma
           </CardTitle>
           <CardDescription>
@@ -151,6 +157,8 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             setFilterType={setFilterType}
             viewMode={viewMode}
             setViewMode={setViewMode}
+            isCompactView={isCompactView}
+            setIsCompactView={setIsCompactView}
           />
           
           <ArticlesContent
@@ -169,6 +177,9 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             onRemoveHighlight={onRemoveHighlight}
             articlesByTopic={articlesByTopic}
             topics={topics}
+            isCompactView={isCompactView}
+            savedArticles={[]}
+            onToggleSaveArticle={() => {}}
           />
         </CardContent>
       </Card>
