@@ -17,28 +17,28 @@ interface ResultsContainerProps {
 }
 
 const ResultsContainer: React.FC<ResultsContainerProps> = ({
-  segment,
-  onBackToSegments = () => {}
+  segment
 }) => {
-  const { 
-    expandedArticleId, setExpandedArticleId,
-    searchTerm, setSearchTerm, 
-    filterType, setFilterType, 
-    viewMode, setViewMode,
-    activeTab, setActiveTab, 
-    relevantArticles, filteredArticles,
-    articlesByTopic, positiveCount, negativeCount,
-    handleArticleSelect,
-    topics, 
-    highlights, 
-    handleAddHighlight, 
-    handleRemoveHighlight,
-    savedArticles,
-    handleToggleSaveArticle,
-    isCompactView,
-    setIsCompactView,
+  const {
+    expandedArticleId,
+    setExpandedArticleId,
+    searchTerm,
+    setSearchTerm,
+    filterType,
+    setFilterType,
+    viewMode,
+    setViewMode,
     formData,
-    hasCompanyData
+    hasCompanyData,
+    relevantArticles,
+    filteredArticles,
+    articlesByTopic,
+    positiveCount,
+    negativeCount,
+    topics,
+    highlights,
+    handleAddHighlight,
+    handleRemoveHighlight
   } = useResultsData(segment);
 
   return (
@@ -58,6 +58,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
           </TabsTrigger>
         </TabsList>
         
+        {/* Visão Geral Tab */}
         <TabsContent value="overview">
           <OverviewTabContent 
             segment={segment} 
@@ -71,7 +72,8 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
           />
         </TabsContent>
         
-        <TabsContent value="articles" className="p-0">
+        {/* Artigos e Impactos Tab */}
+        <TabsContent value="articles">
           <ArticlesTab 
             segment={segment}
             filteredArticles={filteredArticles}
@@ -91,23 +93,21 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
             highlights={highlights}
             onAddHighlight={handleAddHighlight}
             onRemoveHighlight={handleRemoveHighlight}
-            savedArticles={savedArticles}
-            onToggleSaveArticle={handleToggleSaveArticle}
           />
         </TabsContent>
         
+        {/* Meus Destaques Tab - Centralized at global level */}
         <TabsContent value="highlights">
           <HighlightsTab 
-            highlights={highlights} 
+            highlights={highlights}
             relevantArticles={relevantArticles}
             setExpandedArticleId={setExpandedArticleId}
             handleRemoveHighlight={handleRemoveHighlight}
-            savedArticles={savedArticles}
-            onToggleSaveArticle={handleToggleSaveArticle}
           />
         </TabsContent>
       </Tabs>
       
+      {/* Rodapé do relatório */}
       <ResultsFooter />
     </div>
   );

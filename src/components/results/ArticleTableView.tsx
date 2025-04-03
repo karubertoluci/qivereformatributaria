@@ -15,8 +15,6 @@ interface ArticleTableViewProps {
   highlights?: HighlightType[];
   onAddHighlight?: (text: string, color: HighlightType['color'], articleId: string) => void;
   onRemoveHighlight?: (id: string) => void;
-  savedArticles?: string[];
-  onToggleSaveArticle?: (articleId: string) => void;
 }
 
 const ArticleTableView: React.FC<ArticleTableViewProps> = ({
@@ -27,9 +25,7 @@ const ArticleTableView: React.FC<ArticleTableViewProps> = ({
   segment,
   highlights = [],
   onAddHighlight = () => {},
-  onRemoveHighlight = () => {},
-  savedArticles = [],
-  onToggleSaveArticle = () => {}
+  onRemoveHighlight = () => {}
 }) => {
   if (isTableView) {
     return (
@@ -74,11 +70,13 @@ const ArticleTableView: React.FC<ArticleTableViewProps> = ({
           <ArticleCard 
             article={article}
             segmentId={segment.id}
-            onClick={() => {
-              setExpandedArticleId(article.id);
+            expanded={expandedArticleId === article.id}
+            onToggleExpand={() => {
+              setExpandedArticleId(expandedArticleId === article.id ? null : article.id);
             }}
-            isSaved={savedArticles.includes(article.id)}
-            onToggleSave={() => onToggleSaveArticle(article.id)}
+            highlights={highlights}
+            onAddHighlight={(text, color) => onAddHighlight(text, color, article.id)}
+            onRemoveHighlight={onRemoveHighlight}
           />
         </div>
       ))}

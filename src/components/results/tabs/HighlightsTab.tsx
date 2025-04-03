@@ -9,17 +9,13 @@ interface HighlightsTabProps {
   relevantArticles: Article[];
   setExpandedArticleId: (id: string | null) => void;
   handleRemoveHighlight: (id: string) => void;
-  savedArticles?: string[];
-  onToggleSaveArticle?: (articleId: string) => void;
 }
 
 const HighlightsTab: React.FC<HighlightsTabProps> = ({
   highlights,
   relevantArticles,
   setExpandedArticleId,
-  handleRemoveHighlight,
-  savedArticles = [],
-  onToggleSaveArticle = () => {}
+  handleRemoveHighlight
 }) => {
   return (
     <div className="space-y-6">

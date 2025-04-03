@@ -4,30 +4,32 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { RelevanceTotalData } from './useFavorabilityRelevanceData';
-
 interface RelevanceCardsProps {
   relevanceLevels: string[];
   relevanceTotals: RelevanceTotalData[];
   relevanceFilter: string | null;
   onRelevanceSelect: (level: string) => void;
 }
-
 const RelevanceCards: React.FC<RelevanceCardsProps> = ({
   relevanceLevels,
   relevanceTotals,
   relevanceFilter,
   onRelevanceSelect
 }) => {
+  // Color mapping para níveis de relevância - consistente com o gráfico 1
   const colorScheme = {
     'Muito relevante': '#10b981',
+    // green
     'Moderadamente relevante': '#f59e0b',
+    // yellow
     'Pouco relevante': '#6b7280',
-    'Irrelevante': '#d1d5db'
+    // gray
+    'Irrelevante': '#d1d5db' // light gray
   };
-
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4 mb-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-16 mb-20">
       {relevanceLevels.map(level => {
+        // Encontra os dados para este nível ou usa valores zerados
         const relevanceData = relevanceTotals.find(item => item.relevanceLevel === level) || {
           relevanceLevel: level,
           favorable: 0,
@@ -38,7 +40,6 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
           neutralPercent: 0,
           unfavorablePercent: 0
         };
-
         return (
           <Card 
             key={level} 

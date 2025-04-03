@@ -22,8 +22,8 @@ const ChartHeader: React.FC<ChartHeaderProps> = ({
   return (
     <div className="flex flex-row items-start justify-between">
       <div>
-        <CardTitle className="text-xl flex items-center gap-2 text-[#F97316]">
-          {icon && React.cloneElement(icon as React.ReactElement, { className: "h-5 w-5 text-[#F97316]" })}
+        <CardTitle className="text-xl flex items-center gap-2">
+          {icon}
           {title}
           {bookId && <span className="text-sm font-normal ml-1">(Livro {bookId})</span>}
         </CardTitle>
