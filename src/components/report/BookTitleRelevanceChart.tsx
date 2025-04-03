@@ -1,14 +1,16 @@
 
 import React from 'react';
 import { Article } from '@/data/articles';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, HelpCircle } from 'lucide-react';
+import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface BookTitleRelevanceChartProps {
   articles: Article[];
   bookId: string;
   segmentId: string;
+  onSelectTitle?: (titleId: string) => void;
 }
 
 interface TitleData {
@@ -23,7 +25,8 @@ interface TitleData {
 const BookTitleRelevanceChart: React.FC<BookTitleRelevanceChartProps> = ({
   articles,
   bookId,
-  segmentId
+  segmentId,
+  onSelectTitle
 }) => {
   // Filter articles by the specified book
   const filterArticlesByBook = () => {
@@ -46,9 +49,9 @@ const BookTitleRelevanceChart: React.FC<BookTitleRelevanceChartProps> = ({
     
     // Define mock titles for each book
     const mockTitles: Record<string, string[]> = {
-      'I': ['NORMAS GERAIS', 'REG. REGIMES IMACAGEM', 'REG. CASHBACK', 'REG. DIF. IBS', 'REG. ESP. IBS', 'REG. DIF. CBS', 'ADM. IBS', 'TRANS. IBS'],
+      'I': ['NORMAS GERAIS', 'REG. REGIMES ESPECIAIS', 'REG. CASHBACK', 'REG. DIF. IBS', 'REG. ESP. IBS', 'REG. DIF. CBS', 'ADM. IBS', 'TRANS. IBS'],
       'II': ['DISP. PRELIMINARES', 'NORMAS GERAIS IMPOSTO SELETIVO', 'IMPOSTO SELETIVO SOBRE IMPORTAÇÕES', 'DISP. FINAIS'],
-      'III': ['ZFM, ÁREAS LIVRE COMÉRCIO DEVOLUÇÃO', 'GOV', 'DISP. TRANSITÓRIAS', 'DISP. FINAIS']
+      'III': ['ZFM, ÁREAS LIVRE COMÉRCIO', 'GOV', 'DISP. TRANSITÓRIAS', 'DISP. FINAIS']
     };
     
     // Initialize title data
@@ -104,14 +107,38 @@ const BookTitleRelevanceChart: React.FC<BookTitleRelevanceChartProps> = ({
     poucoRelevante: '#eab308', // yellow
     irrelevante: '#65a30d' // green
   };
+
+  const handleBarClick = (event: any) => {
+    if (onSelectTitle && event && event.id) {
+      onSelectTitle(event.id);
+    }
+  };
   
   return (
-    <Card className="mt-6">
+    <Card className="mt-6 shadow-md">
       <CardHeader>
-        <CardTitle className="text-xl flex items-center gap-2">
-          <BookOpen className="h-5 w-5 text-primary" />
-          Distribuição de Artigos por Título do Livro {bookId}
-        </CardTitle>
+        <div className="flex flex-row items-start justify-between">
+          <div>
+            <CardTitle className="text-xl flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-primary" />
+              Distribuição de Artigos por Título do Livro {bookId}
+            </CardTitle>
+            <CardDescription className="text-sm text-muted-foreground mt-1">
+              Análise detalhada da relevância dos artigos em cada título do livro
+            </CardDescription>
+          </div>
+          
+          <TooltipProvider>
+            <UITooltip>
+              <TooltipTrigger asChild>
+                <HelpCircle className="h-5 w-5 text-muted-foreground cursor-help" />
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs">
+                <p>Este gráfico mostra a distribuição de artigos por níveis de relevância em cada título do Livro {bookId}.</p>
+              </TooltipContent>
+            </UITooltip>
+          </TooltipProvider>
+        </div>
       </CardHeader>
       
       <CardContent>
@@ -164,17 +191,60 @@ const BookTitleRelevanceChart: React.FC<BookTitleRelevanceChartProps> = ({
                   if (value === 'irrelevante') return 'Irrelevante';
                   return value;
                 }}
+                iconSize={15}
+                wrapperStyle={{ paddingTop: '10px' }}
               />
-              <Bar dataKey="irrelevante" fill={colors.irrelevante} />
-              <Bar dataKey="poucoRelevante" fill={colors.poucoRelevante} />
-              <Bar dataKey="moderadamenteRelevante" fill={colors.moderadamenteRelevante} />
-              <Bar dataKey="muitoRelevante" fill={colors.muitoRelevante} />
+              <Bar 
+                dataKey="irrelevante" 
+                fill={colors.irrelevante} 
+                onClick={handleBarClick}
+                className="cursor-pointer"
+              />
+              <Bar 
+                dataKey="poucoRelevante" 
+                fill={colors.poucoRelevante} 
+                onClick={handleBarClick}
+                className="cursor-pointer"
+              />
+              <Bar 
+                dataKey="moderadamenteRelevante" 
+                fill={colors.moderadamenteRelevante} 
+                onClick={handleBarClick}
+                className="cursor-pointer"
+              />
+              <Bar 
+                dataKey="muitoRelevante" 
+                fill={colors.muitoRelevante} 
+                onClick={handleBarClick}
+                className="cursor-pointer"
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
         
-        <div className="mt-6 text-sm text-muted-foreground">
-          <p>O gráfico acima mostra a distribuição de artigos por título do Livro {bookId}, categorizados por nível de relevância para seu segmento.</p>
+        <div className="mt-6 p-3 bg-muted/50 rounded-md border border-muted">
+          <h4 className="font-medium mb-1">Legenda de relevância:</h4>
+          <div className="grid grid-cols-2 gap-3 mt-2 text-sm">
+            <div className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded-sm" style={{backgroundColor: colors.irrelevante}}></span>
+              <span>Irrelevante: impacto mínimo no seu segmento</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded-sm" style={{backgroundColor: colors.poucoRelevante}}></span>
+              <span>Pouco relevante: baixo impacto no seu segmento</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded-sm" style={{backgroundColor: colors.moderadamenteRelevante}}></span>
+              <span>Moderadamente relevante: impacto significativo</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded-sm" style={{backgroundColor: colors.muitoRelevante}}></span>
+              <span>Muito relevante: alto impacto no seu segmento</span>
+            </div>
+          </div>
+          <p className="mt-3 text-sm text-center text-muted-foreground">
+            Clique nas barras para filtrar artigos por título e nível de relevância
+          </p>
         </div>
       </CardContent>
     </Card>

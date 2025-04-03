@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Article } from '@/data/articles';
 import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell, ResponsiveContainer } from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Filter, PieChart, X } from 'lucide-react';
 import { toast } from 'sonner';
@@ -36,9 +36,9 @@ const BookDistributionChart: React.FC<BookDistributionChartProps> = ({
     
     // Define book metadata
     const bookMeta = [
-      { id: 'I', title: 'CBS', color: '#3b82f6' },
-      { id: 'II', title: 'IBS', color: '#f59e0b' },
-      { id: 'III', title: 'IS', color: '#8b5cf6' }
+      { id: 'I', title: 'CBS', color: '#3b82f6', description: 'Contribuição sobre Bens e Serviços' },
+      { id: 'II', title: 'IBS', color: '#f59e0b', description: 'Imposto sobre Bens e Serviços' },
+      { id: 'III', title: 'IS', color: '#8b5cf6', description: 'Imposto Seletivo' }
     ];
     
     // Initialize each book with zero counts
@@ -96,28 +96,35 @@ const BookDistributionChart: React.FC<BookDistributionChartProps> = ({
   };
   
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-xl flex items-center gap-2">
-          <PieChart className="h-5 w-5 text-primary" />
-          Distribuição de Artigos por Livro
-        </CardTitle>
-        
-        {selectedBook && (
-          <Badge 
-            variant="outline" 
-            className="flex items-center gap-1 cursor-pointer hover:bg-secondary"
-            onClick={() => onSelectBook && onSelectBook(null)}
-          >
-            <Filter className="h-3 w-3" />
-            Livro {selectedBook}: {data.find(d => d.bookId === selectedBook)?.title || ''}
-            <X className="h-3 w-3 ml-1" />
-          </Badge>
-        )}
+    <Card className="shadow-md">
+      <CardHeader>
+        <div className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="text-xl flex items-center gap-2">
+              <PieChart className="h-5 w-5 text-primary" />
+              Distribuição de Artigos por Livro
+            </CardTitle>
+            <CardDescription className="text-sm text-muted-foreground mt-1">
+              Visualize a quantidade de artigos em cada livro da reforma tributária
+            </CardDescription>
+          </div>
+          
+          {selectedBook && (
+            <Badge 
+              variant="outline" 
+              className="flex items-center gap-1 cursor-pointer hover:bg-secondary"
+              onClick={() => onSelectBook && onSelectBook(null)}
+            >
+              <Filter className="h-3 w-3" />
+              Livro {selectedBook}: {data.find(d => d.bookId === selectedBook)?.title || ''}
+              <X className="h-3 w-3 ml-1" />
+            </Badge>
+          )}
+        </div>
       </CardHeader>
       
       <CardContent>
-        <div className="h-80">
+        <div className="h-64 mb-4">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}
@@ -128,7 +135,9 @@ const BookDistributionChart: React.FC<BookDistributionChartProps> = ({
                 dataKey="bookId" 
                 tickFormatter={(value) => `Livro ${value}`} 
               />
-              <YAxis />
+              <YAxis 
+                label={{ value: 'Artigos', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle' } }}
+              />
               <Tooltip
                 formatter={(value, name) => {
                   if (name === 'articles') return [`${value} artigos`, 'Artigos'];
@@ -172,7 +181,7 @@ const BookDistributionChart: React.FC<BookDistributionChartProps> = ({
           {data.map((book) => (
             <div 
               key={book.bookId} 
-              className="bg-card p-4 rounded-md border shadow-sm"
+              className={`bg-card p-4 rounded-md border transition-all duration-150 ${selectedBook === book.bookId ? 'shadow-md border-primary' : 'shadow-sm hover:shadow-md'}`}
               onClick={() => handleBarClick(book)}
               style={{cursor: 'pointer'}}
             >
@@ -200,6 +209,13 @@ const BookDistributionChart: React.FC<BookDistributionChartProps> = ({
               </div>
             </div>
           ))}
+        </div>
+        
+        <div className="mt-4 text-sm text-muted-foreground p-2 bg-muted/50 rounded-md">
+          <p className="flex items-center gap-1">
+            <span className="inline-block w-2 h-2 rounded-full bg-primary"></span>
+            <strong>Como usar:</strong> Clique nas barras ou nos cards para filtrar artigos por livro da legislação.
+          </p>
         </div>
       </CardContent>
     </Card>

@@ -1,9 +1,10 @@
 
 import React from 'react';
 import { Article } from '@/data/articles';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp, HelpCircle } from 'lucide-react';
+import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ImpactDistributionChartProps {
   articles: Article[];
@@ -112,13 +113,32 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
   const percentageData = calculatePercentageData();
   
   return (
-    <Card className="mt-6">
+    <Card className="mt-6 shadow-md">
       <CardHeader>
-        <CardTitle className="text-xl flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-primary" />
-          Favorabilidade por Relevância
-          {bookId && <span className="text-sm font-normal">(Livro {bookId})</span>}
-        </CardTitle>
+        <div className="flex flex-row items-start justify-between">
+          <div>
+            <CardTitle className="text-xl flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-primary" />
+              Favorabilidade por Relevância
+              {bookId && <span className="text-sm font-normal ml-1">(Livro {bookId})</span>}
+            </CardTitle>
+            <CardDescription className="text-sm text-muted-foreground mt-1">
+              Análise da distribuição percentual de impactos por nível de relevância
+            </CardDescription>
+          </div>
+          
+          <TooltipProvider>
+            <UITooltip>
+              <TooltipTrigger asChild>
+                <HelpCircle className="h-5 w-5 text-muted-foreground cursor-help" />
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs">
+                <p>Este gráfico mostra a proporção de impactos favoráveis, neutros e desfavoráveis 
+                  em cada nível de relevância dos artigos para seu segmento.</p>
+              </TooltipContent>
+            </UITooltip>
+          </TooltipProvider>
+        </div>
       </CardHeader>
       
       <CardContent>
@@ -134,7 +154,8 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
               <YAxis 
                 type="category" 
                 dataKey="name" 
-                tickFormatter={(value) => `${value} (${percentageData.find(d => d.name === value)?.count || '0'})`}
+                width={150}
+                tickFormatter={(value) => `${value} (${percentageData.find(d => d.name === value)?.total || '0'} artigos)`}
               />
               <Tooltip 
                 formatter={(value, name) => {
@@ -151,6 +172,8 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
                   if (value === 'unfavorable') return 'Desfavorável';
                   return value;
                 }}
+                iconSize={15}
+                wrapperStyle={{ paddingTop: '10px' }}
               />
               <Bar dataKey="favorable" stackId="a" name="favorable" fill="#4ade80" />
               <Bar dataKey="neutral" stackId="a" name="neutral" fill="#d1d5db" />
@@ -159,9 +182,23 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
           </ResponsiveContainer>
         </div>
         
-        <div className="mt-6 text-sm text-muted-foreground">
-          <p>O gráfico acima mostra a distribuição percentual de impactos favoráveis, neutros e desfavoráveis por nível de relevância dos artigos para seu segmento.</p>
-          <p className="mt-2">Artigos mais relevantes merecem atenção especial, especialmente se tiverem alta proporção de impactos desfavoráveis.</p>
+        <div className="mt-6 p-3 bg-muted/50 rounded-md border border-muted">
+          <h4 className="font-medium mb-1">Como interpretar este gráfico:</h4>
+          <ul className="text-sm text-muted-foreground space-y-1">
+            <li className="flex items-center gap-1">
+              <span className="h-2.5 w-2.5 bg-green-500 rounded-full inline-block"></span>
+              <span><strong>Verde (Favorável):</strong> Impactos positivos para seu segmento</span>
+            </li>
+            <li className="flex items-center gap-1">
+              <span className="h-2.5 w-2.5 bg-gray-400 rounded-full inline-block"></span>
+              <span><strong>Cinza (Neutro):</strong> Impactos neutros ou com efeito equilibrado</span>
+            </li>
+            <li className="flex items-center gap-1">
+              <span className="h-2.5 w-2.5 bg-red-500 rounded-full inline-block"></span>
+              <span><strong>Vermelho (Desfavorável):</strong> Impactos negativos que exigem atenção</span>
+            </li>
+          </ul>
+          <p className="mt-2 text-sm">Priorize a análise de artigos com alta relevância e impactos desfavoráveis.</p>
         </div>
       </CardContent>
     </Card>
