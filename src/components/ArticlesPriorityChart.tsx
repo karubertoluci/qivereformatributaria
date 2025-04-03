@@ -180,8 +180,12 @@ const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
                 onClick={handleDotClick}
               >
                 {data.map((entry, index) => (
-                  <cell 
+                  <rect
                     key={`cell-${index}`}
+                    x={0}
+                    y={0}
+                    width={10}
+                    height={10}
                     fill={entry.isNegative ? "#ef4444" : "#4ade80"}
                     stroke={entry.isNegative ? "#dc2626" : "#22c55e"}
                     strokeWidth={1}
