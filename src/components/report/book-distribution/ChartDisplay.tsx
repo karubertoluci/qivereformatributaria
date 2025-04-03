@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend } from 'recharts';
+import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { ChartDisplayProps } from './types';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 
@@ -62,7 +62,7 @@ const ChartDisplay: React.FC<ChartDisplayProps> = ({ data, selectedBook, onBarCl
             <ChartTooltip 
               content={<ChartTooltipContent />}
             />
-            <Legend />
+            {/* Legend removed as requested */}
             <Bar 
               dataKey="favorable" 
               stackId="a" 
