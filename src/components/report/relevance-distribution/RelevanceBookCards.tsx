@@ -22,7 +22,7 @@ const RelevanceBookCards: React.FC<RelevanceBookCardsProps> = ({
   return <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
       {bookData.map(book => <Card key={book.id} className={`border ${selectedBook === book.id ? 'border-2 border-primary' : 'border-muted'}`}>
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg">
+            <CardTitle className="text-lg font-semibold">
               Livro {book.id}: {book.description}
             </CardTitle>
           </CardHeader>
@@ -35,7 +35,7 @@ const RelevanceBookCards: React.FC<RelevanceBookCardsProps> = ({
               }}></div>
                   <span className="text-sm">Irrelevante</span>
                 </div>
-                <span className="font-medium">{book.irrelevante}</span>
+                <span className="font-semibold">{book.irrelevante}</span>
               </div>
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-1.5">
@@ -44,7 +44,7 @@ const RelevanceBookCards: React.FC<RelevanceBookCardsProps> = ({
               }}></div>
                   <span>Pouco relevante</span>
                 </div>
-                <span className="font-medium">{book.poucoRelevante}</span>
+                <span className="font-semibold">{book.poucoRelevante}</span>
               </div>
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-1.5">
@@ -53,7 +53,7 @@ const RelevanceBookCards: React.FC<RelevanceBookCardsProps> = ({
               }}></div>
                   <span>Moderadamente relevante</span>
                 </div>
-                <span className="font-medium">{book.moderadamenteRelevante}</span>
+                <span className="font-semibold">{book.moderadamenteRelevante}</span>
               </div>
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-1.5">
@@ -62,7 +62,7 @@ const RelevanceBookCards: React.FC<RelevanceBookCardsProps> = ({
               }}></div>
                   <span>Muito relevante</span>
                 </div>
-                <span className="font-medium">{book.muitoRelevante}</span>
+                <span className="font-semibold">{book.muitoRelevante}</span>
               </div>
             </div>
           </CardContent>

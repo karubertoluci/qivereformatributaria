@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -41,14 +40,14 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
       };
       return <Card key={level} className={cn("border", relevanceFilter === level ? "border-primary bg-secondary/20" : "border-muted")}>
             <CardContent className="p-4">
-              <h4 className="text-lg">{level}</h4>
+              <h4 className="text-lg py-[10px] font-semibold">{level}</h4>
               <div className="space-y-1 text-xs">
                 <div className="flex justify-between items-center">
                   <span className="text-sm flex items-center gap-1.5">
                     <div className="w-3 h-3 rounded-sm bg-positive"></div>
                     Favoráveis:
                   </span>
-                  <span className="font-medium text-sm">
+                  <span className="text-sm font-semibold">
                     {relevanceData.favorablePercent}% ({relevanceData.favorable})
                   </span>
                 </div>
@@ -57,7 +56,7 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
                     <div className="w-3 h-3 rounded-sm bg-muted"></div>
                     Neutros:
                   </span>
-                  <span className="font-medium text-sm">
+                  <span className="text-sm font-semibold">
                     {relevanceData.neutralPercent}% ({relevanceData.neutral})
                   </span>
                 </div>
@@ -66,7 +65,7 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
                     <div className="w-3 h-3 rounded-sm bg-negative"></div>
                     Desfavoráveis:
                   </span>
-                  <span className="font-medium text-sm">
+                  <span className="text-sm font-semibold">
                     {relevanceData.unfavorablePercent}% ({relevanceData.unfavorable})
                   </span>
                 </div>
