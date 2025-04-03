@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { BookMarked } from 'lucide-react';
 import ChartHeader from '@/components/report/charts/ChartHeader';
 import { filterArticlesByRelevance } from './report/charts/utils/chartCalculations';
+import { getArticlePriorityData, ArticlePriorityData } from './priority-chart/utils/chartCalculations';
 import PriorityScatterChart from './priority-chart/PriorityScatterChart';
 import PriorityChartLegend from './priority-chart/PriorityChartLegend';
 
@@ -33,6 +34,13 @@ const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
 
   // Then filter by relevance if needed
   const finalFilteredArticles = relevanceFilter ? filterArticlesByRelevance(bookFilteredArticles, segmentId, relevanceFilter) : bookFilteredArticles;
+  const data = getArticlePriorityData(finalFilteredArticles, segmentId);
+  
+  const handleDotClick = (data: ArticlePriorityData) => {
+    if (onSelectArticle) {
+      onSelectArticle(data.id);
+    }
+  };
   
   return (
     <Card className="shadow-md">
@@ -44,11 +52,8 @@ const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
         />
       </CardHeader>
       <CardContent>
-        <PriorityScatterChart 
-          articles={finalFilteredArticles}
-          segmentId={segmentId}
-          onDataPointClick={onSelectArticle}
-        />
+        <PriorityScatterChart data={data} onDotClick={handleDotClick} />
+        <PriorityChartLegend />
       </CardContent>
     </Card>
   );

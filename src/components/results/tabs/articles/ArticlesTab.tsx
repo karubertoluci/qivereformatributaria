@@ -7,7 +7,7 @@ import ActiveFilters from './ActiveFilters';
 import ChartSection from './ChartSection';
 import ArticlesFilters from './ArticlesFilters';
 import ArticlesContent from './ArticlesContent';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 
 interface ArticlesTabProps {
@@ -29,8 +29,6 @@ interface ArticlesTabProps {
   highlights: HighlightType[];
   onAddHighlight: (text: string, color: HighlightType['color'], articleId: string) => void;
   onRemoveHighlight: (id: string) => void;
-  savedArticles: string[];
-  onToggleSaveArticle: (articleId: string) => void;
 }
 
 const ArticlesTab: React.FC<ArticlesTabProps> = ({
@@ -51,16 +49,14 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   articlesByTopic,
   highlights,
   onAddHighlight,
-  onRemoveHighlight,
-  savedArticles,
-  onToggleSaveArticle
+  onRemoveHighlight
 }) => {
   const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(null);
   const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(null);
-  const [selectedRelevanceFilter, setSelectedRelevanceFilter] = useState<string | null>(null);
   const [showAllArticles, setShowAllArticles] = useState<boolean>(false);
   const [chartsCollapsed, setChartsCollapsed] = useState<boolean>(false);
-  const [isCompactView, setIsCompactView] = useState<boolean>(false);
+  const [selectedRelevanceFilter, setSelectedRelevanceFilter] = useState<string | null>(null);
+  
   const allArticles = [...relevantArticles];
 
   const applyCustomFilters = (articlesToFilter: Article[]) => {
@@ -73,6 +69,29 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         if (id > 180 && id <= 300) bookId = 'II';
         else if (id > 300) bookId = 'III';
         return bookId === selectedBookFilter;
+      });
+    }
+    
+    if (selectedRelevanceFilter) {
+      const relevanceLevels = {
+        'Irrelevante': 0,
+        'Pouco relevante': 1,
+        'Moderadamente relevante': 2,
+        'Muito relevante': 3
+      };
+      
+      result = result.filter(article => {
+        const articleImpact = article.impacts.find(impact => impact.segments.includes(segment.id));
+        if (!articleImpact) return false;
+        
+        const relevanceValue = articleImpact.relevance || 0;
+        let relevanceText = 'Irrelevante';
+        
+        if (relevanceValue === 1) relevanceText = 'Pouco relevante';
+        else if (relevanceValue === 2) relevanceText = 'Moderadamente relevante';
+        else if (relevanceValue === 3) relevanceText = 'Muito relevante';
+        
+        return relevanceText === selectedRelevanceFilter;
       });
     }
     
@@ -90,63 +109,17 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   );
 
   useEffect(() => {
-    setSelectedBookFilter(null);
-    setSelectedTitleFilter(null);
-    setSelectedRelevanceFilter(null);
+    if (searchTerm || filterType !== 'all') {
+      // Resetar filtros de livro e título quando busca ou tipo de filtro mudam
+      setSelectedBookFilter(null);
+      setSelectedTitleFilter(null);
+    }
   }, [searchTerm, filterType]);
 
   return (
     <div className="space-y-8">
-      <ActiveFilters
-        selectedBookFilter={selectedBookFilter}
-        setSelectedBookFilter={setSelectedBookFilter}
-        showAllArticles={showAllArticles}
-        setShowAllArticles={setShowAllArticles}
-        selectedRelevanceFilter={selectedRelevanceFilter}
-        setSelectedRelevanceFilter={setSelectedRelevanceFilter}
-      />
-      
-      {/* Seção 1: Análise Visual */}
       <Card className="border shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-xl flex items-center gap-2 text-[#F97316]">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bar-chart text-[#F97316]"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>
-            Análise Visual
-          </CardTitle>
-          <CardDescription>
-            Visualize os impactos da reforma tributária no seu segmento através de gráficos interativos
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartSection
-            chartsCollapsed={chartsCollapsed}
-            setChartsCollapsed={setChartsCollapsed}
-            segment={segment}
-            relevantArticles={relevantArticles}
-            allArticles={allArticles}
-            showAllArticles={showAllArticles}
-            setShowAllArticles={setShowAllArticles}
-            selectedBookFilter={selectedBookFilter}
-            setSelectedBookFilter={setSelectedBookFilter}
-            setSelectedTitleFilter={setSelectedTitleFilter}
-            hasCriticalImpacts={hasCriticalImpacts}
-            setExpandedArticleId={setExpandedArticleId}
-            selectedRelevanceFilter={selectedRelevanceFilter}
-            setSelectedRelevanceFilter={setSelectedRelevanceFilter}
-          />
-        </CardContent>
-      </Card>
-      
-      <Separator className="my-8" />
-      
-      {/* Seção 2: Artigos da Reforma */}
-      <Card className="border shadow-sm">
-        <CardHeader className="pb-0">
-          <CardDescription>
-            Explore os artigos relevantes para seu segmento, filtre por impacto e analise detalhadamente seus efeitos
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <ArticlesFilters
             positiveCount={positiveCount}
             negativeCount={negativeCount}
@@ -157,10 +130,40 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             setFilterType={setFilterType}
             viewMode={viewMode}
             setViewMode={setViewMode}
-            isCompactView={isCompactView}
-            setIsCompactView={setIsCompactView}
           />
           
+          <ActiveFilters
+            selectedBookFilter={selectedBookFilter}
+            setSelectedBookFilter={setSelectedBookFilter}
+            showAllArticles={showAllArticles}
+            setShowAllArticles={setShowAllArticles}
+            selectedRelevanceFilter={selectedRelevanceFilter}
+            setSelectedRelevanceFilter={setSelectedRelevanceFilter}
+          />
+          
+          {/* Seção 1: Análise Visual */}
+          <div className="mt-6">
+            <ChartSection
+              chartsCollapsed={chartsCollapsed}
+              setChartsCollapsed={setChartsCollapsed}
+              segment={segment}
+              relevantArticles={relevantArticles}
+              allArticles={allArticles}
+              showAllArticles={showAllArticles}
+              setShowAllArticles={setShowAllArticles}
+              selectedBookFilter={selectedBookFilter}
+              setSelectedBookFilter={setSelectedBookFilter}
+              setSelectedTitleFilter={setSelectedTitleFilter}
+              hasCriticalImpacts={hasCriticalImpacts}
+              setExpandedArticleId={setExpandedArticleId}
+              selectedRelevanceFilter={selectedRelevanceFilter}
+              setSelectedRelevanceFilter={setSelectedRelevanceFilter}
+            />
+          </div>
+          
+          <Separator className="my-8" />
+          
+          {/* Seção 2: Lista de Artigos */}
           <ArticlesContent
             viewMode={viewMode}
             displayedArticles={displayedArticles}
@@ -177,9 +180,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             onRemoveHighlight={onRemoveHighlight}
             articlesByTopic={articlesByTopic}
             topics={topics}
-            isCompactView={isCompactView}
-            savedArticles={savedArticles}
-            onToggleSaveArticle={onToggleSaveArticle}
           />
         </CardContent>
       </Card>

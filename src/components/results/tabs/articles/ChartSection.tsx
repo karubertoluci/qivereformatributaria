@@ -2,14 +2,15 @@
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
-import PriorityScatterChart from '@/components/priority-chart/PriorityScatterChart';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BookOpen, LineChart } from 'lucide-react';
+import { BarChart, BookOpen } from 'lucide-react';
 import { toast } from 'sonner';
-import { capitalizeFirstLetter } from '@/lib/utils';
+import ImpactDistributionChart from '../../../report/ImpactDistributionChart';
 import ChartExpandToggle from './components/ChartExpandToggle';
-import ImpactsSection from './components/ImpactsSection';
+import BookTitleRelevanceChart from '../../../report/BookTitleRelevanceChart';
 import ViewModeCard from './components/ViewModeCard';
+import ImpactsSection from './components/ImpactsSection';
 
 interface ChartSectionProps {
   chartsCollapsed: boolean;
@@ -44,118 +45,131 @@ const ChartSection: React.FC<ChartSectionProps> = ({
   selectedRelevanceFilter,
   setSelectedRelevanceFilter
 }) => {
-  const handleBookClick = (bookId: string) => {
-    if (selectedBookFilter === bookId) {
-      setSelectedBookFilter(null);
-      toast.info("Filtro de livro removido");
-    } else {
-      setSelectedBookFilter(bookId);
-      toast.info(`Filtrando por Livro ${bookId}`);
+  const handleBookFilter = (bookId: string) => {
+    setSelectedBookFilter(bookId === selectedBookFilter ? null : bookId);
+    toast.info(bookId === selectedBookFilter 
+      ? "Filtro de livro removido" 
+      : `Mostrando apenas artigos do Livro ${bookId}`);
+  };
+
+  const handleRelevanceFilter = (relevanceLevel: string | null) => {
+    setSelectedRelevanceFilter(relevanceLevel);
+    if (relevanceLevel) {
+      toast.info(`Filtrando artigos por relevância: ${relevanceLevel}`);
     }
   };
 
-  const handleTitleClick = (titleId: string) => {
-    setSelectedTitleFilter(titleId);
-    toast.info(`Filtrando por Título: ${capitalizeFirstLetter(titleId)}`);
-  };
-
-  const handleRelevanceFilterSelect = (relevance: string) => {
-    if (selectedRelevanceFilter === relevance) {
-      setSelectedRelevanceFilter(null);
-      toast.info("Filtro de relevância removido");
-    } else {
-      setSelectedRelevanceFilter(relevance);
-      toast.info(`Filtrando por artigos de relevância ${relevance}`);
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div className="flex gap-2 items-center">
-          <LineChart className="h-5 w-5 text-muted-foreground" />
-          <h3 className="font-medium">Gráficos e estatísticas</h3>
-        </div>
-        
-        <ChartExpandToggle
-          isCollapsed={chartsCollapsed}
-          setIsCollapsed={setChartsCollapsed}
+  if (chartsCollapsed) {
+    return (
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-medium flex items-center gap-2">
+          <BarChart className="h-5 w-5 text-[#F97316]" /> 
+          Análise Visual
+        </h3>
+        <ChartExpandToggle 
+          collapsed={chartsCollapsed} 
+          setCollapsed={setChartsCollapsed}
           collapsedLabel="Expandir gráficos"
           expandedLabel="Recolher gráficos"
         />
       </div>
-      
-      {!chartsCollapsed && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Chart Card 1: Prioridade dos Artigos */}
-          <ViewModeCard
-            title="Prioridade dos Artigos"
-            icon={<BookOpen className="h-5 w-5 text-primary" />}
-          >
-            <div className="h-64">
-              <PriorityScatterChart
-                articles={relevantArticles}
-                segmentId={segment.id}
-                onDataPointClick={(articleId) => {
-                  setExpandedArticleId(articleId);
-                }}
-                onDataPointGroupClick={(group) => {
-                  if (group === 'high' || group === 'medium' || group === 'low') {
-                    handleRelevanceFilterSelect(group);
-                  }
-                }}
-                selectedRelevance={selectedRelevanceFilter}
-              />
-            </div>
-          </ViewModeCard>
-          
-          {/* Chart Card 2: Impactos por Tipo */}
-          <ViewModeCard
-            title="Impactos por Tipo"
-            icon={<LineChart className="h-5 w-5 text-primary" />}
-          >
-            <div className="h-64">
-              <ImpactsSection
-                segmentId={segment.id}
-                relevantArticles={relevantArticles}
-                onArticleSelect={setExpandedArticleId}
-              />
-            </div>
-          </ViewModeCard>
-        </div>
-      )}
-      
-      <div className="flex flex-wrap gap-4">
-        <Button
-          variant={selectedBookFilter === 'I' ? 'secondary' : 'outline'}
-          onClick={() => handleBookClick('I')}
-        >
-          Livro I: CBS
-        </Button>
-        <Button
-          variant={selectedBookFilter === 'II' ? 'secondary' : 'outline'}
-          onClick={() => handleBookClick('II')}
-        >
-          Livro II: IBS
-        </Button>
-        <Button
-          variant={selectedBookFilter === 'III' ? 'secondary' : 'outline'}
-          onClick={() => handleBookClick('III')}
-        >
-          Livro III: IS
-        </Button>
-        <Button
-          variant={showAllArticles ? 'secondary' : 'outline'}
-          onClick={() => {
-            setShowAllArticles(!showAllArticles);
-            toast.info(showAllArticles 
-              ? "Mostrando apenas artigos relevantes para seu segmento" 
-              : "Exibindo todos os 544 artigos da reforma"
-            );
-          }}
-        >
-          {showAllArticles ? 'Ver apenas artigos relevantes' : 'Ver todos os artigos'}
-        </Button>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-medium flex items-center gap-2">
+          <BarChart className="h-5 w-5 text-[#F97316]" /> 
+          Análise Visual
+        </h3>
+        <ChartExpandToggle 
+          collapsed={chartsCollapsed} 
+          setCollapsed={setChartsCollapsed}
+          collapsedLabel="Expandir gráficos"
+          expandedLabel="Recolher gráficos"
+        />
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        {/* Distribuição de Favorabilidade */}
+        <Card>
+          <CardContent className="pt-6">
+            <ImpactDistributionChart 
+              articles={showAllArticles ? allArticles : relevantArticles}
+              segmentId={segment.id}
+              bookId={selectedBookFilter}
+              onRelevanceFilter={handleRelevanceFilter}
+              selectedRelevance={selectedRelevanceFilter}
+            />
+          </CardContent>
+        </Card>
+
+        {/* Distribuição por Livros */}
+        <Card>
+          <CardContent className="pt-6 pb-2">
+            <ViewModeCard
+              title="Distribuição por Livros"
+              icon={<BookOpen className="h-5 w-5 text-[#F97316]" />}
+            >
+              <div className="flex flex-col gap-4">
+                <p className="text-sm text-muted-foreground">
+                  Selecione um livro para filtrar os artigos:
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    size="sm"
+                    variant={selectedBookFilter === 'I' ? 'default' : 'outline'}
+                    className="flex items-center gap-1"
+                    onClick={() => handleBookFilter('I')}
+                  >
+                    <BookOpen className="h-4 w-4" />
+                    <span>Livro I</span>
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={selectedBookFilter === 'II' ? 'default' : 'outline'}
+                    className="flex items-center gap-1"
+                    onClick={() => handleBookFilter('II')}
+                  >
+                    <BookOpen className="h-4 w-4" />
+                    <span>Livro II</span>
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={selectedBookFilter === 'III' ? 'default' : 'outline'}
+                    className="flex items-center gap-1"
+                    onClick={() => handleBookFilter('III')}
+                  >
+                    <BookOpen className="h-4 w-4" />
+                    <span>Livro III</span>
+                  </Button>
+                </div>
+                
+                <BookTitleRelevanceChart 
+                  articles={relevantArticles}
+                  segmentId={segment.id}
+                  bookId={selectedBookFilter || undefined}
+                  onSelectTitle={(titleId) => {
+                    setSelectedTitleFilter(titleId);
+                    toast.info(`Filtrando por título: ${titleId}`);
+                  }}
+                />
+              </div>
+            </ViewModeCard>
+          </CardContent>
+        </Card>
+        
+        {/* Componente de Impactos */}
+        {hasCriticalImpacts && (
+          <div className="md:col-span-2">
+            <ImpactsSection 
+              segment={segment} 
+              relevantArticles={relevantArticles} 
+              setExpandedArticleId={setExpandedArticleId} 
+            />
+          </div>
+        )}
       </div>
     </div>
   );

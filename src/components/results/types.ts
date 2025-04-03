@@ -2,11 +2,9 @@
 export type Topic = {
   id: string;
   name: string;
-  title?: string;
   description: string;
   articleCount?: number;
   importance?: number;
-  order?: number;
 };
 
 export type CommentType = {

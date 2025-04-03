@@ -1,103 +1,71 @@
-
 import React from 'react';
-import { Article } from '@/data/articles';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ArticleCard from '../ArticleCard';
-import { Badge } from '@/components/ui/badge';
+import { Article } from '@/data/articles';
 import { Topic, HighlightType } from './types';
-
 interface ArticleTopicsViewProps {
-  articlesByTopic: Record<string, Article[]>;
   filteredArticles: Article[];
+  articlesByTopic: Record<string, Article[]>;
   topics: Topic[];
+  segmentId: string;
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
-  onSelectArticle: (id: string) => void;
-  segmentId: string;
-  highlights: HighlightType[];
-  onAddHighlight: (text: string, color: string, articleId: string) => void;
-  onRemoveHighlight: (id: string) => void;
-  savedArticles?: string[];
-  onToggleSaveArticle?: (articleId: string) => void;
-  isCompactView?: boolean;
-  onOpenArticleModal?: (article: Article) => void;
+  onSelectArticle: (id: string | null) => void;
+  highlights?: HighlightType[];
+  onAddHighlight?: (text: string, color: HighlightType['color'], articleId: string) => void;
+  onRemoveHighlight?: (id: string) => void;
 }
-
 const ArticleTopicsView: React.FC<ArticleTopicsViewProps> = ({
-  articlesByTopic,
   filteredArticles,
+  articlesByTopic,
   topics,
+  segmentId,
   expandedArticleId,
   setExpandedArticleId,
   onSelectArticle,
-  segmentId,
-  highlights,
-  onAddHighlight,
-  onRemoveHighlight,
-  savedArticles = [],
-  onToggleSaveArticle = () => {},
-  isCompactView = false,
-  onOpenArticleModal = () => {}
+  highlights = [],
+  onAddHighlight = () => {},
+  onRemoveHighlight = () => {}
 }) => {
-  // If no articles are found for any topic
-  if (filteredArticles.length === 0) {
-    return (
-      <div className="text-center p-12">
-        <p className="text-lg text-muted-foreground">Nenhum artigo encontrado com os filtros atuais.</p>
-      </div>
-    );
-  }
-
-  // Sort topics by name if there's no order property
-  const sortedTopics = [...topics].sort((a, b) => {
-    if ('order' in a && 'order' in b) {
-      return (a.order as number) - (b.order as number);
-    }
-    return a.name.localeCompare(b.name);
-  });
-  
-  return (
-    <div>
-      {sortedTopics.map(topic => {
-        const topicArticles = articlesByTopic[topic.id] || [];
-        
-        // Skip topics with no articles
-        if (topicArticles.length === 0) return null;
-        
-        return (
-          <div key={topic.id} className="mb-10 last:mb-0">
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold mb-1 flex items-center">
-                <Badge variant="outline" className="mr-2 bg-primary text-primary-foreground">
-                  {topicArticles.length}
-                </Badge>
-                {topic.name || topic.title}
-              </h3>
-              <p className="text-sm text-muted-foreground">{topic.description}</p>
-            </div>
-            
-            <div className={isCompactView ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" : ""}>
-              {topicArticles.map(article => (
-                <ArticleCard
-                  key={article.id}
-                  article={article}
-                  segmentId={segmentId}
-                  expanded={article.id === expandedArticleId}
-                  onToggleExpand={() => onSelectArticle(article.id)}
-                  highlights={highlights.filter(h => h.articleId === article.id)}
-                  onAddHighlight={(text, color) => onAddHighlight(text, color, article.id)}
-                  onRemoveHighlight={onRemoveHighlight}
-                  isCompactView={isCompactView}
-                  onOpenModal={() => onOpenArticleModal(article)}
-                  savedArticles={savedArticles}
-                  onToggleSaveArticle={onToggleSaveArticle}
-                />
-              ))}
-            </div>
+  return <Tabs defaultValue="all" className="w-full">
+      
+      
+      <TabsContent value="all">
+        <div className="space-y-6">
+          {filteredArticles.map(article => <div key={article.id} id={`article-${article.id}`}>
+              <ArticleCard article={article} segmentId={segmentId} expanded={expandedArticleId === article.id} onToggleExpand={() => {
+            setExpandedArticleId(expandedArticleId === article.id ? null : article.id);
+            if (expandedArticleId !== article.id) {
+              onSelectArticle(article.id);
+            } else {
+              onSelectArticle(null);
+            }
+          }} highlights={highlights} onAddHighlight={(text, color) => onAddHighlight(text, color, article.id)} onRemoveHighlight={onRemoveHighlight} />
+            </div>)}
+        </div>
+      </TabsContent>
+      
+      {topics.map(topic => <TabsContent key={topic.id} value={topic.id}>
+          <div className="mb-4">
+            <h3 className="text-lg font-medium">{topic.name}</h3>
+            <p className="text-sm text-gray-600">{topic.description}</p>
           </div>
-        );
-      })}
-    </div>
-  );
+          
+          <div className="space-y-6">
+            {articlesByTopic[topic.id]?.length > 0 ? articlesByTopic[topic.id].map(article => <div key={article.id} id={`article-${article.id}`}>
+                  <ArticleCard article={article} segmentId={segmentId} expanded={expandedArticleId === article.id} onToggleExpand={() => {
+            setExpandedArticleId(expandedArticleId === article.id ? null : article.id);
+            if (expandedArticleId !== article.id) {
+              onSelectArticle(article.id);
+            } else {
+              onSelectArticle(null);
+            }
+          }} highlights={highlights} onAddHighlight={(text, color) => onAddHighlight(text, color, article.id)} onRemoveHighlight={onRemoveHighlight} />
+                </div>) : <p className="text-gray-500 text-center py-4">
+                Nenhum artigo encontrado nesta categoria.
+              </p>}
+          </div>
+        </TabsContent>)}
+    </Tabs>;
 };
-
 export default ArticleTopicsView;
