@@ -33,65 +33,67 @@ const ChartDisplay: React.FC<ChartDisplayProps> = ({ data, selectedBook, onBarCl
   }));
 
   return (
-    <div className="h-64 mb-4">
-      <ChartContainer config={chartConfig} className="h-full">
-        <BarChart
-          data={formattedData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-          onClick={(data) => data && onBarClick(data.activePayload?.[0]?.payload)}
-        >
-          <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
-          <XAxis 
-            dataKey="name" 
-            tick={{ fill: '#64748b' }}
-            axisLine={{ stroke: '#e5e7eb' }}
-            tickLine={false}
-          />
-          <YAxis 
-            label={{ 
-              value: 'Artigos', 
-              angle: -90, 
-              position: 'insideLeft', 
-              style: { textAnchor: 'middle', fill: '#64748b', fontSize: 12 } 
-            }}
-            tick={{ fill: '#64748b' }}
-            axisLine={{ stroke: '#e5e7eb' }}
-            tickLine={false}
-          />
-          <ChartTooltip 
-            content={<ChartTooltipContent />}
-          />
-          <Legend />
-          <Bar 
-            dataKey="favorable" 
-            stackId="a" 
-            name="favorable"
-            fill="#4ade80" 
-            className="cursor-pointer"
-          />
-          <Bar 
-            dataKey="neutral" 
-            stackId="a" 
-            name="neutral"
-            fill="#d1d5db" 
-            className="cursor-pointer"
-          />
-          <Bar 
-            dataKey="unfavorable" 
-            stackId="a" 
-            name="unfavorable"
-            fill="#ef4444" 
-            className="cursor-pointer"
+    <div className="w-full h-72 mb-4">
+      <ChartContainer config={chartConfig} className="h-full w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={formattedData}
+            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+            onClick={(data) => data && onBarClick(data.activePayload?.[0]?.payload)}
           >
-            {formattedData.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                stroke={entry.bookId === selectedBook ? '#000' : 'transparent'}
-                strokeWidth={entry.bookId === selectedBook ? 2 : 0}
-              />
-            ))}
-          </Bar>
-        </BarChart>
+            <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
+            <XAxis 
+              dataKey="name" 
+              tick={{ fill: '#64748b' }}
+              axisLine={{ stroke: '#e5e7eb' }}
+              tickLine={false}
+            />
+            <YAxis 
+              label={{ 
+                value: 'Artigos', 
+                angle: -90, 
+                position: 'insideLeft', 
+                style: { textAnchor: 'middle', fill: '#64748b', fontSize: 12 } 
+              }}
+              tick={{ fill: '#64748b' }}
+              axisLine={{ stroke: '#e5e7eb' }}
+              tickLine={false}
+            />
+            <ChartTooltip 
+              content={<ChartTooltipContent />}
+            />
+            <Legend />
+            <Bar 
+              dataKey="favorable" 
+              stackId="a" 
+              name="favorable"
+              fill="#4ade80" 
+              className="cursor-pointer"
+            />
+            <Bar 
+              dataKey="neutral" 
+              stackId="a" 
+              name="neutral"
+              fill="#d1d5db" 
+              className="cursor-pointer"
+            />
+            <Bar 
+              dataKey="unfavorable" 
+              stackId="a" 
+              name="unfavorable"
+              fill="#ef4444" 
+              className="cursor-pointer"
+            >
+              {formattedData.map((entry, index) => (
+                <Cell 
+                  key={`cell-${index}`} 
+                  stroke={entry.bookId === selectedBook ? '#000' : 'transparent'}
+                  strokeWidth={entry.bookId === selectedBook ? 2 : 0}
+                />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
       </ChartContainer>
     </div>
   );
