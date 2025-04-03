@@ -5,6 +5,7 @@ import { useTitleRelevanceData } from './book-title-relevance/useTitleRelevanceD
 import ChartHeader from './book-title-relevance/ChartHeader';
 import TitleBarChart from './book-title-relevance/TitleBarChart';
 import RelevanceLegend from './book-title-relevance/RelevanceLegend';
+import ChartHelp from './book-title-relevance/ChartHelp';
 import { BookTitleRelevanceChartProps } from './book-title-relevance/types';
 
 const BookTitleRelevanceChart: React.FC<BookTitleRelevanceChartProps> = ({
