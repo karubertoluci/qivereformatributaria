@@ -126,8 +126,25 @@ const BookTitleRelevanceChart: React.FC<BookTitleRelevanceChartProps> = ({
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis 
                 dataKey="name" 
-                tick={{ angle: -45, textAnchor: 'end', fontSize: 11 }}
-                height={80} 
+                height={80}
+                tick={(props) => {
+                  const { x, y, payload } = props;
+                  return (
+                    <g transform={`translate(${x},${y})`}>
+                      <text 
+                        x={0} 
+                        y={0} 
+                        dy={16} 
+                        textAnchor="end" 
+                        fill="#666" 
+                        transform="rotate(-45)"
+                        style={{ fontSize: 11 }}
+                      >
+                        {payload.value}
+                      </text>
+                    </g>
+                  );
+                }}
               />
               <YAxis label={{ value: 'Número de Artigos', angle: -90, position: 'insideLeft' }} />
               <Tooltip 
