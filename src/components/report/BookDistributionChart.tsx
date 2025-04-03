@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Article } from '@/data/articles';
 import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell, ResponsiveContainer } from 'recharts';
@@ -38,7 +37,8 @@ const BookDistributionChart: React.FC<BookDistributionChartProps> = ({
     const bookMeta = [
       { id: 'I', title: 'CBS', color: '#3b82f6', description: 'Contribuição sobre Bens e Serviços' },
       { id: 'II', title: 'IBS', color: '#f59e0b', description: 'Imposto sobre Bens e Serviços' },
-      { id: 'III', title: 'IS', color: '#8b5cf6', description: 'Imposto Seletivo' }
+      { id: 'III', title: 'IS', color: '#8b5cf6', description: 'Imposto Seletivo' },
+      { id: 'IV', title: 'Outras disposições', color: '#10b981', description: 'Disposições finais e transitórias' }
     ];
     
     // Initialize each book with zero counts
@@ -56,14 +56,19 @@ const BookDistributionChart: React.FC<BookDistributionChartProps> = ({
     
     // Count articles and impacts by book
     articles.forEach(article => {
-      // Determine which book this article belongs to
-      const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
-                        parseInt(article.id.replace(/\D/g, ''));
+      // If article has metadata.bookId, use that directly
+      let bookId = article.metadata?.bookId;
       
-      let bookId: string;
-      if (articleNum <= 180) bookId = 'I';
-      else if (articleNum <= 300) bookId = 'II';
-      else bookId = 'III';
+      // Otherwise determine which book this article belongs to based on article number
+      if (!bookId) {
+        const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
+                          parseInt(article.id.replace(/\D/g, ''));
+        
+        if (articleNum <= 150) bookId = 'I';
+        else if (articleNum <= 250) bookId = 'II';
+        else if (articleNum <= 350) bookId = 'III';
+        else bookId = 'IV';
+      }
       
       // Update article count
       const bookData = bookMap.get(bookId);
@@ -177,7 +182,7 @@ const BookDistributionChart: React.FC<BookDistributionChartProps> = ({
           </ResponsiveContainer>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
           {data.map((book) => (
             <div 
               key={book.bookId} 

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Article } from '@/data/articles';
@@ -37,10 +36,16 @@ const LegislationBooks: React.FC<LegislationBooksProps> = ({
   
   // For demonstration, let's assign articles to books based on their ID
   const getArticleBook = (article: Article): string => {
+    // If article has metadata.bookId, use that directly
+    if (article.metadata?.bookId) {
+      return article.metadata.bookId;
+    }
+    
+    // Otherwise determine based on article number
     const id = parseInt(article.id.replace(/\D/g, '')) || parseInt(article.number.replace(/\D/g, ''));
-    if (id % 4 === 0) return 'II';
-    if (id % 4 === 1) return 'I';
-    if (id % 4 === 2) return 'III';
+    if (id < 150) return 'I';
+    if (id >= 150 && id < 250) return 'II';
+    if (id >= 250 && id < 350) return 'III';
     return 'IV';
   };
   
