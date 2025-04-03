@@ -14,6 +14,7 @@ export const useResultsData = (segment: BusinessSegment) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'articles'>('overview');
   const [highlights, setHighlights] = useState<HighlightType[]>([]);
   const [savedArticles, setSavedArticles] = useState<string[]>([]);
+  const [isCompactView, setIsCompactView] = useState<boolean>(false);
   
   // Load highlights from localStorage on mount
   useEffect(() => {
@@ -148,7 +149,10 @@ export const useResultsData = (segment: BusinessSegment) => {
     // Saved articles related state and functions
     savedArticles,
     setSavedArticles,
-    handleToggleSaveArticle
+    handleToggleSaveArticle,
+    // Compact view
+    isCompactView,
+    setIsCompactView
   };
 };
 

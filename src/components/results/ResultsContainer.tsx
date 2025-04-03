@@ -16,30 +16,26 @@ interface ResultsContainerProps {
 }
 
 const ResultsContainer: React.FC<ResultsContainerProps> = ({
-  segment
+  segment,
+  onBackToSegments = () => {}
 }) => {
-  const {
-    expandedArticleId,
-    setExpandedArticleId,
-    searchTerm,
-    setSearchTerm,
-    filterType,
-    setFilterType,
-    viewMode,
-    setViewMode,
-    formData,
-    hasCompanyData,
-    relevantArticles,
-    filteredArticles,
-    articlesByTopic,
-    positiveCount,
-    negativeCount,
-    topics,
-    highlights,
-    handleAddHighlight,
+  const { 
+    expandedArticleId, setExpandedArticleId,
+    searchTerm, setSearchTerm, 
+    filterType, setFilterType, 
+    viewMode, setViewMode,
+    activeTab, setActiveTab, 
+    relevantArticles, filteredArticles,
+    articlesByTopic, positiveCount, negativeCount,
+    handleArticleSelect,
+    topics, 
+    highlights, 
+    handleAddHighlight, 
     handleRemoveHighlight,
     savedArticles,
-    handleToggleSaveArticle
+    handleToggleSaveArticle,
+    isCompactView,
+    setIsCompactView
   } = useResultsData(segment);
 
   return (
@@ -72,7 +68,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
           />
         </TabsContent>
         
-        <TabsContent value="articles">
+        <TabsContent value="articles" className="p-0">
           <ArticlesTab 
             segment={segment}
             filteredArticles={filteredArticles}
@@ -92,12 +88,14 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
             highlights={highlights}
             onAddHighlight={handleAddHighlight}
             onRemoveHighlight={handleRemoveHighlight}
+            savedArticles={savedArticles}
+            onToggleSaveArticle={handleToggleSaveArticle}
           />
         </TabsContent>
         
         <TabsContent value="highlights">
           <HighlightsTab 
-            highlights={highlights}
+            highlights={highlights} 
             relevantArticles={relevantArticles}
             setExpandedArticleId={setExpandedArticleId}
             handleRemoveHighlight={handleRemoveHighlight}

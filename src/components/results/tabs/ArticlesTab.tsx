@@ -32,6 +32,8 @@ interface ArticlesTabProps {
   highlights: HighlightType[];
   onAddHighlight: (text: string, color: HighlightType['color'], articleId: string) => void;
   onRemoveHighlight: (id: string) => void;
+  savedArticles: string[];
+  onToggleSaveArticle: (articleId: string) => void;
 }
 
 const ArticlesTab: React.FC<ArticlesTabProps> = ({
@@ -52,7 +54,9 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   articlesByTopic,
   highlights,
   onAddHighlight,
-  onRemoveHighlight
+  onRemoveHighlight,
+  savedArticles,
+  onToggleSaveArticle
 }) => {
   const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(null);
   const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(null);
@@ -60,27 +64,9 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   const [chartsCollapsed, setChartsCollapsed] = useState<boolean>(false);
   const [selectedRelevanceFilter, setSelectedRelevanceFilter] = useState<string | null>(null);
   const [isCompactView, setIsCompactView] = useState<boolean>(false);
-  const [savedArticles, setSavedArticles] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<"all" | "saved">("all");
   
   const allArticles = [...relevantArticles];
-
-  // Load saved articles from localStorage on mount
-  useEffect(() => {
-    const savedArticlesData = localStorage.getItem('savedArticles');
-    if (savedArticlesData) {
-      try {
-        setSavedArticles(JSON.parse(savedArticlesData));
-      } catch (e) {
-        console.error('Failed to parse saved articles from localStorage:', e);
-      }
-    }
-  }, []);
-
-  // Save articles to localStorage when changed
-  useEffect(() => {
-    localStorage.setItem('savedArticles', JSON.stringify(savedArticles));
-  }, [savedArticles]);
 
   const applyCustomFilters = (articlesToFilter: Article[]) => {
     let result = [...articlesToFilter];
@@ -103,14 +89,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   const savedDisplayedArticles = displayedArticles.filter(article => 
     savedArticles.includes(article.id)
   );
-
-  const handleToggleSaveArticle = (articleId: string) => {
-    if (savedArticles.includes(articleId)) {
-      setSavedArticles(savedArticles.filter(id => id !== articleId));
-    } else {
-      setSavedArticles([...savedArticles, articleId]);
-    }
-  };
 
   const hasCriticalImpacts = relevantArticles.some(article => 
     article.impacts.some(impact => 
@@ -225,7 +203,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
                 topics={topics}
                 isCompactView={isCompactView}
                 savedArticles={savedArticles}
-                onToggleSaveArticle={handleToggleSaveArticle}
+                onToggleSaveArticle={onToggleSaveArticle}
               />
             </TabsContent>
             
@@ -279,7 +257,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
                   topics={topics}
                   isCompactView={isCompactView}
                   savedArticles={savedArticles}
-                  onToggleSaveArticle={handleToggleSaveArticle}
+                  onToggleSaveArticle={onToggleSaveArticle}
                 />
               )}
             </TabsContent>
