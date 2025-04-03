@@ -10,6 +10,7 @@ import ArticlesFilters from './ArticlesFilters';
 import ArticlesContent from './ArticlesContent';
 import { Separator } from '@/components/ui/separator';
 import { BarChart3, FileText } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -90,7 +91,8 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   }, [searchTerm, filterType]);
 
   return (
-    <div>
+    <div className="space-y-8">
+      {/* Filtros ativos */}
       <ActiveFilters
         selectedBookFilter={selectedBookFilter}
         setSelectedBookFilter={setSelectedBookFilter}
@@ -99,73 +101,79 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       />
       
       {/* Seção 1: Análise Visual - Gráficos e Visualização de Dados */}
-      <div className="mb-10">
-        <div className="flex items-center gap-2 mb-6">
+      <Card className="border border-muted p-6">
+        <div className="flex items-center gap-2 mb-4">
           <BarChart3 className="h-5 w-5 text-primary" />
           <h2 className="text-2xl font-semibold">Análise Visual</h2>
         </div>
         <p className="text-muted-foreground mb-6">
-          Explore os dados da reforma tributária de forma visual e interativa. Clique nos elementos dos gráficos para filtrar os artigos relacionados.
+          Explore os dados da reforma tributária de forma visual e interativa. 
+          Clique nos elementos dos gráficos para filtrar os artigos relacionados ao seu segmento.
         </p>
       
-        <ChartSection
-          chartsCollapsed={chartsCollapsed}
-          setChartsCollapsed={setChartsCollapsed}
-          segment={segment}
-          relevantArticles={relevantArticles}
-          allArticles={allArticles}
-          showAllArticles={showAllArticles}
-          setShowAllArticles={setShowAllArticles}
-          selectedBookFilter={selectedBookFilter}
-          setSelectedBookFilter={setSelectedBookFilter}
-          setSelectedTitleFilter={setSelectedTitleFilter}
-          hasCriticalImpacts={hasCriticalImpacts}
-          setExpandedArticleId={setExpandedArticleId}
-        />
-      </div>
+        <CardContent className="p-0">
+          <ChartSection
+            chartsCollapsed={chartsCollapsed}
+            setChartsCollapsed={setChartsCollapsed}
+            segment={segment}
+            relevantArticles={relevantArticles}
+            allArticles={allArticles}
+            showAllArticles={showAllArticles}
+            setShowAllArticles={setShowAllArticles}
+            selectedBookFilter={selectedBookFilter}
+            setSelectedBookFilter={setSelectedBookFilter}
+            setSelectedTitleFilter={setSelectedTitleFilter}
+            hasCriticalImpacts={hasCriticalImpacts}
+            setExpandedArticleId={setExpandedArticleId}
+          />
+        </CardContent>
+      </Card>
       
       <Separator className="my-8" />
       
       {/* Seção 2: Artigos da Reforma */}
-      <div>
-        <div className="flex items-center gap-2 mb-6">
+      <Card className="border border-muted p-6">
+        <div className="flex items-center gap-2 mb-4">
           <FileText className="h-5 w-5 text-primary" />
           <h2 className="text-2xl font-semibold">Artigos da Reforma</h2>
         </div>
         <p className="text-muted-foreground mb-6">
-          Visualize os artigos da reforma tributária relevantes para seu segmento. Use os filtros abaixo para refinar os resultados ou explore por visualizações diferentes.
+          Visualize os artigos da reforma tributária relevantes para seu segmento. 
+          Use os filtros abaixo para refinar os resultados ou utilize as diferentes visualizações disponíveis.
         </p>
       
-        <ArticlesFilters
-          positiveCount={positiveCount}
-          negativeCount={negativeCount}
-          totalCount={relevantArticles.length}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          filterType={filterType}
-          setFilterType={setFilterType}
-          viewMode={viewMode}
-          setViewMode={setViewMode}
-        />
-        
-        <ArticlesContent
-          viewMode={viewMode}
-          displayedArticles={displayedArticles}
-          filteredArticles={filteredArticles}
-          selectedBookFilter={selectedBookFilter}
-          selectedTitleFilter={selectedTitleFilter}
-          setSelectedBookFilter={setSelectedBookFilter}
-          setSelectedTitleFilter={setSelectedTitleFilter}
-          expandedArticleId={expandedArticleId}
-          setExpandedArticleId={setExpandedArticleId}
-          segment={segment}
-          highlights={highlights}
-          onAddHighlight={onAddHighlight}
-          onRemoveHighlight={onRemoveHighlight}
-          articlesByTopic={articlesByTopic}
-          topics={topics}
-        />
-      </div>
+        <CardContent className="p-0 pt-4">
+          <ArticlesFilters
+            positiveCount={positiveCount}
+            negativeCount={negativeCount}
+            totalCount={relevantArticles.length}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            filterType={filterType}
+            setFilterType={setFilterType}
+            viewMode={viewMode}
+            setViewMode={setViewMode}
+          />
+          
+          <ArticlesContent
+            viewMode={viewMode}
+            displayedArticles={displayedArticles}
+            filteredArticles={filteredArticles}
+            selectedBookFilter={selectedBookFilter}
+            selectedTitleFilter={selectedTitleFilter}
+            setSelectedBookFilter={setSelectedBookFilter}
+            setSelectedTitleFilter={setSelectedTitleFilter}
+            expandedArticleId={expandedArticleId}
+            setExpandedArticleId={setExpandedArticleId}
+            segment={segment}
+            highlights={highlights}
+            onAddHighlight={onAddHighlight}
+            onRemoveHighlight={onRemoveHighlight}
+            articlesByTopic={articlesByTopic}
+            topics={topics}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 };
