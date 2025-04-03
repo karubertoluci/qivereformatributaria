@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { RelevanceTotalData } from './useFavorabilityRelevanceData';
 
@@ -17,6 +18,14 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
   relevanceFilter,
   onRelevanceSelect
 }) => {
+  // Color mapping para níveis de relevância - consistente com o gráfico 1
+  const colorScheme = {
+    'Muito relevante': '#10b981', // green
+    'Moderadamente relevante': '#f59e0b', // yellow
+    'Pouco relevante': '#6b7280', // gray
+    'Irrelevante': '#d1d5db', // light gray
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
       {relevanceLevels.map((level) => {
@@ -33,16 +42,19 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
         };
         
         return (
-          <Card key={level} className={cn(
-            "border border-muted",
-            relevanceFilter === level ? "border-primary bg-secondary/20" : ""
-          )}>
+          <Card 
+            key={level} 
+            className={cn(
+              "border",
+              relevanceFilter === level ? "border-primary bg-secondary/20" : "border-muted"
+            )}
+          >
             <CardContent className="p-4">
               <h4 className="font-medium text-sm mb-2">{level}</h4>
               <div className="space-y-1 text-xs">
                 <div className="flex justify-between">
-                  <span className="flex items-center">
-                    <span className="h-2 w-2 bg-[#4ade80] rounded-full mr-1.5"></span>
+                  <span className="flex items-center gap-1.5">
+                    <div className="h-2 w-2 bg-[#4ade80] rounded-full"></div>
                     Favoráveis:
                   </span>
                   <span className="font-medium">
@@ -50,8 +62,8 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="flex items-center">
-                    <span className="h-2 w-2 bg-[#d1d5db] rounded-full mr-1.5"></span>
+                  <span className="flex items-center gap-1.5">
+                    <div className="h-2 w-2 bg-[#d1d5db] rounded-full"></div>
                     Neutros:
                   </span>
                   <span className="font-medium">
@@ -59,8 +71,8 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="flex items-center">
-                    <span className="h-2 w-2 bg-[#ef4444] rounded-full mr-1.5"></span>
+                  <span className="flex items-center gap-1.5">
+                    <div className="h-2 w-2 bg-[#ef4444] rounded-full"></div>
                     Desfavoráveis:
                   </span>
                   <span className="font-medium">
@@ -68,13 +80,16 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
                   </span>
                 </div>
               </div>
-              <button 
-                className="w-full mt-3 py-1 px-2 text-xs bg-muted hover:bg-muted/80 rounded"
+            </CardContent>
+            <CardFooter className="pt-0 px-4 pb-4">
+              <Button 
+                variant={relevanceFilter === level ? "default" : "outline"} 
+                className="w-full text-sm"
                 onClick={() => onRelevanceSelect(level)}
               >
-                Filtrar
-              </button>
-            </CardContent>
+                {relevanceFilter === level ? 'Remover filtro' : 'Filtrar'}
+              </Button>
+            </CardFooter>
           </Card>
         );
       })}

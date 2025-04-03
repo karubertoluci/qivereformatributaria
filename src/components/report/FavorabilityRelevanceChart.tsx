@@ -9,6 +9,7 @@ import ChartHeader from './charts/ChartHeader';
 import ChartHelp from './relevance-distribution/ChartHelp';
 import FavorabilityBarChart from './favorability-relevance/FavorabilityBarChart';
 import RelevanceCards from './favorability-relevance/RelevanceCards';
+import { toast } from 'sonner';
 
 interface FavorabilityRelevanceChartProps {
   articles: Article[];
@@ -27,16 +28,30 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
 }) => {
   // Use the bookId prop as the initial value
   const [selectedBook, setSelectedBook] = useState<string | null>(bookId);
+  // Estado local para filtro de relevância dentro do componente
+  const [localRelevanceFilter, setLocalRelevanceFilter] = useState<string | null>(relevanceFilter);
   
   // Update selectedBook when bookId prop changes
   useEffect(() => {
     setSelectedBook(bookId);
   }, [bookId]);
   
-  const { bookData, relevanceTotals } = useFavorabilityRelevanceData(articles, segmentId, relevanceFilter);
+  // Update local relevance filter when prop changes
+  useEffect(() => {
+    setLocalRelevanceFilter(relevanceFilter);
+  }, [relevanceFilter]);
+  
+  const { bookData, relevanceTotals } = useFavorabilityRelevanceData(articles, segmentId, localRelevanceFilter);
   
   const handleRelevanceSelect = (relevance: string) => {
-    // Implementar no futuro caso necessário
+    // Se já estiver selecionado, remove o filtro
+    if (localRelevanceFilter === relevance) {
+      setLocalRelevanceFilter(null);
+      toast.info(`Filtro de relevância removido`);
+    } else {
+      setLocalRelevanceFilter(relevance);
+      toast.info(`Filtrando por relevância: ${relevance}`);
+    }
   };
 
   // Filter data based on selected book - if no book is selected, show aggregated data by relevance level
@@ -81,7 +96,7 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
         <RelevanceCards 
           relevanceLevels={relevanceLevels}
           relevanceTotals={relevanceTotals}
-          relevanceFilter={relevanceFilter}
+          relevanceFilter={localRelevanceFilter}
           onRelevanceSelect={handleRelevanceSelect}
         />
 
