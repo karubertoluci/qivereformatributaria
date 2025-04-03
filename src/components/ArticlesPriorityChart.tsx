@@ -1,26 +1,90 @@
 
 import React from 'react';
 import { Article } from '@/data/articles';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer } from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { BarChartIcon, ArrowUp, ArrowDown, HelpCircle } from 'lucide-react';
-import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { BookMarked } from 'lucide-react';
+import { 
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  ZAxis,
+  Legend
+} from 'recharts';
+import ChartHeader from '@/components/report/charts/ChartHeader';
+import { filterArticlesByRelevance } from './report/charts/utils/chartCalculations';
 
 interface ArticlesPriorityChartProps {
   articles: Article[];
   segmentId: string;
-  onSelectArticle: (articleId: string) => void;
+  onSelectArticle?: (articleId: string) => void;
   bookId?: string | null;
+  relevanceFilter?: string | null;
 }
 
-const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({ 
+// Function to score article relevance and distribute them graphically
+const getArticlePriorityData = (articles: Article[], segmentId: string) => {
+  const result = [];
+  
+  for (const article of articles) {
+    const segmentImpacts = article.impacts.filter(impact => 
+      impact.segments.includes(segmentId)
+    );
+    
+    if (segmentImpacts.length === 0) continue;
+    
+    // Calculate relevance score
+    let relevance = 0;
+    relevance += segmentImpacts.length * 10;
+    
+    let urgency = 0;
+    let isNegative = false;
+    
+    segmentImpacts.forEach(impact => {
+      if (impact.type === 'positive') {
+        relevance += 15;
+        urgency += impact.severity === 'high' ? 35 : 
+                  impact.severity === 'medium' ? 20 : 10;
+      }
+      if (impact.type === 'negative') {
+        isNegative = true;
+        relevance += 20;
+        urgency += impact.severity === 'high' ? 50 : 
+                  impact.severity === 'medium' ? 30 : 15;
+      }
+    });
+    
+    // Cap scores to a max of 100
+    relevance = Math.min(relevance, 100);
+    urgency = Math.min(urgency, 100);
+    
+    result.push({
+      id: article.id,
+      number: article.number,
+      title: article.title,
+      relevance,
+      urgency,
+      isNegative,
+      simplified: article.simplifiedText.substring(0, 120) + '...',
+    });
+  }
+  
+  // Sort by urgency and relevance
+  return result.sort((a, b) => (b.relevance + b.urgency) - (a.relevance + a.urgency));
+};
+
+const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
   articles,
   segmentId,
   onSelectArticle,
-  bookId
+  bookId,
+  relevanceFilter
 }) => {
-  // Filter articles by book if bookId is provided
-  const filteredArticles = bookId 
+  // First filter by book if bookId is provided
+  const bookFilteredArticles = bookId 
     ? articles.filter(article => {
         const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
                           parseInt(article.id.replace(/\D/g, ''));
@@ -30,176 +94,120 @@ const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
         return articleNum > 300;
       })
     : articles;
-    
-  // Calculate importance score for each article
-  const calculateImportanceScore = (article: Article) => {
-    const segmentImpacts = article.impacts.filter(impact => 
-      impact.segments.includes(segmentId)
-    );
-    
-    let score = 0;
-    
-    // Base score from number of impacts
-    score += segmentImpacts.length * 10;
-    
-    // Additional points based on impact type
-    segmentImpacts.forEach(impact => {
-      if (impact.type === 'positive') score += 15;
-      if (impact.type === 'negative') score += 20; // Negative impacts slightly more important to be aware of
-    });
-    
-    return Math.min(score, 100); // Cap at 100
-  };
   
-  // Create sorted chart data
-  const chartData = filteredArticles
-    .map(article => ({
-      id: article.id,
-      name: article.number,
-      title: article.title,
-      score: calculateImportanceScore(article),
-      type: article.impacts.some(impact => 
-        impact.type === 'negative' && impact.segments.includes(segmentId)
-      ) ? 'negative' : 'positive'
-    }))
-    .sort((a, b) => b.score - a.score) // Sort by score descending
-    .slice(0, 10); // Only show top 10 most important articles
+  // Then filter by relevance if needed
+  const finalFilteredArticles = relevanceFilter 
+    ? filterArticlesByRelevance(bookFilteredArticles, segmentId, relevanceFilter)
+    : bookFilteredArticles;
   
-  // Get color based on score
-  function getScoreColor(score: number, type: string) {
-    if (type === 'negative') {
-      if (score >= 75) return '#ef4444'; // Critical negative - bright red
-      if (score >= 50) return '#f87171'; // Important negative - lighter red
-      return '#fca5a5'; // Less important negative - pale red
-    } else {
-      if (score >= 75) return '#10b981'; // Critical positive - bright green
-      if (score >= 50) return '#34d399'; // Important positive - lighter green
-      return '#6ee7b7'; // Less important positive - pale green
-    }
-  }
-
-  // Handle chart click
-  const handleChartClick = (data: any) => {
-    if (data && data.activePayload && data.activePayload[0]) {
-      const clickedItem = data.activePayload[0].payload;
-      if (clickedItem && clickedItem.id) {
-        onSelectArticle(clickedItem.id);
-      }
+  const data = getArticlePriorityData(finalFilteredArticles, segmentId);
+  
+  const handleDotClick = (data: any) => {
+    if (onSelectArticle) {
+      onSelectArticle(data.id);
     }
   };
   
   return (
     <Card className="shadow-md h-full">
-      <CardHeader>
-        <div className="flex flex-row items-start justify-between">
-          <div>
-            <CardTitle className="text-xl flex items-center gap-2">
-              <BarChartIcon className="h-5 w-5 text-primary" />
-              <span>Priorização de Leitura</span>
-            </CardTitle>
-            <CardDescription className="text-sm text-muted-foreground mt-1">
-              Artigos mais relevantes para seu segmento, ordenados por nível de importância
-              {bookId && <span className="font-medium"> (Livro {bookId})</span>}
-            </CardDescription>
-          </div>
-          
-          <TooltipProvider>
-            <UITooltip>
-              <TooltipTrigger asChild>
-                <HelpCircle className="h-5 w-5 text-muted-foreground cursor-help" />
-              </TooltipTrigger>
-              <TooltipContent className="max-w-xs">
-                <p>Este gráfico mostra os artigos mais importantes para seu segmento. 
-                Clique nas barras para visualizar detalhes de cada artigo.</p>
-              </TooltipContent>
-            </UITooltip>
-          </TooltipProvider>
-        </div>
+      <CardHeader className="pb-2">
+        <ChartHeader 
+          title="Priorização de Leitura"
+          description="Artigos organizados por relevância e urgência para seu segmento"
+          icon={<BookMarked className="h-5 w-5 text-primary" />}
+          tooltipContent="Este gráfico organiza os artigos por prioridade de leitura, combinando relevância para seu segmento e urgência de impacto. Clique em um ponto para ver detalhes do artigo."
+          bookId={bookId}
+        />
       </CardHeader>
       
-      <CardContent>
-        {chartData.length === 0 ? (
-          <div className="w-full h-48 md:h-60 flex items-center justify-center text-muted-foreground">
-            Nenhum artigo com impacto relevante encontrado.
-          </div>
-        ) : (
-          <div className="w-full h-48 md:h-60">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart 
-                data={chartData} 
-                layout="vertical"
-                barCategoryGap={8}
-                margin={{ top: 5, right: 20, bottom: 5, left: 50 }}
-                onClick={handleChartClick}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                <XAxis 
-                  type="number" 
-                  domain={[0, 100]} 
-                  tickCount={6} 
-                  tickFormatter={(value) => `${value}%`}
-                />
-                <YAxis 
-                  type="category" 
-                  dataKey="name" 
-                  width={50} 
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                />
-                <Tooltip
-                  content={
-                    ({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        const data = payload[0].payload;
-                        return (
-                          <div className="rounded-md border bg-background p-2 shadow-md max-w-xs">
-                            <div className="font-medium">{data.name} - {data.title}</div>
-                            <div className="text-sm mt-1 flex items-center gap-1">
-                              <span>Relevância: {data.score}%</span>
-                              {data.type === 'negative' ? 
-                                <ArrowDown className="h-3 w-3 text-red-500" /> : 
-                                <ArrowUp className="h-3 w-3 text-green-500" />
-                              }
-                            </div>
-                            <div className="text-xs mt-1 text-muted-foreground">
-                              Clique para visualizar o artigo
-                            </div>
+      <CardContent className="pt-0">
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <ScatterChart
+              margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis 
+                type="number" 
+                dataKey="relevance" 
+                name="Relevância" 
+                domain={[0, 100]}
+                label={{ value: 'Relevância', position: 'bottom', offset: 0 }} 
+              />
+              <YAxis 
+                type="number" 
+                dataKey="urgency" 
+                name="Urgência" 
+                domain={[0, 100]}
+                label={{ value: 'Urgência', angle: -90, position: 'left' }} 
+              />
+              <ZAxis range={[60, 60]} />
+              <Tooltip 
+                cursor={{ strokeDasharray: '3 3' }}
+                formatter={(value, name) => [value, name === 'relevance' ? 'Relevância' : 'Urgência']}
+                content={(props) => {
+                  const { active, payload } = props;
+                  if (active && payload && payload.length) {
+                    const data = payload[0].payload;
+                    return (
+                      <div className="bg-white p-2 border rounded shadow-lg text-xs max-w-[200px]">
+                        <p className="font-bold">{data.number}: {data.title}</p>
+                        <p className="text-muted-foreground mt-1">{data.simplified}</p>
+                        <div className="grid grid-cols-2 gap-2 mt-2">
+                          <div>
+                            <p>Relevância:</p>
+                            <p className="font-medium">{data.relevance}/100</p>
                           </div>
-                        );
-                      }
-                      
-                      return null;
-                    }
+                          <div>
+                            <p>Urgência:</p>
+                            <p className="font-medium">{data.urgency}/100</p>
+                          </div>
+                        </div>
+                        <p className="mt-1 text-center text-primary-foreground bg-primary/80 rounded p-1">
+                          Clique para detalhes
+                        </p>
+                      </div>
+                    );
                   }
-                />
-                <Bar dataKey="score" radius={[0, 4, 4, 0]} barSize={20} className="cursor-pointer">
-                  {chartData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={getScoreColor(entry.score, entry.type)} 
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        )}
+                  return null;
+                }}
+              />
+              <Legend />
+              <Scatter 
+                name="Artigos" 
+                data={data} 
+                fill="#8884d8" 
+                onClick={handleDotClick}
+              >
+                {data.map((entry, index) => (
+                  <cell 
+                    key={`cell-${index}`}
+                    fill={entry.isNegative ? "#ef4444" : "#4ade80"}
+                    stroke={entry.isNegative ? "#dc2626" : "#22c55e"}
+                    strokeWidth={1}
+                    style={{ cursor: 'pointer' }}
+                  />
+                ))}
+              </Scatter>
+            </ScatterChart>
+          </ResponsiveContainer>
+        </div>
         
         <div className="mt-2 p-2 bg-muted/50 rounded-md border border-muted text-xs">
-          <div className="flex items-center gap-1 mb-1">
-            <span className="inline-block w-2 h-2 rounded-full bg-orange-500"></span>
-            <span className="font-medium">Legenda:</span>
-          </div>
-          <div className="grid grid-cols-2 gap-1">
-            <span>
-              <span className="inline-block w-2 h-2 bg-red-500 rounded-sm mr-1"></span>
-              <strong>Vermelho:</strong> Desfavorável
-            </span>
-            <span>
+          <p className="text-center mb-1 font-medium">Como interpretar:</p>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
               <span className="inline-block w-2 h-2 bg-green-500 rounded-sm mr-1"></span>
-              <strong>Verde:</strong> Favorável
-            </span>
+              <strong>Verde:</strong> Impacto positivo
+            </div>
+            <div>
+              <span className="inline-block w-2 h-2 bg-red-500 rounded-sm mr-1"></span>
+              <strong>Vermelho:</strong> Impacto negativo
+            </div>
           </div>
+          <p className="mt-2 text-center text-muted-foreground">
+            Priorize a leitura dos artigos localizados no canto superior direito
+          </p>
         </div>
       </CardContent>
     </Card>

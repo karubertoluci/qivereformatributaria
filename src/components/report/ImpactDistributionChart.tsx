@@ -1,11 +1,10 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Article } from '@/data/articles';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { TrendingUp } from 'lucide-react';
 import ChartHeader from './charts/ChartHeader';
 import ImpactAlert from './charts/ImpactAlert';
-import ChartLegendHelper from './charts/ChartLegendHelper';
 import ImpactBarChart from './charts/ImpactBarChart';
 import { 
   calculateRelevanceGroups, 
@@ -17,12 +16,16 @@ interface ImpactDistributionChartProps {
   articles: Article[];
   segmentId: string;
   bookId?: string | null;
+  onRelevanceFilter?: (relevanceLevel: string | null) => void;
+  selectedRelevance?: string | null;
 }
 
 const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
   articles,
   segmentId,
-  bookId
+  bookId,
+  onRelevanceFilter,
+  selectedRelevance
 }) => {
   // Filter articles by book if bookId is provided
   const filteredArticles = bookId 
@@ -59,30 +62,10 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
           />
         )}
         
-        <div className="h-48 md:h-60">
-          <ImpactBarChart data={percentageData} />
-        </div>
-        
-        <div className="mt-2 p-2 bg-muted/50 rounded-md border border-muted text-xs">
-          <div className="flex items-center gap-1 mb-1">
-            <span className="inline-block w-2 h-2 rounded-full bg-orange-500"></span>
-            <span className="font-medium">Legenda:</span>
-          </div>
-          <div className="grid grid-cols-3 gap-1">
-            <span>
-              <span className="inline-block w-2 h-2 bg-green-500 rounded-sm mr-1"></span>
-              <strong>Verde:</strong> Favorável
-            </span>
-            <span>
-              <span className="inline-block w-2 h-2 bg-gray-300 rounded-sm mr-1"></span>
-              <strong>Cinza:</strong> Neutro
-            </span>
-            <span>
-              <span className="inline-block w-2 h-2 bg-red-500 rounded-sm mr-1"></span>
-              <strong>Vermelho:</strong> Desfavorável
-            </span>
-          </div>
-        </div>
+        <ImpactBarChart 
+          data={percentageData} 
+          onRelevanceFilter={onRelevanceFilter}
+        />
       </CardContent>
     </Card>
   );

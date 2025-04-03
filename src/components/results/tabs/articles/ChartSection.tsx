@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
 import BookDistributionChart from '@/components/report/BookDistributionChart';
@@ -40,6 +40,8 @@ const ChartSection: React.FC<ChartSectionProps> = ({
   hasCriticalImpacts,
   setExpandedArticleId
 }) => {
+  const [selectedRelevanceFilter, setSelectedRelevanceFilter] = useState<string | null>(null);
+
   if (chartsCollapsed) {
     return (
       <ChartExpandToggle 
@@ -48,6 +50,13 @@ const ChartSection: React.FC<ChartSectionProps> = ({
       />
     );
   }
+  
+  const handleRelevanceFilter = (relevanceLevel: string | null) => {
+    setSelectedRelevanceFilter(relevanceLevel);
+    if (relevanceLevel) {
+      toast.info(`Filtrando por relevância: ${relevanceLevel}`);
+    }
+  };
   
   return (
     <div className="space-y-6 mb-8">
@@ -71,6 +80,8 @@ const ChartSection: React.FC<ChartSectionProps> = ({
             articles={showAllArticles ? allArticles : relevantArticles}
             segmentId={segment.id}
             bookId={selectedBookFilter}
+            onRelevanceFilter={handleRelevanceFilter}
+            selectedRelevance={selectedRelevanceFilter}
           />
         </div>
         
@@ -80,6 +91,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
             segmentId={segment.id}
             onSelectArticle={setExpandedArticleId}
             bookId={selectedBookFilter}
+            relevanceFilter={selectedRelevanceFilter}
           />
         </div>
       </div>
@@ -91,6 +103,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
         relevantArticles={relevantArticles}
         segmentId={segment.id}
         bookId={selectedBookFilter}
+        relevanceFilter={selectedRelevanceFilter}
       />
       
       {selectedBookFilter && (

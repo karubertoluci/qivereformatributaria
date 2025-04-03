@@ -108,3 +108,34 @@ export const calculatePercentageData = (data: RelevanceGroup[]): PercentageData[
 export const checkForCriticalImpacts = (data: RelevanceGroup[]): boolean => {
   return data.some(group => group.hasCritical);
 };
+
+// Helper to filter articles by relevance level
+export const filterArticlesByRelevance = (articles: Article[], segmentId: string, relevanceLevel: string | null): Article[] => {
+  if (!relevanceLevel) return articles;
+  
+  return articles.filter(article => {
+    const segmentImpacts = article.impacts.filter(impact => 
+      impact.segments.includes(segmentId)
+    );
+    
+    if (segmentImpacts.length === 0) return false;
+    
+    // Calculate score
+    let score = 0;
+    score += segmentImpacts.length * 10;
+    
+    segmentImpacts.forEach(impact => {
+      if (impact.type === 'positive') score += 15;
+      if (impact.type === 'negative') score += 20;
+    });
+    score = Math.min(score, 100);
+    
+    // Match with the selected relevance level
+    if (relevanceLevel === 'Muito relevante' && score >= 75) return true;
+    if (relevanceLevel === 'Moderadamente relevante' && score >= 50 && score < 75) return true;
+    if (relevanceLevel === 'Pouco relevante' && score >= 25 && score < 50) return true;
+    if (relevanceLevel === 'Irrelevante' && score < 25) return true;
+    
+    return false;
+  });
+};
