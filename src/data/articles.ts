@@ -2,6 +2,7 @@ export interface ArticleImpact {
   type: 'positive' | 'negative' | 'neutral';
   description: string;
   segments: string[];
+  severity?: 'low' | 'medium' | 'high';
 }
 
 export interface ArticleMetadata {
@@ -36,7 +37,8 @@ export const articles: Article[] = [
       {
         type: 'neutral',
         description: "Substituição de tributos anteriores por um novo modelo unificado",
-        segments: ["comercio_varejo", "industria", "servicos", "agronegocio", "construcao", "tecnologia", "saude", "educacao", "financeiro", "transporte"]
+        segments: ["comercio_varejo", "industria", "servicos", "agronegocio", "construcao", "tecnologia", "saude", "educacao", "financeiro", "transporte"],
+        severity: 'medium'
       }
     ],
     metadata: {
@@ -58,12 +60,14 @@ export const articles: Article[] = [
       {
         type: 'negative',
         description: "Ampliação da base de incidência tributária para operações não habituais",
-        segments: ["comercio_varejo", "industria", "servicos", "agronegocio", "construcao"]
+        segments: ["comercio_varejo", "industria", "servicos", "agronegocio", "construcao"],
+        severity: 'high'
       },
       {
         type: 'positive',
         description: "Uniformização de critérios independente da classificação contábil",
-        segments: ["tecnologia", "saude", "educacao", "financeiro", "transporte"]
+        segments: ["tecnologia", "saude", "educacao", "financeiro", "transporte"],
+        severity: 'medium'
       }
     ]
   },

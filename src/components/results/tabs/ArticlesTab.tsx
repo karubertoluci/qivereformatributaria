@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
@@ -7,7 +6,7 @@ import FilterBar from '../FilterBar';
 import ViewSwitcher from '../ViewSwitcher';
 import ArticleTableView from '../ArticleTableView';
 import ArticleTopicsView from '../ArticleTopicsView';
-import { Book, Filter, ListFilter, X, ArrowUp, ArrowDown } from 'lucide-react';
+import { Book, Filter, ListFilter, X, ArrowUp, ArrowDown, Info } from 'lucide-react';
 import ArticlesPriorityChart from '@/components/ArticlesPriorityChart';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
@@ -17,7 +16,6 @@ import BookTitleRelevanceChart from '@/components/report/BookTitleRelevanceChart
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { InfoCircle } from 'lucide-react';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -60,29 +58,17 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   onAddHighlight,
   onRemoveHighlight
 }) => {
-  // State to track book filter
   const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(null);
-  
-  // State to track title filter
   const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(null);
-  
-  // State to track viewing mode (all articles vs. relevant articles)
   const [showAllArticles, setShowAllArticles] = useState<boolean>(false);
-  
-  // State to track if charts are collapsed
   const [chartsCollapsed, setChartsCollapsed] = useState<boolean>(false);
-  
-  // All articles in the system (simulated 544 articles)
   const allArticles = [...relevantArticles];
-  
-  // Apply custom filters (book, title)
+
   const applyCustomFilters = (articlesToFilter: Article[]) => {
     let result = [...articlesToFilter];
     
-    // Apply book filter
     if (selectedBookFilter) {
       result = result.filter(article => {
-        // Using the same book assignment logic
         const id = parseInt(article.id.replace(/\D/g, '')) || parseInt(article.number.replace(/\D/g, ''));
         let bookId = 'I';
         if (id > 180 && id <= 300) bookId = 'II';
@@ -91,15 +77,11 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       });
     }
     
-    // Future: Apply title filter if implemented
-    
     return result;
   };
-  
-  // Final filtered articles
+
   const displayedArticles = applyCustomFilters(filteredArticles);
-  
-  // Check if we have critical scenarios (high negative impact)
+
   const hasCriticalImpacts = relevantArticles.some(article => 
     article.impacts.some(impact => 
       impact.type === 'negative' && 
@@ -107,8 +89,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       impact.severity === 'high'
     )
   );
-  
-  // Reset filters when search or filter type changes
+
   useEffect(() => {
     setSelectedBookFilter(null);
     setSelectedTitleFilter(null);
@@ -116,7 +97,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
 
   return (
     <div>
-      {/* Active filters badges */}
       {(selectedBookFilter || showAllArticles) && (
         <div className="flex flex-wrap gap-2 mb-4">
           {selectedBookFilter && (
@@ -155,7 +135,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         </div>
       )}
       
-      {/* Charts Section Toggle */}
       <Button 
         variant="outline" 
         size="sm" 
@@ -175,10 +154,8 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         )}
       </Button>
       
-      {/* Charts Section */}
       {!chartsCollapsed && (
         <div className="space-y-6 mb-8">
-          {/* GRÁFICO 1: Distribuição de artigos por livro (Full width) */}
           <div className="w-full">
             <BookDistributionChart 
               articles={showAllArticles ? allArticles : relevantArticles} 
@@ -187,7 +164,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             />
           </div>
           
-          {/* GRÁFICO 2: Priorização de Leitura (Relevância) */}
           <div className="w-full">
             <ArticlesPriorityChart 
               articles={relevantArticles}
@@ -196,11 +172,10 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             />
           </div>
           
-          {/* GRÁFICO 3: Favorabilidade por Relevância */}
           <div className="w-full">
             {hasCriticalImpacts && (
               <Alert variant="destructive" className="mb-4">
-                <InfoCircle className="h-4 w-4 mr-2" />
+                <Info className="h-4 w-4 mr-2" />
                 <AlertDescription>
                   Atenção: Identificamos impactos altamente desfavoráveis para seu segmento. Recomendamos analisar com cuidado os artigos marcados como "Muito relevante" com impacto desfavorável.
                 </AlertDescription>
@@ -214,7 +189,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             />
           </div>
           
-          {/* Book Title Relevance Chart - show only when a book is selected */}
           {selectedBookFilter && (
             <BookTitleRelevanceChart 
               articles={showAllArticles ? allArticles : relevantArticles}
@@ -227,7 +201,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             />
           )}
           
-          {/* All vs. Relevant articles toggle */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-md">Modo de Visualização</CardTitle>
@@ -255,7 +228,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         </div>
       )}
       
-      {/* Filtering and View Options */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <FilterBar 
           positiveCount={positiveCount}
@@ -273,7 +245,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         />
       </div>
       
-      {/* Article display section */}
       <div className="bg-muted/30 p-4 rounded-lg border">
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-medium text-lg">
@@ -294,7 +265,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
           )}
         </div>
         
-        {/* Article Table or Topics View */}
         {viewMode === 'table' ? (
           <ArticleTableView 
             articles={displayedArticles}

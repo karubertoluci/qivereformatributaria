@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Article } from '@/data/articles';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -68,6 +67,7 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
         if (impact.type === 'positive') score += 15;
         if (impact.type === 'negative') {
           score += 20;
+          // Check for critical impact (high severity)
           if (impact.severity === 'high') {
             hasCriticalImpact = true;
           }
