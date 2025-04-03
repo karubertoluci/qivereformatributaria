@@ -1,30 +1,37 @@
 
 import React from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ArrowUp, ArrowDown } from 'lucide-react';
 
 interface ChartExpandToggleProps {
-  collapsed: boolean;
-  onToggle: () => void;
+  isCollapsed: boolean;
+  setIsCollapsed: (collapsed: boolean) => void;
+  collapsedLabel: string;
+  expandedLabel: string;
 }
 
-const ChartExpandToggle: React.FC<ChartExpandToggleProps> = ({ collapsed, onToggle }) => {
+const ChartExpandToggle: React.FC<ChartExpandToggleProps> = ({
+  isCollapsed,
+  setIsCollapsed,
+  collapsedLabel,
+  expandedLabel
+}) => {
   return (
     <Button 
       variant="outline" 
-      size="sm" 
-      className="mb-4" 
-      onClick={onToggle}
+      size="sm"
+      onClick={() => setIsCollapsed(!isCollapsed)}
+      className="flex items-center gap-1"
     >
-      {collapsed ? (
+      {isCollapsed ? (
         <>
-          <ArrowDown className="h-4 w-4 mr-1" /> 
-          Expandir Gráficos e Filtros
+          <ChevronDown className="h-4 w-4" />
+          {collapsedLabel}
         </>
       ) : (
         <>
-          <ArrowUp className="h-4 w-4 mr-1" />
-          Recolher Gráficos e Filtros
+          <ChevronUp className="h-4 w-4" />
+          {expandedLabel}
         </>
       )}
     </Button>

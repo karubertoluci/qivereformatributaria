@@ -1,47 +1,92 @@
+
 import React from 'react';
 import { Article } from '@/data/articles';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { AlertTriangle } from 'lucide-react';
-import { filterArticlesByRelevance } from '@/components/report/charts/utils/chartCalculations';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { Card } from '@/components/ui/card';
+
 interface ImpactsSectionProps {
-  hasCriticalImpacts: boolean;
-  showAllArticles: boolean;
-  allArticles: Article[];
-  relevantArticles: Article[];
   segmentId: string;
-  bookId: string | null;
-  relevanceFilter?: string | null;
+  relevantArticles: Article[];
+  onArticleSelect: (articleId: string) => void;
 }
+
 const ImpactsSection: React.FC<ImpactsSectionProps> = ({
-  hasCriticalImpacts,
-  showAllArticles,
-  allArticles,
-  relevantArticles,
   segmentId,
-  bookId,
-  relevanceFilter
+  relevantArticles,
+  onArticleSelect
 }) => {
-  // First apply book filter if needed
-  const bookFilteredArticles = bookId ? (showAllArticles ? allArticles : relevantArticles).filter(article => {
-    const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
-    if (bookId === 'I') return articleNum <= 180;
-    if (bookId === 'II') return articleNum > 180 && articleNum <= 300;
-    return articleNum > 300;
-  }) : showAllArticles ? allArticles : relevantArticles;
+  // Calculate impact stats
+  const positiveCount = relevantArticles.filter(article => 
+    article.impacts.some(impact => impact.type === 'positive' && impact.segments.includes(segmentId))
+  ).length;
+  
+  const negativeCount = relevantArticles.filter(article => 
+    article.impacts.some(impact => impact.type === 'negative' && impact.segments.includes(segmentId))
+  ).length;
+  
+  const neutralCount = relevantArticles.filter(article => 
+    article.impacts.every(impact => !impact.segments.includes(segmentId) || impact.type === 'neutral')
+  ).length;
 
-  // Then apply relevance filter if needed
-  const finalFilteredArticles = relevanceFilter ? filterArticlesByRelevance(bookFilteredArticles, segmentId, relevanceFilter) : bookFilteredArticles;
+  const mixedCount = relevantArticles.filter(article => 
+    article.impacts.some(impact => impact.type === 'positive' && impact.segments.includes(segmentId)) &&
+    article.impacts.some(impact => impact.type === 'negative' && impact.segments.includes(segmentId))
+  ).length;
 
-  // Count impacts by type after all filters
-  const positiveCount = finalFilteredArticles.filter(article => article.impacts.some(impact => impact.type === 'positive' && impact.segments.includes(segmentId))).length;
-  const negativeCount = finalFilteredArticles.filter(article => article.impacts.some(impact => impact.type === 'negative' && impact.segments.includes(segmentId))).length;
-  const neutralCount = finalFilteredArticles.filter(article => article.impacts.some(impact => impact.type === 'neutral' && impact.segments.includes(segmentId))).length;
-  if (!hasCriticalImpacts && positiveCount === 0 && negativeCount === 0) {
-    return null;
+  const data = [
+    { name: 'Positivo', value: positiveCount, color: '#10b981' },
+    { name: 'Negativo', value: negativeCount, color: '#ef4444' },
+    { name: 'Neutro', value: neutralCount, color: '#6b7280' },
+    { name: 'Misto', value: mixedCount, color: '#f59e0b' }
+  ].filter(item => item.value > 0);
+
+  const COLORS = ['#10b981', '#ef4444', '#6b7280', '#f59e0b'];
+
+  if (data.length === 0) {
+    return (
+      <Card className="flex items-center justify-center h-full">
+        <p className="text-muted-foreground">Sem dados suficientes para análise</p>
+      </Card>
+    );
   }
-  return <Card className="bg-card/50 shadow-sm border border-muted">
-      
-      
-    </Card>;
+
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-popover p-2 rounded shadow-md border">
+          <p className="font-medium">{`${payload[0].name}: ${payload[0].value}`}</p>
+          <p className="text-xs">{`${((payload[0].value / relevantArticles.length) * 100).toFixed(1)}% do total`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <div className="h-full">
+      <ResponsiveContainer width="100%" height={220}>
+        <PieChart>
+          <Pie
+            data={data}
+            cx="50%"
+            cy="50%"
+            outerRadius={80}
+            fill="#8884d8"
+            dataKey="value"
+            nameKey="name"
+            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+            labelLine={false}
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.color} />
+            ))}
+          </Pie>
+          <Tooltip content={<CustomTooltip />} />
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
+  );
 };
+
 export default ImpactsSection;
