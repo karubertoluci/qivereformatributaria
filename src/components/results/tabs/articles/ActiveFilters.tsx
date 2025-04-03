@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Book, ListFilter, X, BarChart } from 'lucide-react';
+import { Book, ListFilter, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ActiveFiltersProps {
@@ -9,24 +9,20 @@ interface ActiveFiltersProps {
   setSelectedBookFilter: (bookId: string | null) => void;
   showAllArticles: boolean;
   setShowAllArticles: (show: boolean) => void;
-  selectedRelevanceFilter?: string | null;
-  setSelectedRelevanceFilter?: (relevance: string | null) => void;
 }
 
 const ActiveFilters: React.FC<ActiveFiltersProps> = ({
   selectedBookFilter,
   setSelectedBookFilter,
   showAllArticles,
-  setShowAllArticles,
-  selectedRelevanceFilter,
-  setSelectedRelevanceFilter
+  setShowAllArticles
 }) => {
-  if (!selectedBookFilter && !showAllArticles && !selectedRelevanceFilter) {
+  if (!selectedBookFilter && !showAllArticles) {
     return null;
   }
   
   return (
-    <div className="flex flex-wrap gap-2 mb-4 mt-2">
+    <div className="flex flex-wrap gap-2 mb-4">
       {selectedBookFilter && (
         <Badge 
           variant="secondary" 
@@ -56,23 +52,6 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
             onClick={() => {
               setShowAllArticles(false);
               toast.info("Mostrando apenas artigos relevantes para seu segmento");
-            }}
-          />
-        </Badge>
-      )}
-
-      {selectedRelevanceFilter && setSelectedRelevanceFilter && (
-        <Badge 
-          variant="secondary" 
-          className="flex items-center gap-1 px-2 py-1"
-        >
-          <BarChart className="h-3.5 w-3.5 mr-1" />
-          Filtrando por relevância: {selectedRelevanceFilter}
-          <X 
-            className="h-3.5 w-3.5 ml-1 cursor-pointer hover:text-destructive" 
-            onClick={() => {
-              setSelectedRelevanceFilter(null);
-              toast.info("Filtro de relevância removido");
             }}
           />
         </Badge>
