@@ -5,9 +5,15 @@ import { FavorabilityRelevanceData } from './useFavorabilityRelevanceData';
 
 interface FavorabilityBarChartProps {
   chartData: FavorabilityRelevanceData[];
+  selectedFavorability: string | null;
+  onSelectFavorability: (favorability: string | null) => void;
 }
 
-const FavorabilityBarChart: React.FC<FavorabilityBarChartProps> = ({ chartData }) => {
+const FavorabilityBarChart: React.FC<FavorabilityBarChartProps> = ({ 
+  chartData,
+  selectedFavorability,
+  onSelectFavorability
+}) => {
   // Garantir que o chartData tenha entradas únicas por nível de relevância
   // Isso é especialmente importante para o status "Geral" onde dados de múltiplos livros são agregados
   const relevanceLevels = ['Irrelevante', 'Pouco relevante', 'Moderadamente relevante', 'Muito relevante'];
@@ -34,6 +40,32 @@ const FavorabilityBarChart: React.FC<FavorabilityBarChartProps> = ({ chartData }
     // Caso contrário, usamos o primeiro item (ou agregamos se necessário)
     return relevanceItems[0];
   });
+
+  // Custom legend that acts as a filter
+  const renderCustomLegend = () => {
+    return (
+      <div className="flex justify-center gap-4 mt-4">
+        {[
+          { key: 'favorable', label: 'Favorável', color: '#4ade80' },
+          { key: 'neutral', label: 'Neutro', color: '#d1d5db' },
+          { key: 'unfavorable', label: 'Desfavorável', color: '#ef4444' }
+        ].map((item) => (
+          <div 
+            key={item.key}
+            className={`flex items-center gap-1.5 px-2 py-1 rounded-md cursor-pointer transition-colors
+              ${selectedFavorability === item.key ? 'bg-secondary border border-primary' : 'hover:bg-secondary/50'}`}
+            onClick={() => onSelectFavorability(selectedFavorability === item.key ? null : item.key)}
+          >
+            <div 
+              className="w-3 h-3 rounded-sm" 
+              style={{ backgroundColor: item.color }}
+            />
+            <span className="text-sm">{item.label}</span>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className="h-64">
@@ -69,22 +101,22 @@ const FavorabilityBarChart: React.FC<FavorabilityBarChartProps> = ({ chartData }
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
             }}
           />
-          <Legend 
-            iconType="square"
-            formatter={(value) => {
-              if (value === 'favorable') return 'Favorável';
-              if (value === 'neutral') return 'Neutro';
-              if (value === 'unfavorable') return 'Desfavorável';
-              return value;
-            }}
-            iconSize={10}
-            wrapperStyle={{ paddingTop: '10px' }}
-          />
-          <Bar dataKey="favorable" stackId="a" name="favorable" fill="#4ade80" isAnimationActive={false} />
-          <Bar dataKey="neutral" stackId="a" name="neutral" fill="#d1d5db" isAnimationActive={false} />
-          <Bar dataKey="unfavorable" stackId="a" name="unfavorable" fill="#ef4444" isAnimationActive={false} />
+          {/* Hide the default legend as we'll use our custom one */}
+          <Legend content={() => null} />
+          
+          {/* Only render bars that aren't filtered out */}
+          {(!selectedFavorability || selectedFavorability === 'favorable') && (
+            <Bar dataKey="favorable" stackId="a" name="favorable" fill="#4ade80" isAnimationActive={false} />
+          )}
+          {(!selectedFavorability || selectedFavorability === 'neutral') && (
+            <Bar dataKey="neutral" stackId="a" name="neutral" fill="#d1d5db" isAnimationActive={false} />
+          )}
+          {(!selectedFavorability || selectedFavorability === 'unfavorable') && (
+            <Bar dataKey="unfavorable" stackId="a" name="unfavorable" fill="#ef4444" isAnimationActive={false} />
+          )}
         </BarChart>
       </ResponsiveContainer>
+      {renderCustomLegend()}
     </div>
   );
 };

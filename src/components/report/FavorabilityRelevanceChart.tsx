@@ -30,6 +30,8 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
   const [selectedBook, setSelectedBook] = useState<string | null>(bookId);
   // Estado local para filtro de relevância dentro do componente
   const [localRelevanceFilter, setLocalRelevanceFilter] = useState<string | null>(relevanceFilter);
+  // Estado para filtro de favorabilidade
+  const [favorabilityFilter, setFavorabilityFilter] = useState<string | null>(null);
   
   // Update selectedBook when bookId prop changes
   useEffect(() => {
@@ -51,6 +53,19 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
     } else {
       setLocalRelevanceFilter(relevance);
       toast.info(`Filtrando por relevância: ${relevance}`);
+    }
+  };
+
+  const handleFavorabilitySelect = (favorability: string | null) => {
+    setFavorabilityFilter(favorability);
+    if (favorability) {
+      let label = '';
+      if (favorability === 'favorable') label = 'Favorável';
+      if (favorability === 'neutral') label = 'Neutro';
+      if (favorability === 'unfavorable') label = 'Desfavorável';
+      toast.info(`Filtrando por favorabilidade: ${label}`);
+    } else {
+      toast.info('Filtro de favorabilidade removido');
     }
   };
 
@@ -89,8 +104,12 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
       </CardHeader>
       
       <CardContent>
-        {/* Componente do Gráfico de Barras */}
-        <FavorabilityBarChart chartData={chartData} />
+        {/* Componente do Gráfico de Barras com suporte a filtro de favorabilidade */}
+        <FavorabilityBarChart 
+          chartData={chartData} 
+          selectedFavorability={favorabilityFilter}
+          onSelectFavorability={handleFavorabilitySelect}
+        />
 
         {/* Componente dos Cards de Relevância */}
         <RelevanceCards 
@@ -100,14 +119,7 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
           onRelevanceSelect={handleRelevanceSelect}
         />
 
-        {/* Explicação da legenda */}
-        <ChartLegendHelper 
-          items={[
-            { color: '#4ade80', label: 'Favorável', description: 'Impactos positivos para seu segmento' },
-            { color: '#d1d5db', label: 'Neutro', description: 'Impactos sem efeitos positivos ou negativos claros' },
-            { color: '#ef4444', label: 'Desfavorável', description: 'Impactos negativos ou restritivos para seu segmento' }
-          ]}
-        />
+        {/* Explicação da legenda - Removed as we now have interactive legend */}
       </CardContent>
     </Card>
   );
