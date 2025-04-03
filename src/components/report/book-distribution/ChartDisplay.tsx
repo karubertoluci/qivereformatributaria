@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell, ResponsiveContainer } from 'recharts';
+import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend } from 'recharts';
 import { ChartDisplayProps } from './types';
 
 const ChartDisplay: React.FC<ChartDisplayProps> = ({ data, selectedBook, onBarClick }) => {
@@ -9,22 +9,34 @@ const ChartDisplay: React.FC<ChartDisplayProps> = ({ data, selectedBook, onBarCl
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
-          margin={{ top: 10, right: 30, left: 0, bottom: 20 }}
+          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+          barGap={0}
         >
-          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
           <XAxis 
             dataKey="bookId" 
             tickFormatter={(value) => `Livro ${value}`} 
+            tick={{ fill: '#64748b' }}
+            axisLine={{ stroke: '#e5e7eb' }}
+            tickLine={false}
           />
           <YAxis 
-            label={{ value: 'Artigos', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle' } }}
+            label={{ 
+              value: 'Artigos', 
+              angle: -90, 
+              position: 'insideLeft', 
+              style: { textAnchor: 'middle', fill: '#64748b', fontSize: 12 } 
+            }}
+            tick={{ fill: '#64748b' }}
+            axisLine={{ stroke: '#e5e7eb' }}
+            tickLine={false}
           />
           <Tooltip
             formatter={(value, name) => {
-              if (name === 'articles') return [`${value} artigos`, 'Artigos'];
-              if (name === 'positiveImpacts') return [`${value}`, 'Impactos Favoráveis'];
-              if (name === 'negativeImpacts') return [`${value}`, 'Impactos Desfavoráveis'];
-              if (name === 'neutralImpacts') return [`${value}`, 'Impactos Neutros'];
+              if (name === 'articles') return [`${value} artigos`, 'Total'];
+              if (name === 'positiveImpacts') return [`${value}`, 'Favoráveis'];
+              if (name === 'negativeImpacts') return [`${value}`, 'Desfavoráveis'];
+              if (name === 'neutralImpacts') return [`${value}`, 'Neutros'];
               return [value, name];
             }}
             labelFormatter={(value) => `Livro ${value}`}
@@ -32,27 +44,29 @@ const ChartDisplay: React.FC<ChartDisplayProps> = ({ data, selectedBook, onBarCl
           <Legend 
             formatter={(value) => {
               if (value === 'articles') return 'Artigos';
-              if (value === 'positiveImpacts') return 'Impactos Favoráveis';
-              if (value === 'negativeImpacts') return 'Impactos Desfavoráveis';
-              if (value === 'neutralImpacts') return 'Impactos Neutros';
               return value;
             }}
+            wrapperStyle={{ fontSize: 12 }}
           />
           <Bar 
             dataKey="articles" 
-            fill="#8884d8" 
             name="articles"
             onClick={(data) => onBarClick(data)}
             className="cursor-pointer"
+            stackId="a"
           >
-            {data.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={entry.color} 
-                stroke={entry.bookId === selectedBook ? '#000' : entry.color}
-                strokeWidth={entry.bookId === selectedBook ? 2 : 0}
-              />
-            ))}
+            {data.map((entry, index) => {
+              // Use color from the entry or a default if not provided
+              const fillColor = entry.color || "#3b82f6";
+              return (
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={fillColor} 
+                  stroke={entry.bookId === selectedBook ? '#000' : fillColor}
+                  strokeWidth={entry.bookId === selectedBook ? 2 : 0}
+                />
+              );
+            })}
           </Bar>
         </BarChart>
       </ResponsiveContainer>

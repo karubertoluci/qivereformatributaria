@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Article } from '@/data/articles';
 import { BookData, BOOK_META } from './types';
@@ -9,7 +10,7 @@ export const useBookDistributionData = (articles: Article[]) => {
     // Group articles by book and count them
     const bookMap = new Map<string, BookData>();
     
-    // Initialize each book with zero counts
+    // Initialize each book with zero counts and the specific color
     BOOK_META.forEach(book => {
       bookMap.set(book.id, {
         bookId: book.id,
@@ -52,8 +53,11 @@ export const useBookDistributionData = (articles: Article[]) => {
       }
     });
     
-    // Convert map to array
-    setData(Array.from(bookMap.values()));
+    // Convert map to array and sort by bookId
+    setData(Array.from(bookMap.values()).sort((a, b) => {
+      // Sort by bookId (I, II, III, IV)
+      return a.bookId.localeCompare(b.bookId);
+    }));
   }, [articles]);
   
   return data;

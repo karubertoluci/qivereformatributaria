@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Filter, PieChart, X } from 'lucide-react';
+import { Clock, Filter, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { BookDistributionChartProps } from './book-distribution/types';
 import { useBookDistributionData } from './book-distribution/useBookDistributionData';
@@ -31,11 +31,11 @@ const BookDistributionChart: React.FC<BookDistributionChartProps> = ({
   
   return (
     <Card className="shadow-md">
-      <CardHeader>
+      <CardHeader className="pb-2">
         <div className="flex flex-row items-center justify-between">
           <div>
             <CardTitle className="text-xl flex items-center gap-2">
-              <PieChart className="h-5 w-5 text-primary" />
+              <Clock className="h-5 w-5 text-orange-500" />
               Distribuição de Artigos por Livro
             </CardTitle>
             <CardDescription className="text-sm text-muted-foreground mt-1">
