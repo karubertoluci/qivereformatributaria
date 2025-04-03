@@ -35,9 +35,7 @@ const BookTitleRelevanceChart: React.FC<BookTitleRelevanceChartProps> = ({
     }
   };
   return <Card className="mt-6 shadow-md">
-      <CardHeader>
-        <ChartHeader bookId={bookId} />
-      </CardHeader>
+      
       
       
     </Card>;
