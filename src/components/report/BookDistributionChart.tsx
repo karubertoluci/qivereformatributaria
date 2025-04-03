@@ -36,10 +36,10 @@ const BookDistributionChart: React.FC<BookDistributionChartProps> = ({
           <div>
             <CardTitle className="text-xl flex items-center gap-2">
               <Clock className="h-5 w-5 text-orange-500" />
-              Distribuição de Artigos por Livro
+              Impactos por Livro da Reforma Tributária
             </CardTitle>
             <CardDescription className="text-sm text-muted-foreground mt-1">
-              Visualize a quantidade de artigos em cada livro da reforma tributária
+              Analise como os artigos se distribuem em cada livro, classificados por impacto favorável, neutro ou desfavorável para seu negócio
             </CardDescription>
           </div>
           
