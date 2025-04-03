@@ -8,6 +8,7 @@ import RelevanceBookCards from './relevance-distribution/RelevanceBookCards';
 import { useRelevanceDistributionData } from './relevance-distribution/useRelevanceDistributionData';
 import RelevanceChartLegend from './relevance-distribution/RelevanceChartLegend';
 import { RelevanceChartTooltip } from './relevance-distribution/RelevanceChartTooltip';
+import ChartHelp from './relevance-distribution/ChartHelp';
 
 interface RelevanceDistributionChartProps {
   articles: Article[];
@@ -51,10 +52,13 @@ const RelevanceDistributionChart: React.FC<RelevanceDistributionChartProps> = ({
   return (
     <Card className="shadow-md">
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl flex items-center gap-2">
-          <Clock className="h-5 w-5 text-orange-500" />
-          Distribuição de Artigos por Livro
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-xl flex items-center gap-2">
+            <Clock className="h-5 w-5 text-orange-500" />
+            Distribuição de Artigos por Livro
+          </CardTitle>
+          <ChartHelp />
+        </div>
         <CardDescription className="text-sm text-muted-foreground mt-1">
           Visualize a quantidade de artigos em cada livro da reforma tributária
         </CardDescription>
