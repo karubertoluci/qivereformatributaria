@@ -27,4 +27,4 @@ const ChartLegendHelper: React.FC<ChartLegendHelperProps> = ({ title, items }) =
   );
 };
 
-export default ChartLegendHelper;
+export { ChartLegendHelper };

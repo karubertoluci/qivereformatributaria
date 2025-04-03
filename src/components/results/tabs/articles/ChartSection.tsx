@@ -7,6 +7,7 @@ import ArticlesPriorityChart from '@/components/ArticlesPriorityChart';
 import BookTitleRelevanceChart from '@/components/report/BookTitleRelevanceChart';
 import ImpactDistributionChart from '@/components/report/ImpactDistributionChart';
 import RelevanceDistributionChart from '@/components/report/RelevanceDistributionChart';
+import FavorabilityRelevanceChart from '@/components/report/FavorabilityRelevanceChart';
 import { toast } from 'sonner';
 import ChartExpandToggle from './components/ChartExpandToggle';
 import ViewModeCard from './components/ViewModeCard';
@@ -76,6 +77,17 @@ const ChartSection: React.FC<ChartSectionProps> = ({
           selectedBook={selectedBookFilter}
           onSelectRelevance={handleRelevanceFilter}
           selectedRelevance={selectedRelevanceFilter}
+        />
+      </div>
+      
+      {/* New Favorability vs Relevance Chart */}
+      <div className="w-full mt-6">
+        <FavorabilityRelevanceChart
+          articles={showAllArticles ? allArticles : relevantArticles}
+          segmentId={segment.id}
+          bookId={selectedBookFilter}
+          relevanceFilter={selectedRelevanceFilter}
+          onBookSelect={setSelectedBookFilter}
         />
       </div>
       
