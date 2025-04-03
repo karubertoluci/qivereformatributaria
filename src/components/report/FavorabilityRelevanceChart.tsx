@@ -42,7 +42,7 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
     }
   };
 
-  // Filter data based on selected book
+  // Filter data based on selected book - if no book is selected, show all data
   const chartData = selectedBook 
     ? bookData.filter(book => book.bookId === selectedBook)
     : bookData;
