@@ -2,20 +2,47 @@
 import React from 'react';
 import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend } from 'recharts';
 import { ChartDisplayProps } from './types';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 
 const ChartDisplay: React.FC<ChartDisplayProps> = ({ data, selectedBook, onBarClick }) => {
+  // Define chart config for the UI chart component
+  const chartConfig = {
+    favorable: {
+      label: 'Favoráveis',
+      color: '#4ade80' // green
+    },
+    neutral: {
+      label: 'Neutros',
+      color: '#d1d5db' // gray
+    },
+    unfavorable: {
+      label: 'Desfavoráveis',
+      color: '#ef4444' // red
+    }
+  };
+
+  const formattedData = data.map(book => ({
+    name: `Livro ${book.bookId}`,
+    bookId: book.bookId,
+    title: book.title,
+    total: book.articles,
+    favorable: book.positiveImpacts,
+    neutral: book.neutralImpacts,
+    unfavorable: book.negativeImpacts,
+    color: book.color
+  }));
+
   return (
     <div className="h-64 mb-4">
-      <ResponsiveContainer width="100%" height="100%">
+      <ChartContainer config={chartConfig} className="h-full">
         <BarChart
-          data={data}
+          data={formattedData}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-          barGap={0}
+          onClick={(data) => data && onBarClick(data.activePayload?.[0]?.payload)}
         >
           <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
           <XAxis 
-            dataKey="bookId" 
-            tickFormatter={(value) => `Livro ${value}`} 
+            dataKey="name" 
             tick={{ fill: '#64748b' }}
             axisLine={{ stroke: '#e5e7eb' }}
             tickLine={false}
@@ -31,45 +58,41 @@ const ChartDisplay: React.FC<ChartDisplayProps> = ({ data, selectedBook, onBarCl
             axisLine={{ stroke: '#e5e7eb' }}
             tickLine={false}
           />
-          <Tooltip
-            formatter={(value, name) => {
-              if (name === 'articles') return [`${value} artigos`, 'Total'];
-              if (name === 'positiveImpacts') return [`${value}`, 'Favoráveis'];
-              if (name === 'negativeImpacts') return [`${value}`, 'Desfavoráveis'];
-              if (name === 'neutralImpacts') return [`${value}`, 'Neutros'];
-              return [value, name];
-            }}
-            labelFormatter={(value) => `Livro ${value}`}
+          <ChartTooltip 
+            content={<ChartTooltipContent />}
           />
-          <Legend 
-            formatter={(value) => {
-              if (value === 'articles') return 'Artigos';
-              return value;
-            }}
-            wrapperStyle={{ fontSize: 12 }}
+          <Legend />
+          <Bar 
+            dataKey="favorable" 
+            stackId="a" 
+            name="favorable"
+            fill="#4ade80" 
+            className="cursor-pointer"
           />
           <Bar 
-            dataKey="articles" 
-            name="articles"
-            onClick={(data) => onBarClick(data)}
+            dataKey="neutral" 
+            stackId="a" 
+            name="neutral"
+            fill="#d1d5db" 
             className="cursor-pointer"
-            stackId="a"
+          />
+          <Bar 
+            dataKey="unfavorable" 
+            stackId="a" 
+            name="unfavorable"
+            fill="#ef4444" 
+            className="cursor-pointer"
           >
-            {data.map((entry, index) => {
-              // Use color from the entry or a default if not provided
-              const fillColor = entry.color || "#3b82f6";
-              return (
-                <Cell 
-                  key={`cell-${index}`} 
-                  fill={fillColor} 
-                  stroke={entry.bookId === selectedBook ? '#000' : fillColor}
-                  strokeWidth={entry.bookId === selectedBook ? 2 : 0}
-                />
-              );
-            })}
+            {formattedData.map((entry, index) => (
+              <Cell 
+                key={`cell-${index}`} 
+                stroke={entry.bookId === selectedBook ? '#000' : 'transparent'}
+                strokeWidth={entry.bookId === selectedBook ? 2 : 0}
+              />
+            ))}
           </Bar>
         </BarChart>
-      </ResponsiveContainer>
+      </ChartContainer>
     </div>
   );
 };
