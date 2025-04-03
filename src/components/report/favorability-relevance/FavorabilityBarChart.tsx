@@ -8,11 +8,38 @@ interface FavorabilityBarChartProps {
 }
 
 const FavorabilityBarChart: React.FC<FavorabilityBarChartProps> = ({ chartData }) => {
+  // Garantir que o chartData tenha entradas únicas por nível de relevância
+  // Isso é especialmente importante para o status "Geral" onde dados de múltiplos livros são agregados
+  const relevanceLevels = ['Irrelevante', 'Pouco relevante', 'Moderadamente relevante', 'Muito relevante'];
+  
+  // Primeiro vamos filtrar os dados para ter apenas um item por nível de relevância
+  // Isso evita duplicação quando estamos no modo "Geral" com dados de vários livros
+  const uniqueChartData = relevanceLevels.map(level => {
+    // Encontra todos os itens para este nível de relevância
+    const relevanceItems = chartData.filter(item => item.relevanceLevel === level);
+    
+    // Se não há itens para este nível, criamos um com valores zero
+    if (relevanceItems.length === 0) {
+      return {
+        relevanceLevel: level,
+        favorable: 0,
+        neutral: 0,
+        unfavorable: 0,
+        name: level,
+        bookId: 'none',
+        total: 0
+      };
+    }
+    
+    // Caso contrário, usamos o primeiro item (ou agregamos se necessário)
+    return relevanceItems[0];
+  });
+
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
-          data={chartData}
+          data={uniqueChartData}
           layout="vertical"
           margin={{ top: 20, right: 30, left: 150, bottom: 20 }}
         >

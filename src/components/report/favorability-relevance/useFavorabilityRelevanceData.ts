@@ -149,6 +149,7 @@ export const useFavorabilityRelevanceData = (
     
     // Calculate percentages for book data
     const finalData = initialData
+      .filter(item => item.total > 0 || true) // Mantém todos os itens, mesmo com total zero
       .map(item => {
         const total = item.favorable + item.neutral + item.unfavorable;
         return {
