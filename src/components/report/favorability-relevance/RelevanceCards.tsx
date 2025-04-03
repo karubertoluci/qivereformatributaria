@@ -25,7 +25,7 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
     // gray
     'Irrelevante': '#d1d5db' // light gray
   };
-  return <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+  return <div className="">
       {relevanceLevels.map(level => {
       // Encontra os dados para este nível ou usa valores zerados
       const relevanceData = relevanceTotals.find(item => item.relevanceLevel === level) || {
@@ -40,9 +40,9 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
       };
       return <Card key={level} className={cn("border", relevanceFilter === level ? "border-primary bg-secondary/20" : "border-muted")}>
             <CardContent className="p-4 mx-0 px-0 py-0 my-[16px]">
-              <h4 className="text-lg py-[10px] font-semibold">{level}</h4>
+              <h4 className="text-lg py-[10px] font-semibold mx-[20px]">{level}</h4>
               <div className="space-y-1 text-xs">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center mx-[20px]">
                   <span className="text-sm flex items-center gap-1.5">
                     <div className="w-3 h-3 rounded-sm bg-positive"></div>
                     Favoráveis:
@@ -51,7 +51,7 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
                     {relevanceData.favorablePercent}% ({relevanceData.favorable})
                   </span>
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center mx-[20px]">
                   <span className="flex items-center gap-1.5 text-sm">
                     <div className="w-3 h-3 rounded-sm bg-muted"></div>
                     Neutros:
@@ -60,7 +60,7 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
                     {relevanceData.neutralPercent}% ({relevanceData.neutral})
                   </span>
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center mx-[20px]">
                   <span className="flex items-center gap-1.5 text-sm">
                     <div className="w-3 h-3 rounded-sm bg-negative"></div>
                     Desfavoráveis:
