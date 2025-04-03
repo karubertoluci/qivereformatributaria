@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,29 +25,21 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
     // gray
     'Irrelevante': '#d1d5db' // light gray
   };
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-16 mb-20">
+  return <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-16 mb-20">
       {relevanceLevels.map(level => {
-        // Encontra os dados para este nível ou usa valores zerados
-        const relevanceData = relevanceTotals.find(item => item.relevanceLevel === level) || {
-          relevanceLevel: level,
-          favorable: 0,
-          neutral: 0,
-          unfavorable: 0,
-          total: 0,
-          favorablePercent: 0,
-          neutralPercent: 0,
-          unfavorablePercent: 0
-        };
-        return (
-          <Card 
-            key={level} 
-            className={cn(
-              "border", 
-              relevanceFilter === level ? "border-primary bg-secondary/20" : "border-muted"
-            )}
-          >
-            <CardContent className="p-4 pt-3">
+      // Encontra os dados para este nível ou usa valores zerados
+      const relevanceData = relevanceTotals.find(item => item.relevanceLevel === level) || {
+        relevanceLevel: level,
+        favorable: 0,
+        neutral: 0,
+        unfavorable: 0,
+        total: 0,
+        favorablePercent: 0,
+        neutralPercent: 0,
+        unfavorablePercent: 0
+      };
+      return <Card key={level} className={cn("border", relevanceFilter === level ? "border-primary bg-secondary/20" : "border-muted")}>
+            <CardContent className="p-4 pt-3 py-[17px] my-0">
               <h4 className="text-lg font-semibold mb-3">{level}</h4>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
@@ -81,19 +72,12 @@ const RelevanceCards: React.FC<RelevanceCardsProps> = ({
               </div>
             </CardContent>
             <CardFooter className="pt-0 px-4 pb-4">
-              <Button 
-                variant={relevanceFilter === level ? "default" : "outline"} 
-                onClick={() => onRelevanceSelect(level)} 
-                className="w-full text-sm"
-              >
+              <Button variant={relevanceFilter === level ? "default" : "outline"} onClick={() => onRelevanceSelect(level)} className="w-full text-sm">
                 {relevanceFilter === level ? 'Remover filtro' : 'Filtrar'}
               </Button>
             </CardFooter>
-          </Card>
-        );
-      })}
-    </div>
-  );
+          </Card>;
+    })}
+    </div>;
 };
-
 export default RelevanceCards;
