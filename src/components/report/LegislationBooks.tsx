@@ -22,10 +22,10 @@ const LegislationBooks: React.FC<LegislationBooksProps> = ({
 }) => {
   // Define books of legislation
   const books = [
-    { id: 'iva', name: 'Livro IVA', color: '#22c55e' },
-    { id: 'cbs', name: 'Livro CBS', color: '#3b82f6' },
-    { id: 'ibs', name: 'Livro IBS', color: '#f59e0b' },
-    { id: 'is', name: 'Livro IS', color: '#8b5cf6' }
+    { id: 'I', name: 'Livro I: CBS', color: '#22c55e', description: 'Contribuição sobre Bens e Serviços' },
+    { id: 'II', name: 'Livro II: IBS', color: '#3b82f6', description: 'Imposto sobre Bens e Serviços' },
+    { id: 'III', name: 'Livro III: IS', color: '#8b5cf6', description: 'Imposto Seletivo' },
+    { id: 'IV', name: 'Livro IV: Outras disposições', color: '#f59e0b', description: 'Disposições finais e transitórias' }
   ];
   
   // State to track which book is selected for filtering - use internal state if no external state provided
@@ -37,28 +37,87 @@ const LegislationBooks: React.FC<LegislationBooksProps> = ({
   
   // For demonstration, let's assign articles to books based on their ID
   const getArticleBook = (article: Article): string => {
-    const id = parseInt(article.id);
-    if (id % 4 === 0) return 'iva';
-    if (id % 4 === 1) return 'cbs';
-    if (id % 4 === 2) return 'ibs';
-    return 'is';
+    const id = parseInt(article.id.replace(/\D/g, '')) || parseInt(article.number.replace(/\D/g, ''));
+    if (id % 4 === 0) return 'II';
+    if (id % 4 === 1) return 'I';
+    if (id % 4 === 2) return 'III';
+    return 'IV';
   };
   
-  // Count articles per book - more accurate counting
-  const bookCounts: Record<string, number> = {};
+  // Count articles per book with more detailed counting
+  const bookCounts: Record<string, {
+    total: number, 
+    positive: number, 
+    negative: number, 
+    neutral: number,
+    titles: Record<string, number>
+  }> = {};
   
-  articles.forEach(article => {
-    const bookId = getArticleBook(article);
-    bookCounts[bookId] = (bookCounts[bookId] || 0) + 1;
+  // Mock data for titles within books
+  const bookTitles: Record<string, string[]> = {
+    'I': ['Normas Gerais', 'Regimes Especiais', 'Alíquotas', 'Administração'],
+    'II': ['Normas Gerais', 'Alíquotas', 'Regimes Especiais', 'Administração'],
+    'III': ['Normas Gerais', 'Tabaco', 'Bebidas', 'Veículos'],
+    'IV': ['Transição', 'Disposições Finais', 'Comitê Gestor', 'Outras']
+  };
+  
+  // Initialize book structure
+  books.forEach(book => {
+    bookCounts[book.id] = { 
+      total: 0, 
+      positive: 0, 
+      negative: 0, 
+      neutral: 0,
+      titles: {}
+    };
+    // Initialize titles
+    bookTitles[book.id]?.forEach(title => {
+      bookCounts[book.id].titles[title] = 0;
+    });
   });
   
-  // Create chart data with exact counts
-  const chartData = books.map(book => ({
-    name: book.name,
-    count: bookCounts[book.id] || 0,
-    color: book.color,
-    id: book.id
-  })).sort((a, b) => b.count - a.count); // Sort by count (highest to lowest)
+  // Count articles and categorize by book, impact type, and title
+  articles.forEach(article => {
+    const bookId = getArticleBook(article);
+    const bookData = bookCounts[bookId];
+    if (bookData) {
+      bookData.total += 1;
+      
+      // Assign to a title (for demo purposes)
+      const id = parseInt(article.id.replace(/\D/g, ''));
+      const titleIndex = id % (bookTitles[bookId]?.length || 1);
+      const title = bookTitles[bookId]?.[titleIndex] || 'Outros';
+      bookData.titles[title] = (bookData.titles[title] || 0) + 1;
+      
+      // Count by impact type
+      article.impacts.forEach(impact => {
+        if (impact.type === 'positive') bookData.positive++;
+        else if (impact.type === 'negative') bookData.negative++;
+        else bookData.neutral++;
+      });
+    }
+  });
+  
+  // Create chart data with exact counts and title breakdowns
+  const chartData = books.map(book => {
+    const bookData = bookCounts[book.id] || { total: 0, positive: 0, negative: 0, neutral: 0, titles: {} };
+    const titleData = Object.entries(bookData.titles).map(([title, count]) => ({
+      title,
+      count
+    }));
+    
+    return {
+      id: book.id,
+      name: book.name,
+      count: bookData.total,
+      positive: bookData.positive,
+      negative: bookData.negative,
+      neutral: bookData.neutral,
+      color: book.color,
+      titles: titleData,
+      description: book.description
+    };
+  }).sort((a, b) => b.count - a.count); // Sort by count (highest to lowest)
 
   // Handle click on chart bar
   const handleBarClick = (data: any) => {
@@ -140,16 +199,61 @@ const LegislationBooks: React.FC<LegislationBooksProps> = ({
           </ResponsiveContainer>
         </div>
         
-        <div className="mt-6 text-center">
-          {selectedBook ? (
-            <p className="text-sm text-primary font-medium">
-              Mostrando {bookCounts[selectedBook] || 0} artigos do {books.find(b => b.id === selectedBook)?.name}
-            </p>
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              Clique em uma barra para filtrar os artigos por livro
-            </p>
-          )}
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+          {chartData.map((book) => (
+            <div 
+              key={book.id} 
+              className={`p-3 rounded border cursor-pointer transition-all ${book.id === selectedBook ? 'border-primary shadow-md' : 'border-border hover:border-primary/50'}`}
+              onClick={() => {
+                if (selectedBook === book.id) {
+                  setSelectedBook(null);
+                  toast.info("Filtro removido");
+                } else {
+                  setSelectedBook(book.id);
+                  toast.info(`Filtrando por ${book.name}`);
+                }
+              }}
+            >
+              <div className="flex justify-between items-center mb-2">
+                <h4 className="font-medium flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full" style={{ backgroundColor: book.color }}></span>
+                  {book.name}
+                </h4>
+                <span className="text-sm font-medium">{book.count} artigos</span>
+              </div>
+              
+              <p className="text-xs text-muted-foreground mb-2">{book.description}</p>
+              
+              {/* Impact distribution */}
+              <div className="flex gap-2 text-xs mt-2">
+                <div className="flex-1 bg-green-50 p-1 rounded text-center">
+                  <span className="font-medium block text-green-700">{Math.round((book.positive / (book.positive + book.negative + book.neutral)) * 100) || 0}%</span>
+                  <span className="text-green-600">Favorável</span>
+                </div>
+                <div className="flex-1 bg-gray-50 p-1 rounded text-center">
+                  <span className="font-medium block text-gray-700">{Math.round((book.neutral / (book.positive + book.negative + book.neutral)) * 100) || 0}%</span>
+                  <span className="text-gray-600">Neutro</span>
+                </div>
+                <div className="flex-1 bg-red-50 p-1 rounded text-center">
+                  <span className="font-medium block text-red-700">{Math.round((book.negative / (book.positive + book.negative + book.neutral)) * 100) || 0}%</span>
+                  <span className="text-red-600">Desfavorável</span>
+                </div>
+              </div>
+              
+              {/* Top titles */}
+              <div className="mt-2">
+                <p className="text-xs font-medium">Principais títulos:</p>
+                <ul className="text-xs text-muted-foreground space-y-1 mt-1">
+                  {book.titles.slice(0, 3).map((title, idx) => (
+                    <li key={idx} className="flex justify-between">
+                      <span>{title.title}</span>
+                      <span>{title.count} artigos</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
         </div>
         
         <div className="mt-6 pt-4 border-t text-sm text-muted-foreground">

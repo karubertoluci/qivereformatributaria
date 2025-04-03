@@ -7,6 +7,7 @@ import ArticleImportanceChart from '@/components/ArticleImportanceChart';
 import ArticleSimplifiedText from './ArticleSimplifiedText';
 import ArticleOriginalText from './ArticleOriginalText';
 import ArticleImpactList from './ArticleImpactList';
+import ArticleMetadata from './ArticleMetadata';
 
 interface ArticleContentProps {
   article: Article;
@@ -23,6 +24,9 @@ const ArticleContent: React.FC<ArticleContentProps> = ({
 }) => {
   return (
     <div className="space-y-4">
+      {/* Display article metadata */}
+      <ArticleMetadata article={article} />
+      
       <ArticleSimplifiedText 
         articleId={article.id}
         text={article.simplifiedText}

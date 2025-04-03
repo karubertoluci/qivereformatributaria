@@ -1,8 +1,18 @@
-
 export interface ArticleImpact {
   type: 'positive' | 'negative' | 'neutral';
   description: string;
   segments: string[];
+}
+
+export interface ArticleMetadata {
+  bookId?: 'I' | 'II' | 'III' | 'IV';
+  bookTitle?: string;
+  title?: string;
+  chapter?: string;
+  section?: string;
+  subsection?: string;
+  relevanceScore?: number;
+  impactType?: 'positive' | 'negative' | 'neutral';
 }
 
 export interface Article {
@@ -12,6 +22,7 @@ export interface Article {
   originalText: string;
   simplifiedText: string;
   impacts: ArticleImpact[];
+  metadata?: ArticleMetadata;
 }
 
 export const articles: Article[] = [
@@ -27,7 +38,15 @@ export const articles: Article[] = [
         description: "Substituição de tributos anteriores por um novo modelo unificado",
         segments: ["comercio_varejo", "industria", "servicos", "agronegocio", "construcao", "tecnologia", "saude", "educacao", "financeiro", "transporte"]
       }
-    ]
+    ],
+    metadata: {
+      bookId: 'I',
+      bookTitle: 'CBS',
+      title: 'NORMAS GERAIS',
+      chapter: 'Disposições Preliminares',
+      relevanceScore: 65,
+      impactType: 'neutral'
+    }
   },
   {
     id: "art2",

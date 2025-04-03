@@ -1,9 +1,9 @@
-
 import React from 'react';
 import { Article } from '@/data/articles';
 import { HighlightType } from '@/components/results/types';
-import { BookOpen, FileText, Tag } from 'lucide-react';
+import { BookOpen, FileText, Tag, Book, Bookmark, Layers } from 'lucide-react';
 import HighlightedText from '@/components/results/HighlightedText';
+import { Badge } from '@/components/ui/badge';
 
 interface ArticleCardContentProps {
   article: Article;
@@ -23,8 +23,66 @@ const ArticleCardContent: React.FC<ArticleCardContentProps> = ({
     impact.segments.includes(segmentId)
   );
   
+  // Get book and metadata information
+  const getBookInfo = () => {
+    // Determine book from article ID or metadata
+    const id = parseInt(article.id.replace(/\D/g, '')) || parseInt(article.number.replace(/\D/g, ''));
+    let bookId = 'I';
+    if (id % 4 === 0) bookId = 'II';
+    if (id % 4 === 1) bookId = 'I';
+    if (id % 4 === 2) bookId = 'III';
+    if (id % 4 === 3) bookId = 'IV';
+    
+    let bookTitle = '';
+    switch(bookId) {
+      case 'I': bookTitle = 'CBS'; break;
+      case 'II': bookTitle = 'IBS'; break;
+      case 'III': bookTitle = 'IS'; break;
+      case 'IV': bookTitle = 'Disposições Finais'; break;
+    }
+    
+    // Use metadata if available, otherwise use computed values
+    return {
+      id: article.metadata?.bookId || bookId,
+      title: article.metadata?.bookTitle || bookTitle,
+    };
+  };
+  
+  const { id: bookId, title: bookTitle } = getBookInfo();
+  
   return (
     <div className="space-y-6 mt-4">
+      {/* Article Metadata */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {/* Book Badge */}
+        <Badge variant="outline" className="bg-blue-100 text-blue-700 flex items-center gap-1">
+          <Book className="h-3 w-3" />
+          Livro {bookId}: {bookTitle}
+        </Badge>
+        
+        {/* Other metadata badges if available */}
+        {article.metadata?.title && (
+          <Badge variant="outline" className="bg-gray-100 text-gray-700 flex items-center gap-1">
+            <BookOpen className="h-3 w-3" />
+            Título: {article.metadata.title}
+          </Badge>
+        )}
+        
+        {article.metadata?.chapter && (
+          <Badge variant="outline" className="bg-gray-100 text-gray-700 flex items-center gap-1">
+            <Bookmark className="h-3 w-3" />
+            Capítulo: {article.metadata.chapter}
+          </Badge>
+        )}
+        
+        {article.metadata?.section && (
+          <Badge variant="outline" className="bg-gray-100 text-gray-700 flex items-center gap-1">
+            <Layers className="h-3 w-3" />
+            Seção: {article.metadata.section}
+          </Badge>
+        )}
+      </div>
+      
       {/* Original Text */}
       <div>
         <h4 className="text-sm font-bold flex items-center mb-2">
