@@ -20,3 +20,7 @@ export type HighlightType = {
   color: 'yellow' | 'green' | 'blue' | 'pink';
   articleId: string;
 };
+
+// Add the missing types
+export type ViewMode = 'list' | 'table' | 'chart';
+export type FilterType = 'all' | 'positive' | 'negative' | 'neutral';

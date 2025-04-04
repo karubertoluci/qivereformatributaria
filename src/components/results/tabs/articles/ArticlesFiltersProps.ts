@@ -11,7 +11,7 @@ export interface ArticlesFiltersProps {
   positiveCount: number;
   negativeCount: number;
   neutralCount: number;
-  total?: number;
+  total: number; // Add the required total property
 }
 
 export default ArticlesFiltersProps;

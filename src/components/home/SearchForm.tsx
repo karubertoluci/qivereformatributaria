@@ -14,6 +14,7 @@ import { businessSegments, BusinessSegment } from '@/data/segments';
 // Extend the BusinessSegment interface locally for component use
 interface SegmentWithUI extends BusinessSegment {
   icon?: React.ReactNode;
+  keywords?: string[]; // Make keywords optional with a default fallback
 }
 
 // Helper function to get segment keywords

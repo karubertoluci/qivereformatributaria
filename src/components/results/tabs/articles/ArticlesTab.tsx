@@ -6,6 +6,7 @@ import { getArticlesByTopic } from '../../ArticlesByTopic';
 import ArticlesFilters from './ArticlesFilters';
 import ArticlesContent from './ArticlesContent';
 import ChartSection from '../articles/ChartSection';
+import { Topic } from '../../types';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -13,7 +14,7 @@ interface ArticlesTabProps {
   relevantArticles: Article[];
   positiveCount: number;
   negativeCount: number;
-  topics: string[];
+  topics: Topic[];
   viewMode: 'list' | 'table' | 'chart';
   setViewMode: (mode: 'list' | 'table' | 'chart') => void;
   searchTerm: string;
@@ -49,6 +50,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   onRemoveHighlight
 }) => {
   const [chartExpanded, setChartExpanded] = useState(false);
+  const allArticles = [...relevantArticles]; // Create allArticles for ChartSection
 
   return (
     <div className="space-y-6">
@@ -56,6 +58,9 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       <ChartSection 
         filteredArticles={filteredArticles} 
         segmentId={segment.id}
+        segment={segment}
+        relevantArticles={relevantArticles}
+        allArticles={allArticles}
         setExpandedArticleId={setExpandedArticleId}
         expanded={chartExpanded}
         toggleExpanded={() => setChartExpanded(!chartExpanded)}
@@ -71,6 +76,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         setViewMode={setViewMode}
         positiveCount={positiveCount}
         negativeCount={negativeCount}
+        neutralCount={0} // Add required neutralCount
         total={relevantArticles.length}
       />
       
