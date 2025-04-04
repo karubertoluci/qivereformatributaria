@@ -39,7 +39,7 @@ const SectorCard: React.FC<SectorCardProps> = ({ icon, title, description, onLea
 
 const SectorsImpact = () => {
   const { openFormDialog } = useFormDialogContext();
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
   const isPausedRef = useRef(false);
   
@@ -92,22 +92,27 @@ const SectorsImpact = () => {
     openFormDialog();
   };
 
+  // Implement automatic horizontal scrolling
   const scrollStep = () => {
-    if (scrollRef.current && !isPausedRef.current) {
-      // Move 0.5px at a time for a smooth, slow scroll
-      scrollRef.current.scrollLeft += 0.5;
+    if (scrollContainerRef.current && !isPausedRef.current) {
+      // Add small increments to create smooth scrolling effect
+      scrollContainerRef.current.scrollLeft += 0.5;
       
-      // Reset scroll to beginning when we reach the end
-      if (scrollRef.current.scrollLeft >= 
-          (scrollRef.current.scrollWidth - scrollRef.current.clientWidth)) {
-        scrollRef.current.scrollLeft = 0;
+      // Reset scroll position when reaching the end to create infinite loop effect
+      const container = scrollContainerRef.current;
+      const scrollWidth = container.scrollWidth;
+      const clientWidth = container.clientWidth;
+      
+      // When we reach halfway through the duplicated content, reset to the beginning
+      if (container.scrollLeft >= (scrollWidth - clientWidth) / 2) {
+        container.scrollLeft = 0;
       }
     }
     
     animationRef.current = requestAnimationFrame(scrollStep);
   };
 
-  // Start the animation when component mounts
+  // Start scrolling animation when component mounts
   useEffect(() => {
     animationRef.current = requestAnimationFrame(scrollStep);
     
@@ -118,7 +123,7 @@ const SectorsImpact = () => {
     };
   }, []);
 
-  // Handle mouse interactions to pause/resume the scroll
+  // Pause scrolling on mouse enter, resume on mouse leave
   const handleMouseEnter = () => {
     isPausedRef.current = true;
   };
@@ -137,19 +142,22 @@ const SectorsImpact = () => {
           economia. Conheça os principais impactos no seu segmento de atuação.
         </p>
         
-        {/* Continuous horizontal scroll container */}
+        {/* Horizontal scrolling container */}
         <div 
-          className="w-full overflow-hidden relative"
+          className="w-full overflow-hidden"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
           <div 
-            ref={scrollRef}
-            className="flex py-4 scrollbar-hide"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            ref={scrollContainerRef}
+            className="flex py-4 gap-4"
+            style={{ 
+              scrollbarWidth: 'none', 
+              msOverflowStyle: 'none' 
+            }}
           >
-            {/* Add duplicate cards at the beginning for seamless looping */}
-            {sectors.concat(sectors).map((sector, index) => (
+            {/* Duplicate the sectors array to create a seamless loop effect */}
+            {[...sectors, ...sectors].map((sector, index) => (
               <div key={index} className="flex-shrink-0">
                 <SectorCard 
                   icon={sector.icon}
