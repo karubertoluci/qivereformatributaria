@@ -14,7 +14,7 @@ interface SectorCardProps {
 }
 
 const SectorCard: React.FC<SectorCardProps> = ({ icon, title, description, onLearnMore }) => (
-  <Card className="border border-orange-100 shadow-sm hover:shadow-md transition-shadow h-full bg-gradient-to-br from-orange-50 to-white">
+  <Card className="border border-orange-100 shadow-sm hover:shadow-md transition-shadow h-full bg-gradient-to-br from-orange-50/50 to-white">
     <CardContent className="p-6 flex flex-col items-center h-full">
       <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mb-4">
         {icon}
@@ -25,10 +25,10 @@ const SectorCard: React.FC<SectorCardProps> = ({ icon, title, description, onLea
       </p>
       <div className="mt-auto pt-2">
         <Button 
-          variant="ghost" 
+          variant="outline" 
           size="sm" 
           onClick={onLearnMore}
-          className="text-orange-600 hover:text-orange-700 hover:bg-orange-50"
+          className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 border-orange-200"
         >
           Saiba mais →
         </Button>

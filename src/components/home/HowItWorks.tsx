@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { AlertTriangle, FileText, Calendar, BookOpen } from 'lucide-react';
+import { AlertTriangle, FileText, Calendar, BookOpen, ArrowRight } from 'lucide-react';
 
 const HowItWorks = () => {
   return (
@@ -20,55 +20,55 @@ const HowItWorks = () => {
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-10">
-            <Card className="border border-gray-100 rounded-lg p-6 shadow-sm">
+            <Card className="border border-gray-100 rounded-lg p-6 shadow-sm hover:shadow-md transition-all">
               <div className="flex items-center mb-4">
                 <div className="bg-blue-100 rounded-full p-3 mr-4">
                   <FileText className="h-6 w-6 text-blue-600" />
                 </div>
                 <h3 className="font-semibold text-lg">Principais Mudanças</h3>
               </div>
-              <ul className="space-y-2 text-gray-700">
+              <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start">
-                  <span className="text-orange-500 mr-2 font-bold">•</span>
+                  <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
                   <span>Criação da CBS (federal) substituindo PIS e COFINS</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-orange-500 mr-2 font-bold">•</span>
+                  <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
                   <span>Implementação do IBS (estadual/municipal) em substituição ao ICMS e ISS</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-orange-500 mr-2 font-bold">•</span>
+                  <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
                   <span>Adoção do sistema de crédito amplo e não cumulativo</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-orange-500 mr-2 font-bold">•</span>
+                  <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
                   <span>Princípio do destino para a tributação</span>
                 </li>
               </ul>
             </Card>
             
-            <Card className="border border-gray-100 rounded-lg p-6 shadow-sm">
+            <Card className="border border-gray-100 rounded-lg p-6 shadow-sm hover:shadow-md transition-all">
               <div className="flex items-center mb-4">
                 <div className="bg-orange-100 rounded-full p-3 mr-4">
                   <Calendar className="h-6 w-6 text-orange-600" />
                 </div>
                 <h3 className="font-semibold text-lg">Cronograma de Implementação</h3>
               </div>
-              <ul className="space-y-2 text-gray-700">
+              <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start">
-                  <span className="text-orange-500 mr-2 font-bold">•</span>
+                  <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
                   <span><strong>2026:</strong> Início da implementação gradual</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-orange-500 mr-2 font-bold">•</span>
+                  <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
                   <span><strong>2026-2028:</strong> Teste do novo sistema com alíquotas reduzidas</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-orange-500 mr-2 font-bold">•</span>
+                  <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
                   <span><strong>2029-2033:</strong> Período de transição com redução gradual dos tributos antigos</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-orange-500 mr-2 font-bold">•</span>
+                  <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
                   <span><strong>2033:</strong> Implementação completa do novo sistema</span>
                 </li>
               </ul>

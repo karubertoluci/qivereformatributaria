@@ -1,79 +1,65 @@
-import React, { useState } from 'react';
-import { BusinessSegment } from '@/data/segments';
-import { Article } from '@/data/articles';
-import BookDistributionChart from '@/components/report/BookDistributionChart';
+
+import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Link2 } from 'lucide-react';
 import ArticlesPriorityChart from '@/components/ArticlesPriorityChart';
-import BookTitleRelevanceChart from '@/components/report/BookTitleRelevanceChart';
-import ImpactDistributionChart from '@/components/report/ImpactDistributionChart';
-import RelevanceDistributionChart from '@/components/report/RelevanceDistributionChart';
-import FavorabilityRelevanceChart from '@/components/report/FavorabilityRelevanceChart';
-import { toast } from 'sonner';
 import ChartExpandToggle from './components/ChartExpandToggle';
-import ViewModeCard from './components/ViewModeCard';
-import ImpactsSection from './components/ImpactsSection';
+import { Article } from '@/data/articles';
+
 interface ChartSectionProps {
-  chartsCollapsed: boolean;
-  setChartsCollapsed: (collapsed: boolean) => void;
-  segment: BusinessSegment;
-  relevantArticles: Article[];
-  allArticles: Article[];
-  showAllArticles: boolean;
-  setShowAllArticles: (show: boolean) => void;
-  selectedBookFilter: string | null;
-  setSelectedBookFilter: (bookId: string | null) => void;
-  setSelectedTitleFilter: (titleId: string | null) => void;
-  hasCriticalImpacts: boolean;
+  filteredArticles: Article[];
+  segmentId: string;
   setExpandedArticleId: (id: string | null) => void;
+  chartExpanded: boolean;
+  toggleChartExpanded: () => void;
 }
+
 const ChartSection: React.FC<ChartSectionProps> = ({
-  chartsCollapsed,
-  setChartsCollapsed,
-  segment,
-  relevantArticles,
-  allArticles,
-  showAllArticles,
-  setShowAllArticles,
-  selectedBookFilter,
-  setSelectedBookFilter,
-  setSelectedTitleFilter,
-  hasCriticalImpacts,
-  setExpandedArticleId
+  filteredArticles,
+  segmentId,
+  setExpandedArticleId,
+  chartExpanded,
+  toggleChartExpanded
 }) => {
-  const [selectedRelevanceFilter, setSelectedRelevanceFilter] = useState<string | null>(null);
-  if (chartsCollapsed) {
-    return <ChartExpandToggle collapsed={chartsCollapsed} onToggle={() => setChartsCollapsed(false)} />;
+  if (filteredArticles.length === 0) {
+    return null;
   }
-  const handleRelevanceFilter = (relevanceLevel: string | null) => {
-    setSelectedRelevanceFilter(relevanceLevel);
-    if (relevanceLevel) {
-      toast.info(`Filtrando por relevância: ${relevanceLevel}`);
-    } else {
-      toast.info("Filtro de relevância removido");
-    }
-  };
-  return <div className="space-y-6 mb-8">
-      <ChartExpandToggle collapsed={chartsCollapsed} onToggle={() => setChartsCollapsed(true)} />
-      
-      <div className="w-full">
-        <RelevanceDistributionChart articles={showAllArticles ? allArticles : relevantArticles} segmentId={segment.id} onSelectBook={setSelectedBookFilter} selectedBook={selectedBookFilter} onSelectRelevance={handleRelevanceFilter} selectedRelevance={selectedRelevanceFilter} />
-      </div>
-      
-      {/* FavorabilityRelevanceChart - Connected to both filters */}
-      <div className="w-full mt-6">
-        <FavorabilityRelevanceChart articles={showAllArticles ? allArticles : relevantArticles} segmentId={segment.id} bookId={selectedBookFilter} relevanceFilter={selectedRelevanceFilter} onBookSelect={setSelectedBookFilter} />
-      </div>
-      
-      {/* Side-by-side charts */}
-      
-      
-      <ImpactsSection hasCriticalImpacts={hasCriticalImpacts} showAllArticles={showAllArticles} allArticles={allArticles} relevantArticles={relevantArticles} segmentId={segment.id} bookId={selectedBookFilter} relevanceFilter={selectedRelevanceFilter} />
-      
-      {selectedBookFilter && <BookTitleRelevanceChart articles={showAllArticles ? allArticles : relevantArticles} bookId={selectedBookFilter} segmentId={segment.id} onSelectTitle={titleId => {
-      setSelectedTitleFilter(titleId);
-      toast.info(`Filtrando por título ${titleId}`);
-    }} />}
-      
-      <ViewModeCard showAllArticles={showAllArticles} setShowAllArticles={setShowAllArticles} />
-    </div>;
+
+  return (
+    <div className={`mb-8 ${chartExpanded ? 'h-[600px]' : 'h-[400px]'} transition-all duration-300`}>
+      <Card className="relative h-full">
+        <CardContent className="p-4 h-full">
+          <div className="flex justify-between items-center mb-2">
+            <div className="flex items-center">
+              <h3 className="text-lg font-semibold">Mapa de Prioridades</h3>
+              <button 
+                className="ml-2 text-gray-500 hover:text-gray-700"
+                onClick={() => {
+                  // Abrir modal ou tooltip com explicação sobre o gráfico
+                  alert('O Mapa de Prioridades cruza informações de favorabilidade e relevância para mostrar quais artigos merecem mais atenção.');
+                }}
+              >
+                <Link2 className="h-4 w-4" />
+              </button>
+            </div>
+            
+            <ChartExpandToggle 
+              expanded={chartExpanded}
+              toggleExpanded={toggleChartExpanded}
+            />
+          </div>
+          
+          <div className="h-[calc(100%-40px)]">
+            <ArticlesPriorityChart 
+              articles={filteredArticles}
+              segmentId={segmentId}
+              onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
+            />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 };
+
 export default ChartSection;
