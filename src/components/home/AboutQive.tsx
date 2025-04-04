@@ -13,11 +13,11 @@ const AboutQive = () => {
         </div>
         
         <div className="flex flex-col md:flex-row gap-8 items-stretch mb-8">
-          {/* YouTube Video */}
+          {/* YouTube Video - Modified to fill container */}
           <div className="w-full md:w-3/5 bg-white rounded-xl shadow-md overflow-hidden">
-            <div className="aspect-video w-full">
+            <div className="relative w-full h-0" style={{ paddingBottom: '56.25%' }}>
               <iframe 
-                className="w-full h-full"
+                className="absolute top-0 left-0 w-full h-full"
                 src="https://www.youtube.com/embed/Re_x1_l87lE?list=PL5OqRfb0Uhmht6AbXSGx-qog1nOBlOISt" 
                 title="Qive Reforma Tributária" 
                 frameBorder="0"
