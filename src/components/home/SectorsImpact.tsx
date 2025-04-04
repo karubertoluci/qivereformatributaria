@@ -14,7 +14,7 @@ interface SectorCardProps {
 }
 
 const SectorCard: React.FC<SectorCardProps> = ({ icon, title, description, onLearnMore }) => (
-  <Card className="border border-orange-100 shadow-sm hover:shadow-md transition-shadow h-full bg-gradient-to-br from-orange-50/50 to-white min-w-[280px] mx-2">
+  <Card className="border border-orange-100 shadow-sm hover:shadow-md transition-shadow h-full bg-gradient-to-br from-orange-50/50 to-white min-w-[300px] mx-2">
     <CardContent className="p-6 flex flex-col items-center h-full">
       <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mb-4">
         {icon}
@@ -150,7 +150,7 @@ const SectorsImpact = () => {
           >
             {/* Add duplicate cards at the beginning for seamless looping */}
             {sectors.concat(sectors).map((sector, index) => (
-              <div key={index} className="flex-shrink-0 flex-grow-0">
+              <div key={index} className="flex-shrink-0">
                 <SectorCard 
                   icon={sector.icon}
                   title={sector.title}
