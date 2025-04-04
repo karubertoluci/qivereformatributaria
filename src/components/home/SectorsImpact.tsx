@@ -23,7 +23,7 @@ const SectorCard: React.FC<SectorCardProps> = ({ icon, title, description }) => 
   const { openFormDialog } = useFormDialogContext();
   
   return (
-    <Card className="h-full flex flex-col">
+    <Card className="h-full flex flex-col bg-orange-50 border-orange-100">
       <CardContent className="p-6 flex flex-col items-center h-full">
         <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mb-4">
           {icon}
