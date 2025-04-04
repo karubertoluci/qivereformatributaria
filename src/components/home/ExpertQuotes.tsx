@@ -73,7 +73,7 @@ const ExpertQuotes = () => {
           <div className="w-24 h-1 bg-orange-500 rounded"></div>
         </div>
         
-        <div className="hidden md:grid md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {experts.map((expert, index) => (
             <ExpertQuote
               key={index}
@@ -83,27 +83,6 @@ const ExpertQuotes = () => {
               imageUrl={expert.imageUrl}
             />
           ))}
-        </div>
-        
-        <div className="md:hidden">
-          <Carousel className="w-full">
-            <CarouselContent>
-              {experts.map((expert, index) => (
-                <CarouselItem key={index} className="pl-1 md:basis-1/2 lg:basis-1/3">
-                  <ExpertQuote
-                    name={expert.name}
-                    role={expert.role}
-                    quote={expert.quote}
-                    imageUrl={expert.imageUrl}
-                  />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <div className="flex justify-center gap-2 mt-4">
-              <CarouselPrevious className="static transform-none mx-1" />
-              <CarouselNext className="static transform-none mx-1" />
-            </div>
-          </Carousel>
         </div>
       </div>
     </section>

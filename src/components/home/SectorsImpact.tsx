@@ -5,6 +5,7 @@ import { Store, Briefcase, Building, BarChart4, HeartPulse, GraduationCap, Bankn
 import { Button } from '@/components/ui/button';
 import { useFormDialogContext } from './FormDialogContext';
 import { businessSegments } from '@/data/segments';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 interface SectorCardProps {
   icon: React.ReactNode;
@@ -109,17 +110,30 @@ const SectorsImpact = () => {
           Conheça os principais impactos no seu segmento de atuação.
         </p>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {sectors.map((sector, index) => (
-            <SectorCard 
-              key={index}
-              icon={sector.icon}
-              title={sector.title}
-              description={sector.description}
-              onLearnMore={handleLearnMore}
-            />
-          ))}
-        </div>
+        {/* Carousel for all screen sizes */}
+        <Carousel className="w-full">
+          <CarouselContent className="-ml-2 md:-ml-4">
+            {sectors.map((sector, index) => (
+              <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+                <SectorCard 
+                  icon={sector.icon}
+                  title={sector.title}
+                  description={sector.description}
+                  onLearnMore={handleLearnMore}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="flex justify-center gap-4 mt-6">
+            <CarouselPrevious className="relative left-0 right-auto transform-none" />
+            <div className="flex gap-2">
+              {[1, 2, 3].map((_, i) => (
+                <div key={i} className={`w-2 h-2 rounded-full ${i === 0 ? 'bg-orange-500' : 'bg-gray-300'}`} />
+              ))}
+            </div>
+            <CarouselNext className="relative right-0 left-auto transform-none" />
+          </div>
+        </Carousel>
       </div>
     </section>
   );
