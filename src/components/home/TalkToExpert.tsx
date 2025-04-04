@@ -17,10 +17,10 @@ const TalkToExpert = () => {
             />
           </div>
           <div className="text-left">
-            <h2 className="text-2xl md:text-3xl font-bold">
+            <h2 className="text-2xl md:text-3xl font-medium">
               Qive na Reforma: fale com um especialista
             </h2>
-            <p className="text-lg md:text-xl mt-2">
+            <p className="text-lg md:text-xl mt-2 font-normal">
               e saiba como podemos te ajudar
             </p>
           </div>
