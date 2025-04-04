@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -13,7 +12,7 @@ interface ExpertQuoteProps {
 
 const ExpertQuote: React.FC<ExpertQuoteProps> = ({ name, role, quote, imageUrl }) => (
   <Card className="border border-gray-200 shadow-md h-full">
-    <CardContent className="p-3 flex flex-col h-full">
+    <CardContent className="p-3 sm:p-4 flex flex-col h-full">
       <div className="mb-2 flex items-center">
         <Avatar className="h-10 w-10 mr-2">
           <AvatarImage src={imageUrl} alt={name} />
@@ -27,7 +26,7 @@ const ExpertQuote: React.FC<ExpertQuoteProps> = ({ name, role, quote, imageUrl }
       
       <div className="flex-grow">
         <QuoteIcon className="h-4 w-4 text-orange-400 mb-1 opacity-50" />
-        <p className="text-xs text-gray-800 italic leading-tight">
+        <p className="text-xs sm:text-sm text-gray-800 italic leading-tight">
           "{quote}"
         </p>
       </div>
@@ -64,7 +63,7 @@ const ExpertQuotes = () => {
   ];
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-12 sm:py-16 bg-gray-50">
       <div className="container mx-auto px-4 max-w-7xl">
         <h2 className="text-3xl font-bold text-center mb-4">O que os especialistas dizem</h2>
         
@@ -72,7 +71,7 @@ const ExpertQuotes = () => {
           <div className="w-24 h-1 bg-orange-500 rounded"></div>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {experts.map((expert, index) => (
             <div key={index}>
               <ExpertQuote

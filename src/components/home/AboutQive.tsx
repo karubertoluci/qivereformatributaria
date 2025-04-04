@@ -1,5 +1,7 @@
+
 import React from 'react';
-import { FileText, Shield, LightbulbIcon, BookOpen } from 'lucide-react';
+import { FileText, Search, LightbulbIcon, BookOpen, Globe, Share2 } from 'lucide-react';
+
 const AboutQive = () => {
   return <section className="bg-gray-50 py-[56px]">
       <div className="container mx-auto px-4 max-w-5xl">
@@ -32,7 +34,7 @@ const AboutQive = () => {
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <div className="bg-orange-100 rounded-full p-1 mr-3 mt-0.5">
-                    <Shield className="h-4 w-4 text-orange-600" />
+                    <Search className="h-4 w-4 text-orange-600" />
                   </div>
                   <p className="text-gray-700">
                     <strong>Análise especializada</strong> por setor de atuação e CNAE específico
@@ -40,7 +42,7 @@ const AboutQive = () => {
                 </li>
                 <li className="flex items-start">
                   <div className="bg-orange-100 rounded-full p-1 mr-3 mt-0.5">
-                    <Shield className="h-4 w-4 text-orange-600" />
+                    <FileText className="h-4 w-4 text-orange-600" />
                   </div>
                   <p className="text-gray-700">
                     <strong>Priorizamos conteúdo</strong> que realmente importa para o seu negócio
@@ -48,7 +50,7 @@ const AboutQive = () => {
                 </li>
                 <li className="flex items-start">
                   <div className="bg-orange-100 rounded-full p-1 mr-3 mt-0.5">
-                    <Shield className="h-4 w-4 text-orange-600" />
+                    <Globe className="h-4 w-4 text-orange-600" />
                   </div>
                   <p className="text-gray-700">
                     <strong>Linguagem acessível</strong> para facilitar o entendimento de termos técnicos
@@ -56,7 +58,7 @@ const AboutQive = () => {
                 </li>
                 <li className="flex items-start">
                   <div className="bg-orange-100 rounded-full p-1 mr-3 mt-0.5">
-                    <Shield className="h-4 w-4 text-orange-600" />
+                    <Share2 className="h-4 w-4 text-orange-600" />
                   </div>
                   <p className="text-gray-700">
                     <strong>Relatórios personalizados</strong> que você pode compartilhar com sua equipe
@@ -68,12 +70,30 @@ const AboutQive = () => {
           
           <div className="bg-orange-50 border border-orange-200 rounded-lg p-6 flex items-start">
             <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-full p-3 mr-4 flex-shrink-0">
-              
+              <BookOpen className="h-5 w-5 text-white" />
             </div>
-            
+            <div>
+              <h4 className="font-bold text-lg mb-2">E lembre-se...</h4>
+              <p className="text-gray-700">
+                Nossa plataforma está em constante atualização para acompanhar as últimas 
+                mudanças na legislação e oferecer o conteúdo mais relevante para o seu negócio.
+              </p>
+            </div>
+          </div>
+          
+          <div className="mt-8 rounded-lg overflow-hidden w-full aspect-video">
+            <iframe 
+              className="w-full h-full"
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+              title="Apresentação da Qive Reforma Tributária" 
+              frameBorder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowFullScreen
+            ></iframe>
           </div>
         </div>
       </div>
     </section>;
 };
+
 export default AboutQive;
