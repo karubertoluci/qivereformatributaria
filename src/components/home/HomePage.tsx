@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Hero from './Hero';
+import Hero from './hero/Hero';
 import SearchForm from './search-form';
 import HowItWorks from './HowItWorks';
 import SectorsImpact from './SectorsImpact';
