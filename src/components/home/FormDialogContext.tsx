@@ -1,5 +1,5 @@
 
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 
 interface FormDialogContextType {
   isFormDialogOpen: boolean;
@@ -26,6 +26,19 @@ export const FormDialogProvider: React.FC<FormDialogProviderProps> = ({ children
 
   const openFormDialog = () => setIsFormDialogOpen(true);
   const closeFormDialog = () => setIsFormDialogOpen(false);
+  
+  // Listen for custom event to open dialog from anywhere
+  useEffect(() => {
+    const handleOpenFormDialog = () => {
+      openFormDialog();
+    };
+    
+    document.addEventListener('openFormDialog', handleOpenFormDialog);
+    
+    return () => {
+      document.removeEventListener('openFormDialog', handleOpenFormDialog);
+    };
+  }, []);
 
   return (
     <FormDialogContext.Provider value={{ isFormDialogOpen, openFormDialog, closeFormDialog }}>

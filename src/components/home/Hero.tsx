@@ -1,12 +1,12 @@
 
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Bot, Info } from 'lucide-react';
+import { Bot } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section className="bg-gradient-to-b from-white to-orange-50 pt-16 pb-8 px-4">
-      <div className="container mx-auto max-w-5xl">
+    <section className="bg-white pt-16 pb-8 px-4">
+      <div className="container mx-auto max-w-6xl">
         <div className="flex justify-center mb-6">
           <Badge variant="outline" className="py-2 px-4 flex items-center gap-2 text-sm border border-gray-200 shadow-sm bg-white/80">
             <Bot className="h-4 w-4" /> 
@@ -16,17 +16,47 @@ const Hero = () => {
         
         <div className="text-center mb-10">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 text-gray-900 leading-tight">
-            A Reforma Tributária <span className="text-orange-500">Simplificada</span> <br /> 
-            para o seu Negócio
+            A Reforma Tributária e o <br /> 
+            impacto no seu negócio
           </h1>
           
           <p className="text-xl md:text-2xl mb-6 max-w-3xl mx-auto text-gray-700">
-            Entenda como a Lei Complementar 214/2025 afeta sua empresa e prepare-se para as mudanças que ocorrerão nos próximos anos.
+            Entenda como a Lei Complementar 214/2025 afeta sua empresa e 
+            prepare-se para as mudanças no sistema tributário brasileiro com a Qive.
           </p>
+        </div>
+        
+        <div className="bg-orange-50 rounded-lg p-8 border border-orange-100 max-w-6xl mx-auto">
+          <div className="text-center mb-6">
+            <p className="text-sm text-gray-500 mb-2">
+              este conteúdo é gerado por inteligencia artificial
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">
+              Gere um relatório personalizado da<br />
+              Reforma Tributária para sua empresa
+            </h2>
+          </div>
           
-          <div className="inline-flex items-center text-gray-500 text-sm bg-white/80 px-4 py-2 rounded-full shadow-sm border border-gray-100">
-            <Info className="h-4 w-4 mr-2 text-orange-500" />
-            Resultados personalizados com base no seu segmento de atuação
+          <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+            <img 
+              src="/lovable-uploads/a1fa57b5-d751-45dc-ad02-a455994c6dbd.png" 
+              alt="Relatório da Reforma Tributária" 
+              className="w-full h-auto"
+            />
+          </div>
+          
+          <div className="text-center">
+            <button 
+              className="bg-orange-500 hover:bg-orange-600 text-white text-lg font-medium py-3 px-6 rounded-md shadow-md mb-3"
+              onClick={() => {
+                // Use the context to open form dialog
+                const event = new CustomEvent('openFormDialog');
+                document.dispatchEvent(event);
+              }}
+            >
+              Gerar relatório personalizado pra minha empresa
+            </button>
+            <p className="text-sm text-gray-500">Relatório gratuito e sem compromisso</p>
           </div>
         </div>
       </div>

@@ -2,11 +2,10 @@
 import React, { useState } from 'react';
 import { Article } from '@/data/articles';
 import { BusinessSegment } from '@/data/segments';
-import { ArticlesByTopic } from '../../ArticlesByTopic';
+import { getArticlesByTopic } from '../../ArticlesByTopic';
 import ArticlesFilters from './ArticlesFilters';
 import ArticlesContent from './ArticlesContent';
 import ChartSection from '../articles/ChartSection';
-import { ViewMode } from '../../types';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -15,15 +14,15 @@ interface ArticlesTabProps {
   positiveCount: number;
   negativeCount: number;
   topics: string[];
-  viewMode: ViewMode;
-  setViewMode: (mode: ViewMode) => void;
+  viewMode: 'list' | 'table' | 'chart';
+  setViewMode: (mode: 'list' | 'table' | 'chart') => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filterType: string;
-  setFilterType: (type: string) => void;
+  filterType: 'all' | 'positive' | 'negative';
+  setFilterType: (type: 'all' | 'positive' | 'negative') => void;
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
-  articlesByTopic: ArticlesByTopic;
+  articlesByTopic: Record<string, Article[]>;
   highlights: any[];
   onAddHighlight: (articleId: string, text: string) => void;
   onRemoveHighlight: (id: string) => void;
@@ -58,8 +57,8 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         filteredArticles={filteredArticles} 
         segmentId={segment.id}
         setExpandedArticleId={setExpandedArticleId}
-        chartExpanded={chartExpanded}
-        toggleChartExpanded={() => setChartExpanded(!chartExpanded)}
+        expanded={chartExpanded}
+        toggleExpanded={() => setChartExpanded(!chartExpanded)}
       />
       
       {/* Search and Filters */}
