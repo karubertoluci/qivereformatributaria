@@ -3,6 +3,7 @@ import React from 'react';
 import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { FilterType } from './types';
 
 interface FilterBarProps {
   positiveCount: number;
@@ -10,8 +11,8 @@ interface FilterBarProps {
   totalCount: number;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filterType: 'all' | 'positive' | 'negative';
-  setFilterType: (type: 'all' | 'positive' | 'negative') => void;
+  filterType: FilterType;
+  setFilterType: (type: FilterType) => void;
 }
 
 const FilterBar: React.FC<FilterBarProps> = ({

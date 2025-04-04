@@ -2,22 +2,25 @@
 import React from 'react';
 import FilterBar from '../../FilterBar';
 import ViewSwitcher from '../../ViewSwitcher';
+import { FilterType, ViewMode } from '../../types';
 
 interface ArticlesFiltersProps {
   positiveCount: number;
   negativeCount: number;
+  neutralCount: number; // Add this property to match with ArticlesFiltersProps.ts
   totalCount: number;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filterType: 'all' | 'positive' | 'negative';
-  setFilterType: (type: 'all' | 'positive' | 'negative') => void;
-  viewMode: 'list' | 'table' | 'chart';
-  setViewMode: (mode: 'list' | 'table' | 'chart') => void;
+  filterType: FilterType;
+  setFilterType: (type: FilterType) => void;
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
 }
 
 const ArticlesFilters: React.FC<ArticlesFiltersProps> = ({
   positiveCount,
   negativeCount,
+  neutralCount, // Include the neutralCount prop
   totalCount,
   searchTerm,
   setSearchTerm,

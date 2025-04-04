@@ -6,7 +6,7 @@ import { getArticlesByTopic } from '../../ArticlesByTopic';
 import ArticlesFilters from './ArticlesFilters';
 import ArticlesContent from './ArticlesContent';
 import ChartSection from '../articles/ChartSection';
-import { Topic } from '../../types';
+import { Topic, FilterType, ViewMode } from '../../types';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -15,12 +15,12 @@ interface ArticlesTabProps {
   positiveCount: number;
   negativeCount: number;
   topics: Topic[];
-  viewMode: 'list' | 'table' | 'chart';
-  setViewMode: (mode: 'list' | 'table' | 'chart') => void;
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filterType: 'all' | 'positive' | 'negative';
-  setFilterType: (type: 'all' | 'positive' | 'negative') => void;
+  filterType: FilterType;
+  setFilterType: (type: FilterType) => void;
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
   articlesByTopic: Record<string, Article[]>;
@@ -50,7 +50,12 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   onRemoveHighlight
 }) => {
   const [chartExpanded, setChartExpanded] = useState(false);
+  const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(null);
+  const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(null);
   const allArticles = [...relevantArticles]; // Create allArticles for ChartSection
+  
+  // Define displayedArticles for the ArticlesContent component
+  const displayedArticles = filteredArticles;
 
   return (
     <div className="space-y-6">
@@ -83,6 +88,11 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       {/* Article Content (List or Table) */}
       <ArticlesContent 
         filteredArticles={filteredArticles}
+        displayedArticles={displayedArticles} // Add required displayedArticles prop
+        selectedBookFilter={selectedBookFilter} // Add required selectedBookFilter prop
+        selectedTitleFilter={selectedTitleFilter} // Add required selectedTitleFilter prop
+        setSelectedBookFilter={setSelectedBookFilter} // Add required setSelectedBookFilter prop
+        setSelectedTitleFilter={setSelectedTitleFilter} // Add required setSelectedTitleFilter prop
         segment={segment}
         topics={topics}
         viewMode={viewMode}

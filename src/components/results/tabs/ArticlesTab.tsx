@@ -100,6 +100,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         chartsCollapsed={chartsCollapsed}
         setChartsCollapsed={setChartsCollapsed}
         segment={segment}
+        segmentId={segment.id} // Add the missing segmentId prop
         relevantArticles={relevantArticles}
         allArticles={allArticles}
         showAllArticles={showAllArticles}
@@ -114,6 +115,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       <ArticlesFilters
         positiveCount={positiveCount}
         negativeCount={negativeCount}
+        neutralCount={0} // Add required neutralCount prop
         totalCount={relevantArticles.length}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -125,9 +127,9 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       
       <ArticlesContent
         viewMode={viewMode}
-        displayedArticles={displayedArticles}
+        displayedArticles={displayedArticles} // Add the required displayedArticles prop
         filteredArticles={filteredArticles}
-        selectedBookFilter={selectedBookFilter}
+        selectedBookFilter={selectedBookFilter} 
         selectedTitleFilter={selectedTitleFilter}
         setSelectedBookFilter={setSelectedBookFilter}
         setSelectedTitleFilter={setSelectedTitleFilter}
