@@ -4,7 +4,6 @@ import Hero from './Hero';
 import SearchForm from './search-form';
 import HowItWorks from './HowItWorks';
 import SectorsImpact from './SectorsImpact';
-import ProductFeatures from './ProductFeatures';
 import ExpertQuotes from './ExpertQuotes';
 import AboutQive from './AboutQive';
 import { BusinessSegment } from '@/data/segments';
@@ -54,9 +53,6 @@ const HomePage: React.FC<HomePageProps> = ({ onCnaeSubmit, onSelectSegment }) =>
       
       {/* Terceiro andar: Setores impactados pela reforma */}
       <SectorsImpact />
-      
-      {/* Quarto andar: O que oferecemos */}
-      <ProductFeatures />
       
       {/* Quinto andar: O que os especialistas dizem */}
       <ExpertQuotes />
