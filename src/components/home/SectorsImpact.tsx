@@ -1,11 +1,10 @@
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Store, Briefcase, Building, BarChart4, HeartPulse, GraduationCap, Banknote, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useFormDialogContext } from './FormDialogContext';
 import { businessSegments } from '@/data/segments';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 interface SectorCardProps {
   icon: React.ReactNode;
@@ -15,7 +14,7 @@ interface SectorCardProps {
 }
 
 const SectorCard: React.FC<SectorCardProps> = ({ icon, title, description, onLearnMore }) => (
-  <Card className="border border-orange-100 shadow-sm hover:shadow-md transition-shadow h-full bg-gradient-to-br from-orange-50/50 to-white">
+  <Card className="border border-orange-100 shadow-sm hover:shadow-md transition-shadow h-full bg-gradient-to-br from-orange-50/50 to-white min-w-[300px] mx-2">
     <CardContent className="p-6 flex flex-col items-center h-full">
       <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mb-4">
         {icon}
@@ -40,6 +39,9 @@ const SectorCard: React.FC<SectorCardProps> = ({ icon, title, description, onLea
 
 const SectorsImpact = () => {
   const { openFormDialog } = useFormDialogContext();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number | null>(null);
+  const isPausedRef = useRef(false);
   
   const sectors = [
     {
@@ -96,6 +98,41 @@ const SectorsImpact = () => {
     openFormDialog();
   };
 
+  const scrollStep = () => {
+    if (scrollRef.current && !isPausedRef.current) {
+      // Move 0.5px at a time for a smooth, slow scroll
+      scrollRef.current.scrollLeft += 0.5;
+      
+      // Reset scroll to beginning when we reach the end
+      if (scrollRef.current.scrollLeft >= 
+          (scrollRef.current.scrollWidth - scrollRef.current.clientWidth)) {
+        scrollRef.current.scrollLeft = 0;
+      }
+    }
+    
+    animationRef.current = requestAnimationFrame(scrollStep);
+  };
+
+  // Start the animation when component mounts
+  useEffect(() => {
+    animationRef.current = requestAnimationFrame(scrollStep);
+    
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
+
+  // Handle mouse interactions to pause/resume the scroll
+  const handleMouseEnter = () => {
+    isPausedRef.current = true;
+  };
+
+  const handleMouseLeave = () => {
+    isPausedRef.current = false;
+  };
+
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4 max-w-5xl">
@@ -110,30 +147,30 @@ const SectorsImpact = () => {
           Conheça os principais impactos no seu segmento de atuação.
         </p>
         
-        {/* Carousel for all screen sizes */}
-        <Carousel className="w-full">
-          <CarouselContent className="-ml-2 md:-ml-4">
-            {sectors.map((sector, index) => (
-              <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+        {/* Continuous horizontal scroll container */}
+        <div 
+          className="w-full overflow-hidden relative"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div 
+            ref={scrollRef}
+            className="flex overflow-x-auto py-4 scrollbar-hide"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {/* Add duplicate cards at the beginning for seamless looping */}
+            {sectors.concat(sectors).map((sector, index) => (
+              <div key={index} className="flex-shrink-0">
                 <SectorCard 
                   icon={sector.icon}
                   title={sector.title}
                   description={sector.description}
                   onLearnMore={handleLearnMore}
                 />
-              </CarouselItem>
+              </div>
             ))}
-          </CarouselContent>
-          <div className="flex justify-center gap-4 mt-6">
-            <CarouselPrevious className="relative left-0 right-auto transform-none" />
-            <div className="flex gap-2">
-              {[1, 2, 3].map((_, i) => (
-                <div key={i} className={`w-2 h-2 rounded-full ${i === 0 ? 'bg-orange-500' : 'bg-gray-300'}`} />
-              ))}
-            </div>
-            <CarouselNext className="relative right-0 left-auto transform-none" />
           </div>
-        </Carousel>
+        </div>
       </div>
     </section>
   );
