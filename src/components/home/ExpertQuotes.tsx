@@ -72,7 +72,7 @@ const ExpertQuotes = () => {
           <div className="w-24 h-1 bg-orange-500 rounded"></div>
         </div>
         
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {experts.map((expert, index) => (
             <div key={index}>
               <ExpertQuote
