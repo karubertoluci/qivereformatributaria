@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useFormDialogContext } from '../FormDialogContext';
+import { FileText } from 'lucide-react';
 
 const ReportGenerator = () => {
   const {
@@ -9,7 +10,8 @@ const ReportGenerator = () => {
   
   return <div className="bg-orange-50 rounded-lg p-8 border border-orange-100 max-w-6xl mx-auto">
       <div className="text-center mb-6">
-        <h2 className="text-xl md:text-2xl mb-3 font-normal">
+        <h2 className="text-xl md:text-2xl mb-3 font-normal flex items-center justify-center gap-2">
+          <FileText className="h-6 w-6 text-orange-500" />
           Gere um relatório personalizado da Reforma Tributária para sua empresa
         </h2>
       </div>
