@@ -34,7 +34,7 @@ const SectorCard: React.FC<SectorCardProps> = ({ icon, title, description }) => 
         </p>
         <button 
           onClick={openFormDialog}
-          className="text-xs text-orange-600 hover:text-orange-700 font-medium mt-auto"
+          className="text-xs text-[#FF4719] hover:text-[#E53E15] font-medium mt-auto"
         >
           Saiba mais →
         </button>
@@ -46,42 +46,42 @@ const SectorCard: React.FC<SectorCardProps> = ({ icon, title, description }) => 
 const SectorsImpact = () => {
   const sectors = [
     {
-      icon: <Store className="h-6 w-6 text-orange-500" />,
+      icon: <Store className="h-6 w-6 text-[#FF4719]" />,
       title: "Comércio e Varejo",
       description: "Impacto nas alíquotas e fim da cumulatividade dos tributos, com redução da carga tributária em produtos essenciais."
     },
     {
-      icon: <Building2 className="h-6 w-6 text-orange-500" />,
+      icon: <Building2 className="h-6 w-6 text-[#FF4719]" />,
       title: "Indústria",
       description: "Simplificação do sistema e recuperação de créditos em toda cadeia produtiva, eliminando a tributação em cascata."
     },
     {
-      icon: <Briefcase className="h-6 w-6 text-orange-500" />,
+      icon: <Briefcase className="h-6 w-6 text-[#FF4719]" />,
       title: "Prestação de Serviços",
       description: "Mudanças significativas com a substituição do ISS pelo IBS, com regras e transição especiais para o setor."
     },
     {
-      icon: <BarChart4 className="h-6 w-6 text-orange-500" />,
+      icon: <BarChart4 className="h-6 w-6 text-[#FF4719]" />,
       title: "Tecnologia",
       description: "Maior segurança jurídica e possibilidade de aproveitamento de créditos de bens e serviços utilizados na operação."
     },
     {
-      icon: <HeartPulse className="h-6 w-6 text-orange-500" />,
+      icon: <HeartPulse className="h-6 w-6 text-[#FF4719]" />,
       title: "Saúde",
       description: "Tratamento diferenciado para medicamentos e serviços essenciais, com possível redução de custos ao consumidor final."
     },
     {
-      icon: <GraduationCap className="h-6 w-6 text-orange-500" />,
+      icon: <GraduationCap className="h-6 w-6 text-[#FF4719]" />,
       title: "Educação",
       description: "Regime específico com alíquotas diferenciadas e regras especiais para instituições de ensino."
     },
     {
-      icon: <Banknote className="h-6 w-6 text-orange-500" />,
+      icon: <Banknote className="h-6 w-6 text-[#FF4719]" />,
       title: "Serviços Financeiros",
       description: "Nova metodologia de tributação para operações financeiras, com impacto direto nos custos de transação bancária."
     },
     {
-      icon: <Truck className="h-6 w-6 text-orange-500" />,
+      icon: <Truck className="h-6 w-6 text-[#FF4719]" />,
       title: "Transporte e Logística",
       description: "Mudanças na tributação interestadual e maior clareza para operações de transporte com o princípio do destino."
     }

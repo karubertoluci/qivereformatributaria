@@ -17,7 +17,7 @@ const SearchFormButton: React.FC<SearchFormButtonProps> = ({
   
   return (
     <Button 
-      className={`bg-orange-500 hover:bg-orange-600 transition-colors text-lg py-6 px-8 rounded-md font-medium shadow-md ${className || ''}`}
+      className={`bg-[#FF4719] hover:bg-[#E53E15] transition-colors text-lg py-6 px-8 rounded-md font-medium shadow-md ${className || ''}`}
       onClick={openFormDialog}
     >
       <FileBarChart className="mr-2 h-6 w-6" />

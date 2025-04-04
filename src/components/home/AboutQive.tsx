@@ -8,7 +8,7 @@ const AboutQive = () => {
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Por que Criamos a Qive Reforma Tributária</h2>
         
         <div className="flex justify-center mb-10">
-          <div className="w-24 h-1 bg-orange-500 rounded"></div>
+          <div className="w-24 h-1 bg-[#FF4719] rounded"></div>
         </div>
         
         <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 overflow-hidden">
@@ -32,13 +32,13 @@ const AboutQive = () => {
               {/* Nossos diferenciais com ícones diferentes */}
               <div className="bg-orange-50 p-6 rounded-lg flex-grow">
                 <h4 className="font-bold text-xl mb-4 flex items-center">
-                  <LightbulbIcon className="h-5 w-5 text-orange-500 mr-2" /> 
+                  <LightbulbIcon className="h-5 w-5 text-[#FF4719] mr-2" /> 
                   Nossos diferenciais:
                 </h4>
                 <ul className="space-y-3">
                   <li className="flex items-start">
                     <div className="bg-orange-100 rounded-full p-1 mr-3 mt-0.5">
-                      <Search className="h-4 w-4 text-orange-600" />
+                      <Search className="h-4 w-4 text-[#FF4719]" />
                     </div>
                     <p className="text-gray-700">
                       <strong>Análise especializada</strong> por setor de atuação e CNAE específico
@@ -46,7 +46,7 @@ const AboutQive = () => {
                   </li>
                   <li className="flex items-start">
                     <div className="bg-orange-100 rounded-full p-1 mr-3 mt-0.5">
-                      <BarChart4 className="h-4 w-4 text-orange-600" />
+                      <BarChart4 className="h-4 w-4 text-[#FF4719]" />
                     </div>
                     <p className="text-gray-700">
                       <strong>Priorizamos conteúdo</strong> que realmente importa para o seu negócio
@@ -54,7 +54,7 @@ const AboutQive = () => {
                   </li>
                   <li className="flex items-start">
                     <div className="bg-orange-100 rounded-full p-1 mr-3 mt-0.5">
-                      <Globe className="h-4 w-4 text-orange-600" />
+                      <Globe className="h-4 w-4 text-[#FF4719]" />
                     </div>
                     <p className="text-gray-700">
                       <strong>Linguagem acessível</strong> para facilitar o entendimento de termos técnicos
@@ -62,7 +62,7 @@ const AboutQive = () => {
                   </li>
                   <li className="flex items-start">
                     <div className="bg-orange-100 rounded-full p-1 mr-3 mt-0.5">
-                      <Zap className="h-4 w-4 text-orange-600" />
+                      <Zap className="h-4 w-4 text-[#FF4719]" />
                     </div>
                     <p className="text-gray-700">
                       <strong>Relatórios personalizados</strong> que você pode compartilhar com sua equipe
@@ -74,9 +74,9 @@ const AboutQive = () => {
           </div>
           
           {/* Caixa de lembrete na parte inferior */}
-          <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg p-6 flex items-start text-white shadow-md">
+          <div className="bg-gradient-to-r from-[#FF4719] to-[#FF5A30] rounded-lg p-6 flex items-start text-white shadow-md">
             <div className="bg-white rounded-full p-3 mr-4 flex-shrink-0">
-              <Shield className="h-5 w-5 text-orange-600" />
+              <Shield className="h-5 w-5 text-[#FF4719]" />
             </div>
             <div>
               <h4 className="font-bold text-lg mb-2">E lembre-se...</h4>

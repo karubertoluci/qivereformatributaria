@@ -12,7 +12,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({ isLoading }) => {
     <div className="pt-4">
       <Button 
         type="submit" 
-        className="bg-orange-500 hover:bg-orange-600 transition-colors w-full py-6"
+        className="bg-[#FF4719] hover:bg-[#E53E15] transition-colors w-full py-6"
         disabled={isLoading}
         size="lg"
       >

@@ -73,6 +73,12 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				orange: {
+					500: '#FF4719', // Overriding the orange-500 color
+					600: '#E53E15', // Slightly darker for hover states
+					50: '#FFF1ED', // Very light orange for backgrounds
+					100: '#FFE2D9', // Light orange for subtle elements
 				}
 			},
 			borderRadius: {
