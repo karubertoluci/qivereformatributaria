@@ -13,21 +13,21 @@ interface ExpertQuoteProps {
 
 const ExpertQuote: React.FC<ExpertQuoteProps> = ({ name, role, quote, imageUrl }) => (
   <Card className="border border-gray-200 shadow-md h-full">
-    <CardContent className="p-4 flex flex-col h-full">
-      <div className="mb-4 flex items-center">
-        <Avatar className="h-12 w-12 mr-3">
+    <CardContent className="p-3 flex flex-col h-full">
+      <div className="mb-2 flex items-center">
+        <Avatar className="h-10 w-10 mr-2">
           <AvatarImage src={imageUrl} alt={name} />
           <AvatarFallback>{name.charAt(0)}</AvatarFallback>
         </Avatar>
         <div>
-          <h3 className="text-lg font-bold">{name}</h3>
-          <p className="text-gray-600 text-sm">{role}</p>
+          <h3 className="text-sm font-bold">{name}</h3>
+          <p className="text-gray-600 text-xs">{role}</p>
         </div>
       </div>
       
       <div className="flex-grow">
-        <QuoteIcon className="h-6 w-6 text-orange-400 mb-2 opacity-50" />
-        <p className="text-sm text-gray-800 italic leading-relaxed">
+        <QuoteIcon className="h-4 w-4 text-orange-400 mb-1 opacity-50" />
+        <p className="text-xs text-gray-800 italic leading-tight">
           "{quote}"
         </p>
       </div>
@@ -72,7 +72,7 @@ const ExpertQuotes = () => {
           <div className="w-24 h-1 bg-orange-500 rounded"></div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-3">
           {experts.map((expert, index) => (
             <div key={index}>
               <ExpertQuote

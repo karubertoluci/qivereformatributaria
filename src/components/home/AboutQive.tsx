@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Shield, LightbulbIcon, BookOpen } from 'lucide-react';
+import { Shield, LightbulbIcon } from 'lucide-react';
 
 const AboutQive = () => {
   return (
@@ -20,6 +20,7 @@ const AboutQive = () => {
                 className="w-full h-full"
                 src="https://www.youtube.com/embed/Re_x1_l87lE?list=PL5OqRfb0Uhmht6AbXSGx-qog1nOBlOISt" 
                 title="Qive Reforma Tributária" 
+                frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                 allowFullScreen>
               </iframe>
@@ -70,9 +71,11 @@ const AboutQive = () => {
             </div>
             
             <div className="mt-auto bg-orange-50 border border-orange-200 rounded-lg p-4 flex items-start">
-              <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-full p-3 mr-4 flex-shrink-0">
-                <BookOpen className="h-6 w-6 text-white" />
-              </div>
+              <img 
+                src="/lovable-uploads/91206615-9a00-4cbb-85ad-ee19eba09f20.png" 
+                alt="Qive Logo" 
+                className="w-12 h-12 mr-4 flex-shrink-0" 
+              />
               <div>
                 <p className="text-gray-800 font-medium mb-2">
                   E lembre-se: quando o assunto é automatização de rotinas com documentos fiscais, 
