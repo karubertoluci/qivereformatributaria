@@ -8,12 +8,10 @@ import { cnaeToSegmentMap } from './utils';
 import { Dialog } from '@/components/ui/dialog';
 import { useFormDialogContext } from '../FormDialogContext';
 import { fetchCNPJData } from '@/services/brasilApi';
-
 interface SearchFormProps {
   onCnaeSubmit: (cnae: string) => void;
   onSelectSegment: (segment: BusinessSegment | null) => void;
 }
-
 interface CompanyData {
   cnpj?: string;
   razaoSocial?: string;
@@ -30,7 +28,6 @@ interface CompanyData {
   situacaoCadastral?: string;
   naturezaJuridica?: string;
 }
-
 const SearchForm: React.FC<SearchFormProps> = ({
   onCnaeSubmit,
   onSelectSegment
@@ -44,7 +41,6 @@ const SearchForm: React.FC<SearchFormProps> = ({
     isFormDialogOpen,
     closeFormDialog
   } = useFormDialogContext();
-
   const fetchCompanyData = async (cnpj: string) => {
     try {
       const data = await fetchCNPJData(cnpj);
@@ -66,35 +62,51 @@ const SearchForm: React.FC<SearchFormProps> = ({
       throw error;
     }
   };
-
   const simulateReportGeneration = async (data: FormValues) => {
     setShowLoadingDialog(true);
     setLoadingProgress(0);
     let cnaeCode = '';
     let companyInfo: CompanyData | undefined = undefined;
-    
     setCompanyName(data.nome);
-    
-    const stages = [
-      { progress: 5, delay: 500 },   // Inicio
-      { progress: 20, delay: 1000 }, // Após buscar CNPJ
-      { progress: 40, delay: 800 },  // Após identificar CNAE
-      { progress: 60, delay: 1200 }, // Analisando impactos
-      { progress: 95, delay: 1500 }, // Relatório pronto
-      { progress: 100, delay: 2000 } // Delay adicional antes de redirecionar
+    const stages = [{
+      progress: 5,
+      delay: 500
+    },
+    // Inicio
+    {
+      progress: 20,
+      delay: 1000
+    },
+    // Após buscar CNPJ
+    {
+      progress: 40,
+      delay: 800
+    },
+    // Após identificar CNAE
+    {
+      progress: 60,
+      delay: 1200
+    },
+    // Analisando impactos
+    {
+      progress: 95,
+      delay: 1500
+    },
+    // Relatório pronto
+    {
+      progress: 100,
+      delay: 2000
+    } // Delay adicional antes de redirecionar
     ];
-    
     const processStage = async (index: number) => {
       if (index >= stages.length) {
         setTimeout(() => {
           setShowLoadingDialog(false);
-          
           const formDataWithCompanyInfo = {
             ...data,
             ...companyInfo
           };
           localStorage.setItem('formData', JSON.stringify(formDataWithCompanyInfo));
-
           if (cnaeCode) {
             const segmentId = cnaeToSegmentMap[cnaeCode];
             if (segmentId) {
@@ -106,24 +118,20 @@ const SearchForm: React.FC<SearchFormProps> = ({
               }
             }
           }
-
           const defaultSegment = businessSegments[0];
           toast.success(`Relatório para ${companyInfo?.razaoSocial || data.nome} gerado com sucesso!`);
           onSelectSegment(defaultSegment);
         }, 500);
         return;
       }
-
       const stage = stages[index];
       setLoadingProgress(stage.progress);
-      
       if (index === 0) {
         try {
           companyInfo = await fetchCompanyData(data.cnpj);
           if (companyInfo) {
             setCompanyData(companyInfo);
             setCompanyName(companyInfo.razaoSocial || data.nome);
-            
             if (companyInfo.cnaePrincipal) {
               cnaeCode = companyInfo.cnaePrincipal.codigo.substring(0, 2);
             }
@@ -133,56 +141,22 @@ const SearchForm: React.FC<SearchFormProps> = ({
           toast.error("Não foi possível obter dados detalhados do CNPJ");
         }
       }
-      
       setTimeout(() => {
         processStage(index + 1);
       }, stage.delay);
     };
-    
     processStage(0);
   };
-
   const handleSubmit = async (data: FormValues) => {
     setIsLoading(true);
     setCompanyName(data.nome);
-
     localStorage.setItem('formData', JSON.stringify(data));
-    
     setTimeout(() => {
       setIsLoading(false);
       simulateReportGeneration(data);
       closeFormDialog();
     }, 500);
   };
-
-  return (
-    <div className="bg-orange-50 rounded-lg shadow-lg p-8 mb-8 border border-orange-100">
-      <div className="max-w-3xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-3">Relatório Personalizado da Reforma Tributária</h2>
-        <p className="text-orange-600 text-center text-lg mb-8">
-          Gere agora um relatório da Reforma Tributária de forma simplificada e compreenda o que pode impactar sua empresa.
-        </p>
-        
-        <div className="flex flex-col items-center">
-          <SearchFormButton />
-          
-          <p className="text-sm text-gray-500 mt-2">Relatório gratuito e sem compromisso</p>
-        </div>
-        
-        <Dialog open={isFormDialogOpen} onOpenChange={closeFormDialog}>
-          <FormDialog onSubmit={handleSubmit} isLoading={isLoading} />
-        </Dialog>
-        
-        <LoadingDialog 
-          open={showLoadingDialog} 
-          onOpenChange={setShowLoadingDialog} 
-          progress={loadingProgress} 
-          companyName={companyName} 
-          companyData={companyData} 
-        />
-      </div>
-    </div>
-  );
+  return;
 };
-
 export default SearchForm;
