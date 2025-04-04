@@ -15,11 +15,12 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
   articles, 
   segmentId 
 }) => {
-  const { bookData, relevanceTotals } = useFavorabilityRelevanceData(articles, segmentId);
+  // Pass null as the third argument for relevanceFilter
+  const { bookData, relevanceTotals } = useFavorabilityRelevanceData(articles, segmentId, null);
   
   // Use the bookData for the chart
   const chartData = bookData;
-  const totalArticles = bookData.reduce((sum, item) => sum + (item.favoravel || 0) + (item.desfavoravel || 0), 0);
+  const totalArticles = bookData.reduce((sum, item) => sum + (item.favorable || 0) + (item.unfavorable || 0), 0);
 
   return (
     <Card className="shadow-md">
@@ -36,8 +37,8 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="favoravel" fill="#82ca9d" />
-            <Bar dataKey="desfavoravel" fill="#e45858" />
+            <Bar dataKey="favorable" fill="#82ca9d" />
+            <Bar dataKey="unfavorable" fill="#e45858" />
           </BarChart>
         </ResponsiveContainer>
         
