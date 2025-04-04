@@ -1,14 +1,15 @@
 
 import React from 'react';
 import { useFormDialogContext } from '../FormDialogContext';
+
 const ReportGenerator = () => {
   const {
     openFormDialog
   } = useFormDialogContext();
+  
   return <div className="bg-orange-50 rounded-lg p-8 border border-orange-100 max-w-6xl mx-auto">
       <div className="text-center mb-6">
-        
-        <h2 className="text-2xl md:text-3xl mb-3 font-normal">
+        <h2 className="text-xl md:text-2xl mb-3 font-normal">
           Gere um relatório personalizado da Reforma Tributária para sua empresa
         </h2>
       </div>
@@ -25,4 +26,5 @@ const ReportGenerator = () => {
       </div>
     </div>;
 };
+
 export default ReportGenerator;
