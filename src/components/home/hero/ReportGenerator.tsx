@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useFormDialogContext } from '../FormDialogContext';
 const ReportGenerator = () => {
@@ -8,8 +9,7 @@ const ReportGenerator = () => {
       <div className="text-center mb-6">
         
         <h2 className="text-2xl md:text-3xl mb-3 font-normal">
-          Gere um relatório personalizado da<br />
-          Reforma Tributária para sua empresa
+          Gere um relatório personalizado da Reforma Tributária para sua empresa
         </h2>
       </div>
       
