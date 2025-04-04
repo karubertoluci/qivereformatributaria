@@ -6,6 +6,8 @@ import HowItWorks from './HowItWorks';
 import SectorsImpact from './SectorsImpact';
 import ExpertQuotes from './ExpertQuotes';
 import AboutQive from './AboutQive';
+import TalkToExpert from './TalkToExpert';
+import SectorTags from './SectorTags';
 import { BusinessSegment } from '@/data/segments';
 
 interface HomePageProps {
@@ -59,6 +61,12 @@ const HomePage: React.FC<HomePageProps> = ({ onCnaeSubmit, onSelectSegment }) =>
       
       {/* Sexto andar: Por que criamos a Qive */}
       <AboutQive />
+      
+      {/* Novo andar: Fale com um especialista */}
+      <TalkToExpert />
+      
+      {/* Novo andar: Tags de setores */}
+      <SectorTags />
     </div>
   );
 };
