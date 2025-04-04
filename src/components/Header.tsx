@@ -2,7 +2,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Link, useLocation } from 'react-router-dom';
-import { FileText, Share2, Download, FileBarChart } from 'lucide-react';
 import { useFormDialogContext } from './home/FormDialogContext';
 
 const Header = () => {
@@ -24,26 +23,33 @@ const Header = () => {
           />
         </Link>
         
-        {/* CTA Buttons */}
-        <div className="flex items-center gap-4">
-          <a 
-            href="https://qive.digital" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-gray-700 hover:text-orange-500 transition-colors hidden sm:block"
-          >
-            Conheça a Qive
+        {/* Navigation Links */}
+        <nav className="hidden md:flex items-center space-x-8">
+          <Link to="/" className="text-gray-800 hover:text-orange-500 transition-colors relative py-2">
+            relatório por setor
+            {location.pathname === '/' && (
+              <span className="absolute bottom-0 left-0 w-full h-1 bg-orange-500"></span>
+            )}
+          </Link>
+          <a href="#" className="text-gray-800 hover:text-orange-500 transition-colors py-2">
+            webinars
           </a>
-          
-          <Button 
-            variant="outline" 
-            className="border-orange-500 text-orange-500 hover:bg-orange-50"
-            onClick={openFormDialog}
-          >
-            <FileBarChart className="mr-2 h-4 w-4" />
-            Gerar relatório personalizado
-          </Button>
-        </div>
+          <a href="#" className="text-gray-800 hover:text-orange-500 transition-colors py-2">
+            planilha
+          </a>
+          <a href="#" className="text-gray-800 hover:text-orange-500 transition-colors py-2">
+            calculadora
+          </a>
+        </nav>
+        
+        {/* CTA Button */}
+        <Button 
+          variant="default"
+          className="bg-orange-500 hover:bg-orange-600 text-white text-sm"
+          onClick={openFormDialog}
+        >
+          Como a Qive pode te ajudar com a Reforma Tributária
+        </Button>
       </div>
     </header>
   );

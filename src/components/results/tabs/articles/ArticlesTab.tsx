@@ -1,15 +1,12 @@
 
-import React, { useState, useEffect } from 'react';
-import { BusinessSegment } from '@/data/segments';
+import React, { useState } from 'react';
 import { Article } from '@/data/articles';
-import { HighlightType, Topic } from '../../types';
-import { ListFilter } from 'lucide-react';
-import ActiveFilters from './ActiveFilters';
-import ChartSection from './ChartSection';
+import { BusinessSegment } from '@/data/segments';
+import { ArticlesByTopic } from '../../ArticlesByTopic';
 import ArticlesFilters from './ArticlesFilters';
 import ArticlesContent from './ArticlesContent';
-import { Separator } from '@/components/ui/separator';
-import { BarChart3, FileText } from 'lucide-react';
+import ChartSection from '../articles/ChartSection';
+import { ViewMode } from '../../types';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -17,18 +14,18 @@ interface ArticlesTabProps {
   relevantArticles: Article[];
   positiveCount: number;
   negativeCount: number;
-  topics: Topic[];
-  viewMode: 'list' | 'table' | 'chart';
-  setViewMode: (mode: 'list' | 'table' | 'chart') => void;
+  topics: string[];
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filterType: 'all' | 'positive' | 'negative';
-  setFilterType: (type: 'all' | 'positive' | 'negative') => void;
+  filterType: string;
+  setFilterType: (type: string) => void;
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
-  articlesByTopic: Record<string, Article[]>;
-  highlights: HighlightType[];
-  onAddHighlight: (text: string, color: HighlightType['color'], articleId: string) => void;
+  articlesByTopic: ArticlesByTopic;
+  highlights: any[];
+  onAddHighlight: (articleId: string, text: string) => void;
   onRemoveHighlight: (id: string) => void;
 }
 
@@ -52,120 +49,45 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   onAddHighlight,
   onRemoveHighlight
 }) => {
-  const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(null);
-  const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(null);
-  const [showAllArticles, setShowAllArticles] = useState<boolean>(false);
-  const [chartsCollapsed, setChartsCollapsed] = useState<boolean>(false);
-  const allArticles = [...relevantArticles];
-
-  const applyCustomFilters = (articlesToFilter: Article[]) => {
-    let result = [...articlesToFilter];
-    
-    if (selectedBookFilter) {
-      result = result.filter(article => {
-        const id = parseInt(article.id.replace(/\D/g, '')) || parseInt(article.number.replace(/\D/g, ''));
-        let bookId = 'I';
-        if (id > 180 && id <= 300) bookId = 'II';
-        else if (id > 300) bookId = 'III';
-        return bookId === selectedBookFilter;
-      });
-    }
-    
-    return result;
-  };
-
-  const displayedArticles = applyCustomFilters(filteredArticles);
-
-  const hasCriticalImpacts = relevantArticles.some(article => 
-    article.impacts.some(impact => 
-      impact.type === 'negative' && 
-      impact.segments.includes(segment.id) &&
-      impact.severity === 'high'
-    )
-  );
-
-  useEffect(() => {
-    setSelectedBookFilter(null);
-    setSelectedTitleFilter(null);
-  }, [searchTerm, filterType]);
+  const [chartExpanded, setChartExpanded] = useState(false);
 
   return (
-    <div>
-      <ActiveFilters
-        selectedBookFilter={selectedBookFilter}
-        setSelectedBookFilter={setSelectedBookFilter}
-        showAllArticles={showAllArticles}
-        setShowAllArticles={setShowAllArticles}
+    <div className="space-y-6">
+      {/* Chart Section */}
+      <ChartSection 
+        filteredArticles={filteredArticles} 
+        segmentId={segment.id}
+        setExpandedArticleId={setExpandedArticleId}
+        chartExpanded={chartExpanded}
+        toggleChartExpanded={() => setChartExpanded(!chartExpanded)}
       />
       
-      {/* Seção 1: Análise Visual - Gráficos e Visualização de Dados */}
-      <div className="mb-10">
-        <div className="flex items-center gap-2 mb-6">
-          <BarChart3 className="h-5 w-5 text-primary" />
-          <h2 className="text-2xl font-semibold">Análise Visual</h2>
-        </div>
-        <p className="text-muted-foreground mb-6">
-          Explore os dados da reforma tributária de forma visual e interativa. Clique nos elementos dos gráficos para filtrar os artigos relacionados.
-        </p>
+      {/* Search and Filters */}
+      <ArticlesFilters 
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        filterType={filterType}
+        setFilterType={setFilterType}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        positiveCount={positiveCount}
+        negativeCount={negativeCount}
+        total={relevantArticles.length}
+      />
       
-        <ChartSection
-          chartsCollapsed={chartsCollapsed}
-          setChartsCollapsed={setChartsCollapsed}
-          segment={segment}
-          relevantArticles={relevantArticles}
-          allArticles={allArticles}
-          showAllArticles={showAllArticles}
-          setShowAllArticles={setShowAllArticles}
-          selectedBookFilter={selectedBookFilter}
-          setSelectedBookFilter={setSelectedBookFilter}
-          setSelectedTitleFilter={setSelectedTitleFilter}
-          hasCriticalImpacts={hasCriticalImpacts}
-          setExpandedArticleId={setExpandedArticleId}
-        />
-      </div>
-      
-      <Separator className="my-8" />
-      
-      {/* Seção 2: Artigos da Reforma */}
-      <div>
-        <div className="flex items-center gap-2 mb-6">
-          <FileText className="h-5 w-5 text-primary" />
-          <h2 className="text-2xl font-semibold">Artigos da Reforma</h2>
-        </div>
-        <p className="text-muted-foreground mb-6">
-          Visualize os artigos da reforma tributária relevantes para seu segmento. Use os filtros abaixo para refinar os resultados ou explore por visualizações diferentes.
-        </p>
-      
-        <ArticlesFilters
-          positiveCount={positiveCount}
-          negativeCount={negativeCount}
-          totalCount={relevantArticles.length}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          filterType={filterType}
-          setFilterType={setFilterType}
-          viewMode={viewMode}
-          setViewMode={setViewMode}
-        />
-        
-        <ArticlesContent
-          viewMode={viewMode}
-          displayedArticles={displayedArticles}
-          filteredArticles={filteredArticles}
-          selectedBookFilter={selectedBookFilter}
-          selectedTitleFilter={selectedTitleFilter}
-          setSelectedBookFilter={setSelectedBookFilter}
-          setSelectedTitleFilter={setSelectedTitleFilter}
-          expandedArticleId={expandedArticleId}
-          setExpandedArticleId={setExpandedArticleId}
-          segment={segment}
-          highlights={highlights}
-          onAddHighlight={onAddHighlight}
-          onRemoveHighlight={onRemoveHighlight}
-          articlesByTopic={articlesByTopic}
-          topics={topics}
-        />
-      </div>
+      {/* Article Content (List or Table) */}
+      <ArticlesContent 
+        filteredArticles={filteredArticles}
+        segment={segment}
+        topics={topics}
+        viewMode={viewMode}
+        expandedArticleId={expandedArticleId}
+        setExpandedArticleId={setExpandedArticleId}
+        articlesByTopic={articlesByTopic}
+        highlights={highlights}
+        onAddHighlight={onAddHighlight}
+        onRemoveHighlight={onRemoveHighlight}
+      />
     </div>
   );
 };

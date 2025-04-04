@@ -1,31 +1,29 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowUp, ArrowDown } from 'lucide-react';
+import { Maximize2, Minimize2 } from 'lucide-react';
 
 interface ChartExpandToggleProps {
-  collapsed: boolean;
-  onToggle: () => void;
+  expanded: boolean;
+  toggleExpanded: () => void;
 }
 
-const ChartExpandToggle: React.FC<ChartExpandToggleProps> = ({ collapsed, onToggle }) => {
+const ChartExpandToggle: React.FC<ChartExpandToggleProps> = ({
+  expanded,
+  toggleExpanded
+}) => {
   return (
-    <Button 
-      variant="outline" 
-      size="sm" 
-      className="mb-4" 
-      onClick={onToggle}
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={toggleExpanded}
+      title={expanded ? "Minimizar gráfico" : "Expandir gráfico"}
+      className="h-8 w-8 p-0"
     >
-      {collapsed ? (
-        <>
-          <ArrowDown className="h-4 w-4 mr-1" /> 
-          Expandir Gráficos e Filtros
-        </>
+      {expanded ? (
+        <Minimize2 className="h-4 w-4" />
       ) : (
-        <>
-          <ArrowUp className="h-4 w-4 mr-1" />
-          Recolher Gráficos e Filtros
-        </>
+        <Maximize2 className="h-4 w-4" />
       )}
     </Button>
   );

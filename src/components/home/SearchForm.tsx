@@ -9,9 +9,25 @@ import { Input } from '@/components/ui/input';
 import { useFormDialogContext } from './FormDialogContext';
 import FormDialog from './search-form/FormDialog';
 import LoadingDialog from './search-form/LoadingDialog';
-import { businessSegments } from '@/data/segments';
+import { businessSegments, BusinessSegment } from '@/data/segments';
 
-const SearchForm = ({ onCnaeSubmit, onSelectSegment }) => {
+// Extend the BusinessSegment interface locally for component use
+interface SegmentWithUI extends BusinessSegment {
+  icon?: React.ReactNode;
+}
+
+// Helper function to get segment keywords
+const getSegmentKeywords = (segment: SegmentWithUI): string[] => {
+  // Return default keywords if none defined for backward compatibility
+  return segment.keywords || [segment.name.toLowerCase()];
+};
+
+interface SearchFormProps {
+  onCnaeSubmit: (cnae: string) => void;
+  onSelectSegment: (segment: BusinessSegment | null) => void;
+}
+
+const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }) => {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [activeTab, setActiveTab] = React.useState('segment');
   const [isLoading, setIsLoading] = React.useState(false);
@@ -20,14 +36,16 @@ const SearchForm = ({ onCnaeSubmit, onSelectSegment }) => {
   // Filtrar segmentos com base no termo de busca
   const filteredSegments = businessSegments.filter(segment => 
     segment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    segment.keywords.some(keyword => keyword.toLowerCase().includes(searchTerm.toLowerCase()))
+    getSegmentKeywords(segment as SegmentWithUI).some(keyword => 
+      keyword.toLowerCase().includes(searchTerm.toLowerCase())
+    )
   );
 
-  const handleSegmentSelection = (segment) => {
+  const handleSegmentSelection = (segment: BusinessSegment) => {
     openFormDialog();
   };
 
-  const handleDialogSubmit = (formData) => {
+  const handleDialogSubmit = (formData: any) => {
     // Salvar dados no localStorage para uso posterior
     localStorage.setItem('formData', JSON.stringify(formData));
     
@@ -45,7 +63,7 @@ const SearchForm = ({ onCnaeSubmit, onSelectSegment }) => {
         // Encontrar o segmento que corresponde ao CNAE na descrição da empresa ou escolher o primeiro segmento
         const selectedSegment = formData.companyData?.cnaePrincipal?.descricao
           ? businessSegments.find(s => 
-              s.keywords.some(k => 
+              getSegmentKeywords(s as SegmentWithUI).some(k => 
                 formData.companyData.cnaePrincipal.descricao.toLowerCase().includes(k.toLowerCase())
               )
             ) || businessSegments[0]
@@ -93,7 +111,8 @@ const SearchForm = ({ onCnaeSubmit, onSelectSegment }) => {
                     onClick={() => handleSegmentSelection(segment)}
                   >
                     <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3">
-                      {segment.icon}
+                      {/* Render a fallback icon if segment.icon doesn't exist */}
+                      {(segment as SegmentWithUI).icon || <Building className="h-6 w-6 text-orange-500" />}
                     </div>
                     <h3 className="font-medium text-sm">{segment.name}</h3>
                   </div>
@@ -133,7 +152,12 @@ const SearchForm = ({ onCnaeSubmit, onSelectSegment }) => {
       </Dialog>
       
       <Dialog open={isLoading}>
-        <LoadingDialog />
+        <LoadingDialog 
+          open={isLoading} 
+          onOpenChange={() => {}} 
+          progress={50} 
+          companyName="Sua empresa" 
+        />
       </Dialog>
     </>
   );
