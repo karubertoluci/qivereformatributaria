@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+
 const Footer = () => {
   const navigate = useNavigate();
   const handleBackToHome = () => {
@@ -12,7 +14,9 @@ const Footer = () => {
     // Recarregar a página para garantir que tudo seja resetado
     window.location.reload();
   };
-  return <footer className="border-t border-gray-200 mt-12 bg-zinc-950 my-0 py-[36px]">
+
+  return (
+    <footer className="border-t border-gray-200 mt-12 bg-zinc-950 my-0 py-[36px]">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center bg-gray-950">
           <div className="mb-4 md:mb-0">
@@ -33,6 +37,8 @@ const Footer = () => {
           </button>
         </div>
       </div>
-    </footer>;
+    </footer>
+  );
 };
+
 export default Footer;

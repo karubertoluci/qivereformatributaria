@@ -20,7 +20,7 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
   
   // Use the bookData for the chart
   const chartData = bookData;
-  const totalArticles = bookData.reduce((sum, item) => sum + (item.favorable || 0) + (item.unfavorable || 0), 0);
+  const totalArticles = chartData.reduce((sum, item) => sum + (item.favorable || 0) + (item.unfavorable || 0), 0);
 
   return (
     <Card className="shadow-md">
@@ -42,8 +42,7 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
           </BarChart>
         </ResponsiveContainer>
         
-        {/* Use bg-gray-200 to ensure it's gray */}
-        <Separator className="my-4 bg-gray-200 border-gray-200" />
+        <Separator className="my-4 bg-gray-200" />
         
         <div className="flex items-center justify-between">
           <div className="flex items-center">
