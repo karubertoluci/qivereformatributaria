@@ -39,7 +39,37 @@
   color: #888;
 }
 
-/* Remove any horizontal orange lines */
-hr, .border-t, .border-b, [class*="divider"], [class*="separator"] {
+/* Remove any horizontal orange lines - apply to all possible elements */
+hr, .border-t, .border-b, [class*="divider"], [class*="separator"],
+.horizontal-divider, .section-divider, .chart-divider, .content-divider,
+[class*="border-y"], [class*="border-x"] {
   border-color: #e5e7eb !important; /* gray-200 */
+  background-color: #e5e7eb !important; /* gray-200 */
+}
+
+/* Add additional fixes for any dividing lines */
+.recharts-tooltip-separator {
+  background-color: #e5e7eb !important;
+}
+
+/* Fix for chart lines */
+.recharts-reference-line line {
+  stroke: #e5e7eb !important;
+}
+
+/* Ensure all borders in cards and sections are gray */
+.card, .card-header, .card-content, .card-footer,
+section, article, .chart-container, .data-display {
+  border-color: #e5e7eb !important;
+}
+
+/* Override any component with orange borders */
+* {
+  border-color: inherit;
+}
+
+/* Force all separators to use gray color */
+[role="separator"] {
+  background-color: #e5e7eb !important;
+  border-color: #e5e7eb !important;
 }

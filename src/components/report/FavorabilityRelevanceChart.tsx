@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
@@ -14,21 +15,11 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
   articles, 
   segmentId 
 }) => {
-  const { chartData, totalArticles } = useFavorabilityRelevanceData(articles, segmentId);
-
-  const renderCustomLabel = (props: any) => {
-    const { x, y, width, value } = props;
-    const radius = 10;
-
-    return (
-      <g>
-        <circle cx={x + width / 2} cy={y - radius} r={radius} fill="#8884d8" />
-        <text x={x + width / 2} y={y - radius} fill="#fff" fontSize={10} textAnchor="middle" dominantBaseline="middle">
-          {value}
-        </text>
-      </g>
-    );
-  };
+  const { bookData, relevanceTotals } = useFavorabilityRelevanceData(articles, segmentId);
+  
+  // Use the bookData for the chart
+  const chartData = bookData;
+  const totalArticles = bookData.reduce((sum, item) => sum + (item.favoravel || 0) + (item.desfavoravel || 0), 0);
 
   return (
     <Card className="shadow-md">
@@ -50,8 +41,8 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
           </BarChart>
         </ResponsiveContainer>
         
-        {/* Add a class to the separator to ensure it's gray */}
-        <Separator className="my-4 bg-gray-200" />
+        {/* Use bg-gray-200 to ensure it's gray */}
+        <Separator className="my-4 bg-gray-200 border-gray-200" />
         
         <div className="flex items-center justify-between">
           <div className="flex items-center">

@@ -9,7 +9,7 @@ const ReportGenerator = () => {
   } = useFormDialogContext();
   
   return (
-    <div className="bg-orange-50 rounded-lg p-8 border border-orange-100 max-w-6xl mx-auto">
+    <div className="bg-orange-50 rounded-lg p-8 border border-gray-200 max-w-6xl mx-auto">
       <div className="text-center mb-6">
         <h2 className="text-xl md:text-2xl mb-3 font-normal flex items-center justify-center gap-2">
           <FileText className="h-6 w-6 text-[#FF4719]" />
@@ -17,7 +17,7 @@ const ReportGenerator = () => {
         </h2>
       </div>
       
-      <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+      <div className="bg-white rounded-lg shadow-md p-4 mb-6 border border-gray-200">
         <img 
           src="/lovable-uploads/cfd0cf2f-fe15-4249-9be3-525d800b9ee5.png" 
           alt="Relatório da Reforma Tributária" 

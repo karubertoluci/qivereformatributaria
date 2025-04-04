@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -82,9 +81,19 @@
   }
 }
 
-/* Remove any horizontal orange lines */
-hr, .horizontal-divider {
-  @apply border-gray-200 !important;
+/* Remove any horizontal orange lines - more comprehensive fix */
+hr, .horizontal-divider, 
+.border-t, .border-b, .border-y,
+[class*="divider"], [class*="separator"], 
+[role="separator"], [class*="horizontal-line"] {
+  @apply border-gray-200 bg-gray-200 !important;
+}
+
+/* Override --border color variable for horizontal elements */
+.horizontal-element, [class*="horizontal"], [class*="divider"], [class*="separator"] {
+  --border: 220 13% 91% !important; /* gray-200 in HSL */
+  border-color: #e5e7eb !important;
+  background-color: #e5e7eb !important;
 }
 
 @media print {
@@ -117,22 +126,37 @@ hr, .horizontal-divider {
   }
 }
 
-/* Fix for any orange horizontal separators */
-.separator, .divider {
-  @apply border-gray-200 !important;
+/* Fix for any orange horizontal separators - very specific selectors */
+.separator, .divider, 
+[class*="separator"], [class*="divider"],
+.recharts-tooltip-separator, .recharts-reference-line line,
+[role="separator"] {
+  @apply border-gray-200 bg-gray-200 !important;
 }
 
 /* Specifically target any horizontal dividing elements */
 div[class*="border-t"], div[class*="border-b"], div[class*="border-y"] {
-  @apply border-gray-200;
+  @apply border-gray-200 !important;
 }
 
 /* Target specific elements that might be causing the orange line */
 .card, .chart-container, .section-divider {
-  @apply border-gray-200;
+  @apply border-gray-200 !important;
 }
 
 /* Fix for any dividers in the report sections */
 section, article {
-  @apply border-gray-200;
+  @apply border-gray-200 !important;
+}
+
+/* Additional selectors for report generator section */
+.bg-orange-50, .border-orange-100 {
+  border-color: #e5e7eb !important;
+}
+
+/* Force all horizontal rules to be gray no matter what */
+hr {
+  border-color: #e5e7eb !important;
+  background-color: #e5e7eb !important;
+  height: 1px !important;
 }
