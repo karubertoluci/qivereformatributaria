@@ -25,7 +25,7 @@ interface ArticlesTabProps {
   setExpandedArticleId: (id: string | null) => void;
   articlesByTopic: Record<string, Article[]>;
   highlights: any[];
-  onAddHighlight: (articleId: string, text: string) => void;
+  onAddHighlight: (articleId: string, text: string, color?: string) => void;
   onRemoveHighlight: (id: string) => void;
 }
 
@@ -68,6 +68,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         setExpandedArticleId={setExpandedArticleId}
         expanded={chartExpanded}
         toggleExpanded={() => setChartExpanded(!chartExpanded)}
+        allArticles={relevantArticles} // Pass relevantArticles as allArticles
       />
       
       {/* Search and Filters */}
@@ -99,7 +100,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         setExpandedArticleId={setExpandedArticleId}
         articlesByTopic={articlesByTopic}
         highlights={highlights}
-        onAddHighlight={onAddHighlight}
+        onAddHighlight={(text, color, articleId) => onAddHighlight(articleId, text, color)}
         onRemoveHighlight={onRemoveHighlight}
       />
     </div>

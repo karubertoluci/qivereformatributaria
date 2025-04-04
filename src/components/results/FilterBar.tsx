@@ -8,6 +8,7 @@ import { FilterType } from './types';
 interface FilterBarProps {
   positiveCount: number;
   negativeCount: number;
+  neutralCount: number;  // Added neutralCount prop
   totalCount: number;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
@@ -18,6 +19,7 @@ interface FilterBarProps {
 const FilterBar: React.FC<FilterBarProps> = ({
   positiveCount,
   negativeCount,
+  neutralCount,  // Added neutralCount prop
   totalCount,
   searchTerm,
   setSearchTerm,
@@ -60,6 +62,16 @@ const FilterBar: React.FC<FilterBarProps> = ({
         >
           Negativos ({negativeCount})
         </Button>
+        {neutralCount > 0 && (
+          <Button
+            size="sm"
+            variant={filterType === 'neutral' ? "default" : "outline"}
+            onClick={() => setFilterType('neutral')}
+            className="text-xs whitespace-nowrap"
+          >
+            Neutros ({neutralCount})
+          </Button>
+        )}
       </div>
     </div>
   );

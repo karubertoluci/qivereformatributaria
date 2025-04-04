@@ -6,7 +6,7 @@ import { Article } from '@/data/articles';
 export interface ChartSectionProps {
   segment: BusinessSegment;
   relevantArticles: Article[];
-  allArticles: Article[]; // Add the missing property
+  allArticles?: Article[]; // Make allArticles optional
   segmentId: string;
   setExpandedArticleId: (id: string) => void;
   filteredArticles?: Article[];

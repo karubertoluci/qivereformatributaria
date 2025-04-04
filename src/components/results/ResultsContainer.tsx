@@ -10,6 +10,7 @@ import { Book, FileText, Highlighter } from 'lucide-react';
 import ArticlesTab from './tabs/ArticlesTab';
 import HighlightsTab from './tabs/HighlightsTab';
 import ResultsFooter from './layout/ResultsFooter';
+import { FilterType } from './types';
 
 interface ResultsContainerProps {
   segment: BusinessSegment;
@@ -40,6 +41,16 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
     handleAddHighlight,
     handleRemoveHighlight
   } = useResultsData(segment);
+
+  // Wrapper function to adapt the signature
+  const onAddHighlight = (articleId: string, text: string, color?: string) => {
+    handleAddHighlight(articleId, text, color as any);
+  };
+
+  // Wrapper for setFilterType to ensure it works with FilterType
+  const onSetFilterType = (type: FilterType) => {
+    setFilterType(type);
+  };
 
   return (
     <div className="container mx-auto print:p-0 px-[10px] my-0 py-0">
@@ -86,12 +97,12 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             filterType={filterType}
-            setFilterType={setFilterType}
+            setFilterType={onSetFilterType}
             expandedArticleId={expandedArticleId}
             setExpandedArticleId={setExpandedArticleId}
             articlesByTopic={articlesByTopic}
             highlights={highlights}
-            onAddHighlight={handleAddHighlight}
+            onAddHighlight={onAddHighlight}
             onRemoveHighlight={handleRemoveHighlight}
           />
         </TabsContent>

@@ -1,16 +1,15 @@
-
 import { useState, useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article, articles } from '@/data/articles';
 import { getArticlesByTopic } from '@/components/results/ArticlesByTopic';
 import { topics } from '@/components/results/ArticlesByTopic';
-import { CommentType, HighlightType } from '@/components/results/types';
+import { CommentType, HighlightType, FilterType, ViewMode } from '@/components/results/types';
 
 export const useResultsData = (segment: BusinessSegment) => {
   const [expandedArticleId, setExpandedArticleId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'positive' | 'negative'>('all');
-  const [viewMode, setViewMode] = useState<'list' | 'table' | 'chart'>('list');
+  const [filterType, setFilterType] = useState<FilterType>('all');
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [activeTab, setActiveTab] = useState<'overview' | 'articles'>('overview');
   const [highlights, setHighlights] = useState<HighlightType[]>([]);
   
@@ -82,7 +81,7 @@ export const useResultsData = (segment: BusinessSegment) => {
   };
 
   // Handle adding a highlight
-  const handleAddHighlight = (text: string, color: HighlightType['color'], articleId: string) => {
+  const handleAddHighlight = (articleId: string, text: string, color: HighlightType['color'] = 'yellow') => {
     const newHighlight: HighlightType = {
       id: crypto.randomUUID(),
       text,
