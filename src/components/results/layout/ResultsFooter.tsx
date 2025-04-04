@@ -18,7 +18,7 @@ const ResultsFooter: React.FC = () => {
   };
   
   return (
-    <div className="mt-16 pt-8 border-t">
+    <div className="pt-8 border-t">
       <div className="flex flex-col items-center">
         <img 
           src="/lovable-uploads/a6337190-c94c-4bbd-a525-b41d6b7a4f4c.png" 

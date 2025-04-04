@@ -1,5 +1,8 @@
+
 import React from 'react';
+
 const ReformSummary = () => {
-  return;
+  return null;
 };
+
 export default ReformSummary;
