@@ -11,6 +11,7 @@ import {
   Truck 
 } from 'lucide-react';
 import { useFormDialogContext } from './FormDialogContext';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface SectorCardProps {
   icon: React.ReactNode;
@@ -22,21 +23,23 @@ const SectorCard: React.FC<SectorCardProps> = ({ icon, title, description }) => 
   const { openFormDialog } = useFormDialogContext();
   
   return (
-    <div className="flex flex-col items-center max-w-[150px] mx-2">
-      <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mb-2">
-        {icon}
-      </div>
-      <h3 className="text-center font-bold mb-2 text-sm">{title}</h3>
-      <p className="text-xs text-center text-gray-700 mb-3">
-        {description}
-      </p>
-      <button 
-        onClick={openFormDialog}
-        className="text-xs text-orange-600 hover:text-orange-700 font-medium"
-      >
-        Saiba mais →
-      </button>
-    </div>
+    <Card className="h-full flex flex-col">
+      <CardContent className="p-6 flex flex-col items-center h-full">
+        <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mb-4">
+          {icon}
+        </div>
+        <h3 className="text-center font-bold mb-2 text-sm">{title}</h3>
+        <p className="text-xs text-center text-gray-700 mb-4 flex-grow">
+          {description}
+        </p>
+        <button 
+          onClick={openFormDialog}
+          className="text-xs text-orange-600 hover:text-orange-700 font-medium mt-auto"
+        >
+          Saiba mais →
+        </button>
+      </CardContent>
+    </Card>
   );
 };
 
@@ -87,14 +90,14 @@ const SectorsImpact = () => {
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-4">Setores impactos pela reforma</h2>
+        <h2 className="text-3xl font-bold text-center mb-4">Setores impactados pela reforma</h2>
         
         <p className="text-lg text-center text-gray-700 mb-10 max-w-3xl mx-auto">
           A Reforma Tributária traz mudanças específicas para diferentes setores da 
           economia. Conheça os principais impactos no seu segmento de atuação.
         </p>
         
-        <div className="flex flex-wrap justify-center gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {sectors.map((sector, index) => (
             <SectorCard 
               key={index}
