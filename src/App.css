@@ -78,3 +78,9 @@ section, article, .chart-container, .data-display {
 .bg-orange-50 {
   border-color: #e5e7eb !important;
 }
+
+/* Fix footer border colors */
+footer .border-t,
+footer .border-gray-800 {
+  border-color: rgba(75, 85, 99, 0.3) !important;
+}
