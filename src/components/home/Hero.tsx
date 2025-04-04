@@ -2,8 +2,11 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Bot } from 'lucide-react';
+import { useFormDialogContext } from './FormDialogContext';
 
 const Hero = () => {
+  const { openFormDialog } = useFormDialogContext();
+  
   return (
     <section className="bg-white pt-16 pb-8 px-4">
       <div className="container mx-auto max-w-6xl">
@@ -48,11 +51,7 @@ const Hero = () => {
           <div className="text-center">
             <button 
               className="bg-orange-500 hover:bg-orange-600 text-white text-lg font-medium py-3 px-6 rounded-md shadow-md mb-3"
-              onClick={() => {
-                // Use the context to open form dialog
-                const event = new CustomEvent('openFormDialog');
-                document.dispatchEvent(event);
-              }}
+              onClick={openFormDialog}
             >
               Gerar relatório personalizado pra minha empresa
             </button>

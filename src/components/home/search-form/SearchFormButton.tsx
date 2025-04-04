@@ -6,9 +6,13 @@ import { useFormDialogContext } from '../FormDialogContext';
 
 interface SearchFormButtonProps {
   className?: string;
+  text?: string;
 }
 
-const SearchFormButton: React.FC<SearchFormButtonProps> = ({ className }) => {
+const SearchFormButton: React.FC<SearchFormButtonProps> = ({ 
+  className,
+  text = "Gerar relatório personalizado para minha empresa" 
+}) => {
   const { openFormDialog } = useFormDialogContext();
   
   return (
@@ -17,7 +21,7 @@ const SearchFormButton: React.FC<SearchFormButtonProps> = ({ className }) => {
       onClick={openFormDialog}
     >
       <FileBarChart className="mr-2 h-6 w-6" />
-      Gerar relatório personalizado para minha empresa
+      {text}
     </Button>
   );
 };
