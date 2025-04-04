@@ -73,3 +73,8 @@ section, article, .chart-container, .data-display {
   background-color: #e5e7eb !important;
   border-color: #e5e7eb !important;
 }
+
+/* Ensure borders in report generator section are gray */
+.bg-orange-50 {
+  border-color: #e5e7eb !important;
+}
