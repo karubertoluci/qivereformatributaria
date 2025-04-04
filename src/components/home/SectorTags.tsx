@@ -1,10 +1,7 @@
 
 import React from 'react';
-import { useFormDialogContext } from './FormDialogContext';
 
 const SectorTags = () => {
-  const { openFormDialog } = useFormDialogContext();
-  
   const sectors = [
     "Agronegócio",
     "Automotivo",
@@ -24,13 +21,12 @@ const SectorTags = () => {
         
         <div className="flex flex-wrap justify-center sm:justify-start gap-2">
           {sectors.map((sector, index) => (
-            <button
+            <div
               key={index}
-              onClick={openFormDialog}
-              className="bg-gray-800 hover:bg-gray-700 transition-colors rounded-full px-4 py-2 text-sm"
+              className="bg-gray-800 rounded-full px-4 py-2 text-sm"
             >
               {sector}
-            </button>
+            </div>
           ))}
         </div>
       </div>
