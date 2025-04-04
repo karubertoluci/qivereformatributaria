@@ -29,19 +29,6 @@ const AboutQive = () => {
             
             {/* Conteúdo da direita - Texto principal e diferenciais */}
             <div className="flex flex-col">
-              <div className="mb-6">
-                <p className="text-lg mb-4 leading-relaxed">
-                  Navegamos pela reforma tributária para que você não precise fazê-lo sozinho. 
-                  Sabemos que os 544 artigos distribuídos na Lei Complementar 214/2025 
-                  podem ser um desafio interpretativo para empresários e gestores financeiros.
-                </p>
-                <p className="text-lg leading-relaxed">
-                  A Qive desenvolveu esta solução para traduzir a complexidade da reforma em 
-                  insights práticos e acionáveis para o seu negócio, poupando seu tempo e 
-                  preparando sua empresa para as mudanças que virão.
-                </p>
-              </div>
-              
               {/* Nossos diferenciais com ícones diferentes */}
               <div className="bg-orange-50 p-6 rounded-lg flex-grow">
                 <h4 className="font-bold text-xl mb-4 flex items-center">
