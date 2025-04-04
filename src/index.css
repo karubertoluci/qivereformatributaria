@@ -82,6 +82,11 @@
   }
 }
 
+/* Remove any horizontal orange lines */
+hr, .horizontal-divider {
+  @apply border-gray-200;
+}
+
 @media print {
   .page-break-before {
     page-break-before: always;
@@ -110,4 +115,9 @@
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
+}
+
+/* Fix for any orange horizontal separators */
+.separator, .divider {
+  @apply border-gray-200;
 }

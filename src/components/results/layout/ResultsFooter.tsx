@@ -26,7 +26,7 @@ const ResultsFooter: React.FC<ResultsFooterProps> = ({
   };
   
   return (
-    <div className="pt-8 border-t">
+    <div className="pt-8 border-t border-gray-200">
       <div className="flex flex-col items-center">
         <img 
           src={logoSrc} 

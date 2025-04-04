@@ -62,7 +62,6 @@ const ChartDisplay: React.FC<ChartDisplayProps> = ({ data, selectedBook, onBarCl
             <ChartTooltip 
               content={<ChartTooltipContent />}
             />
-            {/* Legend removed as requested */}
             <Bar 
               dataKey="favorable" 
               stackId="a" 

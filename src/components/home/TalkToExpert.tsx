@@ -7,7 +7,7 @@ interface TalkToExpertProps {
 }
 
 const TalkToExpert: React.FC<TalkToExpertProps> = ({
-  iconSrc = "/lovable-uploads/fe2571a0-ae93-4460-9167-c49fa3fd5d74.png"
+  iconSrc = "/lovable-uploads/0c928790-a8e1-4ae3-8539-e6917b68d73c.png" // Updated to use the Q icon
 }) => {
   const { openFormDialog } = useFormDialogContext();
   

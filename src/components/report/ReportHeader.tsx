@@ -19,7 +19,7 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
   const displayName = companyName || "sua empresa";
   
   return (
-    <div className="flex flex-col space-y-4 mb-8 print:mb-6 border-b pb-6">
+    <div className="flex flex-col space-y-4 mb-8 print:mb-6 pb-6">
       <div className="flex items-center justify-between">
         {/* Smaller logo */}
         <Link to="/">

@@ -11,7 +11,7 @@ const ReformSummary: React.FC<ReformSummaryProps> = ({
   description = "A Reforma Tributária traz mudanças significativas para empresas de todos os setores. Com nossa análise personalizada, você estará preparado para adaptar seu negócio às novas regras fiscais de 2025."
 }) => {
   return (
-    <div className="py-8 text-center">
+    <div className="py-8 text-center border-t border-gray-200">
       <h3 className="text-xl font-medium text-gray-800 mb-4">
         {title}
       </h3>
