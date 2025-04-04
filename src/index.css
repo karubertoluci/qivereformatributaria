@@ -84,7 +84,7 @@
 
 /* Remove any horizontal orange lines */
 hr, .horizontal-divider {
-  @apply border-gray-200;
+  @apply border-gray-200 !important;
 }
 
 @media print {
@@ -119,5 +119,20 @@ hr, .horizontal-divider {
 
 /* Fix for any orange horizontal separators */
 .separator, .divider {
+  @apply border-gray-200 !important;
+}
+
+/* Specifically target any horizontal dividing elements */
+div[class*="border-t"], div[class*="border-b"], div[class*="border-y"] {
+  @apply border-gray-200;
+}
+
+/* Target specific elements that might be causing the orange line */
+.card, .chart-container, .section-divider {
+  @apply border-gray-200;
+}
+
+/* Fix for any dividers in the report sections */
+section, article {
   @apply border-gray-200;
 }

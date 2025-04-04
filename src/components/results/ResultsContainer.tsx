@@ -119,8 +119,10 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
         </TabsContent>
       </Tabs>
       
-      {/* Rodapé do relatório */}
-      <ResultsFooter />
+      {/* Rodapé do relatório com borda cinza */}
+      <div className="border-t border-gray-200 mt-8">
+        <ResultsFooter />
+      </div>
     </div>
   );
 };

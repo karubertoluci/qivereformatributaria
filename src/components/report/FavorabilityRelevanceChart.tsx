@@ -1,96 +1,73 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Article } from '@/data/articles';
-import { Clock } from 'lucide-react';
-import { ChartLegendHelper } from './charts/ChartLegendHelper';
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
+import { Separator } from '@/components/ui/separator';
+import { AlertTriangle } from 'lucide-react';
 import { useFavorabilityRelevanceData } from './favorability-relevance/useFavorabilityRelevanceData';
-import ChartHeader from './charts/ChartHeader';
-import ChartHelp from './relevance-distribution/ChartHelp';
-import FavorabilityBarChart from './favorability-relevance/FavorabilityBarChart';
-import RelevanceCards from './favorability-relevance/RelevanceCards';
-import { toast } from 'sonner';
+
 interface FavorabilityRelevanceChartProps {
-  articles: Article[];
+  articles: any[];
   segmentId: string;
-  bookId: string | null;
-  relevanceFilter: string | null;
-  onBookSelect?: (bookId: string | null) => void;
 }
-const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
-  articles,
-  segmentId,
-  bookId,
-  relevanceFilter,
-  onBookSelect
+
+const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({ 
+  articles, 
+  segmentId 
 }) => {
-  // Use the bookId prop as the initial value
-  const [selectedBook, setSelectedBook] = useState<string | null>(bookId);
-  // Estado local para filtro de relevância dentro do componente
-  const [localRelevanceFilter, setLocalRelevanceFilter] = useState<string | null>(relevanceFilter);
-  // Estado para filtro de favorabilidade
-  const [favorabilityFilter, setFavorabilityFilter] = useState<string | null>(null);
+  const { chartData, totalArticles } = useFavorabilityRelevanceData(articles, segmentId);
 
-  // Update selectedBook when bookId prop changes
-  useEffect(() => {
-    setSelectedBook(bookId);
-  }, [bookId]);
+  const renderCustomLabel = (props: any) => {
+    const { x, y, width, value } = props;
+    const radius = 10;
 
-  // Update local relevance filter when prop changes
-  useEffect(() => {
-    setLocalRelevanceFilter(relevanceFilter);
-  }, [relevanceFilter]);
-  const {
-    bookData,
-    relevanceTotals
-  } = useFavorabilityRelevanceData(articles, segmentId, localRelevanceFilter);
-  const handleRelevanceSelect = (relevance: string) => {
-    // Se já estiver selecionado, remove o filtro
-    if (localRelevanceFilter === relevance) {
-      setLocalRelevanceFilter(null);
-      toast.info(`Filtro de relevância removido`);
-    } else {
-      setLocalRelevanceFilter(relevance);
-      toast.info(`Filtrando por relevância: ${relevance}`);
-    }
-  };
-  const handleFavorabilitySelect = (favorability: string | null) => {
-    setFavorabilityFilter(favorability);
-    if (favorability) {
-      let label = '';
-      if (favorability === 'favorable') label = 'Favorável';
-      if (favorability === 'neutral') label = 'Neutro';
-      if (favorability === 'unfavorable') label = 'Desfavorável';
-      toast.info(`Filtrando por favorabilidade: ${label}`);
-    } else {
-      toast.info('Filtro de favorabilidade removido');
-    }
+    return (
+      <g>
+        <circle cx={x + width / 2} cy={y - radius} r={radius} fill="#8884d8" />
+        <text x={x + width / 2} y={y - radius} fill="#fff" fontSize={10} textAnchor="middle" dominantBaseline="middle">
+          {value}
+        </text>
+      </g>
+    );
   };
 
-  // Filter data based on selected book - if no book is selected, show aggregated data by relevance level
-  const chartData = selectedBook ? bookData.filter(book => book.bookId === selectedBook) : bookData;
-
-  // Garante que temos todos os níveis de relevância no gráfico
-  const relevanceLevels = ['Irrelevante', 'Pouco relevante', 'Moderadamente relevante', 'Muito relevante'];
-
-  // Determina o título com base no livro selecionado
-  const chartTitle = selectedBook ? `Favorabilidade por Relevância: Livro ${selectedBook}` : "Favorabilidade por Relevância: Geral";
-  return <Card className="shadow-md">
+  return (
+    <Card className="shadow-md">
       <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <ChartHeader title={chartTitle} description="Distribuição de favorabilidade por nível de relevância em cada livro" icon={<Clock className="h-5 w-5 text-orange-500" />} />
-          <ChartHelp title="Sobre este gráfico" description="Este gráfico mostra como se distribui a favorabilidade (positivo, neutro, negativo) dos artigos em relação ao seu nível de relevância." usage={["Observe a proporção de impactos favoráveis vs desfavoráveis", "Compare os níveis de relevância para identificar prioridades", "Use os cards abaixo para filtrar por nível de relevância"]} />
-        </div>
+        <CardTitle className="text-xl">Relação entre Favorabilidade e Relevância</CardTitle>
+        <CardDescription>
+          Distribuição de artigos por favorabilidade e relevância.
+        </CardDescription>
       </CardHeader>
-      
-      <CardContent className="my-0">
-        {/* Componente do Gráfico de Barras com suporte a filtro de favorabilidade */}
-        <FavorabilityBarChart chartData={chartData} selectedFavorability={favorabilityFilter} onSelectFavorability={handleFavorabilitySelect} />
-
-        {/* Componente dos Cards de Relevância */}
-        <RelevanceCards relevanceLevels={relevanceLevels} relevanceTotals={relevanceTotals} relevanceFilter={localRelevanceFilter} onRelevanceSelect={handleRelevanceSelect} />
-
-        {/* Explicação da legenda - Removed as we now have interactive legend */}
+      <CardContent>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="favoravel" fill="#82ca9d" />
+            <Bar dataKey="desfavoravel" fill="#e45858" />
+          </BarChart>
+        </ResponsiveContainer>
+        
+        {/* Add a class to the separator to ensure it's gray */}
+        <Separator className="my-4 bg-gray-200" />
+        
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <AlertTriangle className="h-4 w-4 mr-2 text-yellow-500" />
+            <p className="text-sm text-muted-foreground">
+              Um número alto de artigos desfavoráveis pode indicar áreas de atenção.
+            </p>
+          </div>
+          <div>
+            <span className="text-sm font-medium">Total de Artigos:</span>{" "}
+            <span className="text-sm">{totalArticles}</span>
+          </div>
+        </div>
       </CardContent>
-    </Card>;
+    </Card>
+  );
 };
+
 export default FavorabilityRelevanceChart;

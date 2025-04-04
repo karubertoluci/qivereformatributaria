@@ -33,7 +33,7 @@ const ChartDisplay: React.FC<ChartDisplayProps> = ({ data, selectedBook, onBarCl
   }));
 
   return (
-    <div className="w-full h-72 mb-4">
+    <div className="w-full h-72 mb-4 border-gray-200">
       <ChartContainer config={chartConfig} className="h-full w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart

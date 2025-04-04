@@ -50,8 +50,8 @@ const RelevanceDistributionChart: React.FC<RelevanceDistributionChartProps> = ({
   };
 
   return (
-    <Card className="shadow-md">
-      <CardHeader className="pb-2">
+    <Card className="shadow-md border border-gray-200">
+      <CardHeader className="pb-2 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <CardTitle className="text-xl flex items-center gap-2">
             <Clock className="h-5 w-5 text-orange-500" />

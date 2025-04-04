@@ -38,3 +38,8 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Remove any horizontal orange lines */
+hr, .border-t, .border-b, [class*="divider"], [class*="separator"] {
+  border-color: #e5e7eb !important; /* gray-200 */
+}
