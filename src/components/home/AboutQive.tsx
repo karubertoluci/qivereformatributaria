@@ -1,36 +1,31 @@
-
 import React from 'react';
-import { Shield, LightbulbIcon } from 'lucide-react';
-
+import { FileText, Shield, LightbulbIcon, BookOpen } from 'lucide-react';
 const AboutQive = () => {
-  return (
-    <section className="bg-gradient-to-br from-orange-50 to-white py-16">
-      <div className="container mx-auto px-4 max-w-6xl">
+  return <section className="bg-gray-50 py-[56px]">
+      <div className="container mx-auto px-4 max-w-5xl">
         <h2 className="text-3xl font-bold text-center mb-4">Por que Criamos a Qive Reforma Tributária</h2>
         
         <div className="flex justify-center mb-8">
           <div className="w-24 h-1 bg-orange-500 rounded"></div>
         </div>
         
-        <div className="flex flex-col md:flex-row gap-8 items-stretch mb-8">
-          {/* YouTube Video - Modified to fill container */}
-          <div className="w-full md:w-3/5 bg-white rounded-xl shadow-md overflow-hidden">
-            <div className="relative w-full h-0" style={{ paddingBottom: '56.25%' }}>
-              <iframe 
-                className="absolute top-0 left-0 w-full h-full"
-                src="https://www.youtube.com/embed/Re_x1_l87lE?list=PL5OqRfb0Uhmht6AbXSGx-qog1nOBlOISt" 
-                title="Qive Reforma Tributária" 
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowFullScreen>
-              </iframe>
+        <div className="bg-white rounded-xl shadow-md p-8 mb-10">
+          <div className="flex flex-col md:flex-row items-center mb-8">
+            <div className="w-full md:w-1/2 pr-0 md:pr-8 mb-6 md:mb-0">
+              <h3 className="text-2xl font-bold mb-4">Nossa Missão</h3>
+              <p className="text-lg mb-4 leading-relaxed">
+                Navegamos pela reforma tributária para que você não precise fazê-lo sozinho. 
+                Sabemos que os 544 artigos distribuídos na Lei Complementar 214/2025 
+                podem ser um desafio interpretativo para empresários e gestores financeiros.
+              </p>
+              <p className="text-lg leading-relaxed">
+                A Qive desenvolveu esta solução para traduzir a complexidade da reforma em 
+                insights práticos e acionáveis para o seu negócio, poupando seu tempo e 
+                preparando sua empresa para as mudanças que virão.
+              </p>
             </div>
-          </div>
-          
-          {/* Diferenciais */}
-          <div className="w-full md:w-2/5 bg-white rounded-xl shadow-md p-6 flex flex-col">
-            <div className="mb-4">
-              <h4 className="font-bold text-xl mb-4 flex items-center text-orange-600">
+            <div className="w-full md:w-1/2 bg-orange-50 p-6 rounded-lg">
+              <h4 className="font-bold text-xl mb-4 flex items-center">
                 <LightbulbIcon className="h-5 w-5 text-orange-500 mr-2" /> 
                 Nossos diferenciais:
               </h4>
@@ -69,41 +64,16 @@ const AboutQive = () => {
                 </li>
               </ul>
             </div>
-            
-            <div className="mt-auto bg-orange-50 border border-orange-200 rounded-lg p-4 flex items-start">
-              <img 
-                src="/lovable-uploads/91206615-9a00-4cbb-85ad-ee19eba09f20.png" 
-                alt="Qive Logo" 
-                className="w-12 h-12 mr-4 flex-shrink-0" 
-              />
-              <div>
-                <p className="text-gray-800 font-medium mb-2">
-                  E lembre-se: quando o assunto é automatização de rotinas com documentos fiscais, 
-                  a fonte da verdade é a Qive.
-                </p>
-                <p className="text-lg font-bold text-orange-700">
-                  O elo do fiscal com o financeiro.
-                </p>
-              </div>
+          </div>
+          
+          <div className="bg-orange-50 border border-orange-200 rounded-lg p-6 flex items-start">
+            <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-full p-3 mr-4 flex-shrink-0">
+              <BookOpen className="h-6 w-6 text-white" />
             </div>
+            
           </div>
         </div>
-        
-        {/* Call to Action */}
-        <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl shadow-lg p-8 text-white text-center">
-          <h3 className="text-2xl font-bold mb-4">Prepare sua empresa para a maior mudança tributária das últimas décadas</h3>
-          <p className="text-lg mb-6 max-w-3xl mx-auto">
-            Sabemos que os 544 artigos distribuídos na Lei Complementar 214/2025 
-            podem ser um desafio interpretativo para empresários e gestores financeiros.
-            A Qive está aqui para guiar seu negócio nesta transição.
-          </p>
-          <button className="bg-white text-orange-600 px-8 py-3 rounded-full font-bold hover:bg-orange-50 transition-colors shadow-md">
-            Gerar relatório personalizado
-          </button>
-        </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default AboutQive;
