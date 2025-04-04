@@ -18,7 +18,11 @@ const ReportGenerator = () => {
       </div>
       
       <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-        <img src="/lovable-uploads/a1fa57b5-d751-45dc-ad02-a455994c6dbd.png" alt="Relatório da Reforma Tributária" className="w-full h-auto" />
+        <img 
+          src="/lovable-uploads/1kTyeC9OuJNE--wkdVzsVqv3UetQgQ_c8.jpg" 
+          alt="Relatório da Reforma Tributária" 
+          className="w-full h-auto" 
+        />
       </div>
       
       <div className="text-center">
