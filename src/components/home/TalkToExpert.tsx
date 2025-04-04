@@ -11,8 +11,8 @@ const TalkToExpert = () => {
         <div className="flex items-center mb-6 md:mb-0 justify-center md:justify-start">
           <div className="w-24 h-24 mr-6 flex-shrink-0">
             <img 
-              src="/lovable-uploads/a6337190-c94c-4bbd-a525-b41d6b7a4f4c.png" 
-              alt="Qive Logo" 
+              src="/lovable-uploads/fe2571a0-ae93-4460-9167-c49fa3fd5d74.png" 
+              alt="Qive Icon" 
               className="w-full h-full object-contain"
             />
           </div>
