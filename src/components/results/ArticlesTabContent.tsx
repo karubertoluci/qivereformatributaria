@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
@@ -26,6 +25,7 @@ interface ArticlesTabContentProps {
   setExpandedArticleId: (id: string | null) => void;
   articlesByTopic: Record<string, Article[]>;
   topics: Topic[];
+  neutralCount?: number;
 }
 
 const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
@@ -43,7 +43,8 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
   expandedArticleId,
   setExpandedArticleId,
   articlesByTopic,
-  topics
+  topics,
+  neutralCount = 0
 }) => {
   return (
     <div className="space-y-6 mt-6">
@@ -61,7 +62,8 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
         setFilterType={setFilterType}
         positiveCount={positiveCount}
         negativeCount={negativeCount}
-        totalCount={relevantArticles.length} // Add the missing totalCount property
+        neutralCount={neutralCount}
+        totalCount={relevantArticles.length}
       />
       
       <ViewSwitcher viewMode={viewMode} setViewMode={setViewMode} />
@@ -90,13 +92,13 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
               segmentId={segment.id}
               expandedArticleId={expandedArticleId}
               setExpandedArticleId={setExpandedArticleId}
-              onSelectArticle={(id) => setExpandedArticleId(id)} // Add the missing onSelectArticle property
+              onSelectArticle={(id) => setExpandedArticleId(id)}
             />
           )}
           
           {viewMode === 'table' && (
             <ArticleTableView 
-              articles={filteredArticles} // Change filteredArticles to articles to match the prop name
+              articles={filteredArticles}
               segment={segment}
               expandedArticleId={expandedArticleId}
               setExpandedArticleId={setExpandedArticleId}
