@@ -16,56 +16,56 @@ interface HomePageProps {
 }
 
 const HomePage: React.FC<HomePageProps> = ({ onCnaeSubmit, onSelectSegment }) => {
-  // Quando um usuário preenche o formulário com dados da empresa,
-  // armazenamos isso no localStorage para usar na página de resultados
+  // When a user fills out the form with company data,
+  // we store this in localStorage to use on the results page
   React.useEffect(() => {
-    // Limpar os dados anteriores quando a página é carregada
+    // Clear previous data when the page loads
     localStorage.removeItem('companyData');
   }, []);
   
+  const handleFormSubmission = (cnae: string, segment?: BusinessSegment) => {
+    // Save the form data in localStorage before navigating
+    const formData = JSON.parse(localStorage.getItem('formData') || '{}');
+    if (formData) {
+      localStorage.setItem('companyData', JSON.stringify(formData));
+    }
+    
+    if (segment) {
+      onSelectSegment(segment);
+    } else {
+      onCnaeSubmit(cnae);
+    }
+  };
+  
   return (
     <div className="flex flex-col min-h-[calc(100vh-12rem)]">
-      {/* Primeiro andar: Manchete + Subtítulo */}
+      {/* First floor: Headline + Subtitle */}
       <Hero />
       
-      {/* Formulário de busca em destaque */}
+      {/* Search form in focus */}
       <div className="container mx-auto max-w-4xl px-4 -mt-8 relative z-10 mb-10">
         <SearchForm 
-          onCnaeSubmit={(cnae) => {
-            // Salvamos o CNAE e outros dados do formulário no localStorage
-            const formData = JSON.parse(localStorage.getItem('formData') || '{}');
-            if (formData) {
-              localStorage.setItem('companyData', JSON.stringify(formData));
-            }
-            onCnaeSubmit(cnae);
-          }} 
-          onSelectSegment={(segment) => {
-            // Salvamos os dados do formulário no localStorage antes de navegar
-            const formData = JSON.parse(localStorage.getItem('formData') || '{}');
-            if (formData) {
-              localStorage.setItem('companyData', JSON.stringify(formData));
-            }
-            onSelectSegment(segment);
-          }}
+          onCnaeSubmit={(cnae) => handleFormSubmission(cnae)} 
+          onSelectSegment={(segment) => handleFormSubmission('', segment)}
         />
       </div>
       
-      {/* Segundo andar: Explicação sobre a reforma */}
+      {/* Second floor: Explanation about the reform */}
       <HowItWorks />
       
-      {/* Terceiro andar: Setores impactados pela reforma */}
+      {/* Third floor: Sectors impacted by the reform */}
       <SectorsImpact />
       
-      {/* Quinto andar: O que os especialistas dizem */}
+      {/* Fifth floor: What the experts say */}
       <ExpertQuotes />
       
-      {/* Sexto andar: Por que criamos a Qive */}
+      {/* Sixth floor: Why we created Qive */}
       <AboutQive />
       
-      {/* Novo andar: Fale com um especialista */}
-      <TalkToExpert />
+      {/* New floor: Talk to an expert */}
+      <TalkToExpert iconSrc="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" />
       
-      {/* Novo andar: Tags de setores */}
+      {/* New floor: Sector tags */}
       <SectorTags />
     </div>
   );

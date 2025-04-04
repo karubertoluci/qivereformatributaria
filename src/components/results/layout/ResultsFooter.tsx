@@ -3,17 +3,25 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
 
-const ResultsFooter: React.FC = () => {
+interface ResultsFooterProps {
+  logoSrc?: string;
+  disclaimerText?: string;
+}
+
+const ResultsFooter: React.FC<ResultsFooterProps> = ({ 
+  logoSrc = "/lovable-uploads/a6337190-c94c-4bbd-a525-b41d6b7a4f4c.png",
+  disclaimerText = "Este relatório não substitui a orientação profissional. Consulte um advogado para questões legais específicas."
+}) => {
   const navigate = useNavigate();
   
   const handleBackToHome = () => {
-    // Limpar dados armazenados
+    // Clear stored data
     localStorage.removeItem('selectedSegment');
     localStorage.removeItem('cnae');
     localStorage.removeItem('formData');
-    // Navegar para a página inicial
+    // Navigate to home page
     navigate('/');
-    // Recarregar a página para garantir que tudo seja resetado
+    // Reload page to ensure everything is reset
     window.location.reload();
   };
   
@@ -21,7 +29,7 @@ const ResultsFooter: React.FC = () => {
     <div className="pt-8 border-t">
       <div className="flex flex-col items-center">
         <img 
-          src="/lovable-uploads/a6337190-c94c-4bbd-a525-b41d6b7a4f4c.png" 
+          src={logoSrc} 
           alt="Qive Logo" 
           className="h-10 w-auto mb-4" 
         />
@@ -41,7 +49,7 @@ const ResultsFooter: React.FC = () => {
         </div>
         
         <p className="mt-6 text-xs text-gray-500 text-center max-w-md">
-          Este relatório não substitui a orientação profissional. Consulte um advogado para questões legais específicas.
+          {disclaimerText}
         </p>
       </div>
     </div>

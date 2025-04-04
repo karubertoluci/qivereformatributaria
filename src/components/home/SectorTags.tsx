@@ -1,6 +1,18 @@
 
 import React from 'react';
 
+interface SectorTagProps {
+  name: string;
+}
+
+const SectorTag: React.FC<SectorTagProps> = ({ name }) => {
+  return (
+    <div className="bg-gray-800 rounded-full px-4 py-2 text-sm">
+      {name}
+    </div>
+  );
+};
+
 const SectorTags = () => {
   const sectors = [
     "Agronegócio",
@@ -21,12 +33,7 @@ const SectorTags = () => {
         
         <div className="flex flex-wrap justify-center sm:justify-start gap-2">
           {sectors.map((sector, index) => (
-            <div
-              key={index}
-              className="bg-gray-800 rounded-full px-4 py-2 text-sm"
-            >
-              {sector}
-            </div>
+            <SectorTag key={index} name={sector} />
           ))}
         </div>
       </div>

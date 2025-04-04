@@ -14,11 +14,12 @@ import { FilterType } from './types';
 
 interface ResultsContainerProps {
   segment: BusinessSegment;
-  onBackToSegments: () => void;
+  onBackToSegments?: () => void;
 }
 
 const ResultsContainer: React.FC<ResultsContainerProps> = ({
-  segment
+  segment,
+  onBackToSegments
 }) => {
   const {
     expandedArticleId,

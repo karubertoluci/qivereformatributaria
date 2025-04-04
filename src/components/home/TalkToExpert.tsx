@@ -2,7 +2,13 @@
 import React from 'react';
 import { useFormDialogContext } from './FormDialogContext';
 
-const TalkToExpert = () => {
+interface TalkToExpertProps {
+  iconSrc?: string;
+}
+
+const TalkToExpert: React.FC<TalkToExpertProps> = ({
+  iconSrc = "/lovable-uploads/fe2571a0-ae93-4460-9167-c49fa3fd5d74.png"
+}) => {
   const { openFormDialog } = useFormDialogContext();
   
   return (
@@ -11,7 +17,7 @@ const TalkToExpert = () => {
         <div className="flex items-center mb-6 md:mb-0 justify-center md:justify-start">
           <div className="w-24 h-24 mr-6 flex-shrink-0">
             <img 
-              src="/lovable-uploads/fe2571a0-ae93-4460-9167-c49fa3fd5d74.png" 
+              src={iconSrc} 
               alt="Qive Icon" 
               className="w-full h-full object-contain"
             />
