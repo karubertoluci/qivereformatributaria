@@ -1,136 +1,88 @@
 
-import React, { useRef, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Store, Briefcase, Building, BarChart4, HeartPulse, GraduationCap, Banknote, Truck } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from 'react';
+import { 
+  Store, 
+  Building2, 
+  Briefcase, 
+  BarChart4, 
+  HeartPulse, 
+  GraduationCap, 
+  Banknote, 
+  Truck 
+} from 'lucide-react';
 import { useFormDialogContext } from './FormDialogContext';
-import { businessSegments } from '@/data/segments';
 
 interface SectorCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
-  onLearnMore: () => void;
 }
 
-const SectorCard: React.FC<SectorCardProps> = ({ icon, title, description, onLearnMore }) => (
-  <Card className="border border-orange-100 shadow-sm hover:shadow-md transition-shadow h-full bg-gradient-to-br from-orange-50/50 to-white min-w-[300px] mx-2">
-    <CardContent className="p-6 flex flex-col items-center h-full">
-      <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mb-4">
+const SectorCard: React.FC<SectorCardProps> = ({ icon, title, description }) => {
+  const { openFormDialog } = useFormDialogContext();
+  
+  return (
+    <div className="flex flex-col items-center max-w-[150px] mx-2">
+      <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mb-2">
         {icon}
       </div>
-      <h3 className="text-xl font-bold mb-3 text-center">{title}</h3>
-      <p className="text-gray-700 text-center mb-4">
+      <h3 className="text-center font-bold mb-2 text-sm">{title}</h3>
+      <p className="text-xs text-center text-gray-700 mb-3">
         {description}
       </p>
-      <div className="mt-auto pt-2">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={onLearnMore}
-          className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 border-orange-200"
-        >
-          Saiba mais →
-        </Button>
-      </div>
-    </CardContent>
-  </Card>
-);
+      <button 
+        onClick={openFormDialog}
+        className="text-xs text-orange-600 hover:text-orange-700 font-medium"
+      >
+        Saiba mais →
+      </button>
+    </div>
+  );
+};
 
 const SectorsImpact = () => {
-  const { openFormDialog } = useFormDialogContext();
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number | null>(null);
-  const isPausedRef = useRef(false);
-  
   const sectors = [
     {
-      icon: <Store className="h-8 w-8 text-orange-500" />,
+      icon: <Store className="h-6 w-6 text-orange-500" />,
       title: "Comércio e Varejo",
-      description: "Impacto nas alíquotas e fim da cumulatividade dos tributos, com potencial redução da carga tributária em produtos essenciais.",
-      segmentId: "comercio_varejo"
+      description: "Impacto nas alíquotas e fim da cumulatividade dos tributos, com redução da carga tributária em produtos essenciais."
     },
     {
-      icon: <Building className="h-8 w-8 text-orange-500" />,
+      icon: <Building2 className="h-6 w-6 text-orange-500" />,
       title: "Indústria",
-      description: "Simplificação do sistema e recuperação de créditos em toda cadeia produtiva, eliminando a tributação em cascata.",
-      segmentId: "industria"
+      description: "Simplificação do sistema e recuperação de créditos em toda cadeia produtiva, eliminando a tributação em cascata."
     },
     {
-      icon: <Briefcase className="h-8 w-8 text-orange-500" />,
+      icon: <Briefcase className="h-6 w-6 text-orange-500" />,
       title: "Prestação de Serviços",
-      description: "Mudanças significativas com a substituição do ISS pelo IBS, com regras de transição especiais para o setor.",
-      segmentId: "servicos"
+      description: "Mudanças significativas com a substituição do ISS pelo IBS, com regras e transição especiais para o setor."
     },
     {
-      icon: <BarChart4 className="h-8 w-8 text-orange-500" />,
+      icon: <BarChart4 className="h-6 w-6 text-orange-500" />,
       title: "Tecnologia",
-      description: "Maior segurança jurídica e possibilidade de aproveitamento de créditos de bens e serviços utilizados na operação.",
-      segmentId: "tecnologia"
+      description: "Maior segurança jurídica e possibilidade de aproveitamento de créditos de bens e serviços utilizados na operação."
     },
     {
-      icon: <HeartPulse className="h-8 w-8 text-orange-500" />,
+      icon: <HeartPulse className="h-6 w-6 text-orange-500" />,
       title: "Saúde",
-      description: "Tratamento diferenciado para medicamentos e serviços essenciais, com possível redução de custos ao consumidor final.",
-      segmentId: "saude"
+      description: "Tratamento diferenciado para medicamentos e serviços essenciais, com possível redução de custos ao consumidor final."
     },
     {
-      icon: <GraduationCap className="h-8 w-8 text-orange-500" />,
+      icon: <GraduationCap className="h-6 w-6 text-orange-500" />,
       title: "Educação",
-      description: "Regime específico com alíquotas diferenciadas e regras especiais para instituições de ensino.",
-      segmentId: "educacao"
+      description: "Regime específico com alíquotas diferenciadas e regras especiais para instituições de ensino."
     },
     {
-      icon: <Banknote className="h-8 w-8 text-orange-500" />,
+      icon: <Banknote className="h-6 w-6 text-orange-500" />,
       title: "Serviços Financeiros",
-      description: "Nova metodologia de tributação para operações financeiras, com impacto direto nos custos de transação bancária.",
-      segmentId: "financeiro"
+      description: "Nova metodologia de tributação para operações financeiras, com impacto direto nos custos de transação bancária."
+    },
+    {
+      icon: <Truck className="h-6 w-6 text-orange-500" />,
+      title: "Transporte e Logística",
+      description: "Mudanças na tributação interestadual e maior clareza para operações de transporte com o princípio do destino."
     }
   ];
-
-  const handleLearnMore = () => {
-    openFormDialog();
-  };
-
-  // Implement automatic horizontal scrolling
-  const scrollStep = () => {
-    if (scrollContainerRef.current && !isPausedRef.current) {
-      // Add small increments to create smooth scrolling effect
-      scrollContainerRef.current.scrollLeft += 0.5;
-      
-      // Reset scroll position when reaching the end to create infinite loop effect
-      const container = scrollContainerRef.current;
-      const scrollWidth = container.scrollWidth;
-      const clientWidth = container.clientWidth;
-      
-      // When we reach halfway through the duplicated content, reset to the beginning
-      if (container.scrollLeft >= (scrollWidth - clientWidth) / 2) {
-        container.scrollLeft = 0;
-      }
-    }
-    
-    animationRef.current = requestAnimationFrame(scrollStep);
-  };
-
-  // Start scrolling animation when component mounts
-  useEffect(() => {
-    animationRef.current = requestAnimationFrame(scrollStep);
-    
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, []);
-
-  // Pause scrolling on mouse enter, resume on mouse leave
-  const handleMouseEnter = () => {
-    isPausedRef.current = true;
-  };
-
-  const handleMouseLeave = () => {
-    isPausedRef.current = false;
-  };
 
   return (
     <section className="py-16 bg-white">
@@ -142,32 +94,15 @@ const SectorsImpact = () => {
           economia. Conheça os principais impactos no seu segmento de atuação.
         </p>
         
-        {/* Horizontal scrolling container */}
-        <div 
-          className="w-full overflow-hidden"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <div 
-            ref={scrollContainerRef}
-            className="flex py-4 gap-4"
-            style={{ 
-              scrollbarWidth: 'none', 
-              msOverflowStyle: 'none' 
-            }}
-          >
-            {/* Duplicate the sectors array to create a seamless loop effect */}
-            {[...sectors, ...sectors].map((sector, index) => (
-              <div key={index} className="flex-shrink-0">
-                <SectorCard 
-                  icon={sector.icon}
-                  title={sector.title}
-                  description={sector.description}
-                  onLearnMore={handleLearnMore}
-                />
-              </div>
-            ))}
-          </div>
+        <div className="flex flex-wrap justify-center gap-6">
+          {sectors.map((sector, index) => (
+            <SectorCard 
+              key={index}
+              icon={sector.icon}
+              title={sector.title}
+              description={sector.description}
+            />
+          ))}
         </div>
       </div>
     </section>
