@@ -8,7 +8,8 @@ const ReportGenerator = () => {
     openFormDialog
   } = useFormDialogContext();
   
-  return <div className="bg-orange-50 rounded-lg p-8 border border-orange-100 max-w-6xl mx-auto">
+  return (
+    <div className="bg-orange-50 rounded-lg p-8 border border-orange-100 max-w-6xl mx-auto">
       <div className="text-center mb-6">
         <h2 className="text-xl md:text-2xl mb-3 font-normal flex items-center justify-center gap-2">
           <FileText className="h-6 w-6 text-orange-500" />
@@ -26,7 +27,8 @@ const ReportGenerator = () => {
         </button>
         <p className="text-sm text-gray-500">Relatório gratuito e sem compromisso</p>
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default ReportGenerator;

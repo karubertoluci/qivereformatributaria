@@ -14,7 +14,7 @@ interface SectorCardProps {
 }
 
 const SectorCard: React.FC<SectorCardProps> = ({ icon, title, description, onLearnMore }) => (
-  <Card className="border border-orange-100 shadow-sm hover:shadow-md transition-shadow h-full bg-gradient-to-br from-orange-50/50 to-white min-w-[300px] mx-2">
+  <Card className="border border-orange-100 shadow-sm hover:shadow-md transition-shadow h-full bg-gradient-to-br from-orange-50/50 to-white min-w-[280px] mx-2">
     <CardContent className="p-6 flex flex-col items-center h-full">
       <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mb-4">
         {icon}
@@ -85,12 +85,6 @@ const SectorsImpact = () => {
       title: "Serviços Financeiros",
       description: "Nova metodologia de tributação para operações financeiras, com impacto direto nos custos de transação bancária.",
       segmentId: "financeiro"
-    },
-    {
-      icon: <Truck className="h-8 w-8 text-orange-500" />,
-      title: "Transporte e Logística",
-      description: "Mudanças na tributação interestadual e maior clareza para operações de transporte com o princípio do destino.",
-      segmentId: "transporte"
     }
   ];
 
@@ -135,16 +129,12 @@ const SectorsImpact = () => {
 
   return (
     <section className="py-16 bg-white">
-      <div className="container mx-auto px-4 max-w-5xl">
-        <h2 className="text-3xl font-bold text-center mb-4">Setores Impactados pela Reforma</h2>
-        
-        <div className="flex justify-center mb-8">
-          <div className="w-24 h-1 bg-orange-500 rounded"></div>
-        </div>
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center mb-4">Setores impactos pela reforma</h2>
         
         <p className="text-lg text-center text-gray-700 mb-10 max-w-3xl mx-auto">
-          A Reforma Tributária traz mudanças específicas para diferentes setores da economia. 
-          Conheça os principais impactos no seu segmento de atuação.
+          A Reforma Tributária traz mudanças específicas para diferentes setores da 
+          economia. Conheça os principais impactos no seu segmento de atuação.
         </p>
         
         {/* Continuous horizontal scroll container */}
@@ -155,12 +145,12 @@ const SectorsImpact = () => {
         >
           <div 
             ref={scrollRef}
-            className="flex overflow-x-auto py-4 scrollbar-hide"
+            className="flex py-4 scrollbar-hide"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {/* Add duplicate cards at the beginning for seamless looping */}
             {sectors.concat(sectors).map((sector, index) => (
-              <div key={index} className="flex-shrink-0">
+              <div key={index} className="flex-shrink-0 flex-grow-0">
                 <SectorCard 
                   icon={sector.icon}
                   title={sector.title}

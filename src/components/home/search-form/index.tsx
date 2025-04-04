@@ -8,10 +8,12 @@ import { cnaeToSegmentMap } from './utils';
 import { Dialog } from '@/components/ui/dialog';
 import { useFormDialogContext } from '../FormDialogContext';
 import { fetchCNPJData } from '@/services/brasilApi';
+
 interface SearchFormProps {
   onCnaeSubmit: (cnae: string) => void;
   onSelectSegment: (segment: BusinessSegment | null) => void;
 }
+
 interface CompanyData {
   cnpj?: string;
   razaoSocial?: string;
@@ -28,6 +30,7 @@ interface CompanyData {
   situacaoCadastral?: string;
   naturezaJuridica?: string;
 }
+
 const SearchForm: React.FC<SearchFormProps> = ({
   onCnaeSubmit,
   onSelectSegment
@@ -157,6 +160,11 @@ const SearchForm: React.FC<SearchFormProps> = ({
       closeFormDialog();
     }, 500);
   };
-  return;
+  return (
+    <>
+      {/* Component content here */}
+    </>
+  );
 };
+
 export default SearchForm;
