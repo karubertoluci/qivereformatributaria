@@ -66,23 +66,26 @@ const ExpertQuotes = () => {
 
   return (
     <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-4 max-w-5xl">
+      <div className="container mx-auto px-4 max-w-7xl">
         <h2 className="text-3xl font-bold text-center mb-4">O que os especialistas dizem</h2>
         
         <div className="flex justify-center mb-8">
           <div className="w-24 h-1 bg-orange-500 rounded"></div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {experts.map((expert, index) => (
-            <ExpertQuote
-              key={index}
-              name={expert.name}
-              role={expert.role}
-              quote={expert.quote}
-              imageUrl={expert.imageUrl}
-            />
-          ))}
+        <div className="flex overflow-x-auto pb-6">
+          <div className="flex gap-6">
+            {experts.map((expert, index) => (
+              <div key={index} className="w-80 flex-shrink-0">
+                <ExpertQuote
+                  name={expert.name}
+                  role={expert.role}
+                  quote={expert.quote}
+                  imageUrl={expert.imageUrl}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
