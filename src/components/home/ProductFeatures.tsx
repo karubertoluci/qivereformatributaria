@@ -2,7 +2,7 @@
 import React from 'react';
 import { useFormDialogContext } from './FormDialogContext';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, FileBarChart, List, PieChart } from 'lucide-react';
 
 const ProductFeatures = () => {
   const { openFormDialog } = useFormDialogContext();
@@ -21,10 +21,7 @@ const ProductFeatures = () => {
           {/* Análise de Relevância */}
           <div className="bg-gray-50 p-8 rounded-lg">
             <div className="text-red-500 mb-4">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M23 6L13.5 15.5L8.5 10.5L1 18" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M17 6H23V12" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <PieChart className="h-6 w-6" />
             </div>
             <h3 className="text-xl font-bold mb-3">Análise de relevância</h3>
             <p className="text-gray-700">
@@ -36,14 +33,7 @@ const ProductFeatures = () => {
           {/* Análise de Impacto */}
           <div className="bg-gray-50 p-8 rounded-lg">
             <div className="text-red-500 mb-4">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 6H21" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M8 12H21" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M8 18H21" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M3 6H3.01" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M3 12H3.01" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M3 18H3.01" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <List className="h-6 w-6" />
             </div>
             <h3 className="text-xl font-bold mb-3">Análise de impacto</h3>
             <p className="text-gray-700">
@@ -55,12 +45,7 @@ const ProductFeatures = () => {
           {/* Relatório Personalizado */}
           <div className="bg-gray-50 p-8 rounded-lg">
             <div className="text-red-500 mb-4">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 3H3V10H10V3Z" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M21 3H14V10H21V3Z" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M21 14H14V21H21V14Z" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M10 14H3V21H10V14Z" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <FileBarChart className="h-6 w-6" />
             </div>
             <h3 className="text-xl font-bold mb-3">Relatório personalizado</h3>
             <p className="text-gray-700">

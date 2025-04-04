@@ -8,7 +8,7 @@ interface ArticlesFiltersProps {
   positiveCount: number;
   negativeCount: number;
   neutralCount: number;
-  totalCount: number; // Ensure this property name is consistent 
+  totalCount: number;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   filterType: FilterType;
@@ -34,6 +34,7 @@ const ArticlesFilters: React.FC<ArticlesFiltersProps> = ({
       <FilterBar 
         positiveCount={positiveCount}
         negativeCount={negativeCount}
+        neutralCount={neutralCount}
         totalCount={totalCount}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}

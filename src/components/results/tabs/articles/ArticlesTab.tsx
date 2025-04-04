@@ -5,7 +5,7 @@ import { BusinessSegment } from '@/data/segments';
 import { getArticlesByTopic } from '../../ArticlesByTopic';
 import ArticlesFilters from './ArticlesFilters';
 import ArticlesContent from './ArticlesContent';
-import ChartSection from '../articles/ChartSection';
+import ChartSection from './ChartSection';
 import { Topic, FilterType, ViewMode } from '../../types';
 
 interface ArticlesTabProps {
@@ -52,20 +52,19 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   const [chartExpanded, setChartExpanded] = useState(false);
   const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(null);
   const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(null);
-  const allArticles = [...relevantArticles]; // Create allArticles for ChartSection
   
   // Define displayedArticles for the ArticlesContent component
   const displayedArticles = filteredArticles;
+  const neutralCount = 0; // Add a default neutralCount
 
   return (
     <div className="space-y-6">
       {/* Chart Section */}
       <ChartSection 
-        filteredArticles={filteredArticles} 
+        filteredArticles={filteredArticles}
         segmentId={segment.id}
         segment={segment}
         relevantArticles={relevantArticles}
-        allArticles={allArticles}
         setExpandedArticleId={setExpandedArticleId}
         expanded={chartExpanded}
         toggleExpanded={() => setChartExpanded(!chartExpanded)}
@@ -81,7 +80,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         setViewMode={setViewMode}
         positiveCount={positiveCount}
         negativeCount={negativeCount}
-        neutralCount={0} // Add required neutralCount
+        neutralCount={neutralCount}
         totalCount={relevantArticles.length}
       />
       

@@ -1,13 +1,12 @@
 
-import React, { useState, useEffect } from 'react';
-import { BusinessSegment } from '@/data/segments';
+import React, { useState } from 'react';
 import { Article } from '@/data/articles';
-import { HighlightType, Topic } from '../types';
-import { ListFilter } from 'lucide-react';
-import ActiveFilters from './articles/ActiveFilters';
-import ChartSection from './articles/ChartSection';
+import { BusinessSegment } from '@/data/segments';
+import { getArticlesByTopic } from '../ArticlesByTopic';
 import ArticlesFilters from './articles/ArticlesFilters';
 import ArticlesContent from './articles/ArticlesContent';
+import ChartSection from './articles/ChartSection';
+import { Topic, FilterType, ViewMode } from '../types';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -16,17 +15,17 @@ interface ArticlesTabProps {
   positiveCount: number;
   negativeCount: number;
   topics: Topic[];
-  viewMode: 'list' | 'table' | 'chart';
-  setViewMode: (mode: 'list' | 'table' | 'chart') => void;
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filterType: 'all' | 'positive' | 'negative';
-  setFilterType: (type: 'all' | 'positive' | 'negative') => void;
+  filterType: FilterType;
+  setFilterType: (type: FilterType) => void;
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
   articlesByTopic: Record<string, Article[]>;
-  highlights: HighlightType[];
-  onAddHighlight: (text: string, color: HighlightType['color'], articleId: string) => void;
+  highlights: any[];
+  onAddHighlight: (articleId: string, text: string) => void;
   onRemoveHighlight: (id: string) => void;
 }
 
@@ -50,97 +49,58 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   onAddHighlight,
   onRemoveHighlight
 }) => {
+  const [chartsCollapsed, setChartsCollapsed] = useState(false);
+  const neutralCount = 0; // Define neutralCount
+  
+  // Define displayedArticles for ArticlesContent
+  const displayedArticles = filteredArticles;
   const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(null);
   const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(null);
-  const [showAllArticles, setShowAllArticles] = useState<boolean>(false);
-  const [chartsCollapsed, setChartsCollapsed] = useState<boolean>(false);
-  const allArticles = [...relevantArticles];
-
-  const applyCustomFilters = (articlesToFilter: Article[]) => {
-    let result = [...articlesToFilter];
-    
-    if (selectedBookFilter) {
-      result = result.filter(article => {
-        const id = parseInt(article.id.replace(/\D/g, '')) || parseInt(article.number.replace(/\D/g, ''));
-        let bookId = 'I';
-        if (id > 180 && id <= 300) bookId = 'II';
-        else if (id > 300) bookId = 'III';
-        return bookId === selectedBookFilter;
-      });
-    }
-    
-    return result;
-  };
-
-  const displayedArticles = applyCustomFilters(filteredArticles);
-
-  const hasCriticalImpacts = relevantArticles.some(article => 
-    article.impacts.some(impact => 
-      impact.type === 'negative' && 
-      impact.segments.includes(segment.id) &&
-      impact.severity === 'high'
-    )
-  );
-
-  useEffect(() => {
-    setSelectedBookFilter(null);
-    setSelectedTitleFilter(null);
-  }, [searchTerm, filterType]);
 
   return (
-    <div>
-      <ActiveFilters
-        selectedBookFilter={selectedBookFilter}
-        setSelectedBookFilter={setSelectedBookFilter}
-        showAllArticles={showAllArticles}
-        setShowAllArticles={setShowAllArticles}
-      />
-      
-      <ChartSection
-        chartsCollapsed={chartsCollapsed}
-        setChartsCollapsed={setChartsCollapsed}
+    <div className="space-y-6">
+      {/* Chart Section */}
+      <ChartSection 
+        filteredArticles={filteredArticles}
+        segmentId={segment.id}
         segment={segment}
-        segmentId={segment.id} // Add the missing segmentId prop
         relevantArticles={relevantArticles}
-        allArticles={allArticles}
-        showAllArticles={showAllArticles}
-        setShowAllArticles={setShowAllArticles}
-        selectedBookFilter={selectedBookFilter}
-        setSelectedBookFilter={setSelectedBookFilter}
-        setSelectedTitleFilter={setSelectedTitleFilter}
-        hasCriticalImpacts={hasCriticalImpacts}
         setExpandedArticleId={setExpandedArticleId}
+        expanded={!chartsCollapsed}
+        toggleExpanded={() => setChartsCollapsed(!chartsCollapsed)}
       />
       
-      <ArticlesFilters
-        positiveCount={positiveCount}
-        negativeCount={negativeCount}
-        neutralCount={0} // Add required neutralCount prop
-        totalCount={relevantArticles.length}
+      {/* Search and Filters */}
+      <ArticlesFilters 
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         filterType={filterType}
         setFilterType={setFilterType}
         viewMode={viewMode}
         setViewMode={setViewMode}
+        positiveCount={positiveCount}
+        negativeCount={negativeCount}
+        neutralCount={neutralCount}
+        totalCount={relevantArticles.length}
       />
       
-      <ArticlesContent
-        viewMode={viewMode}
-        displayedArticles={displayedArticles} // Add the required displayedArticles prop
+      {/* Article Content (List or Table) */}
+      <ArticlesContent 
         filteredArticles={filteredArticles}
-        selectedBookFilter={selectedBookFilter} 
+        displayedArticles={displayedArticles}
+        selectedBookFilter={selectedBookFilter}
         selectedTitleFilter={selectedTitleFilter}
         setSelectedBookFilter={setSelectedBookFilter}
         setSelectedTitleFilter={setSelectedTitleFilter}
+        segment={segment}
+        topics={topics}
+        viewMode={viewMode}
         expandedArticleId={expandedArticleId}
         setExpandedArticleId={setExpandedArticleId}
-        segment={segment}
+        articlesByTopic={articlesByTopic}
         highlights={highlights}
         onAddHighlight={onAddHighlight}
         onRemoveHighlight={onRemoveHighlight}
-        articlesByTopic={articlesByTopic}
-        topics={topics}
       />
     </div>
   );
