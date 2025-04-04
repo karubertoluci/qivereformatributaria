@@ -10,7 +10,7 @@ const CTASection = () => {
       <div className="md:flex md:items-center md:justify-between">
         <div className="text-center md:text-left md:max-w-3xl mb-8 md:mb-0">
           <h2 className="text-2xl md:text-3xl font-medium mb-4">
-            O maior risco não está na mudança de alíquotas e modelo de tributação,<br className="hidden md:block" />
+            O maior risco não está na mudança de alíquotas e modelo de tributação, 
             mas na gestão incorreta da informação.
           </h2>
           <p className="text-xl">
