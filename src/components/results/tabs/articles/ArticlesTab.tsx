@@ -82,17 +82,17 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         positiveCount={positiveCount}
         negativeCount={negativeCount}
         neutralCount={0} // Add required neutralCount
-        total={relevantArticles.length}
+        totalCount={relevantArticles.length}
       />
       
       {/* Article Content (List or Table) */}
       <ArticlesContent 
         filteredArticles={filteredArticles}
-        displayedArticles={displayedArticles} // Add required displayedArticles prop
-        selectedBookFilter={selectedBookFilter} // Add required selectedBookFilter prop
-        selectedTitleFilter={selectedTitleFilter} // Add required selectedTitleFilter prop
-        setSelectedBookFilter={setSelectedBookFilter} // Add required setSelectedBookFilter prop
-        setSelectedTitleFilter={setSelectedTitleFilter} // Add required setSelectedTitleFilter prop
+        displayedArticles={displayedArticles}
+        selectedBookFilter={selectedBookFilter}
+        selectedTitleFilter={selectedTitleFilter}
+        setSelectedBookFilter={setSelectedBookFilter}
+        setSelectedTitleFilter={setSelectedTitleFilter}
         segment={segment}
         topics={topics}
         viewMode={viewMode}

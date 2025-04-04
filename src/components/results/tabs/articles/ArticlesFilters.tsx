@@ -7,8 +7,8 @@ import { FilterType, ViewMode } from '../../types';
 interface ArticlesFiltersProps {
   positiveCount: number;
   negativeCount: number;
-  neutralCount: number; // Add this property to match with ArticlesFiltersProps.ts
-  totalCount: number;
+  neutralCount: number;
+  totalCount: number; // Ensure this property name is consistent 
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   filterType: FilterType;
@@ -20,7 +20,7 @@ interface ArticlesFiltersProps {
 const ArticlesFilters: React.FC<ArticlesFiltersProps> = ({
   positiveCount,
   negativeCount,
-  neutralCount, // Include the neutralCount prop
+  neutralCount,
   totalCount,
   searchTerm,
   setSearchTerm,

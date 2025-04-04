@@ -2,7 +2,7 @@
 import React from 'react';
 import { useFormDialogContext } from './FormDialogContext';
 import { Button } from '@/components/ui/button';
-import { TrendingUp, ListChecks, FileText } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const ProductFeatures = () => {
   const { openFormDialog } = useFormDialogContext();
@@ -20,8 +20,11 @@ const ProductFeatures = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           {/* Análise de Relevância */}
           <div className="bg-gray-50 p-8 rounded-lg">
-            <div className="text-orange-500 mb-4">
-              <TrendingUp className="h-6 w-6" />
+            <div className="text-red-500 mb-4">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M23 6L13.5 15.5L8.5 10.5L1 18" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M17 6H23V12" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </div>
             <h3 className="text-xl font-bold mb-3">Análise de relevância</h3>
             <p className="text-gray-700">
@@ -32,8 +35,15 @@ const ProductFeatures = () => {
           
           {/* Análise de Impacto */}
           <div className="bg-gray-50 p-8 rounded-lg">
-            <div className="text-orange-500 mb-4">
-              <ListChecks className="h-6 w-6" />
+            <div className="text-red-500 mb-4">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 6H21" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M8 12H21" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M8 18H21" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M3 6H3.01" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M3 12H3.01" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M3 18H3.01" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </div>
             <h3 className="text-xl font-bold mb-3">Análise de impacto</h3>
             <p className="text-gray-700">
@@ -44,8 +54,13 @@ const ProductFeatures = () => {
           
           {/* Relatório Personalizado */}
           <div className="bg-gray-50 p-8 rounded-lg">
-            <div className="text-orange-500 mb-4">
-              <FileText className="h-6 w-6" />
+            <div className="text-red-500 mb-4">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 3H3V10H10V3Z" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M21 3H14V10H21V3Z" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M21 14H14V21H21V14Z" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M10 14H3V21H10V14Z" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </div>
             <h3 className="text-xl font-bold mb-3">Relatório personalizado</h3>
             <p className="text-gray-700">
@@ -55,17 +70,17 @@ const ProductFeatures = () => {
           </div>
         </div>
         
-        <div className="flex justify-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Button 
             onClick={openFormDialog}
-            className="bg-orange-500 hover:bg-orange-600 px-6 py-5 text-white rounded-md font-medium"
+            className="bg-red-500 hover:bg-red-600 px-6 py-3 text-white rounded-md font-medium"
           >
             Gerar relatório personalizado
           </Button>
           
           <Button
             variant="outline"
-            className="border-orange-500 text-orange-500 hover:bg-orange-50 px-6 py-5 rounded-md font-medium"
+            className="border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-md font-medium"
           >
             Falar com um especialista
           </Button>
