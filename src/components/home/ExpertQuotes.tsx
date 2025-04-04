@@ -2,7 +2,6 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { QuoteIcon } from 'lucide-react';
 
 interface ExpertQuoteProps {
@@ -14,21 +13,21 @@ interface ExpertQuoteProps {
 
 const ExpertQuote: React.FC<ExpertQuoteProps> = ({ name, role, quote, imageUrl }) => (
   <Card className="border border-gray-200 shadow-md h-full">
-    <CardContent className="p-8 flex flex-col h-full">
-      <div className="mb-6 flex items-center">
-        <Avatar className="h-16 w-16 mr-4">
+    <CardContent className="p-4 flex flex-col h-full">
+      <div className="mb-4 flex items-center">
+        <Avatar className="h-12 w-12 mr-3">
           <AvatarImage src={imageUrl} alt={name} />
           <AvatarFallback>{name.charAt(0)}</AvatarFallback>
         </Avatar>
         <div>
-          <h3 className="text-xl font-bold">{name}</h3>
-          <p className="text-gray-600">{role}</p>
+          <h3 className="text-lg font-bold">{name}</h3>
+          <p className="text-gray-600 text-sm">{role}</p>
         </div>
       </div>
       
       <div className="flex-grow">
-        <QuoteIcon className="h-8 w-8 text-orange-400 mb-4 opacity-50" />
-        <p className="text-lg text-gray-800 italic leading-relaxed">
+        <QuoteIcon className="h-6 w-6 text-orange-400 mb-2 opacity-50" />
+        <p className="text-sm text-gray-800 italic leading-relaxed">
           "{quote}"
         </p>
       </div>
@@ -73,19 +72,17 @@ const ExpertQuotes = () => {
           <div className="w-24 h-1 bg-orange-500 rounded"></div>
         </div>
         
-        <div className="flex overflow-x-auto pb-6">
-          <div className="flex gap-6">
-            {experts.map((expert, index) => (
-              <div key={index} className="w-80 flex-shrink-0">
-                <ExpertQuote
-                  name={expert.name}
-                  role={expert.role}
-                  quote={expert.quote}
-                  imageUrl={expert.imageUrl}
-                />
-              </div>
-            ))}
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {experts.map((expert, index) => (
+            <div key={index}>
+              <ExpertQuote
+                name={expert.name}
+                role={expert.role}
+                quote={expert.quote}
+                imageUrl={expert.imageUrl}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </section>
