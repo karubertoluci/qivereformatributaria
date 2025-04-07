@@ -4,7 +4,6 @@ import { BusinessSegment } from '@/data/segments';
 import { useResultsData } from '@/hooks/useResultsData';
 import ReportActions from '../report/ReportActions';
 import OverviewTabContent from './OverviewTabContent';
-import CompanyLegislationRelation from '../report/CompanyLegislationRelation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Book, FileText, Highlighter } from 'lucide-react';
 import ArticlesTab from './tabs/ArticlesTab';

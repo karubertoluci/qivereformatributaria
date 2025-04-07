@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import HomePage from '@/components/home/HomePage';
-import Results from '@/components/Results';
+import Results from '@/components/results';
 
 const Index = () => {
   const [selectedSegment, setSelectedSegment] = useState<BusinessSegment | null>(null);

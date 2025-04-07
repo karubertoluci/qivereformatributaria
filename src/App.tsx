@@ -2,10 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useParams, Navigate } from 'react-router-dom';
 import './App.css';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import Header from './components/common/Header';
+import Footer from './components/common/Footer';
 import Index from './pages/Index';
-import Results from './components/Results';
+import Results from './components/results';
 import NotFound from './pages/NotFound';
 import Handoff from './pages/Handoff';
 import { Toaster } from './components/ui/toaster';
