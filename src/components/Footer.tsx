@@ -52,6 +52,11 @@ const Footer = () => {
                   Serviços
                 </Link>
               </li>
+              <li>
+                <Link to="/handoff" className="text-gray-300 hover:text-primary text-sm">
+                  Handoff
+                </Link>
+              </li>
             </ul>
           </div>
           

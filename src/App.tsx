@@ -1,38 +1,41 @@
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import './App.css';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Index from './pages/Index';
+import Results from './components/Results';
+import NotFound from './pages/NotFound';
+import Handoff from './pages/Handoff';
+import { Toaster } from './components/ui/toaster';
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import React from "react";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
+function App() {
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "system");
 
-// Create a client with default options
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      "data-theme",
+      localStorage.getItem("theme") || "system"
+    );
+  }, [theme]);
 
-const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
+    <BrowserRouter>
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/results/:segmentId" element={<Results />} />
+            <Route path="/handoff" element={<Handoff />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+        </div>
+        <Footer />
+        <Toaster />
+      </div>
+    </BrowserRouter>
   );
-};
+}
 
 export default App;
