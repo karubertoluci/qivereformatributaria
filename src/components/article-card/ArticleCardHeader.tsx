@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Article } from '@/data/articles';
 import { BookOpen, FileText } from 'lucide-react';
@@ -35,6 +34,25 @@ const ArticleCardHeader: React.FC<ArticleCardHeaderProps> = ({
 
   const impactType = getImpactType();
   
+  // Extract book information from article number or metadata
+  const getBookInfo = () => {
+    // First try to get from metadata if available
+    if (article.metadata?.bookId) {
+      return `Livro ${article.metadata.bookId}`;
+    }
+    
+    // Otherwise try to infer from article number
+    const articleNum = parseInt(article.number.replace(/\D/g, '')) || 0;
+    let bookId = 'I';
+    if (articleNum > 300) {
+      bookId = 'III';
+    } else if (articleNum > 180) {
+      bookId = 'II';
+    }
+    
+    return `Livro ${bookId}`;
+  };
+  
   return (
     <div className="flex flex-col">
       <div className="flex justify-between items-start mb-1">
@@ -63,7 +81,7 @@ const ArticleCardHeader: React.FC<ArticleCardHeaderProps> = ({
       
       <div className="flex items-center text-xs text-muted-foreground mt-1">
         <BookOpen className="h-3.5 w-3.5 mr-1" />
-        <span>Livro {article.book}, Título {article.title}, Artigo {article.number}</span>
+        <span>{getBookInfo()}, Título {article.title}, Artigo {article.number}</span>
       </div>
     </div>
   );
