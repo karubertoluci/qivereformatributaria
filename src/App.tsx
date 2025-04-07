@@ -10,6 +10,7 @@ import NotFound from './pages/NotFound';
 import Handoff from './pages/Handoff';
 import { Toaster } from './components/ui/toaster';
 import { businessSegments } from './data/segments';
+import { FormDialogProvider } from './components/home/FormDialogContext';
 
 // Wrapper component to handle route parameters for Results
 const ResultsPage = () => {
@@ -37,21 +38,23 @@ function App() {
   }, [theme]);
 
   return (
-    <BrowserRouter>
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <div className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/results/:segmentId" element={<ResultsPage />} />
-            <Route path="/handoff" element={<Handoff />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+    <FormDialogProvider>
+      <BrowserRouter>
+        <div className="flex flex-col min-h-screen">
+          <Header />
+          <div className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/results/:segmentId" element={<ResultsPage />} />
+              <Route path="/handoff" element={<Handoff />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
+          <Footer />
+          <Toaster />
         </div>
-        <Footer />
-        <Toaster />
-      </div>
-    </BrowserRouter>
+      </BrowserRouter>
+    </FormDialogProvider>
   );
 }
 
