@@ -26,3 +26,11 @@ export const clearArticleCache = (segmentId?: string) => {
 export const hasArticleCache = (segmentId: string): boolean => {
   return localStorage.getItem(`segmentArticles_${segmentId}`) !== null;
 };
+
+/**
+ * Forces a refresh of article data by clearing the cache and reloading the page
+ */
+export const forceArticleRefresh = (segmentId?: string) => {
+  clearArticleCache(segmentId);
+  window.location.reload();
+};

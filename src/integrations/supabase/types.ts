@@ -9,262 +9,117 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      artigos: {
+      cnae_artigos: {
         Row: {
-          capitulo_id: number | null
-          created_at: string
+          artigo_id: number | null
+          cnae: string
           id: number
-          numero: number
-          secao_id: number | null
-          subsecao_id: number | null
-          texto: string
-          texto_simplificado: string | null
         }
         Insert: {
-          capitulo_id?: number | null
-          created_at?: string
+          artigo_id?: number | null
+          cnae: string
           id?: number
-          numero: number
-          secao_id?: number | null
-          subsecao_id?: number | null
-          texto: string
-          texto_simplificado?: string | null
         }
         Update: {
-          capitulo_id?: number | null
-          created_at?: string
+          artigo_id?: number | null
+          cnae?: string
           id?: number
-          numero?: number
-          secao_id?: number | null
-          subsecao_id?: number | null
-          texto?: string
-          texto_simplificado?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "artigos_capitulo_id_fkey"
-            columns: ["capitulo_id"]
-            isOneToOne: false
-            referencedRelation: "capitulos"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "artigos_secao_id_fkey"
-            columns: ["secao_id"]
-            isOneToOne: false
-            referencedRelation: "secoes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "artigos_subsecao_id_fkey"
-            columns: ["subsecao_id"]
-            isOneToOne: false
-            referencedRelation: "subsecoes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      capitulos: {
-        Row: {
-          created_at: string
-          descricao: string | null
-          id: number
-          nome: string
-          numero: number | null
-          titulo_id: number
-        }
-        Insert: {
-          created_at?: string
-          descricao?: string | null
-          id?: number
-          nome: string
-          numero?: number | null
-          titulo_id: number
-        }
-        Update: {
-          created_at?: string
-          descricao?: string | null
-          id?: number
-          nome?: string
-          numero?: number | null
-          titulo_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "capitulos_titulo_id_fkey"
-            columns: ["titulo_id"]
-            isOneToOne: false
-            referencedRelation: "titulos"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      impactos: {
-        Row: {
-          artigo_id: number
-          created_at: string
-          descricao: string
-          id: number
-          relevancia: number
-          segmento_id: string
-          tipo: string
-        }
-        Insert: {
-          artigo_id: number
-          created_at?: string
-          descricao: string
-          id?: number
-          relevancia: number
-          segmento_id: string
-          tipo: string
-        }
-        Update: {
-          artigo_id?: number
-          created_at?: string
-          descricao?: string
-          id?: number
-          relevancia?: number
-          segmento_id?: string
-          tipo?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "impactos_artigo_id_fkey"
+            foreignKeyName: "cnae_artigos_artigo_id_fkey"
             columns: ["artigo_id"]
             isOneToOne: false
-            referencedRelation: "artigos"
+            referencedRelation: "livros_reforma"
             referencedColumns: ["id"]
           },
         ]
       }
-      livros: {
+      cnae_classificacoes: {
         Row: {
-          created_at: string
-          descricao: string | null
+          artigo_id: number | null
+          cnae: string
           id: number
-          nome: string
-          numero: number | null
+          impacto: string | null
+          relevancia: string | null
         }
         Insert: {
-          created_at?: string
-          descricao?: string | null
+          artigo_id?: number | null
+          cnae: string
           id?: number
-          nome: string
-          numero?: number | null
+          impacto?: string | null
+          relevancia?: string | null
         }
         Update: {
-          created_at?: string
-          descricao?: string | null
+          artigo_id?: number | null
+          cnae?: string
           id?: number
-          nome?: string
-          numero?: number | null
+          impacto?: string | null
+          relevancia?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cnae_classificacoes_artigo_id_fkey"
+            columns: ["artigo_id"]
+            isOneToOne: false
+            referencedRelation: "livros_reforma"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consultas: {
+        Row: {
+          cnae: string | null
+          cnpj: string | null
+          consultado_em: string | null
+          id: number
+        }
+        Insert: {
+          cnae?: string | null
+          cnpj?: string | null
+          consultado_em?: string | null
+          id?: number
+        }
+        Update: {
+          cnae?: string | null
+          cnpj?: string | null
+          consultado_em?: string | null
+          id?: number
         }
         Relationships: []
       }
-      secoes: {
+      livros_reforma: {
         Row: {
-          capitulo_id: number
-          created_at: string
-          descricao: string | null
+          artigo: string | null
+          capitulo: string | null
+          conteudo: string | null
           id: number
-          nome: string
-          numero: number | null
+          livro: string | null
+          secao: string | null
+          subsecao: string | null
+          titulo: string | null
         }
         Insert: {
-          capitulo_id: number
-          created_at?: string
-          descricao?: string | null
+          artigo?: string | null
+          capitulo?: string | null
+          conteudo?: string | null
           id?: number
-          nome: string
-          numero?: number | null
+          livro?: string | null
+          secao?: string | null
+          subsecao?: string | null
+          titulo?: string | null
         }
         Update: {
-          capitulo_id?: number
-          created_at?: string
-          descricao?: string | null
+          artigo?: string | null
+          capitulo?: string | null
+          conteudo?: string | null
           id?: number
-          nome?: string
-          numero?: number | null
+          livro?: string | null
+          secao?: string | null
+          subsecao?: string | null
+          titulo?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "secoes_capitulo_id_fkey"
-            columns: ["capitulo_id"]
-            isOneToOne: false
-            referencedRelation: "capitulos"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      subsecoes: {
-        Row: {
-          created_at: string
-          descricao: string | null
-          id: number
-          nome: string
-          numero: number | null
-          secao_id: number | null
-        }
-        Insert: {
-          created_at?: string
-          descricao?: string | null
-          id?: number
-          nome: string
-          numero?: number | null
-          secao_id?: number | null
-        }
-        Update: {
-          created_at?: string
-          descricao?: string | null
-          id?: number
-          nome?: string
-          numero?: number | null
-          secao_id?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "subsecoes_secao_id_fkey"
-            columns: ["secao_id"]
-            isOneToOne: false
-            referencedRelation: "secoes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      titulos: {
-        Row: {
-          created_at: string
-          descricao: string | null
-          id: number
-          livro_id: number
-          nome: string
-          numero: number | null
-        }
-        Insert: {
-          created_at?: string
-          descricao?: string | null
-          id?: number
-          livro_id: number
-          nome: string
-          numero?: number | null
-        }
-        Update: {
-          created_at?: string
-          descricao?: string | null
-          id?: number
-          livro_id?: number
-          nome?: string
-          numero?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "titulos_livro_id_fkey"
-            columns: ["livro_id"]
-            isOneToOne: false
-            referencedRelation: "livros"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {

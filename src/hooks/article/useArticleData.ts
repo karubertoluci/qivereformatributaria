@@ -26,7 +26,58 @@ export const useArticleData = (segment: BusinessSegment) => {
         
         console.log(`Fetching articles from Supabase for segment: ${segment.id}`);
         
-        // First, get all impacts for this segment
+        // First check if we should load from livros_reforma table instead of impactos
+        // Get articles from livros_reforma table
+        const { data: livrosData, error: livrosError } = await supabase
+          .from('livros_reforma')
+          .select('*');
+          
+        if (livrosError) {
+          console.error('Error fetching from livros_reforma:', livrosError);
+          setError(`Erro ao buscar da tabela livros_reforma: ${livrosError.message}`);
+          setIsLoading(false);
+          return;
+        }
+        
+        if (livrosData && livrosData.length > 0) {
+          console.log(`Fetched ${livrosData.length} articles from livros_reforma table`);
+          
+          // Format articles from livros_reforma table
+          const formattedArticles = livrosData.map((item: any) => {
+            return {
+              id: `art_${item.id}`,
+              number: item.artigo || "N/A",
+              title: `Artigo ${item.artigo || "N/A"}`,
+              originalText: item.conteudo || "",
+              simplifiedText: item.conteudo || "",
+              impacts: [
+                {
+                  type: "positive", // Default impact type
+                  description: `Artigo relacionado a ${segment.name}`,
+                  relevance: "medium",
+                  segments: [segment.id]
+                }
+              ],
+              metadata: {
+                livro: item.livro,
+                titulo: item.titulo,
+                capitulo: item.capitulo,
+                secao: item.secao,
+                subsecao: item.subsecao
+              }
+            };
+          });
+          
+          console.log(`Formatted ${formattedArticles.length} articles from livros_reforma`);
+          setSegmentArticles(formattedArticles);
+          
+          // Cache the articles for this segment to improve performance
+          localStorage.setItem(`segmentArticles_${segment.id}`, JSON.stringify(formattedArticles));
+          setIsLoading(false);
+          return;
+        }
+        
+        // If no data in livros_reforma, fall back to original impactos method
         const { data: impactos, error: impactosError } = await supabase
           .from('impactos')
           .select('*')
