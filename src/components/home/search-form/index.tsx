@@ -43,7 +43,7 @@ const SearchForm: React.FC = () => {
       // Buscar artigos que têm impacto para o segmento específico
       const { data: impactos, error: impactosError } = await supabase
         .from('impactos')
-        .select('artigo_id, tipo, descricao, relevancia')
+        .select('*')
         .eq('segmento_id', segmentId);
         
       if (impactosError) throw new Error(impactosError.message);
@@ -59,7 +59,7 @@ const SearchForm: React.FC = () => {
       // Buscar detalhes dos artigos
       const { data: artigos, error: artigosError } = await supabase
         .from('artigos')
-        .select('*, capitulos(*), secoes(*), subsecoes(*)')
+        .select('*')
         .in('id', artigoIds);
         
       if (artigosError) throw new Error(artigosError.message);
@@ -139,7 +139,14 @@ const SearchForm: React.FC = () => {
         <FormDialog onSubmit={handleSubmit} isLoading={isLoading} />
       )}
       
-      {isLoading && <LoadingDialog />}
+      {isLoading && (
+        <LoadingDialog 
+          open={isLoading} 
+          onOpenChange={() => setIsLoading(false)} 
+          progress={50} 
+          companyName="Sua empresa" 
+        />
+      )}
       
       <div className="flex flex-col items-center justify-center py-6 gap-6">
         <SearchFormButton />

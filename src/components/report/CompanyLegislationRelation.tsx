@@ -35,7 +35,7 @@ const CompanyLegislationRelation: React.FC<CompanyLegislationRelationProps> = ({
         // Buscar impactos para o segmento
         const { data: impacts, error: impactsError } = await supabase
           .from('impactos')
-          .select('artigo_id, tipo, descricao, relevancia')
+          .select('*')
           .eq('segmento_id', segment.id);
           
         if (impactsError) throw impactsError;
@@ -51,7 +51,7 @@ const CompanyLegislationRelation: React.FC<CompanyLegislationRelationProps> = ({
         // Buscar detalhes dos artigos
         const { data: articles, error: articlesError } = await supabase
           .from('artigos')
-          .select('id, numero, texto, texto_simplificado')
+          .select('*')
           .in('id', articleIds);
           
         if (articlesError) throw articlesError;

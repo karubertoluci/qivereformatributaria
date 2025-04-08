@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article, articles } from '@/data/articles';
@@ -17,13 +16,11 @@ export const useResultsData = (segment: BusinessSegment) => {
   const [segmentArticles, setSegmentArticles] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Função para buscar artigos do Supabase
   useEffect(() => {
     const fetchArticlesFromSupabase = async () => {
       setIsLoading(true);
       
       try {
-        // Primeiro tentamos carregar dados do localStorage (previamente buscados)
         const cachedArticles = localStorage.getItem('segmentArticles');
         if (cachedArticles) {
           setSegmentArticles(JSON.parse(cachedArticles));
@@ -31,13 +28,11 @@ export const useResultsData = (segment: BusinessSegment) => {
           return;
         }
         
-        // Se não houver cache, buscar do Supabase
         console.log('Buscando artigos do Supabase para o segmento:', segment.id);
         
-        // Buscar impactos para o segmento
         const { data: impactos, error: impactosError } = await supabase
           .from('impactos')
-          .select('artigo_id, tipo, descricao, relevancia')
+          .select('*')
           .eq('segmento_id', segment.id);
           
         if (impactosError) {
@@ -52,13 +47,11 @@ export const useResultsData = (segment: BusinessSegment) => {
           return;
         }
         
-        // Obter IDs dos artigos a partir dos impactos
         const artigoIds = impactos.map(impacto => impacto.artigo_id);
         
-        // Buscar os artigos
         const { data: artigos, error: artigosError } = await supabase
           .from('artigos')
-          .select('id, numero, texto, texto_simplificado, capitulo_id, secao_id, subsecao_id')
+          .select('*')
           .in('id', artigoIds);
           
         if (artigosError) {
@@ -67,10 +60,8 @@ export const useResultsData = (segment: BusinessSegment) => {
           return;
         }
         
-        // Transformar os resultados do Supabase no formato esperado pelo aplicativo
         if (artigos) {
           const formattedArticles = artigos.map(artigo => {
-            // Obter os impactos relacionados a este artigo
             const artigoImpactos = impactos
               .filter(impacto => impacto.artigo_id === artigo.id)
               .map(impacto => ({
@@ -80,7 +71,6 @@ export const useResultsData = (segment: BusinessSegment) => {
                 segments: [segment.id]
               }));
             
-            // Criar o objeto de artigo no formato esperado pelo app
             return {
               id: `art_${artigo.id}`,
               number: artigo.numero.toString(),
@@ -98,7 +88,6 @@ export const useResultsData = (segment: BusinessSegment) => {
           
           setSegmentArticles(formattedArticles);
           
-          // Salvar no localStorage para uso futuro
           localStorage.setItem('segmentArticles', JSON.stringify(formattedArticles));
         }
       } catch (error) {
@@ -111,7 +100,6 @@ export const useResultsData = (segment: BusinessSegment) => {
     fetchArticlesFromSupabase();
   }, [segment.id]);
   
-  // Load highlights from localStorage on mount
   useEffect(() => {
     const savedHighlights = localStorage.getItem('highlights');
     if (savedHighlights) {
@@ -123,23 +111,19 @@ export const useResultsData = (segment: BusinessSegment) => {
     }
   }, []);
 
-  // Save highlights to localStorage on change
   useEffect(() => {
     localStorage.setItem('highlights', JSON.stringify(highlights));
   }, [highlights]);
   
-  // Get form data from localStorage
   const formData = JSON.parse(localStorage.getItem('formData') || '{}');
   const hasCompanyData = Object.keys(formData).length > 0;
   
-  // Use segmentArticles when available, otherwise use the mock articles from data/articles.ts
   const relevantArticles = segmentArticles.length > 0 
     ? segmentArticles 
     : articles.filter(article => 
         article.impacts.some(impact => impact.segments.includes(segment.id))
       );
   
-  // Apply search and impact type filters
   const filteredArticles = relevantArticles
     .filter(article => 
       article.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -152,10 +136,8 @@ export const useResultsData = (segment: BusinessSegment) => {
       );
     });
   
-  // Organize articles by topic
   const articlesByTopic = getArticlesByTopic(filteredArticles);
 
-  // Count positive and negative impacts
   const positiveCount = relevantArticles.filter(article => 
     article.impacts.some(impact => impact.type === 'positive' && impact.segments.includes(segment.id))
   ).length;
@@ -167,10 +149,8 @@ export const useResultsData = (segment: BusinessSegment) => {
   const handleArticleSelect = (articleId: string) => {
     setExpandedArticleId(articleId);
     
-    // Scroll to the article if in list view
     if (viewMode === 'chart') {
       setViewMode('list');
-      // Give time for the view to switch before scrolling
       setTimeout(() => {
         const element = document.getElementById(`article-${articleId}`);
         if (element) {
@@ -180,7 +160,6 @@ export const useResultsData = (segment: BusinessSegment) => {
     }
   };
 
-  // Handle adding a highlight
   const handleAddHighlight = (articleId: string, text: string, color: HighlightType['color'] = 'yellow') => {
     const newHighlight: HighlightType = {
       id: crypto.randomUUID(),
@@ -191,7 +170,6 @@ export const useResultsData = (segment: BusinessSegment) => {
     setHighlights([...highlights, newHighlight]);
   };
 
-  // Handle removing a highlight
   const handleRemoveHighlight = (id: string) => {
     setHighlights(highlights.filter(h => h.id !== id));
   };
@@ -217,7 +195,6 @@ export const useResultsData = (segment: BusinessSegment) => {
     handleArticleSelect,
     topics,
     isLoading,
-    // Highlight-related state and functions
     highlights,
     setHighlights,
     handleAddHighlight,
