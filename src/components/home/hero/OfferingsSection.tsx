@@ -1,6 +1,12 @@
+
 import React from 'react';
 import { FileBarChart, List, PieChart } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useFormDialogContext } from '../FormDialogContext';
+
 const OfferingsSection = () => {
+  const { openFormDialog } = useFormDialogContext();
+  
   return <div className="mt-20">
       <h2 className="text-3xl font-bold text-center mb-4">O que oferecemos</h2>
       <p className="text-lg text-center text-gray-700 mb-12 max-w-3xl mx-auto">
@@ -44,6 +50,15 @@ const OfferingsSection = () => {
             da reforma para o seu CNAE específico e setor de atuação.
           </p>
         </div>
+      </div>
+      
+      <div className="mt-12 text-center">
+        <Button 
+          onClick={openFormDialog}
+          className="bg-[#FF4719] hover:bg-[#E53E15] text-white px-6 py-3 text-lg"
+        >
+          Gerar relatório personalizado
+        </Button>
       </div>
     </div>;
 };

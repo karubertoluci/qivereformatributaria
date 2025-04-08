@@ -3,8 +3,12 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { AlertTriangle, FileText, Calendar, BookOpen, ArrowRight } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { useFormDialogContext } from './FormDialogContext';
+import { Button } from '@/components/ui/button';
 
 const HowItWorks = () => {
+  const { openFormDialog } = useFormDialogContext();
+  
   return <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4 max-w-5xl">
         <h2 className="text-3xl font-bold text-center mb-4">A Reforma Tributária em Resumo</h2>
@@ -75,7 +79,7 @@ const HowItWorks = () => {
             </Card>
           </div>
           
-          <div className="bg-red-50 p-6 rounded-lg border-l-4 border-red-500 flex items-start">
+          <div className="bg-red-50 p-6 rounded-lg border-l-4 border-red-500 flex items-start text-left">
             <AlertTriangle className="h-6 w-6 text-red-500 mr-4 mt-1 flex-shrink-0" />
             <div className="text-left">
               <h3 className="font-semibold text-red-700 mb-2">Por que sua empresa deve se preparar agora:</h3>
@@ -84,6 +88,14 @@ const HowItWorks = () => {
                 Empresas que se adaptarem primeiro terão vantagem competitiva significativa, 
                 enquanto as despreparadas enfrentarão desafios fiscais, operacionais e financeiros.
               </p>
+              <div className="mt-4">
+                <Button 
+                  onClick={openFormDialog}
+                  className="bg-[#FF4719] hover:bg-[#E53E15] text-white"
+                >
+                  Gerar relatório personalizado
+                </Button>
+              </div>
             </div>
           </div>
         </div>
