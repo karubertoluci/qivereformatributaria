@@ -19,10 +19,15 @@ const ImpactsSection: React.FC<ImpactsSectionProps> = ({
 }) => {
   // Count critical articles
   const criticalArticles = relevantArticles.filter(article => 
-    article.impacts.some(impact => 
-      // Fix the comparison by ensuring severity is treated as a number
-      typeof impact.severity === 'number' && impact.severity >= 8 && impact.segments.includes(segmentId)
-    )
+    article.impacts.some(impact => {
+      // Handle both string and number severity types
+      if (typeof impact.severity === 'number') {
+        return impact.severity >= 8 && impact.segments.includes(segmentId);
+      } else if (typeof impact.severity === 'string') {
+        return impact.severity === 'high' && impact.segments.includes(segmentId);
+      }
+      return false;
+    })
   );
   
   if (!hasCriticalImpacts) return null;

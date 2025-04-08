@@ -73,16 +73,16 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-[300px_1fr]'} gap-6`}>
         {/* Filters sidebar */}
         <ArticlesFilters 
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          filterType={filterType}
-          setFilterType={setFilterType}
           positiveCount={positiveCount}
           negativeCount={negativeCount}
           selectedBookFilter={selectedBookFilter}
           setSelectedBookFilter={setSelectedBookFilter}
           selectedTitleFilter={selectedTitleFilter}
           setSelectedTitleFilter={setSelectedTitleFilter}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          filterType={filterType}
+          setFilterType={setFilterType}
           relevantArticles={relevantArticles}
         />
         

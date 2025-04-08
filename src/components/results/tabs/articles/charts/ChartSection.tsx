@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Article } from '@/data/articles';
+import { BusinessSegment } from '@/data/segments';
 import { useIsMobile } from '@/hooks/use-mobile';
 import ArticlesPriorityChart from '@/components/ArticlesPriorityChart';
 import ChartExpandToggle from '../components/ChartExpandToggle';
