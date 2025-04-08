@@ -1,10 +1,7 @@
-
 import React from 'react';
 import { FileBarChart, List, PieChart } from 'lucide-react';
-
 const OfferingsSection = () => {
-  return (
-    <div className="mt-20">
+  return <div className="mt-20">
       <h2 className="text-3xl font-bold text-center mb-4">O que oferecemos</h2>
       <p className="text-lg text-center text-gray-700 mb-12 max-w-3xl mx-auto">
         Nossa ferramenta de análise personalizada destaca exatamente o que você precisa 
@@ -18,7 +15,7 @@ const OfferingsSection = () => {
             <PieChart className="h-6 w-6" />
           </div>
           <h3 className="text-xl font-bold mb-3">Análise de relevância</h3>
-          <p className="text-gray-700">
+          <p className="text-gray-700 text-left">
             Identifica quais artigos da reforma tributária têm maior impacto para o seu segmento, 
             com classificação para priorizar sua leitura.
           </p>
@@ -30,7 +27,7 @@ const OfferingsSection = () => {
             <List className="h-6 w-6" />
           </div>
           <h3 className="text-xl font-bold mb-3">Análise de impacto</h3>
-          <p className="text-gray-700">
+          <p className="text-gray-700 text-left">
             Avalia se o artigo é favorável, neutro ou desfavorável para seu negócio, 
             considerando carga tributária, burocracia e segurança jurídica.
           </p>
@@ -42,14 +39,12 @@ const OfferingsSection = () => {
             <FileBarChart className="h-6 w-6" />
           </div>
           <h3 className="text-xl font-bold mb-3">Relatório personalizado</h3>
-          <p className="text-gray-700">
+          <p className="text-gray-700 text-left">
             Gera um documento completo e personalizado com análise detalhada dos impactos 
             da reforma para o seu CNAE específico e setor de atuação.
           </p>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default OfferingsSection;
