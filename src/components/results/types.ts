@@ -1,4 +1,3 @@
-
 export type Topic = {
   id: string;
   name: string;
@@ -21,6 +20,5 @@ export type HighlightType = {
   articleId: string;
 };
 
-// Add the missing types
 export type ViewMode = 'list' | 'table' | 'chart';
 export type FilterType = 'all' | 'positive' | 'negative' | 'neutral';

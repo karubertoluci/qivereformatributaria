@@ -85,7 +85,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         totalCount={relevantArticles.length}
       />
       
-      {/* Article Content (List or Table) */}
+      {/* Article Content (List, Table or Cards) */}
       <ArticlesContent 
         filteredArticles={filteredArticles}
         displayedArticles={displayedArticles}
