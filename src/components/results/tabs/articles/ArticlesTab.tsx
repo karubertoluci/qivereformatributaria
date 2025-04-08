@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import { Article } from '@/data/articles';
 import { BusinessSegment } from '@/data/segments';
-import ArticlesFilters from './ArticlesFilters';
-import ArticlesContent from './ArticlesContent';
-import ChartSection from './ChartSection';
+import ArticlesFilters from './filters/ArticlesFilters';
+import ArticlesContent from './content/ArticlesContent';
+import ChartSection from './charts/ChartSection';
 import { Topic, FilterType, ViewMode } from '../../types';
 
 interface ArticlesTabProps {
@@ -74,7 +74,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         setExpandedArticleId={setExpandedArticleId}
         expanded={chartExpanded}
         toggleExpanded={() => setChartExpanded(!chartExpanded)}
-        allArticles={relevantArticles} // Pass relevantArticles as allArticles
+        allArticles={relevantArticles}
       />
       
       {/* Search and Filters */}
@@ -91,7 +91,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         totalCount={relevantArticles.length}
       />
       
-      {/* Article Content (always Cards) */}
+      {/* Article Content */}
       <ArticlesContent 
         filteredArticles={filteredArticles}
         displayedArticles={displayedArticles}
@@ -106,7 +106,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         setExpandedArticleId={setExpandedArticleId}
         articlesByTopic={articlesByTopic}
         highlights={highlights}
-        onAddHighlight={(text, color, articleId) => onAddHighlight(articleId, text, color)}
+        onAddHighlight={onAddHighlight}
         onRemoveHighlight={onRemoveHighlight}
       />
     </div>

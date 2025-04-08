@@ -1,5 +1,5 @@
 
-import { FilterType, ViewMode } from '../../types';
+import { FilterType, ViewMode } from '../../../types';
 
 export interface ArticlesFiltersProps {
   positiveCount: number;
