@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BusinessSegment } from '@/data/segments';
-import { Building2, Briefcase, MapPin, FileText, Store } from 'lucide-react';
+import { Building2, Briefcase, MapPin, FileText, Store, User } from 'lucide-react';
 
 interface CompanyData {
   nome?: string;
@@ -55,7 +55,7 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
       
       <CardContent className="p-6">
         {/* Company header with name and trading name */}
-        <div className="mb-6 bg-gray-100 p-4 rounded-md">
+        <div className="mb-6 bg-white p-4 rounded-md border border-gray-100">
           <h3 className="text-xl font-semibold text-gray-800">
             {companyData.razaoSocial || "Empresa Não Identificada"}
           </h3>
@@ -71,29 +71,32 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left Column - Company Information */}
           <div className="space-y-4">
-            {/* CNPJ */}
-            <div className="border border-gray-100 p-4 rounded-md shadow-sm">
-              <div className="flex items-center gap-2 mb-2">
-                <FileText className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium text-gray-500">CNPJ</span>
-              </div>
-              <span className="font-semibold text-gray-800">{formatCNPJ(companyData.cnpj) || "Não informado"}</span>
-            </div>
-            
-            {/* Segmento */}
-            {segment && (
-              <div className="border border-gray-100 p-4 rounded-md shadow-sm">
+            {/* CNPJ & Segmento in the same row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* CNPJ */}
+              <div className="border border-gray-100 p-4 rounded-md shadow-sm bg-white">
                 <div className="flex items-center gap-2 mb-2">
-                  <Store className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-medium text-gray-500">Segmento</span>
+                  <FileText className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium text-gray-500">CNPJ</span>
                 </div>
-                <span className="font-semibold text-gray-800">{segment.name}</span>
+                <span className="font-semibold text-gray-800">{formatCNPJ(companyData.cnpj) || "Não informado"}</span>
               </div>
-            )}
+              
+              {/* Segmento */}
+              {segment && (
+                <div className="border border-gray-100 p-4 rounded-md shadow-sm bg-white">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Store className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium text-gray-500">Segmento</span>
+                  </div>
+                  <span className="font-semibold text-gray-800">{segment.name}</span>
+                </div>
+              )}
+            </div>
             
             {/* Natureza Jurídica */}
             {companyData.naturezaJuridica && (
-              <div className="border border-gray-100 p-4 rounded-md shadow-sm">
+              <div className="border border-gray-100 p-4 rounded-md shadow-sm bg-white">
                 <div className="flex items-center gap-2 mb-2">
                   <FileText className="h-4 w-4 text-primary" />
                   <span className="text-sm font-medium text-gray-500">Natureza Jurídica</span>
@@ -104,7 +107,7 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
 
             {/* Endereço */}
             {companyData.endereco && (
-              <div className="border border-gray-100 p-4 rounded-md shadow-sm">
+              <div className="border border-gray-100 p-4 rounded-md shadow-sm bg-white">
                 <div className="flex items-center gap-2 mb-2">
                   <MapPin className="h-4 w-4 text-primary" />
                   <span className="text-sm font-medium text-gray-500">Endereço</span>
@@ -117,7 +120,7 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
           {/* Right Column - CNAE Information */}
           <div className="space-y-4">
             {/* CNAE Principal */}
-            <div className="border border-gray-200 rounded-md p-4 shadow-sm">
+            <div className="border border-gray-200 rounded-md p-4 shadow-sm bg-white">
               <h4 className="text-sm font-medium flex items-center gap-1.5 text-primary mb-3">
                 <Briefcase className="h-4 w-4 text-primary" />
                 CNAE Principal
@@ -136,7 +139,7 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
             </div>
             
             {/* CNAEs Secundários */}
-            <div className="border border-gray-200 rounded-md p-4 shadow-sm">
+            <div className="border border-gray-200 rounded-md p-4 shadow-sm bg-white">
               <h4 className="text-sm font-medium flex items-center gap-1.5 mb-3 text-primary">
                 <FileText className="h-4 w-4 text-primary" />
                 CNAEs Secundários
