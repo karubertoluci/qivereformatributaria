@@ -53,11 +53,11 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
       const bookDataObj = initialBookData.find(book => book.id === bookId);
       if (!bookDataObj) return;
       
-      // Apply the new relevance distribution: 
+      // Apply the relevance distribution: 
       // 40% Irrelevante, 10% Pouco relevante, 40% Moderadamente relevante, 10% Muito relevante
       const random = Math.random() * 100;
       
-      // Increment the appropriate relevance category based on new distribution
+      // Increment the appropriate relevance category based on distribution
       bookDataObj.total += 1;
       
       if (random < 40) {

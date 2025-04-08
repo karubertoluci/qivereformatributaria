@@ -2,7 +2,7 @@
 import React from 'react';
 import { Article } from '@/data/articles';
 import { HighlightType } from '@/components/results/types';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp } from 'lucide-react';
@@ -70,8 +70,22 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
     onAddHighlight(article.id, text, color);
   };
   
+  // Determine border color based on impact type
+  const getBorderClass = () => {
+    const segmentImpacts = article.impacts.filter(impact => 
+      impact.segments.includes(segmentId)
+    );
+    
+    // Apply favorability distribution
+    const randomImpact = Math.random() * 100;
+    
+    if (randomImpact < 40) return 'border-l-4 border-l-green-500'; // Favorable
+    if (randomImpact < 60) return ''; // Neutral (no special border)
+    return 'border-l-4 border-l-red-500'; // Unfavorable
+  };
+  
   return (
-    <Card className={`shadow-sm hover:shadow transition-shadow duration-200 mb-4 ${isExpanded ? 'border-primary' : ''}`}>
+    <Card className={`shadow-sm hover:shadow transition-shadow duration-200 mb-4 ${isExpanded ? 'border-primary' : ''} ${getBorderClass()}`}>
       <CardHeader className="pb-2 pt-4 px-4 md:pb-2 md:pt-6 md:px-6">
         <ArticleCardHeader 
           article={article} 
@@ -87,6 +101,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
           expanded={isExpanded}
           highlights={articleHighlights}
           onAddHighlight={handleAddHighlight}
+          onToggleExpand={onToggleExpand}
         />
         
         {isExpanded && (
@@ -103,35 +118,32 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
           </>
         )}
         
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onToggleExpand}
-            className="text-muted-foreground text-xs flex items-center gap-1"
-          >
-            {isExpanded ? (
-              <>
-                <ChevronUp className="h-4 w-4" />
-                Mostrar menos
-              </>
-            ) : (
-              <>
-                <ChevronDown className="h-4 w-4" />
-                Mostrar mais
-              </>
-            )}
-          </Button>
-          
-          {isExpanded && (
+        {isExpanded && (
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onToggleExpand}
+              className="text-muted-foreground text-xs flex items-center gap-1"
+            >
+              <ChevronUp className="h-4 w-4" />
+              Mostrar menos
+            </Button>
+            
             <ArticleCardActions 
               articleId={article.id}
               onShareArticle={handleShareArticle}
               onInviteToArticle={handleInviteToArticle}
             />
-          )}
-        </div>
+          </div>
+        )}
       </CardContent>
+      
+      {!isExpanded && (
+        <CardFooter className="pt-0 px-4 pb-4 md:px-6">
+          {/* "Ver detalhes" button moved to ArticleCardSummary */}
+        </CardFooter>
+      )}
     </Card>
   );
 };

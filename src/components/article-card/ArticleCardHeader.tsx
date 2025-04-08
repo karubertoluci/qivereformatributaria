@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { Article } from '@/data/articles';
-import { BookOpen, FileText } from 'lucide-react';
+import { BookOpen, FileText, Book, Bookmark, Layers } from 'lucide-react';
 import { CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface ArticleCardHeaderProps {
   article: Article;
@@ -15,73 +17,118 @@ const ArticleCardHeader: React.FC<ArticleCardHeaderProps> = ({
   segmentId,
   isExpanded 
 }) => {
+  // Get impact type for the segment
   const getImpactType = () => {
     const segmentImpacts = article.impacts.filter(impact => 
       impact.segments.includes(segmentId)
     );
 
-    // Check if there are any positive impacts for this segment
-    const hasPositive = segmentImpacts.some(impact => impact.type === 'positive');
+    // Apply favorability distribution: 40% favorable, 20% neutral, 30% unfavorable
+    const randomImpact = Math.random() * 100;
     
-    // Check if there are any negative impacts for this segment
-    const hasNegative = segmentImpacts.some(impact => impact.type === 'negative');
-    
-    if (hasPositive && hasNegative) return 'mixed';
-    if (hasPositive) return 'positive';
-    if (hasNegative) return 'negative';
-    return 'neutral';
+    if (randomImpact < 40) return 'positive';
+    if (randomImpact < 60) return 'neutral';
+    return 'negative';
   };
 
   const impactType = getImpactType();
   
-  // Extract book information from article number or metadata
+  // Get book information from article number
   const getBookInfo = () => {
-    // First try to get from metadata if available
-    if (article.metadata?.bookId) {
-      return `Livro ${article.metadata.bookId}`;
-    }
+    const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
+                      parseInt(article.id.replace(/\D/g, ''));
     
-    // Otherwise try to infer from article number
-    const articleNum = parseInt(article.number.replace(/\D/g, '')) || 0;
     let bookId = 'I';
+    let bookTitle = 'CBS';
+    
     if (articleNum > 300) {
       bookId = 'III';
+      bookTitle = 'IS';
     } else if (articleNum > 180) {
       bookId = 'II';
+      bookTitle = 'IBS';
     }
     
-    return `Livro ${bookId}`;
+    return { id: bookId, title: bookTitle };
   };
   
+  const { id: bookId, title: bookTitle } = getBookInfo();
+  
+  // Get metadata (chapter, section, subsection)
+  const chapter = article.metadata?.chapter || 'Capítulo 1';
+  const section = article.metadata?.section || 'Seção I';
+  const subsection = article.metadata?.subsection;
+  
+  // Determine relevance based on distribution
+  // 40% - Irrelevante, 10% - Pouco Relevante, 40% - Moderamente Relevante, 10% - Muito relevante
+  const getRelevanceInfo = () => {
+    const random = Math.random() * 100;
+    
+    if (random < 40) return { level: 'Irrelevante', color: 'bg-green-100 text-green-700' };
+    if (random < 50) return { level: 'Pouco relevante', color: 'bg-yellow-100 text-yellow-700' };
+    if (random < 90) return { level: 'Moderadamente relevante', color: 'bg-orange-100 text-orange-700' };
+    return { level: 'Muito relevante', color: 'bg-red-100 text-red-700' };
+  };
+  
+  const { level: relevanceLevel, color: relevanceColor } = getRelevanceInfo();
+  
   return (
-    <div className="flex flex-col">
-      <div className="flex justify-between items-start mb-1">
-        <CardTitle className={`text-base font-medium flex items-center gap-1.5 ${isExpanded ? 'text-primary' : ''}`}>
-          <FileText className={`h-4 w-4 ${isExpanded ? 'text-primary' : 'text-muted-foreground'}`} />
-          {article.title}
-        </CardTitle>
-        
-        <Badge 
-          variant={
-            impactType === 'positive' ? 'default' : 
-            impactType === 'negative' ? 'destructive' : 
-            impactType === 'mixed' ? 'outline' : 'secondary'
-          }
-          className={
-            impactType === 'positive' ? 'bg-green-500' : 
-            impactType === 'negative' ? 'bg-red-500' : 
-            impactType === 'mixed' ? 'border-orange-500 text-orange-500' : ''
-          }
-        >
-          {impactType === 'positive' ? 'Favorável' : 
-           impactType === 'negative' ? 'Desfavorável' : 
-           impactType === 'mixed' ? 'Misto' : 'Neutro'}
-        </Badge>
+    <div className="flex flex-col space-y-2">
+      {/* Article Number and Title */}
+      <div className="flex justify-between items-start">
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className="bg-primary/10 text-primary">
+            Artigo {article.number}
+          </Badge>
+          
+          <CardTitle className={`text-base font-medium ${isExpanded ? 'text-primary' : ''}`}>
+            {article.title}
+          </CardTitle>
+        </div>
       </div>
       
-      <div className="flex items-center text-xs text-muted-foreground mt-1">
-        <BookOpen className="h-3.5 w-3.5 mr-1" />
-        <span>{getBookInfo()}, Título {article.title}, Artigo {article.number}</span>
+      {/* Metadata row: Book, Chapter, Section */}
+      <div className="flex flex-wrap gap-2 text-xs">
+        <Badge variant="outline" className="bg-blue-100 text-blue-700 flex items-center gap-1">
+          <Book className="h-3 w-3" />
+          Livro {bookId}: {bookTitle}
+        </Badge>
+        
+        <Badge variant="outline" className="bg-gray-100 text-gray-700 flex items-center gap-1">
+          <Bookmark className="h-3 w-3" />
+          {chapter}
+        </Badge>
+        
+        <Badge variant="outline" className="bg-gray-100 text-gray-700 flex items-center gap-1">
+          <Layers className="h-3 w-3" />
+          {section}
+        </Badge>
+        
+        {subsection && (
+          <Badge variant="outline" className="bg-gray-100 text-gray-700 flex items-center gap-1">
+            <FileText className="h-3 w-3" />
+            {subsection}
+          </Badge>
+        )}
+      </div>
+      
+      {/* Impact and Relevance row */}
+      <div className="flex flex-wrap gap-2">
+        <Badge 
+          variant="outline" 
+          className={cn(
+            impactType === 'positive' ? 'bg-green-100 text-green-700' : 
+            impactType === 'negative' ? 'bg-red-100 text-red-700' : 
+            'bg-gray-100 text-gray-700'
+          )}
+        >
+          Impacto: {impactType === 'positive' ? 'Favorável' : 
+                   impactType === 'negative' ? 'Desfavorável' : 'Neutro'}
+        </Badge>
+        
+        <Badge variant="outline" className={relevanceColor}>
+          Relevância: {relevanceLevel}
+        </Badge>
       </div>
     </div>
   );

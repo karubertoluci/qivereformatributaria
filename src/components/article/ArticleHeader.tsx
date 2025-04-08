@@ -2,7 +2,7 @@
 import React from 'react';
 import { CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { FileText, Book, Info, AlertTriangle, CheckCircle } from 'lucide-react';
+import { FileText, Book, Info, AlertTriangle, CheckCircle, Bookmark, Layers } from 'lucide-react';
 import { Article } from '@/data/articles';
 import { cn } from '@/lib/utils';
 
@@ -17,12 +17,12 @@ const ArticleHeader: React.FC<ArticleHeaderProps> = ({ article, segmentId }) => 
   );
   
   // Apply the updated relevance distribution
+  // 40% Irrelevante, 10% Pouco relevante, 40% Moderadamente relevante, 10% Muito relevante
   const randomRelevance = Math.random() * 100;
   let importanceText: string;
   let colorClass: string;
   let importanceIcon: JSX.Element;
   
-  // 40% Irrelevante, 10% Pouco relevante, 40% Moderadamente relevante, 10% Muito relevante
   if (randomRelevance < 40) {
     importanceText = 'Irrelevante';
     colorClass = 'bg-green-100 text-green-700';
@@ -44,7 +44,6 @@ const ArticleHeader: React.FC<ArticleHeaderProps> = ({ article, segmentId }) => 
   // Determine which book the article belongs to based on article ID or number
   const getArticleBook = () => {
     // For demonstration purposes, determining book based on article ID or number logic
-    // In a real implementation, this would come from the article metadata
     const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
                       parseInt(article.id.replace(/\D/g, ''));
     
@@ -58,6 +57,11 @@ const ArticleHeader: React.FC<ArticleHeaderProps> = ({ article, segmentId }) => 
   };
   
   const { id: bookId, name: bookName, color: bookColor } = getArticleBook();
+  
+  // Get metadata (chapter, section, subsection)
+  const chapter = article.metadata?.chapter || 'Capítulo 1';
+  const section = article.metadata?.section || 'Seção I';
+  const subsection = article.metadata?.subsection;
   
   // Apply favorability distribution: 40% favorable, 20% neutral, 30% unfavorable
   const randomImpact = Math.random() * 100;
@@ -76,36 +80,55 @@ const ArticleHeader: React.FC<ArticleHeaderProps> = ({ article, segmentId }) => 
   }
   
   return (
-    <div className="flex flex-col mb-3">
+    <div className="flex flex-col space-y-2 mb-3">
+      {/* Article Number and Title */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <CardTitle className="flex items-center">
             <FileText className="h-5 w-5 mr-2 text-primary" />
-            <span className="bg-primary/10 px-2 py-0.5 rounded text-primary">{article.number}</span>
+            <span className="bg-primary/10 px-2 py-0.5 rounded text-primary">Artigo {article.number}</span>
           </CardTitle>
-          
-          {/* Book Badge */}
-          <Badge variant="outline" className={cn("text-xs py-0.5 px-2 flex items-center gap-1", bookColor)}>
-            <Book className="h-3 w-3" />
-            Livro {bookId}: {bookName}
-          </Badge>
-        </div>
-        
-        <div className="flex gap-2">
-          {/* Impact Badge */}
-          <Badge variant="outline" className={cn("text-xs py-0.5 px-2", impactColor)}>
-            {impactType}
-          </Badge>
-          
-          {/* Relevance Badge */}
-          <Badge variant="outline" className={cn("text-xs py-0.5 px-2 flex items-center gap-1", colorClass)}>
-            {importanceIcon}
-            {importanceText}
-          </Badge>
         </div>
       </div>
       
-      <CardDescription className="text-lg font-medium mt-1 text-foreground">
+      {/* Metadata row: Book, Chapter, Section */}
+      <div className="flex flex-wrap gap-2 mt-2">
+        <Badge variant="outline" className={cn("text-xs py-0.5 px-2 flex items-center gap-1", bookColor)}>
+          <Book className="h-3 w-3" />
+          Livro {bookId}: {bookName}
+        </Badge>
+        
+        <Badge variant="outline" className="bg-gray-100 text-gray-700 text-xs py-0.5 px-2 flex items-center gap-1">
+          <Bookmark className="h-3 w-3" />
+          {chapter}
+        </Badge>
+        
+        <Badge variant="outline" className="bg-gray-100 text-gray-700 text-xs py-0.5 px-2 flex items-center gap-1">
+          <Layers className="h-3 w-3" />
+          {section}
+        </Badge>
+        
+        {subsection && (
+          <Badge variant="outline" className="bg-gray-100 text-gray-700 text-xs py-0.5 px-2 flex items-center gap-1">
+            <FileText className="h-3 w-3" />
+            {subsection}
+          </Badge>
+        )}
+      </div>
+      
+      {/* Impact and Relevance row */}
+      <div className="flex flex-wrap gap-2">
+        <Badge variant="outline" className={cn("text-xs py-0.5 px-2", impactColor)}>
+          {impactType}
+        </Badge>
+        
+        <Badge variant="outline" className={cn("text-xs py-0.5 px-2 flex items-center gap-1", colorClass)}>
+          {importanceIcon}
+          {importanceText}
+        </Badge>
+      </div>
+      
+      <CardDescription className="text-lg font-medium text-foreground">
         {article.title}
       </CardDescription>
     </div>

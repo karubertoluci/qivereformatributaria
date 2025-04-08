@@ -34,13 +34,15 @@ export const useArticleFiltering = (
       );
     });
   
-  // Apply the desired distribution: 40% positive, 20% neutral, 30% negative
+  // Apply the favorability distribution: 40% positive, 20% neutral, 30% negative
   const totalCount = relevantArticles.length;
   const positiveCount = Math.round(totalCount * 0.4); // 40% favorable
   const neutralCount = Math.round(totalCount * 0.2);  // 20% neutral
   const negativeCount = Math.round(totalCount * 0.3); // 30% unfavorable
+  const otherCount = totalCount - positiveCount - neutralCount - negativeCount;
   
-  // Calculate relevance distribution counts
+  // Apply the relevance distribution: 
+  // 40% Irrelevante, 10% Pouco relevante, 40% Moderadamente relevante, 10% Muito relevante
   const irrelevantCount = Math.round(totalCount * 0.4);       // 40% irrelevant
   const slightlyRelevantCount = Math.round(totalCount * 0.1); // 10% slightly relevant
   const moderatelyRelevantCount = Math.round(totalCount * 0.4); // 40% moderately relevant
@@ -60,6 +62,7 @@ export const useArticleFiltering = (
     positiveCount,
     negativeCount,
     neutralCount,
+    otherCount,
     irrelevantCount,
     slightlyRelevantCount,
     moderatelyRelevantCount,
