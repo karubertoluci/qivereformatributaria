@@ -5,6 +5,14 @@ import { FileText, ChevronDown } from 'lucide-react';
 import HighlightedText from '../results/HighlightedText';
 import { HighlightType } from '../results/types';
 import { Button } from '../ui/button';
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import ArticleContent from '../article';
 
 interface ArticleCardSummaryProps {
   article: Article;
@@ -12,6 +20,7 @@ interface ArticleCardSummaryProps {
   expanded: boolean;
   highlights: HighlightType[];
   onAddHighlight: (text: string, color: HighlightType['color']) => void;
+  onRemoveHighlight: (id: string) => void;
   onToggleExpand: () => void;
 }
 
@@ -21,38 +30,50 @@ const ArticleCardSummary: React.FC<ArticleCardSummaryProps> = ({
   expanded,
   highlights,
   onAddHighlight,
+  onRemoveHighlight,
   onToggleExpand 
 }) => {
   return (
     <div className="space-y-4">
-      {/* Texto Original - sempre visível quando não expandido */}
-      {!expanded && (
-        <div className="bg-muted/50 rounded-md border border-muted p-3 mt-2">
-          <h4 className="text-sm font-bold flex items-center mb-2">
-            <FileText className="h-4 w-4 mr-1 text-blue-500" />
-            Texto Original da Lei
-          </h4>
-          <p className="text-xs text-muted-foreground">
-            {article.originalText.substring(0, 150)}
-            {article.originalText.length > 150 && "..."}
-          </p>
+      {/* Texto Original - sempre visível */}
+      <div className="bg-white rounded-md p-3 mt-2 space-y-3 border border-border/30">
+        <p className="text-sm font-medium">
+          {article.originalText.substring(0, 150)}
+          {article.originalText.length > 150 && "..."}
+        </p>
+        
+        {/* Tag de relevância */}
+        <div className="flex items-center">
+          <span className="text-xs px-3 py-1 rounded-full bg-green-100 text-green-700 font-medium">
+            Muito relevante
+          </span>
         </div>
-      )}
-      
-      {/* Conteúdo expandido - é mostrado em outro componente */}
-      
-      {/* CTA Button - somente quando não expandido */}
-      {!expanded && (
-        <Button 
-          onClick={onToggleExpand}
-          variant="outline" 
-          size="sm" 
-          className="w-full mt-3 border-primary text-primary hover:bg-primary/10"
-        >
-          Ver detalhes
-          <ChevronDown className="h-4 w-4 ml-1" />
-        </Button>
-      )}
+        
+        {/* CTA Button - Dialog trigger */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="w-full mt-3 text-primary border-primary hover:bg-primary/10"
+            >
+              Ver detalhes do artigo
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{article.title}</DialogTitle>
+            </DialogHeader>
+            <ArticleContent 
+              article={article} 
+              segmentId={segmentId} 
+              highlights={highlights} 
+              onAddHighlight={onAddHighlight} 
+              onRemoveHighlight={onRemoveHighlight} 
+            />
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 };
