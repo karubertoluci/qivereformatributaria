@@ -31,20 +31,44 @@ export const useResultsData = (segment: BusinessSegment) => {
   
   // Carregar os dados da empresa do localStorage
   useEffect(() => {
-    // Tenta carregar os dados da empresa
     try {
+      // First try to load from companyData (from API)
       const companyDataStr = localStorage.getItem('companyData');
       if (companyDataStr) {
         const companyData = JSON.parse(companyDataStr);
-        setFormData(companyData);
-        console.log('Dados da empresa carregados com sucesso:', companyData);
+        console.log('Dados da empresa carregados:', companyData);
+        
+        // Format the data to ensure consistency
+        const formattedData: CompanyData = {
+          cnpj: companyData.cnpj,
+          razaoSocial: companyData.razaoSocial || companyData.razao_social,
+          nomeFantasia: companyData.nomeFantasia || companyData.nome_fantasia || companyData.razaoSocial || companyData.razao_social,
+          endereco: companyData.endereco,
+          cnaePrincipal: companyData.cnaePrincipal || {
+            codigo: companyData.cnae_fiscal?.toString() || '',
+            descricao: companyData.cnae_fiscal_descricao || ''
+          },
+          cnaeSecundarios: companyData.cnaeSecundarios || companyData.cnaes_secundarios || [],
+          situacaoCadastral: companyData.situacaoCadastral || companyData.situacao_cadastral,
+          dataSituacaoCadastral: companyData.dataSituacaoCadastral || companyData.data_situacao_cadastral,
+          naturezaJuridica: companyData.naturezaJuridica || companyData.natureza_juridica,
+          capitalSocial: companyData.capitalSocial || companyData.capital_social,
+          porte: companyData.porte,
+          telefone: companyData.telefone || companyData.ddd_telefone_1,
+          original: companyData.original || companyData
+        };
+        
+        setFormData(formattedData);
+        
+        // Set company name in localStorage for easy access by other components
+        localStorage.setItem('companyName', formattedData.razaoSocial || '');
       } else {
-        // Se não existir companyData, verificar formData
+        // Fallback to formData for backwards compatibility
         const formDataStr = localStorage.getItem('formData');
         if (formDataStr) {
-          const formData = JSON.parse(formDataStr);
-          setFormData(formData);
-          console.log('Dados do formulário carregados:', formData);
+          const formDataObj = JSON.parse(formDataStr);
+          setFormData(formDataObj);
+          console.log('Dados do formulário carregados:', formDataObj);
         }
       }
     } catch (e) {

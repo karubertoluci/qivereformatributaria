@@ -29,11 +29,9 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
     
     if (propCompanyName) {
       setDisplayName(propCompanyName);
-      console.log('Nome da empresa definido como propriedade:', propCompanyName);
     }
     else if (storedCompanyName) {
       setDisplayName(storedCompanyName);
-      console.log('Nome da empresa encontrado no localStorage:', storedCompanyName);
     } 
     else if (companyData) {
       try {
@@ -43,7 +41,6 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
           const name = parsedData.razaoSocial || parsedData.razao_social || 
                        parsedData.nomeFantasia || parsedData.nome_fantasia;
           setDisplayName(name);
-          console.log('Nome da empresa extraído dos dados da empresa:', name);
           
           // Store it in localStorage for future reference
           localStorage.setItem('companyName', name);
@@ -58,7 +55,6 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
         if (parsedFormData.razaoSocial || parsedFormData.nome) {
           const name = parsedFormData.razaoSocial || parsedFormData.nome;
           setDisplayName(name);
-          console.log('Nome da empresa extraído do formulário:', name);
         }
       } catch (error) {
         console.error('Erro ao analisar os dados do formulário:', error);
@@ -74,8 +70,9 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
     navigate('/');
   };
   
-  return <div className="py-4 border-b border-gray-200 bg-zinc-50">
-      <div className="container mx-auto flex justify-between items-center mb-0 font-lexend px-4">
+  return (
+    <div className="py-4 border-b border-gray-200 bg-zinc-50 shadow-sm">
+      <div className="container mx-auto flex justify-between items-center font-lexend px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img src="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" alt="Qive Reforma Tributária" className="h-10" />
@@ -85,7 +82,7 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
         <div className="text-center mx-auto max-w-md sm:max-w-lg flex flex-col items-center">
           <h2 className="text-xl font-bold flex items-center gap-2 justify-center">
             <FileText className="h-5 w-5 shrink-0 text-primary" />
-            <span className="truncate">Relatório para {displayName}</span>
+            <span className="truncate">{displayName}</span>
           </h2>
           <p className="text-sm text-muted-foreground">
             Análise de impactos da reforma tributária no segmento {segment.name}
@@ -110,7 +107,8 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
           </Button>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default ResultsHeader;
