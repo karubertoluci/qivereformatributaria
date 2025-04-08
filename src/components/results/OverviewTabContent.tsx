@@ -3,7 +3,7 @@ import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
 import { CompanyData } from '@/hooks/useResultsData';
-import CompanyOverview from '../report/CompanyOverview';
+import CompanyOverview from '../report/company-overview';
 import ReformOverview from '../report/ReformOverview';
 import CompanyLegislationRelation from '../report/CompanyLegislationRelation';
 
