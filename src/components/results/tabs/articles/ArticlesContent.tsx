@@ -9,21 +9,19 @@ import ArticleCardList from '@/components/article/ArticleCardList';
 import ImpactsSection from './components/ImpactsSection';
 
 interface ArticlesContentProps {
-  viewMode: 'chart';
   displayedArticles: Article[];
   filteredArticles: Article[];
   selectedBookFilter: string | null;
   selectedTitleFilter: string | null;
   setSelectedBookFilter: (bookId: string | null) => void;
   setSelectedTitleFilter: (titleId: string | null) => void;
-  expandedArticleId: string | null;
-  setExpandedArticleId: (id: string | null) => void;
   segment: BusinessSegment;
   highlights: HighlightType[];
   onAddHighlight: (text: string, color: HighlightType['color'], articleId: string) => void;
   onRemoveHighlight: (id: string) => void;
-  articlesByTopic: Record<string, Article[]>;
-  topics: Topic[];
+  positiveCount: number;
+  negativeCount: number;
+  neutralCount: number;
 }
 
 const ArticlesContent: React.FC<ArticlesContentProps> = ({
@@ -36,7 +34,10 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
   segment,
   highlights,
   onAddHighlight,
-  onRemoveHighlight
+  onRemoveHighlight,
+  positiveCount,
+  negativeCount,
+  neutralCount
 }) => {
   // Verificar se há impactos críticos
   const hasCriticalImpacts = displayedArticles.some(article => 
@@ -71,12 +72,9 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
       {/* Seção de impactos no topo */}
       <ImpactsSection 
         hasCriticalImpacts={hasCriticalImpacts}
-        showAllArticles={true}
-        allArticles={filteredArticles}
-        relevantArticles={displayedArticles}
-        segmentId={segment.id}
-        bookId={selectedBookFilter}
-        relevanceFilter={null}
+        positiveCount={positiveCount}
+        negativeCount={negativeCount}
+        neutralCount={neutralCount}
       />
       
       {/* Sempre renderiza a visualização de cards */}
@@ -85,9 +83,10 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
         segmentId={segment.id}
         highlights={highlights}
         onAddHighlight={(text, color) => {
-          // We need to handle the articleId correctly
-          const selectedArticle = displayedArticles[0]; // Default to first article
-          onAddHighlight(text, color, selectedArticle.id);
+          // We need the articleId, which should be passed from the selected article
+          if (displayedArticles.length > 0) {
+            onAddHighlight(text, color, displayedArticles[0].id);
+          }
         }}
         onRemoveHighlight={onRemoveHighlight}
       />

@@ -2,10 +2,10 @@
 import React, { useState } from 'react';
 import { Article } from '@/data/articles';
 import { BusinessSegment } from '@/data/segments';
-import ArticlesFilters from './filters/ArticlesFilters';
-import ArticlesContent from './content/ArticlesContent';
-import ChartSection from './charts/ChartSection';
-import { Topic, FilterType, ViewMode } from '../../types';
+import { Topic, FilterType, ViewMode, HighlightType } from '../../types';
+import ChartSection from './ChartSection';
+import ArticlesFilters from './ArticlesFilters';
+import ArticlesContent from './ArticlesContent';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -23,8 +23,8 @@ interface ArticlesTabProps {
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
   articlesByTopic: Record<string, Article[]>;
-  highlights: any[];
-  onAddHighlight: (articleId: string, text: string, color?: string) => void;
+  highlights: HighlightType[];
+  onAddHighlight: (text: string, color: HighlightType['color'], articleId: string) => void;
   onRemoveHighlight: (id: string) => void;
 }
 
@@ -48,20 +48,13 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   onAddHighlight,
   onRemoveHighlight
 }) => {
-  const [chartExpanded, setChartExpanded] = useState(false);
+  const [chartsCollapsed, setChartsCollapsed] = useState(false);
+  const neutralCount = 0; // Define neutralCount
+  
+  // Define displayedArticles for ArticlesContent
+  const displayedArticles = filteredArticles;
   const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(null);
   const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(null);
-  
-  // Define displayedArticles for the ArticlesContent component
-  const displayedArticles = filteredArticles;
-  const neutralCount = 0; // Add a default neutralCount
-
-  // Ensure viewMode is always 'chart'
-  React.useEffect(() => {
-    if (viewMode !== 'chart') {
-      setViewMode('chart');
-    }
-  }, [viewMode, setViewMode]);
 
   return (
     <div className="space-y-6">
@@ -69,12 +62,9 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       <ChartSection 
         filteredArticles={filteredArticles}
         segmentId={segment.id}
-        segment={segment}
-        relevantArticles={relevantArticles}
         setExpandedArticleId={setExpandedArticleId}
-        expanded={chartExpanded}
-        toggleExpanded={() => setChartExpanded(!chartExpanded)}
-        allArticles={relevantArticles}
+        expanded={!chartsCollapsed}
+        toggleExpanded={() => setChartsCollapsed(!chartsCollapsed)}
       />
       
       {/* Search and Filters */}
@@ -91,7 +81,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         totalCount={relevantArticles.length}
       />
       
-      {/* Article Content */}
+      {/* Article Content (List or Table) */}
       <ArticlesContent 
         filteredArticles={filteredArticles}
         displayedArticles={displayedArticles}
@@ -100,14 +90,12 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         setSelectedBookFilter={setSelectedBookFilter}
         setSelectedTitleFilter={setSelectedTitleFilter}
         segment={segment}
-        topics={topics}
-        viewMode={viewMode}
-        expandedArticleId={expandedArticleId}
-        setExpandedArticleId={setExpandedArticleId}
-        articlesByTopic={articlesByTopic}
         highlights={highlights}
         onAddHighlight={onAddHighlight}
         onRemoveHighlight={onRemoveHighlight}
+        positiveCount={positiveCount}
+        negativeCount={negativeCount}
+        neutralCount={neutralCount}
       />
     </div>
   );

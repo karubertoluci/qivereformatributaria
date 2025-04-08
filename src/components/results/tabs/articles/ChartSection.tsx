@@ -2,33 +2,46 @@
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
+import { useIsMobile } from '@/hooks/use-mobile';
+import ArticlesPriorityChart from '@/components/ArticlesPriorityChart';
+import ChartExpandToggle from './components/ChartExpandToggle';
 
-export interface ChartSectionProps {
-  segment: BusinessSegment;
-  relevantArticles: Article[];
-  allArticles?: Article[]; // Make allArticles optional
+interface ChartSectionProps {
+  filteredArticles: Article[];
   segmentId: string;
   setExpandedArticleId: (id: string) => void;
-  filteredArticles?: Article[];
-  expanded?: boolean;
-  toggleExpanded?: () => void;
-  chartsCollapsed?: boolean;
-  setChartsCollapsed?: React.Dispatch<React.SetStateAction<boolean>>;
-  showAllArticles?: boolean;
-  setShowAllArticles?: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedBookFilter?: string | null;
-  setSelectedBookFilter?: React.Dispatch<React.SetStateAction<string | null>>;
-  setSelectedTitleFilter?: React.Dispatch<React.SetStateAction<string | null>>;
-  hasCriticalImpacts?: boolean;
-  total?: number;
+  expanded: boolean;
+  toggleExpanded: () => void;
 }
 
-// This is a placeholder component to fix build errors
-// The actual component implementation is in a read-only file
-const ChartSection: React.FC<ChartSectionProps> = () => {
+const ChartSection: React.FC<ChartSectionProps> = ({
+  filteredArticles,
+  segmentId,
+  setExpandedArticleId,
+  expanded,
+  toggleExpanded
+}) => {
+  const isMobile = useIsMobile();
+
   return (
-    <div>
-      {/* Placeholder - the actual implementation is in a read-only file */}
+    <div className="bg-white rounded-lg border p-4 mb-6">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="font-medium text-lg">Distribuição de impactos</h3>
+        <ChartExpandToggle 
+          expanded={expanded} 
+          toggleExpanded={toggleExpanded} 
+        />
+      </div>
+
+      <div className={`overflow-x-auto transition-all duration-300 ${expanded ? 'max-h-[600px]' : 'max-h-[300px]'}`}>
+        <div className={isMobile ? "min-w-[500px]" : ""}>
+          <ArticlesPriorityChart 
+            articles={filteredArticles}
+            segmentId={segmentId}
+            onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
+          />
+        </div>
+      </div>
     </div>
   );
 };

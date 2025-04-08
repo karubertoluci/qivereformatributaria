@@ -1,29 +1,31 @@
 
 import React from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Maximize2, Minimize2 } from 'lucide-react';
 
 interface ChartExpandToggleProps {
   expanded: boolean;
   toggleExpanded: () => void;
 }
 
-const ChartExpandToggle: React.FC<ChartExpandToggleProps> = ({
-  expanded,
-  toggleExpanded
-}) => {
+const ChartExpandToggle: React.FC<ChartExpandToggleProps> = ({ expanded, toggleExpanded }) => {
   return (
     <Button
       variant="ghost"
       size="sm"
       onClick={toggleExpanded}
-      title={expanded ? "Minimizar gráfico" : "Expandir gráfico"}
-      className="h-8 w-8 p-0"
+      className="flex items-center gap-1 text-sm"
     >
       {expanded ? (
-        <Minimize2 className="h-4 w-4" />
+        <>
+          <ChevronUp className="h-4 w-4" />
+          <span>Minimizar</span>
+        </>
       ) : (
-        <Maximize2 className="h-4 w-4" />
+        <>
+          <ChevronDown className="h-4 w-4" />
+          <span>Expandir</span>
+        </>
       )}
     </Button>
   );
