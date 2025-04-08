@@ -1,7 +1,5 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { FileText } from 'lucide-react';
 import { ViewMode } from './types';
 
 interface ViewSwitcherProps {
@@ -17,19 +15,8 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({ viewMode, setViewMode }) =>
     }
   }, [viewMode, setViewMode]);
 
-  return (
-    <div className="flex space-x-2">
-      <Button
-        variant="default"
-        size="sm"
-        className="flex items-center gap-1.5"
-        aria-label="Visualização em cards"
-      >
-        <FileText className="h-4 w-4" />
-        <span className="hidden sm:inline">Cards</span>
-      </Button>
-    </div>
-  );
+  // Return an empty fragment since we don't need to show any view mode buttons
+  return <></>;
 };
 
 export default ViewSwitcher;
