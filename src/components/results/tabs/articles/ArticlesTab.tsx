@@ -103,6 +103,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
           viewMode={viewMode}
           setViewMode={setViewMode}
           topics={topics}
+          segment={segment}
         />
       </div>
     </TabsContent>

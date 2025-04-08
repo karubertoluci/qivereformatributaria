@@ -44,7 +44,9 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
     article.impacts.some(impact => 
       impact.segments.includes(segment.id) && 
       impact.type === 'negative' && 
-      impact.severity === 'high'
+      (typeof impact.severity === 'string' ? 
+        impact.severity === 'high' : 
+        impact.severity >= 8)
     )
   );
 
@@ -72,9 +74,11 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
       {/* Seção de impactos no topo */}
       <ImpactsSection 
         hasCriticalImpacts={hasCriticalImpacts}
-        positiveCount={positiveCount}
-        negativeCount={negativeCount}
-        neutralCount={neutralCount}
+        relevantArticles={displayedArticles}
+        allArticles={filteredArticles}
+        segmentId={segment.id}
+        bookId={selectedBookFilter || ''}
+        relevanceFilter={null}
       />
       
       {/* Sempre renderiza a visualização de cards */}

@@ -47,7 +47,7 @@ const HighlightsTab: React.FC<HighlightsTabProps> = ({
                         highlight.color === 'yellow' ? 'bg-yellow-100' : 
                         highlight.color === 'green' ? 'bg-green-100' : 
                         highlight.color === 'blue' ? 'bg-blue-100' : 
-                        highlight.color === 'purple' ? 'bg-purple-100' : 
+                        highlight.color === 'pink' ? 'bg-purple-100' : 
                         'bg-gray-100'
                       }`}
                     >

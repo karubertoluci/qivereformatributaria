@@ -7,6 +7,7 @@ import ArticleTableView from '@/components/results/ArticleTableView';
 import ViewSwitcher from '@/components/results/ViewSwitcher';
 import NoArticlesFound from '@/components/results/NoArticlesFound';
 import ImpactsSection from '../components/ImpactsSection';
+import { BusinessSegment } from '@/data/segments';
 
 interface ArticlesContentProps {
   filteredArticles: Article[];
@@ -24,6 +25,7 @@ interface ArticlesContentProps {
   viewMode: ViewMode;
   setViewMode: (mode: ViewMode) => void;
   topics: Topic[];
+  segment: BusinessSegment;
 }
 
 const ArticlesContent: React.FC<ArticlesContentProps> = ({
@@ -41,16 +43,23 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
   articlesByTopic,
   viewMode,
   setViewMode,
-  topics
+  topics,
+  segment
 }) => {
   const hasCriticalImpacts = filteredArticles.some(article => 
-    article.impacts.some(impact => impact.severity >= 8)
+    article.impacts.some(impact => 
+      typeof impact.severity === 'number' && impact.severity >= 8
+    )
   );
 
   // If no articles match the filters
   if (!filteredArticles.length) {
-    return <NoArticlesFound />;
+    return <NoArticlesFound segment={segment} />;
   }
+
+  const onSelectArticle = (id: string | null) => {
+    setExpandedArticleId(id);
+  };
 
   return (
     <div className="space-y-6">
@@ -59,7 +68,7 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
         hasCriticalImpacts={hasCriticalImpacts}
         relevantArticles={filteredArticles}
         allArticles={filteredArticles}
-        segmentId={selectedBookFilter}
+        segmentId={segment.id}
         bookId={selectedBookFilter}
         relevanceFilter={null}
       />
@@ -73,8 +82,9 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
       </div>
       
       {/* Display articles in the selected view mode */}
-      {viewMode === 'topics' ? (
+      {viewMode === 'chart' ? (
         <ArticleTopicsView 
+          filteredArticles={filteredArticles}
           articlesByTopic={articlesByTopic}
           expandedArticleId={expandedArticleId}
           setExpandedArticleId={setExpandedArticleId}
@@ -82,6 +92,8 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
           onAddHighlight={onAddHighlight}
           onRemoveHighlight={onRemoveHighlight}
           topics={topics}
+          segmentId={segment.id}
+          onSelectArticle={onSelectArticle}
         />
       ) : (
         <ArticleTableView 
@@ -91,6 +103,7 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
           highlights={highlights}
           onAddHighlight={onAddHighlight}
           onRemoveHighlight={onRemoveHighlight}
+          segment={segment}
         />
       )}
     </div>

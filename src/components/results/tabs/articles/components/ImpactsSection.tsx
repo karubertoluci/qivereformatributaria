@@ -20,7 +20,8 @@ const ImpactsSection: React.FC<ImpactsSectionProps> = ({
   // Count critical articles
   const criticalArticles = relevantArticles.filter(article => 
     article.impacts.some(impact => 
-      impact.severity >= 8 && impact.segments.includes(segmentId)
+      // Fix the comparison by ensuring severity is treated as a number
+      typeof impact.severity === 'number' && impact.severity >= 8 && impact.segments.includes(segmentId)
     )
   );
   
