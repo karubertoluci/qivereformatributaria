@@ -1,3 +1,4 @@
+
 #root {
   margin: 0 auto;
   padding: 0;
@@ -42,7 +43,8 @@
 /* Remove any horizontal orange lines - apply to all possible elements */
 hr, .border-t, .border-b, [class*="divider"], [class*="separator"],
 .horizontal-divider, .section-divider, .chart-divider, .content-divider,
-[class*="border-y"], [class*="border-x"] {
+[class*="border-y"], [class*="border-x"], .recharts-wrapper .recharts-cartesian-grid-horizontal line,
+.recharts-wrapper .recharts-reference-line line {
   border-color: #e5e7eb !important; /* gray-200 */
   background-color: #e5e7eb !important; /* gray-200 */
 }
@@ -82,6 +84,25 @@ section, article, .chart-container, .data-display {
 /* Fix footer border colors */
 footer .border-t {
   border-color: rgba(75, 85, 99, 0.3) !important;
+}
+
+/* Fix for the bottom border in the chart component */
+.recharts-wrapper {
+  border-bottom-color: #e5e7eb !important;
+}
+
+/* Specific fix for the line at the bottom of the results page */
+.recharts-wrapper::after,
+.chart-container::after,
+.results-section::after {
+  content: "";
+  display: block;
+  height: 1px;
+  background-color: #e5e7eb;
+  border-color: #e5e7eb;
+  position: relative;
+  bottom: 0;
+  width: 100%;
 }
 
 /* Ensure the footer spans the full width */

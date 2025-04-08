@@ -127,7 +127,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
         </TabsContent>
       </ResultsTabLayout>
       
-      {/* Footer */}
+      {/* Footer com borda cinza */}
       <div className="border-t border-gray-600 bg-white">
         <ResultsFooter />
       </div>

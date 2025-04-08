@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -86,7 +85,8 @@
 hr, .horizontal-divider, 
 .border-t, .border-b, .border-y,
 [class*="divider"], [class*="separator"], 
-[role="separator"], [class*="horizontal-line"] {
+[role="separator"], [class*="horizontal-line"],
+.recharts-reference-line line, .recharts-tooltip-separator {
   @apply border-gray-200 bg-gray-200 !important;
 }
 
@@ -160,4 +160,18 @@ hr {
   border-color: #e5e7eb !important;
   background-color: #e5e7eb !important;
   height: 1px !important;
+}
+
+/* Fix specific for result container elements */
+.recharts-wrapper, .chart-footer, 
+.results-container, .results-section, 
+.report-section, .book-distribution {
+  border-color: #e5e7eb !important;
+}
+
+/* Fix for any bottom borders that might be orange */
+*[class*="bottom-border"], 
+*[style*="border-bottom-color"], 
+*[style*="border-bottom:"] {
+  border-bottom-color: #e5e7eb !important;
 }
