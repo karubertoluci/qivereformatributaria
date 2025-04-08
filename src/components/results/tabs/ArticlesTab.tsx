@@ -20,6 +20,9 @@ interface ArticlesTabProps {
   handleAddHighlight: (articleId: string, text: string, color?: HighlightType['color']) => void;
   handleRemoveHighlight: (id: string) => void;
   topics: Topic[];
+  articlesByTopic: Record<string, Article[]>;
+  viewMode: 'chart';
+  setViewMode: (mode: 'chart') => void;
 }
 
 const ArticlesTab = ({ 
@@ -31,7 +34,10 @@ const ArticlesTab = ({
   highlights,
   handleAddHighlight,
   handleRemoveHighlight,
-  topics
+  topics,
+  articlesByTopic,
+  viewMode,
+  setViewMode
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(searchParams.get('book') || null);
@@ -98,6 +104,10 @@ const ArticlesTab = ({
               onAddHighlight={handleAddHighlight}
               onRemoveHighlight={handleRemoveHighlight}
               topics={topics}
+              articlesByTopic={articlesByTopic}
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+              segment={segment}
             />
           </div>
         </main>
