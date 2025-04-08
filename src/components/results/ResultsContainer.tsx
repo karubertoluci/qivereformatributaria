@@ -42,7 +42,8 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
     topics,
     highlights,
     handleAddHighlight,
-    handleRemoveHighlight
+    handleRemoveHighlight,
+    isLoading
   } = useResultsData(segment);
 
   // Wrapper function to adapt the signature
@@ -54,6 +55,20 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
   const onSetFilterType = (type: FilterType) => {
     setFilterType(type);
   };
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto p-8 text-center">
+        <div className="flex flex-col items-center justify-center space-y-4">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
+          <h2 className="text-xl font-medium">Carregando relatório personalizado...</h2>
+          <p className="text-muted-foreground">
+            Estamos analisando os dados da reforma tributária para o segmento: {segment.name}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto print:p-0 px-[10px] my-0 py-0">
@@ -113,7 +128,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
           />
         </TabsContent>
         
-        {/* Meus Destaques Tab - Centralized at global level */}
+        {/* Meus Destaques Tab */}
         <TabsContent value="highlights">
           <HighlightsTab 
             highlights={highlights}
@@ -124,7 +139,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
         </TabsContent>
       </Tabs>
       
-      {/* Rodapé do relatório com borda cinza */}
+      {/* Rodapé do relatório */}
       <div className="border-t border-gray-600">
         <ResultsFooter />
       </div>

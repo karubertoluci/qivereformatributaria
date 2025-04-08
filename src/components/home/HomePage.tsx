@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Hero from './hero/Hero';
 import SearchForm from './search-form';
@@ -8,38 +9,46 @@ import AboutQive from './AboutQive';
 import TalkToExpert from './TalkToExpert';
 import SectorTags from './SectorTags';
 import { BusinessSegment } from '@/data/segments';
+
 interface HomePageProps {
   onCnaeSubmit: (cnae: string) => void;
   onSelectSegment: (segment: BusinessSegment | null) => void;
 }
+
 const HomePage: React.FC<HomePageProps> = ({
   onCnaeSubmit,
   onSelectSegment
 }) => {
-  // When a user fills out the form with company data,
-  // we store this in localStorage to use on the results page
+  // Quando um usuário preenche o formulário com dados da empresa,
+  // armazenamos no localStorage para usar na página de resultados
   React.useEffect(() => {
-    // Clear previous data when the page loads
+    // Limpar dados anteriores quando a página carrega
     localStorage.removeItem('companyData');
+    // Também removemos dados de artigos do segmento para garantir que serão buscados novamente
+    localStorage.removeItem('segmentArticles');
   }, []);
+
   const handleFormSubmission = (cnae: string, segment?: BusinessSegment) => {
-    // Save the form data in localStorage before navigating
+    // Salvar os dados do formulário no localStorage antes de navegar
     const formData = JSON.parse(localStorage.getItem('formData') || '{}');
     if (formData) {
       localStorage.setItem('companyData', JSON.stringify(formData));
     }
+
     if (segment) {
       onSelectSegment(segment);
     } else {
       onCnaeSubmit(cnae);
     }
   };
-  return <div className="flex flex-col min-h-[calc(100vh-12rem)]">
+
+  return (
+    <div className="flex flex-col min-h-[calc(100vh-12rem)]">
       {/* First floor: Headline + Subtitle */}
       <Hero />
       
       {/* Search form in focus */}
-      
+      <SearchForm />
       
       {/* Second floor: Explanation about the reform */}
       <HowItWorks />
@@ -58,6 +67,8 @@ const HomePage: React.FC<HomePageProps> = ({
       
       {/* New floor: Sector tags */}
       <SectorTags />
-    </div>;
+    </div>
+  );
 };
+
 export default HomePage;

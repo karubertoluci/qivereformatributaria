@@ -1,9 +1,11 @@
+
 import { useState, useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article, articles } from '@/data/articles';
 import { getArticlesByTopic } from '@/components/results/ArticlesByTopic';
 import { topics } from '@/components/results/ArticlesByTopic';
 import { CommentType, HighlightType, FilterType, ViewMode } from '@/components/results/types';
+import { supabase } from '@/integrations/supabase/client';
 
 export const useResultsData = (segment: BusinessSegment) => {
   const [expandedArticleId, setExpandedArticleId] = useState<string | null>(null);
@@ -12,6 +14,102 @@ export const useResultsData = (segment: BusinessSegment) => {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [activeTab, setActiveTab] = useState<'overview' | 'articles'>('overview');
   const [highlights, setHighlights] = useState<HighlightType[]>([]);
+  const [segmentArticles, setSegmentArticles] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Função para buscar artigos do Supabase
+  useEffect(() => {
+    const fetchArticlesFromSupabase = async () => {
+      setIsLoading(true);
+      
+      try {
+        // Primeiro tentamos carregar dados do localStorage (previamente buscados)
+        const cachedArticles = localStorage.getItem('segmentArticles');
+        if (cachedArticles) {
+          setSegmentArticles(JSON.parse(cachedArticles));
+          setIsLoading(false);
+          return;
+        }
+        
+        // Se não houver cache, buscar do Supabase
+        console.log('Buscando artigos do Supabase para o segmento:', segment.id);
+        
+        // Buscar impactos para o segmento
+        const { data: impactos, error: impactosError } = await supabase
+          .from('impactos')
+          .select('artigo_id, tipo, descricao, relevancia')
+          .eq('segmento_id', segment.id);
+          
+        if (impactosError) {
+          console.error('Erro ao buscar impactos:', impactosError);
+          setIsLoading(false);
+          return;
+        }
+        
+        if (!impactos || impactos.length === 0) {
+          console.log('Nenhum impacto encontrado para o segmento:', segment.id);
+          setIsLoading(false);
+          return;
+        }
+        
+        // Obter IDs dos artigos a partir dos impactos
+        const artigoIds = impactos.map(impacto => impacto.artigo_id);
+        
+        // Buscar os artigos
+        const { data: artigos, error: artigosError } = await supabase
+          .from('artigos')
+          .select('id, numero, texto, texto_simplificado, capitulo_id, secao_id, subsecao_id')
+          .in('id', artigoIds);
+          
+        if (artigosError) {
+          console.error('Erro ao buscar artigos:', artigosError);
+          setIsLoading(false);
+          return;
+        }
+        
+        // Transformar os resultados do Supabase no formato esperado pelo aplicativo
+        if (artigos) {
+          const formattedArticles = artigos.map(artigo => {
+            // Obter os impactos relacionados a este artigo
+            const artigoImpactos = impactos
+              .filter(impacto => impacto.artigo_id === artigo.id)
+              .map(impacto => ({
+                type: impacto.tipo,
+                description: impacto.descricao,
+                relevance: impacto.relevancia,
+                segments: [segment.id]
+              }));
+            
+            // Criar o objeto de artigo no formato esperado pelo app
+            return {
+              id: `art_${artigo.id}`,
+              number: artigo.numero.toString(),
+              title: `Artigo ${artigo.numero}`,
+              originalText: artigo.texto,
+              simplifiedText: artigo.texto_simplificado || artigo.texto,
+              impacts: artigoImpactos,
+              metadata: {
+                capituloId: artigo.capitulo_id,
+                secaoId: artigo.secao_id,
+                subsecaoId: artigo.subsecao_id
+              }
+            };
+          });
+          
+          setSegmentArticles(formattedArticles);
+          
+          // Salvar no localStorage para uso futuro
+          localStorage.setItem('segmentArticles', JSON.stringify(formattedArticles));
+        }
+      } catch (error) {
+        console.error('Erro ao buscar dados do Supabase:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchArticlesFromSupabase();
+  }, [segment.id]);
   
   // Load highlights from localStorage on mount
   useEffect(() => {
@@ -34,10 +132,12 @@ export const useResultsData = (segment: BusinessSegment) => {
   const formData = JSON.parse(localStorage.getItem('formData') || '{}');
   const hasCompanyData = Object.keys(formData).length > 0;
   
-  // Filter articles that affect the selected segment
-  const relevantArticles = articles.filter(article => 
-    article.impacts.some(impact => impact.segments.includes(segment.id))
-  );
+  // Use segmentArticles when available, otherwise use the mock articles from data/articles.ts
+  const relevantArticles = segmentArticles.length > 0 
+    ? segmentArticles 
+    : articles.filter(article => 
+        article.impacts.some(impact => impact.segments.includes(segment.id))
+      );
   
   // Apply search and impact type filters
   const filteredArticles = relevantArticles
@@ -116,7 +216,8 @@ export const useResultsData = (segment: BusinessSegment) => {
     negativeCount,
     handleArticleSelect,
     topics,
-    // New highlight-related state and functions
+    isLoading,
+    // Highlight-related state and functions
     highlights,
     setHighlights,
     handleAddHighlight,

@@ -1,127 +1,157 @@
+
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BusinessSegment } from '@/data/segments';
-import { Link, CircleCheck, CircleX, Info, ArrowRight } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-interface CompanyData {
-  nome?: string;
-  cargo?: string;
-  cnpj?: string;
-  razaoSocial?: string;
-  nomeFantasia?: string;
-  endereco?: string;
-  cnaePrincipal?: {
-    codigo: string;
-    descricao: string;
-  };
-}
+import { CompanyData } from '@/hooks/useResultsData';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { supabase } from '@/integrations/supabase/client';
+import LegislationBooks from './LegislationBooks';
+import ImpactDistributionChart from './ImpactDistributionChart';
+import { useEffect, useState } from 'react';
+
 interface CompanyLegislationRelationProps {
   segment: BusinessSegment;
   companyData?: CompanyData;
 }
+
 const CompanyLegislationRelation: React.FC<CompanyLegislationRelationProps> = ({
   segment,
   companyData
 }) => {
-  // This is placeholder data - in a real implementation, this would come from an analysis
-  // of how the specific CNAE or segment relates to different parts of the tax reform
-  const mainFocusAreas = [{
-    name: 'Alíquotas Diferenciadas',
-    applicable: true,
-    description: 'Seu segmento pode se beneficiar de alíquotas reduzidas previstas na reforma.'
-  }, {
-    name: 'Regime de Crédito Especial',
-    applicable: segment.id === 'agronegocio' || segment.id === 'industria',
-    description: 'Mecanismos específicos para recuperação de créditos tributários.'
-  }, {
-    name: 'Regras de Transição Estendidas',
-    applicable: segment.id === 'servicos' || segment.id === 'financeiro',
-    description: 'Períodos mais longos para adaptação ao novo sistema.'
-  }, {
-    name: 'Imunidades e Isenções',
-    applicable: segment.id === 'educacao' || segment.id === 'saude',
-    description: 'Possíveis reduções ou isenções em determinadas operações.'
-  }, {
-    name: 'Cashback para Consumidores',
-    applicable: segment.id === 'comercio_varejo',
-    description: 'Impacto das regras de devolução de imposto para consumidores finais.'
-  }];
-  const recommendations = ['Analise os impactos no fluxo de caixa durante o período de transição', 'Atualize seus sistemas fiscais para o novo modelo de tributação', 'Revise sua política de precificação considerando os efeitos da reforma', 'Avalie oportunidades de crédito fiscal no novo sistema', 'Prepare-se para potenciais mudanças nos requisitos de compliance'];
-  return <Card className="bg-gradient-to-br from-slate-50 to-slate-100 border shadow-lg">
-      <CardHeader className="border-b bg-white bg-opacity-70">
-        <CardTitle className="flex items-center gap-2 text-2xl">
-          <Link className="h-6 w-6 text-primary" />
-          Relação com seu Negócio
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="bg-slate-00 bg-zinc-50">
-        <div className="grid md:grid-cols-2 gap-6 py-[20px]">
-          {/* Lado Esquerdo - Análise Específica */}
-          <div className="space-y-5">
-            <h3 className="font-semibold text-lg text-slate-950">Análise Específica para seu Negócio</h3>
-            <p className="text-muted-foreground mb-4">
-              Analisamos como a Reforma Tributária afeta especificamente o segmento {segment.name}
-              {companyData?.cnaePrincipal && ` e empresas com CNAE ${companyData.cnaePrincipal.codigo}`}.
-              Abaixo estão os principais pontos de atenção:
-            </p>
-            
-            <div className="space-y-4">
-              {mainFocusAreas.map((area, index) => <div key={index} className="flex items-start gap-3">
-                  {area.applicable ? <CircleCheck className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" /> : <CircleX className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />}
-                  <div>
-                    <h4 className={`font-medium ${area.applicable ? 'text-foreground' : 'text-muted-foreground'}`}>
-                      {area.name}
-                    </h4>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {area.description}
-                    </p>
-                  </div>
-                </div>)}
-            </div>
-          </div>
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      // Tentar carregar do localStorage primeiro
+      const cachedArticles = localStorage.getItem('segmentArticles');
+      if (cachedArticles) {
+        setArticles(JSON.parse(cachedArticles));
+        setLoading(false);
+        return;
+      }
+      
+      try {
+        // Buscar impactos para o segmento
+        const { data: impacts, error: impactsError } = await supabase
+          .from('impactos')
+          .select('artigo_id, tipo, descricao, relevancia')
+          .eq('segmento_id', segment.id);
           
-          {/* Lado Direito - Recomendações */}
-          <div className="rounded-lg bg-gradient-to-r from-primary/10 to-primary/5 p-5 border border-primary/20">
-            <h3 className="font-semibold text-lg mb-4 flex items-center gap-2 text-gray-950">
-              <Info className="h-5 w-5" />
-              Recomendações para seu Negócio
-            </h3>
+        if (impactsError) throw impactsError;
+        
+        if (!impacts || impacts.length === 0) {
+          setLoading(false);
+          return;
+        }
+        
+        // Obter IDs dos artigos
+        const articleIds = impacts.map(impact => impact.artigo_id);
+        
+        // Buscar detalhes dos artigos
+        const { data: articles, error: articlesError } = await supabase
+          .from('artigos')
+          .select('id, numero, texto, texto_simplificado')
+          .in('id', articleIds);
+          
+        if (articlesError) throw articlesError;
+        
+        if (articles) {
+          // Formatar artigos para o formato esperado pelo componente
+          const formattedArticles = articles.map(article => {
+            const articleImpacts = impacts
+              .filter(impact => impact.artigo_id === article.id)
+              .map(impact => ({
+                type: impact.tipo,
+                description: impact.descricao,
+                relevance: impact.relevancia,
+                segments: [segment.id]
+              }));
             
-            
-            
-            <div className="space-y-3 mt-4">
-              {recommendations.map((rec, index) => <div key={index} className="flex items-start gap-3">
-                  <ArrowRight className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                  <p className="text-sm">
-                    {rec}
-                  </p>
-                </div>)}
-            </div>
-            
-            <div className="mt-5 text-sm text-muted-foreground">
-              <p>
-                Com base na sua atividade {companyData?.cnaePrincipal?.descricao ? `de ${companyData.cnaePrincipal.descricao}` : `no segmento ${segment.name}`}, 
-                recomendamos atenção especial aos artigos sobre {getRecommendationForSegment(segment.id)}.
-              </p>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>;
-};
-function getRecommendationForSegment(segmentId: string): string {
-  const recommendations: Record<string, string> = {
-    comercio_varejo: "apuração de créditos na cadeia produtiva e regras de cashback para consumidores de baixa renda",
-    industria: "aproveitamento de créditos em bens de capital e insumos, além das regras de transição para o IVA dual",
-    servicos: "alíquotas diferenciadas para serviços essenciais e mecanismos de compensação para setores mais impactados",
-    agronegocio: "regimes específicos para a agropecuária e tratamento da cesta básica",
-    construcao: "tratamento fiscal de obras em andamento e regras específicas para o setor imobiliário",
-    tecnologia: "tributação de serviços digitais e operações internacionais de tecnologia",
-    saude: "imunidades e alíquotas reduzidas para serviços e produtos de saúde",
-    educacao: "tratamento diferenciado para serviços educacionais e possíveis isenções",
-    financeiro: "regime específico para o sistema financeiro e seguro",
-    transporte: "regras de creditamento para investimentos em infraestrutura e tributação interestadual"
+            return {
+              id: `art_${article.id}`,
+              number: article.numero.toString(),
+              title: `Artigo ${article.numero}`,
+              originalText: article.texto,
+              simplifiedText: article.texto_simplificado || article.texto,
+              impacts: articleImpacts
+            };
+          });
+          
+          setArticles(formattedArticles);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar artigos:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchArticles();
+  }, [segment.id]);
+
+  const handleSelectArticle = (articleId: string) => {
+    // Navegar para a aba de artigos e expandir o artigo selecionado
+    const tabTrigger = document.querySelector('[value="articles"]');
+    if (tabTrigger) {
+      tabTrigger.dispatchEvent(new Event('click'));
+      // Aguardar a mudança de tab antes de expandir o artigo
+      setTimeout(() => {
+        const articleElement = document.getElementById(`article-${articleId}`);
+        if (articleElement) {
+          articleElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
   };
-  return recommendations[segmentId] || "não-cumulatividade e regras de transição";
-}
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Carregando dados da legislação...</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-center p-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-semibold mb-4">Relação da Sua Empresa com a Legislação</h2>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Livros da Legislação */}
+        <LegislationBooks 
+          articles={articles}
+          onSelectArticle={handleSelectArticle} 
+          selectedBook={selectedBookFilter}
+          onSelectBook={setSelectedBookFilter}
+        />
+        
+        {/* Distribuição de Impactos */}
+        <ImpactDistributionChart 
+          articles={articles} 
+          segmentId={segment.id}
+          bookId={selectedBookFilter}
+        />
+      </div>
+      
+      <div className="text-sm text-muted-foreground mt-4">
+        <p>
+          Esta análise mostra como sua empresa se relaciona com a reforma tributária, 
+          destacando os livros e artigos mais relevantes para o seu segmento: 
+          <strong> {segment.name}</strong>.
+        </p>
+      </div>
+    </div>
+  );
+};
+
 export default CompanyLegislationRelation;

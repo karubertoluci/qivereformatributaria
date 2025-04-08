@@ -1,1 +1,5 @@
+
 project_id = "devwdehydhhdczkxtvjt"
+
+[functions.load-reform-data]
+verify_jwt = false

@@ -9,7 +9,263 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      artigos: {
+        Row: {
+          capitulo_id: number | null
+          created_at: string
+          id: number
+          numero: number
+          secao_id: number | null
+          subsecao_id: number | null
+          texto: string
+          texto_simplificado: string | null
+        }
+        Insert: {
+          capitulo_id?: number | null
+          created_at?: string
+          id?: number
+          numero: number
+          secao_id?: number | null
+          subsecao_id?: number | null
+          texto: string
+          texto_simplificado?: string | null
+        }
+        Update: {
+          capitulo_id?: number | null
+          created_at?: string
+          id?: number
+          numero?: number
+          secao_id?: number | null
+          subsecao_id?: number | null
+          texto?: string
+          texto_simplificado?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artigos_capitulo_id_fkey"
+            columns: ["capitulo_id"]
+            isOneToOne: false
+            referencedRelation: "capitulos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "artigos_secao_id_fkey"
+            columns: ["secao_id"]
+            isOneToOne: false
+            referencedRelation: "secoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "artigos_subsecao_id_fkey"
+            columns: ["subsecao_id"]
+            isOneToOne: false
+            referencedRelation: "subsecoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capitulos: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          id: number
+          nome: string
+          numero: number | null
+          titulo_id: number
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          id?: number
+          nome: string
+          numero?: number | null
+          titulo_id: number
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          id?: number
+          nome?: string
+          numero?: number | null
+          titulo_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capitulos_titulo_id_fkey"
+            columns: ["titulo_id"]
+            isOneToOne: false
+            referencedRelation: "titulos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      impactos: {
+        Row: {
+          artigo_id: number
+          created_at: string
+          descricao: string
+          id: number
+          relevancia: number
+          segmento_id: string
+          tipo: string
+        }
+        Insert: {
+          artigo_id: number
+          created_at?: string
+          descricao: string
+          id?: number
+          relevancia: number
+          segmento_id: string
+          tipo: string
+        }
+        Update: {
+          artigo_id?: number
+          created_at?: string
+          descricao?: string
+          id?: number
+          relevancia?: number
+          segmento_id?: string
+          tipo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "impactos_artigo_id_fkey"
+            columns: ["artigo_id"]
+            isOneToOne: false
+            referencedRelation: "artigos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      livros: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          id: number
+          nome: string
+          numero: number | null
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          id?: number
+          nome: string
+          numero?: number | null
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          id?: number
+          nome?: string
+          numero?: number | null
+        }
+        Relationships: []
+      }
+      secoes: {
+        Row: {
+          capitulo_id: number
+          created_at: string
+          descricao: string | null
+          id: number
+          nome: string
+          numero: number | null
+        }
+        Insert: {
+          capitulo_id: number
+          created_at?: string
+          descricao?: string | null
+          id?: number
+          nome: string
+          numero?: number | null
+        }
+        Update: {
+          capitulo_id?: number
+          created_at?: string
+          descricao?: string | null
+          id?: number
+          nome?: string
+          numero?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "secoes_capitulo_id_fkey"
+            columns: ["capitulo_id"]
+            isOneToOne: false
+            referencedRelation: "capitulos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subsecoes: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          id: number
+          nome: string
+          numero: number | null
+          secao_id: number | null
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          id?: number
+          nome: string
+          numero?: number | null
+          secao_id?: number | null
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          id?: number
+          nome?: string
+          numero?: number | null
+          secao_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subsecoes_secao_id_fkey"
+            columns: ["secao_id"]
+            isOneToOne: false
+            referencedRelation: "secoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      titulos: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          id: number
+          livro_id: number
+          nome: string
+          numero: number | null
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          id?: number
+          livro_id: number
+          nome: string
+          numero?: number | null
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          id?: number
+          livro_id?: number
+          nome?: string
+          numero?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "titulos_livro_id_fkey"
+            columns: ["livro_id"]
+            isOneToOne: false
+            referencedRelation: "livros"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
