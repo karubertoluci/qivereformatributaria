@@ -3,10 +3,10 @@ import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { CompanyData } from '@/hooks/useResultsData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { supabase } from '@/integrations/supabase/client';
 import LegislationBooks from './LegislationBooks';
 import ImpactDistributionChart from './ImpactDistributionChart';
 import { useEffect, useState } from 'react';
+import { useArticleData } from '@/hooks/article/useArticleData';
 
 interface CompanyLegislationRelationProps {
   segment: BusinessSegment;
@@ -17,75 +17,8 @@ const CompanyLegislationRelation: React.FC<CompanyLegislationRelationProps> = ({
   segment,
   companyData
 }) => {
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchArticles = async () => {
-      // Tentar carregar do localStorage primeiro
-      const cachedArticles = localStorage.getItem('segmentArticles');
-      if (cachedArticles) {
-        setArticles(JSON.parse(cachedArticles));
-        setLoading(false);
-        return;
-      }
-      
-      try {
-        // Como não temos uma tabela de impactos, vamos usar diretamente a tabela livros_reforma
-        const { data: livrosData, error: livrosError } = await supabase
-          .from('livros_reforma' as any)
-          .select('*');
-          
-        if (livrosError) throw livrosError;
-        
-        if (!livrosData || livrosData.length === 0) {
-          setLoading(false);
-          return;
-        }
-        
-        // Formatar artigos para o formato esperado pelo componente
-        const formattedArticles = livrosData.map(artigo => {
-          // Criar um impacto padrão para cada artigo baseado no segmento
-          const articleImpacts = [
-            {
-              type: "positive", // Tipo de impacto padrão
-              description: `Artigo relacionado a ${segment.name}`,
-              relevance: "medium",
-              segments: [segment.id]
-            }
-          ];
-          
-          return {
-            id: `art_${artigo.id}`,
-            number: artigo.artigo || "N/A",
-            title: `Artigo ${artigo.artigo || "N/A"}`,
-            originalText: artigo.conteudo || "",
-            simplifiedText: artigo.conteudo || "",
-            impacts: articleImpacts,
-            metadata: {
-              livro: artigo.livro,
-              titulo: artigo.titulo,
-              capitulo: artigo.capitulo,
-              secao: artigo.secao,
-              subsecao: artigo.subsecao
-            }
-          };
-        });
-        
-        setArticles(formattedArticles);
-        
-        // Armazenar os artigos em cache para este segmento para melhorar o desempenho
-        localStorage.setItem(`segmentArticles_${segment.id}`, JSON.stringify(formattedArticles));
-      } catch (error) {
-        console.error('Erro ao buscar artigos:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchArticles();
-  }, [segment.id]);
+  const { segmentArticles: articles, isLoading } = useArticleData(segment);
 
   const handleSelectArticle = (articleId: string) => {
     // Navegar para a aba de artigos e expandir o artigo selecionado
@@ -102,7 +35,7 @@ const CompanyLegislationRelation: React.FC<CompanyLegislationRelationProps> = ({
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="space-y-4">
         <Card>

@@ -27,9 +27,8 @@ export const useArticleData = (segment: BusinessSegment) => {
         console.log(`Buscando artigos do Supabase para o segmento: ${segment.id}`);
         
         // Buscar da tabela livros_reforma
-        // Usando o cast para any para evitar erros de TypeScript
         const { data: livrosData, error: livrosError } = await supabase
-          .from('livros_reforma' as any)
+          .from('livros_reforma')
           .select('*');
           
         if (livrosError) {
