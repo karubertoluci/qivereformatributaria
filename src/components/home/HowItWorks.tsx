@@ -9,6 +9,11 @@ import { Button } from '@/components/ui/button';
 const HowItWorks = () => {
   const { openFormDialog } = useFormDialogContext();
   
+  const handleOpenDialog = () => {
+    console.log("Botão de gerar relatório clicado no HowItWorks");
+    openFormDialog();
+  };
+  
   return <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4 max-w-5xl">
         <h2 className="text-3xl font-bold text-center mb-4">A Reforma Tributária em Resumo</h2>
@@ -90,7 +95,7 @@ const HowItWorks = () => {
               </p>
               <div className="mt-4">
                 <Button 
-                  onClick={openFormDialog}
+                  onClick={handleOpenDialog}
                   className="bg-[#FF4719] hover:bg-[#E53E15] text-white"
                 >
                   Gerar relatório personalizado

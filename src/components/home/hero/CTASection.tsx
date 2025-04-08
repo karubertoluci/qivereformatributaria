@@ -7,6 +7,11 @@ const CTASection = () => {
   const { openFormDialog } = useFormDialogContext();
   const isMobile = useIsMobile();
   
+  const handleOpenDialog = () => {
+    console.log("Botão CTA clicado");
+    openFormDialog();
+  };
+  
   return (
     <div className="mt-12 md:mt-20 bg-[#FF4719] text-white py-8 md:py-12 px-4 md:px-8 rounded-lg">
       <div className="flex flex-col md:flex-row md:items-start md:justify-between">
@@ -27,7 +32,7 @@ const CTASection = () => {
         <div className="flex justify-center md:justify-end md:self-center">
           <button 
             className="bg-white text-[#FF4719] hover:bg-gray-100 font-medium py-3 px-6 rounded-md shadow-md w-full md:w-auto"
-            onClick={openFormDialog}
+            onClick={handleOpenDialog}
           >
             Falar com um especialista
           </button>

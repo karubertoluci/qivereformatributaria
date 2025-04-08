@@ -34,6 +34,8 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
   const [isLoading, setIsLoading] = React.useState(false);
   const { isFormDialogOpen, openFormDialog, closeFormDialog } = useFormDialogContext();
   
+  console.log("Estado do modal no SearchForm:", isFormDialogOpen);
+  
   // Filtrar segmentos com base no termo de busca
   const filteredSegments = businessSegments.filter(segment => 
     segment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -43,6 +45,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
   );
 
   const handleSegmentSelection = (segment: BusinessSegment) => {
+    console.log("Segmento selecionado, abrindo modal");
     openFormDialog();
   };
 
@@ -121,7 +124,10 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
               </div>
               
               <Button 
-                onClick={openFormDialog}
+                onClick={() => {
+                  console.log("Botão de gerar relatório clicado");
+                  openFormDialog();
+                }}
                 className="w-full bg-orange-500 hover:bg-orange-600 py-6 text-lg"
               >
                 <FileBarChart className="mr-2 h-5 w-5" />
@@ -136,7 +142,10 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
                 </p>
                 
                 <Button 
-                  onClick={openFormDialog}
+                  onClick={() => {
+                    console.log("Botão de informar dados clicado");
+                    openFormDialog();
+                  }}
                   className="w-full bg-orange-500 hover:bg-orange-600 py-6 text-lg"
                 >
                   <FileBarChart className="mr-2 h-5 w-5" />
@@ -147,12 +156,17 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
           </Tabs>
         </CardContent>
       </Card>
-      
-      <Dialog open={isFormDialogOpen} onOpenChange={closeFormDialog}>
+
+      {/* Modificamos a implementação do Dialog para usar openState explicitamente */}
+      <Dialog open={isFormDialogOpen} onOpenChange={(open) => {
+        if (!open) closeFormDialog();
+      }}>
         <FormDialog onSubmit={handleDialogSubmit} isLoading={isLoading} />
       </Dialog>
       
-      <Dialog open={isLoading}>
+      <Dialog open={isLoading} onOpenChange={(open) => {
+        if (!open) setIsLoading(false);
+      }}>
         <LoadingDialog 
           open={isLoading} 
           onOpenChange={() => {}} 

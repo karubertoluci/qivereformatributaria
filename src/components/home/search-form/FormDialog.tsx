@@ -1,6 +1,7 @@
 
 import React from 'react';
 import {
+  Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -51,6 +52,8 @@ const FormDialog: React.FC<FormDialogProps> = ({
   onSubmit, 
   isLoading 
 }) => {
+  console.log("FormDialog renderizado");
+  
   return (
     <DialogContent className="sm:max-w-2xl">
       <DialogHeader>

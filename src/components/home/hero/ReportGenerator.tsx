@@ -8,6 +8,11 @@ const ReportGenerator = () => {
   const { openFormDialog } = useFormDialogContext();
   const isMobile = useIsMobile();
   
+  const handleOpenDialog = () => {
+    console.log("Botão de gerar relatório clicado no ReportGenerator");
+    openFormDialog();
+  };
+  
   return (
     <div className="bg-orange-50 rounded-lg p-4 md:p-8 border border-gray-200 max-w-6xl mx-auto">
       <div className="text-center mb-4 md:mb-6">
@@ -28,7 +33,7 @@ const ReportGenerator = () => {
       <div className="text-center">
         <button 
           className="bg-[#FF4719] hover:bg-[#E53E15] text-white text-base md:text-lg font-medium py-2 md:py-3 px-4 md:px-6 rounded-md shadow-md mb-2 md:mb-3 w-full md:w-auto" 
-          onClick={openFormDialog}
+          onClick={handleOpenDialog}
         >
           Gerar relatório personalizado
           {!isMobile && " pra minha empresa"}
