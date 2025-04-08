@@ -33,11 +33,14 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
       try {
         const parsedData = JSON.parse(companyData);
         if (parsedData.razaoSocial || parsedData.razao_social || parsedData.nomeFantasia || parsedData.nome_fantasia) {
-          // Considere tanto as chaves em camelCase quanto as em snake_case
+          // Consider both camelCase and snake_case keys
           const name = parsedData.razaoSocial || parsedData.razao_social || 
                        parsedData.nomeFantasia || parsedData.nome_fantasia;
           setDisplayName(name);
           console.log('Nome da empresa extraído dos dados da empresa:', name);
+          
+          // Store it in localStorage for future reference
+          localStorage.setItem('companyName', name);
         }
       } catch (error) {
         console.error('Erro ao analisar os dados da empresa:', error);
