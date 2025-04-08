@@ -16,6 +16,11 @@ const Header = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
   
+  // Se estiver na rota de resultados, não mostrar o header
+  if (location.pathname.includes('/results/')) {
+    return null;
+  }
+  
   return (
     <header className="bg-white border-b font-lexend">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">

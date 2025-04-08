@@ -24,7 +24,11 @@ const ResultsPage = () => {
     return <Navigate to="/" />;
   }
   
-  return <Results segment={segment} onBackToSegments={() => {}} />;
+  return (
+    <div className="results-page">
+      <Results segment={segment} onBackToSegments={() => {}} />
+    </div>
+  );
 };
 
 function App() {
