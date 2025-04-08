@@ -50,7 +50,7 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
     article.impacts.some(impact => 
       impact.segments.includes(segment.id) && 
       impact.type === 'negative' && 
-      impact.relevance === 'critical'
+      impact.severity === 'high'
     )
   );
 

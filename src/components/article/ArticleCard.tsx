@@ -38,7 +38,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId }) => {
   };
   
   const averageRelevance = segmentImpacts.reduce((sum, impact) => {
-    return sum + (relevanceLevels[impact.relevance as keyof typeof relevanceLevels] || 2);
+    return sum + (relevanceLevels[impact.severity as keyof typeof relevanceLevels] || 2);
   }, 0) / Math.max(1, segmentImpacts.length);
   
   let relevanceText = 'Relevância média';
@@ -49,8 +49,8 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId }) => {
   
   // Determinar o livro com base no número do artigo ou metadata
   const getBookInfo = () => {
-    if (article.metadata?.livro) {
-      return `Livro ${article.metadata.livro}`;
+    if (article.metadata?.bookId) {
+      return `Livro ${article.metadata.bookId}`;
     }
     
     const articleNum = parseInt(article.number.replace(/\D/g, '')) || 0;
@@ -106,9 +106,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId }) => {
             {relevanceText}
           </Badge>
           
-          {article.metadata?.titulo && (
+          {article.metadata?.title && (
             <Badge variant="outline" className="text-xs">
-              Título: {article.metadata.titulo}
+              Título: {article.metadata.title}
             </Badge>
           )}
         </div>
@@ -125,7 +125,13 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId }) => {
             <DialogHeader>
               <DialogTitle>{article.title}</DialogTitle>
             </DialogHeader>
-            <ArticleContent article={article} segmentId={segmentId} highlights={[]} onAddHighlight={() => {}} />
+            <ArticleContent 
+              article={article} 
+              segmentId={segmentId} 
+              highlights={[]} 
+              onAddHighlight={() => {}} 
+              onRemoveHighlight={() => {}} 
+            />
           </DialogContent>
         </Dialog>
       </CardFooter>
