@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BusinessSegment } from '@/data/segments';
@@ -24,8 +25,8 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
     // Navegar para a página inicial
     navigate('/');
   };
-  return <div className="border-b py-4 bg-zinc-50">
-      <div className="container mx-auto flex justify-between items-center mb-0 font-lexend px-4 bg-gray-50">
+  return <div className="border-b py-4 bg-white">
+      <div className="container mx-auto flex justify-between items-center mb-0 font-lexend px-4 bg-white">
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img src="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" alt="Qive Reforma Tributária" className="h-10" />
