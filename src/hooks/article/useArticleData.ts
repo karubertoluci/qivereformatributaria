@@ -26,10 +26,10 @@ export const useArticleData = (segment: BusinessSegment) => {
         
         console.log(`Fetching articles from Supabase for segment: ${segment.id}`);
         
-        // First check if we should load from livros_reforma table instead of impactos
-        // Get articles from livros_reforma table
+        // First check if we should load from livros_reforma table
+        // Using the generic query method to avoid TypeScript errors
         const { data: livrosData, error: livrosError } = await supabase
-          .from('livros_reforma')
+          .from('livros_reforma' as any)
           .select('*');
           
         if (livrosError) {
