@@ -30,48 +30,57 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   };
   
   return (
-    <div className="flex justify-between items-center mb-8 font-lexend border-b pb-6 print:pb-4 my-[10px] px-[12px]">
-      {/* Logo */}
-      <Link to="/" className="hidden md:block">
-        <img 
-          src="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" 
-          alt="Qive Reforma Tributária" 
-          className="h-10"
-        />
-      </Link>
-      
-      {/* Center content with file icon, title and subtitle */}
-      <div className="text-center mx-auto max-w-md sm:max-w-lg flex flex-col items-center">
-        <h2 className="text-xl font-bold flex items-center gap-2 justify-center">
-          <FileText className="h-5 w-5 shrink-0 text-primary" />
-          <span className="truncate">Relatório para {displayName}</span>
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          Análise de impactos da reforma tributária no segmento {segment.name}
-        </p>
-      </div>
-      
-      {/* Action buttons */}
-      <div className="flex items-center gap-2">
-        <Button variant="outline" size="sm" className="flex items-center gap-1 h-8 px-2 sm:px-3">
-          <Share2 className="h-3 w-3" />
-          <span className="hidden sm:inline text-xs">Compartilhar</span>
-        </Button>
+    <div className="bg-white border-b py-4">
+      <div className="container mx-auto flex justify-between items-center mb-0 font-lexend px-4">
+        {/* Logo */}
+        <Link to="/" className="flex items-center">
+          <img 
+            src="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" 
+            alt="Qive Reforma Tributária" 
+            className="h-10"
+          />
+        </Link>
         
-        <Button size="sm" className="flex items-center gap-1 h-8 px-2 sm:px-3 bg-orange-500 hover:bg-orange-600">
-          <Download className="h-3 w-3" />
-          <span className="hidden sm:inline text-xs">Baixar PDF</span>
-        </Button>
+        {/* Center content with file icon, title and subtitle */}
+        <div className="text-center mx-auto max-w-md sm:max-w-lg flex flex-col items-center">
+          <h2 className="text-xl font-bold flex items-center gap-2 justify-center">
+            <FileText className="h-5 w-5 shrink-0 text-primary" />
+            <span className="truncate">Relatório para {displayName}</span>
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Análise de impactos da reforma tributária no segmento {segment.name}
+          </p>
+        </div>
         
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="flex items-center gap-1 h-8 px-2 sm:px-3"
-          onClick={handleBackToHome}
-        >
-          <RefreshCw className="h-3 w-3" />
-          <span className="hidden sm:inline text-xs">Novo relatório</span>
-        </Button>
+        {/* Action buttons */}
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex items-center gap-1 h-8 px-2 sm:px-3"
+          >
+            <Share2 className="h-3 w-3" />
+            <span className="hidden sm:inline text-xs">Compartilhar</span>
+          </Button>
+          
+          <Button 
+            size="sm" 
+            className="flex items-center gap-1 h-8 px-2 sm:px-3 bg-orange-500 hover:bg-orange-600"
+          >
+            <Download className="h-3 w-3" />
+            <span className="hidden sm:inline text-xs">Baixar PDF</span>
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex items-center gap-1 h-8 px-2 sm:px-3"
+            onClick={handleBackToHome}
+          >
+            <RefreshCw className="h-3 w-3" />
+            <span className="hidden sm:inline text-xs">Novo relatório</span>
+          </Button>
+        </div>
       </div>
     </div>
   );

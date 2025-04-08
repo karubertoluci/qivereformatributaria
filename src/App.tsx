@@ -5,7 +5,7 @@ import './App.css';
 import Header from './components/Header';
 import Footer from './components/common/Footer';
 import Index from './pages/Index';
-import Results from './components/results';
+import Results from './components/Results';
 import NotFound from './pages/NotFound';
 import Handoff from './pages/Handoff';
 import { Toaster } from './components/ui/toaster';
