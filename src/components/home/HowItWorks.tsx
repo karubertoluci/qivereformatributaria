@@ -1,6 +1,9 @@
+
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { AlertTriangle, FileText, Calendar, BookOpen, ArrowRight } from 'lucide-react';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+
 const HowItWorks = () => {
   return <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4 max-w-5xl">
@@ -74,7 +77,7 @@ const HowItWorks = () => {
           
           <div className="bg-red-50 p-6 rounded-lg border-l-4 border-red-500 flex items-start">
             <AlertTriangle className="h-6 w-6 text-red-500 mr-4 mt-1 flex-shrink-0" />
-            <div>
+            <div className="text-left">
               <h3 className="font-semibold text-red-700 mb-2">Por que sua empresa deve se preparar agora:</h3>
               <p className="text-gray-700">
                 A complexidade e o alcance das mudanças exigem preparação antecipada. 
