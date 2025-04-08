@@ -50,6 +50,8 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
   };
 
   const handleDialogSubmit = (formData: any) => {
+    console.log("Form dialog submitted with data:", formData);
+    
     // Salvar dados no localStorage para uso posterior
     localStorage.setItem('formData', JSON.stringify(formData));
     
@@ -61,8 +63,9 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
       closeFormDialog();
       
       // Selecionar segmento com base no CNAE ou na seleção direta
-      if (activeTab === 'cnae') {
-        onCnaeSubmit(formData.cnpj || '');
+      if (activeTab === 'cnae' && formData.companyData?.cnaePrincipal?.codigo) {
+        console.log("Usando CNAE para submissão:", formData.companyData.cnaePrincipal.codigo);
+        onCnaeSubmit(formData.companyData.cnaePrincipal.codigo);
       } else {
         // Encontrar o segmento que corresponde ao CNAE na descrição da empresa ou escolher o primeiro segmento
         const selectedSegment = formData.companyData?.cnaePrincipal?.descricao
@@ -73,6 +76,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
             ) || businessSegments[0]
           : filteredSegments[0];
           
+        console.log("Selecionando segmento:", selectedSegment);
         onSelectSegment(selectedSegment);
       }
     }, 2000);
@@ -161,7 +165,14 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
       <Dialog open={isFormDialogOpen} onOpenChange={(open) => {
         if (!open) closeFormDialog();
       }}>
-        <FormDialog onSubmit={handleDialogSubmit} isLoading={isLoading} />
+        <FormDialog 
+          onSubmit={handleDialogSubmit} 
+          isLoading={isLoading} 
+          open={isFormDialogOpen}
+          onOpenChange={(open) => {
+            if (!open) closeFormDialog();
+          }}
+        />
       </Dialog>
       
       <Dialog open={isLoading} onOpenChange={(open) => {

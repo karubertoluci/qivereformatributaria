@@ -44,23 +44,32 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
     if (digits.length === 14) {
       setIsValidating(true);
       try {
+        console.log('Validando CNPJ:', cnpj);
         const data = await fetchCNPJData(cnpj);
         setIsValid(true);
         
-        // Store company data in localStorage for later use
-        localStorage.setItem('companyData', JSON.stringify({
+        // Convert the CNAE code from number to string for consistency
+        const cnaeCode = data.cnae_fiscal ? data.cnae_fiscal.toString() : '';
+        
+        // Create company data object
+        const companyData = {
           cnpj: data.cnpj,
           razaoSocial: data.razao_social,
           nomeFantasia: data.nome_fantasia,
           endereco: `${data.logradouro}, ${data.numero}, ${data.bairro}, ${data.municipio} - ${data.uf}`,
           cnaePrincipal: {
-            codigo: data.cnae_fiscal.toString(),
+            codigo: cnaeCode,
             descricao: data.cnae_fiscal_descricao,
           },
           cnaeSecundarios: data.cnaes_secundarios,
           situacaoCadastral: data.situacao_cadastral,
           naturezaJuridica: data.natureza_juridica,
-        }));
+        };
+        
+        console.log('Dados da empresa obtidos:', companyData);
+        
+        // Store company data in localStorage for later use
+        localStorage.setItem('companyData', JSON.stringify(companyData));
       } catch (error) {
         setIsValid(false);
         console.error('Error validating CNPJ:', error);

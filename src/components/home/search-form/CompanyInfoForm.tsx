@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -32,17 +32,38 @@ const CompanyInfoForm: React.FC<CompanyInfoFormProps> = ({ onSubmit, isLoading }
 
   // Handle form submit with any additional company data
   const handleSubmit = (data: FormValues) => {
+    console.log('Form submitted, retrieving company data from localStorage');
+    
     // Get additional company data from localStorage if available
     const companyDataStr = localStorage.getItem('companyData');
     
     if (companyDataStr) {
-      const companyData = JSON.parse(companyDataStr);
-      // Merge form data with additional company data
-      onSubmit({
-        ...data,
-        companyData, // This won't be part of the form schema, but will be available in the onSubmit handler
-      });
+      try {
+        const companyData = JSON.parse(companyDataStr);
+        console.log('Company data retrieved from localStorage:', companyData);
+        
+        // Store full form data in localStorage for future use
+        const formData = {
+          ...data,
+          ...companyData
+        };
+        localStorage.setItem('formData', JSON.stringify(formData));
+        
+        // Merge form data with additional company data
+        onSubmit({
+          ...data,
+          companyData, // This won't be part of the form schema, but will be available in the onSubmit handler
+        });
+      } catch (error) {
+        console.error('Error parsing company data from localStorage:', error);
+        
+        // Store form data without company data as fallback
+        localStorage.setItem('formData', JSON.stringify(data));
+        onSubmit(data);
+      }
     } else {
+      console.log('No company data found in localStorage');
+      localStorage.setItem('formData', JSON.stringify(data));
       onSubmit(data);
     }
   };

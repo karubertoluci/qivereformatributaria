@@ -31,9 +31,14 @@ interface CompanyOverviewProps {
 const CompanyOverview: React.FC<CompanyOverviewProps> = ({ companyData, segment }) => {
   const formatCNPJ = (cnpj: string | undefined) => {
     if (!cnpj) return '';
+    // If already formatted, return as is
+    if (cnpj.includes('.')) return cnpj;
+    
     // Format CNPJ: XX.XXX.XXX/XXXX-XX
     return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
   };
+
+  console.log('CompanyOverview rendering with data:', companyData);
 
   return (
     <Card className="bg-white">
@@ -91,7 +96,7 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({ companyData, segment 
                 CNAE Principal
               </h4>
               
-              {companyData.cnaePrincipal ? (
+              {companyData.cnaePrincipal?.codigo ? (
                 <div className="mt-2">
                   <p className="font-semibold">{companyData.cnaePrincipal.codigo}</p>
                   <p>{companyData.cnaePrincipal.descricao}</p>

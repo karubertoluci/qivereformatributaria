@@ -75,6 +75,30 @@ const mockCnpjData: Record<string, CNPJResponse> = {
     ddd_telefone_1: '4833335555',
     capital_social: 500000,
     porte: 'DEMAIS'
+  },
+  '53821808000104': {
+    cnpj: '53.821.808/0001-04',
+    razao_social: 'TechBR Soluções em Tecnologia S.A.',
+    nome_fantasia: 'TechBR',
+    cnaes_secundarios: [
+      { codigo: '62.03-1', descricao: 'Desenvolvimento e licenciamento de programas de computador não-customizáveis' },
+      { codigo: '62.09-1', descricao: 'Suporte técnico, manutenção e outros serviços em tecnologia da informação' }
+    ],
+    cnae_fiscal: 6201500,
+    cnae_fiscal_descricao: 'Desenvolvimento de programas de computador sob encomenda',
+    situacao_cadastral: 'ATIVA',
+    data_situacao_cadastral: '05/01/2015',
+    natureza_juridica: 'Sociedade Anônima Fechada',
+    logradouro: 'Rua da Tecnologia',
+    numero: '500',
+    complemento: 'Andar 15',
+    bairro: 'Tecnópolis',
+    cep: '04571-010',
+    uf: 'SP',
+    municipio: 'São Paulo',
+    ddd_telefone_1: '1135557777',
+    capital_social: 5000000,
+    porte: 'DEMAIS'
   }
 };
 
@@ -87,6 +111,8 @@ export const fetchCNPJData = async (cnpj: string): Promise<CNPJResponse> => {
       throw new Error('CNPJ inválido: deve conter 14 dígitos');
     }
 
+    console.log(`Buscando dados para o CNPJ: ${formattedCNPJ}`);
+
     // Simula um delay para parecer uma chamada de API real
     await new Promise(resolve => setTimeout(resolve, 800));
 
@@ -95,6 +121,7 @@ export const fetchCNPJData = async (cnpj: string): Promise<CNPJResponse> => {
       // Tenta encontrar o CNPJ no mockdata
       const mockData = mockCnpjData[formattedCNPJ];
       if (mockData) {
+        console.log('CNPJ encontrado nos dados simulados:', mockData);
         return mockData;
       }
       
@@ -105,6 +132,7 @@ export const fetchCNPJData = async (cnpj: string): Promise<CNPJResponse> => {
       // Personaliza o mock com o CNPJ informado
       randomMock.cnpj = formattedCNPJ.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
       
+      console.log('CNPJ não encontrado, usando dados simulados aleatórios:', randomMock);
       return randomMock;
     }
     
