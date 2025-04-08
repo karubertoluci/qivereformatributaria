@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Hero from './hero/Hero';
-import SearchForm from './search-form';
+import SearchForm from './SearchForm';
 import HowItWorks from './HowItWorks';
 import SectorsImpact from './SectorsImpact';
 import ExpertQuotes from './ExpertQuotes';
