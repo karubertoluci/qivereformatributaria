@@ -13,6 +13,7 @@ import { FilterType } from './types';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import ResultsHeader from './ResultsHeader';
 
 interface ResultsContainerProps {
   segment: BusinessSegment;
@@ -115,6 +116,14 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
 
   return (
     <div className="container mx-auto print:p-0 px-[10px] my-0 py-0">
+      {/* Novo header para resultados */}
+      <ResultsHeader 
+        segment={segment} 
+        positiveCount={positiveCount} 
+        negativeCount={negativeCount}
+        companyName={formData?.razaoSocial || formData?.nomeFantasia}
+      />
+      
       {hasCompanyData && <ReportActions companyData={formData} segment={segment} />}
       
       <Tabs defaultValue="overview" className="w-full">

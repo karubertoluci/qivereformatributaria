@@ -29,7 +29,7 @@ const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
 
   return (
     <div className="print:bg-white">
-      <div className="container mx-auto py-4 flex justify-end">
+      <div className="container mx-auto py-4 flex justify-end print:hidden">
         <Button 
           variant="outline" 
           size="sm" 

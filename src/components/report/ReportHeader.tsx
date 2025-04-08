@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { FileText, Download, Share2 } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FileText, Download, Share2, RefreshCw } from 'lucide-react';
 import { BusinessSegment } from '@/data/segments';
 import { Button } from '@/components/ui/button';
 
@@ -16,12 +16,21 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
   segment,
   companyName,
 }) => {
+  const navigate = useNavigate();
   const displayName = companyName || "sua empresa";
+  
+  const handleBackToHome = () => {
+    // Limpar localStorage quando voltar para home
+    localStorage.removeItem('selectedSegment');
+    localStorage.removeItem('cnae');
+    // Navegar para a página inicial
+    navigate('/');
+  };
   
   return (
     <div className="flex flex-col space-y-4 mb-8 print:mb-6 pb-6">
       <div className="flex items-center justify-between">
-        {/* Smaller logo */}
+        {/* Logo */}
         <Link to="/">
           <img 
             alt="Qive Reforma Tributária" 
@@ -41,7 +50,7 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
           </p>
         </div>
         
-        {/* Smaller CTA buttons */}
+        {/* Action buttons */}
         <div className="flex items-center gap-2">
           <Button 
             variant="outline" 
@@ -54,10 +63,20 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
           
           <Button 
             size="sm"
-            className="flex items-center gap-1 h-8 px-2 sm:px-3"
+            className="flex items-center gap-1 h-8 px-2 sm:px-3 bg-orange-500 hover:bg-orange-600"
           >
             <Download className="h-3 w-3" />
             <span className="hidden sm:inline text-xs">Baixar PDF</span>
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="flex items-center gap-1 h-8 px-2 sm:px-3"
+            onClick={handleBackToHome}
+          >
+            <RefreshCw className="h-3 w-3" />
+            <span className="hidden sm:inline text-xs">Novo relatório</span>
           </Button>
         </div>
       </div>
