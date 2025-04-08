@@ -22,14 +22,20 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   const navigate = useNavigate();
   
   useEffect(() => {
-    // Try to get company name from localStorage
+    // Try to get company name from different sources in order of priority
     const storedCompanyName = localStorage.getItem('companyName');
     const companyData = localStorage.getItem('companyData');
+    const formData = localStorage.getItem('formData');
     
-    if (storedCompanyName) {
+    if (propCompanyName) {
+      setDisplayName(propCompanyName);
+      console.log('Nome da empresa definido como propriedade:', propCompanyName);
+    }
+    else if (storedCompanyName) {
       setDisplayName(storedCompanyName);
       console.log('Nome da empresa encontrado no localStorage:', storedCompanyName);
-    } else if (companyData) {
+    } 
+    else if (companyData) {
       try {
         const parsedData = JSON.parse(companyData);
         if (parsedData.razaoSocial || parsedData.razao_social || parsedData.nomeFantasia || parsedData.nome_fantasia) {
@@ -44,6 +50,18 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
         }
       } catch (error) {
         console.error('Erro ao analisar os dados da empresa:', error);
+      }
+    }
+    else if (formData) {
+      try {
+        const parsedFormData = JSON.parse(formData);
+        if (parsedFormData.razaoSocial || parsedFormData.nome) {
+          const name = parsedFormData.razaoSocial || parsedFormData.nome;
+          setDisplayName(name);
+          console.log('Nome da empresa extraído do formulário:', name);
+        }
+      } catch (error) {
+        console.error('Erro ao analisar os dados do formulário:', error);
       }
     }
   }, [propCompanyName]);

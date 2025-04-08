@@ -14,9 +14,10 @@ export const useResultsData = (segment: BusinessSegment) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<FilterType>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('chart');
-  const [activeTab, setActiveTab] = useState<'overview' | 'articles'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'articles' | 'highlights'>('overview');
   const [highlights, setHighlights] = useState<HighlightType[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState<CompanyData | null>(null);
   
   // Use the article data hook to fetch articles from Supabase
   const { segmentArticles, isLoading, error: fetchError } = useArticleData(segment);
@@ -27,6 +28,29 @@ export const useResultsData = (segment: BusinessSegment) => {
       setError(fetchError);
     }
   }, [fetchError]);
+  
+  // Carregar os dados da empresa do localStorage
+  useEffect(() => {
+    // Tenta carregar os dados da empresa
+    try {
+      const companyDataStr = localStorage.getItem('companyData');
+      if (companyDataStr) {
+        const companyData = JSON.parse(companyDataStr);
+        setFormData(companyData);
+        console.log('Dados da empresa carregados com sucesso:', companyData);
+      } else {
+        // Se não existir companyData, verificar formData
+        const formDataStr = localStorage.getItem('formData');
+        if (formDataStr) {
+          const formData = JSON.parse(formDataStr);
+          setFormData(formData);
+          console.log('Dados do formulário carregados:', formData);
+        }
+      }
+    } catch (e) {
+      console.error('Erro ao carregar dados da empresa do localStorage:', e);
+    }
+  }, []);
   
   useEffect(() => {
     const savedHighlights = localStorage.getItem('highlights');
@@ -43,8 +67,7 @@ export const useResultsData = (segment: BusinessSegment) => {
     localStorage.setItem('highlights', JSON.stringify(highlights));
   }, [highlights]);
   
-  const formData = JSON.parse(localStorage.getItem('formData') || '{}');
-  const hasCompanyData = Object.keys(formData).length > 0;
+  const hasCompanyData = formData !== null;
   
   const relevantArticles = segmentArticles.length > 0 
     ? segmentArticles 
@@ -147,5 +170,10 @@ export type CompanyData = {
     descricao: string;
   }[];
   situacaoCadastral?: string;
+  dataSituacaoCadastral?: string;
   naturezaJuridica?: string;
+  capitalSocial?: number;
+  porte?: string;
+  telefone?: string;
+  original?: any; // Dados originais da API
 };
