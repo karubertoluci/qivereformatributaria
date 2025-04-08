@@ -1,7 +1,5 @@
-
 import React from 'react';
-import { FileText, Search, LightbulbIcon, BookOpen, Globe, Share2, Zap, BarChart4 } from 'lucide-react';
-
+import { FileText, Search, LightbulbIcon, BookOpen, Globe, Share2, Zap, Shield, BarChart4 } from 'lucide-react';
 const AboutQive = () => {
   return <section className="bg-gradient-to-b from-gray-50 to-orange-50 py-16">
       <div className="container mx-auto px-4 max-w-5xl">
@@ -16,14 +14,7 @@ const AboutQive = () => {
             {/* Vídeo (ocupando toda a altura do grid na coluna esquerda) */}
             <div className="rounded-lg overflow-hidden w-full h-full shadow-lg border border-orange-100">
               <div className="aspect-video w-full h-full">
-                <iframe 
-                  className="w-full h-full"
-                  src="https://www.youtube.com/embed/Re_x1_l87lE" 
-                  title="Apresentação da Qive Reforma Tributária" 
-                  frameBorder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                  allowFullScreen
-                ></iframe>
+                <iframe className="w-full h-full" src="https://www.youtube.com/embed/Re_x1_l87lE" title="Apresentação da Qive Reforma Tributária" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
               </div>
             </div>
             
@@ -40,7 +31,7 @@ const AboutQive = () => {
                     <div className="bg-orange-100 rounded-full p-1 mr-3 mt-0.5">
                       <Search className="h-4 w-4 text-[#FF4719]" />
                     </div>
-                    <p className="text-gray-700">
+                    <p className="text-gray-700 text-left">
                       <strong>Análise especializada</strong> por setor de atuação e CNAE específico
                     </p>
                   </li>
@@ -48,7 +39,7 @@ const AboutQive = () => {
                     <div className="bg-orange-100 rounded-full p-1 mr-3 mt-0.5">
                       <BarChart4 className="h-4 w-4 text-[#FF4719]" />
                     </div>
-                    <p className="text-gray-700">
+                    <p className="text-gray-700 text-left">
                       <strong>Priorizamos conteúdo</strong> que realmente importa para o seu negócio
                     </p>
                   </li>
@@ -56,7 +47,7 @@ const AboutQive = () => {
                     <div className="bg-orange-100 rounded-full p-1 mr-3 mt-0.5">
                       <Globe className="h-4 w-4 text-[#FF4719]" />
                     </div>
-                    <p className="text-gray-700">
+                    <p className="text-gray-700 text-left">
                       <strong>Linguagem acessível</strong> para facilitar o entendimento de termos técnicos
                     </p>
                   </li>
@@ -64,7 +55,7 @@ const AboutQive = () => {
                     <div className="bg-orange-100 rounded-full p-1 mr-3 mt-0.5">
                       <Zap className="h-4 w-4 text-[#FF4719]" />
                     </div>
-                    <p className="text-gray-700">
+                    <p className="text-gray-700 text-left">
                       <strong>Relatórios personalizados</strong> que você pode compartilhar com sua equipe
                     </p>
                   </li>
@@ -75,12 +66,8 @@ const AboutQive = () => {
           
           {/* Caixa de lembrete na parte inferior */}
           <div className="bg-gradient-to-r from-[#FF4719] to-[#FF5A30] rounded-lg p-6 flex items-start text-white shadow-md">
-            <div className="mr-4 flex-shrink-0">
-              <img 
-                src="/lovable-uploads/c0547a5d-14ad-4bd4-8b1d-8e27a13de69f.png" 
-                alt="Logo Qive" 
-                className="h-8 w-8"
-              />
+            <div className="bg-white rounded-full p-3 mr-4 flex-shrink-0">
+              <Shield className="h-5 w-5 text-[#FF4719]" />
             </div>
             <div>
               <h4 className="font-bold text-lg mb-2">E lembre-se...</h4>
@@ -94,5 +81,4 @@ const AboutQive = () => {
       </div>
     </section>;
 };
-
 export default AboutQive;
