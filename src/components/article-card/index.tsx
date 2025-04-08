@@ -107,27 +107,25 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
               onAddHighlight={handleAddHighlight}
               onRemoveHighlight={onRemoveHighlight}
             />
-          </>
-        )}
-        
-        {isExpanded && (
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onToggleExpand}
-              className="text-muted-foreground text-xs flex items-center gap-1"
-            >
-              <ChevronUp className="h-4 w-4" />
-              Mostrar menos
-            </Button>
             
-            <ArticleCardActions 
-              articleId={article.id}
-              onShareArticle={handleShareArticle}
-              onInviteToArticle={handleInviteToArticle}
-            />
-          </div>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 gap-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onToggleExpand}
+                className="text-muted-foreground text-xs flex items-center gap-1"
+              >
+                <ChevronUp className="h-4 w-4" />
+                Mostrar menos
+              </Button>
+              
+              <ArticleCardActions 
+                articleId={article.id}
+                onShareArticle={handleShareArticle}
+                onInviteToArticle={handleInviteToArticle}
+              />
+            </div>
+          </>
         )}
       </CardContent>
     </Card>

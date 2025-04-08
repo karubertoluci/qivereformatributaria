@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Article } from '@/data/articles';
-import { BookOpen, FileText, Book, Bookmark, Layers } from 'lucide-react';
+import { FileText, Book, Bookmark, Layers } from 'lucide-react';
 import { CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -84,7 +84,7 @@ const ArticleCardHeader: React.FC<ArticleCardHeaderProps> = ({
       </div>
       
       {/* Metadados: Livro, Capítulo, Seção, Subseção - agrupados por categoria */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-4 text-xs">
+      <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-xs">
         <Badge variant="outline" className="bg-blue-100 text-blue-700 flex items-center gap-1 justify-start">
           <Book className="h-3 w-3 flex-shrink-0" />
           <span className="truncate">Livro {bookId}: {bookTitle}</span>
@@ -108,7 +108,7 @@ const ArticleCardHeader: React.FC<ArticleCardHeaderProps> = ({
         )}
       </div>
       
-      {/* Impacto e Relevância - destacados visualmente */}
+      {/* Impacto e Relevância */}
       <div className="flex flex-wrap gap-2 pt-1">
         <Badge 
           variant="outline" 
