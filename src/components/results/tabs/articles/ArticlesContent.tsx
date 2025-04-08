@@ -114,6 +114,13 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
         <ArticleCardList 
           articles={displayedArticles}
           segmentId={segment.id}
+          highlights={highlights}
+          onAddHighlight={(text, color) => {
+            // We need to handle the articleId correctly
+            const selectedArticle = displayedArticles[0]; // Default to first article
+            onAddHighlight(text, color, selectedArticle.id);
+          }}
+          onRemoveHighlight={onRemoveHighlight}
         />
       )}
     </div>

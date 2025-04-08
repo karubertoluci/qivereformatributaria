@@ -13,13 +13,23 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import ArticleContent from './ArticleContent';
+import { HighlightType } from '@/components/results/types';
 
 interface ArticleCardProps {
   article: Article;
   segmentId: string;
+  highlights?: HighlightType[];
+  onAddHighlight?: (text: string, color: HighlightType['color']) => void;
+  onRemoveHighlight?: (id: string) => void;
 }
 
-const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId }) => {
+const ArticleCard: React.FC<ArticleCardProps> = ({ 
+  article, 
+  segmentId,
+  highlights = [], 
+  onAddHighlight = () => {}, 
+  onRemoveHighlight = () => {} 
+}) => {
   // Identificar o tipo principal de impacto para o card
   const segmentImpacts = article.impacts.filter(impact => 
     impact.segments.includes(segmentId)
@@ -128,9 +138,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, segmentId }) => {
             <ArticleContent 
               article={article} 
               segmentId={segmentId} 
-              highlights={[]} 
-              onAddHighlight={() => {}} 
-              onRemoveHighlight={() => {}} 
+              highlights={highlights} 
+              onAddHighlight={onAddHighlight} 
+              onRemoveHighlight={onRemoveHighlight} 
             />
           </DialogContent>
         </Dialog>
