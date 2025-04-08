@@ -54,8 +54,8 @@ const ArticleCardSummary: React.FC<ArticleCardSummaryProps> = ({
   return (
     <div className="space-y-4">
       {/* Original Text */}
-      <div className="mt-2 space-y-3">
-        <p className="text-sm">
+      <div className="mt-3 space-y-3">
+        <p className="text-sm text-gray-700">
           {truncatedText}
         </p>
         
