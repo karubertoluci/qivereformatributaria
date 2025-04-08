@@ -1,10 +1,11 @@
+
 import React, { useState, useMemo } from 'react';
 import { TabsContent } from '@/components/ui/tabs';
 import { Article } from '@/data/articles';
 import { BusinessSegment } from '@/data/segments';
-import ArticlesFilters from '../ArticlesFilters';
-import ArticlesContent from '../ArticlesContent';
-import ChartSection from '../ChartSection';
+import ArticlesFilters from '@/components/results/tabs/articles/filters/ArticlesFilters';
+import ArticlesContent from '@/components/results/tabs/articles/content/ArticlesContent';
+import ChartSection from '@/components/results/tabs/articles/charts/ChartSection';
 import { HighlightType } from '@/components/results/types';
 import { useSearchParams } from 'react-router-dom';
 import { Topic } from '@/components/results/types';
@@ -78,7 +79,6 @@ const ArticlesTab = ({
             <ChartSection 
               filteredArticles={filteredArticles}
               segmentId={segment.id}
-              relevantArticles={relevantArticles}
               setExpandedArticleId={setExpandedArticleId}
               expanded={expanded}
               toggleExpanded={toggleExpanded}
