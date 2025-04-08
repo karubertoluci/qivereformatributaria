@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FileText, Download, Share2, RefreshCw } from 'lucide-react';
@@ -28,7 +27,7 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
   };
   
   return (
-    <div className="flex flex-col space-y-4 mb-8 print:mb-6 pb-6">
+    <div className="flex flex-col space-y-4 mb-8 print:mb-6 pb-6 bg-white">
       <div className="flex items-center justify-between">
         {/* Logo */}
         <Link to="/">
