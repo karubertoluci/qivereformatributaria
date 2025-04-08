@@ -3,17 +3,16 @@ import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { useResultsData } from '@/hooks/useResultsData';
 import ReportActions from '../report/ReportActions';
-import OverviewTabContent from './OverviewTabContent';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Book, FileText, Highlighter, AlertTriangle } from 'lucide-react';
+import { TabsContent } from '@/components/ui/tabs';
+import ResultsHeader from './ResultsHeader';
+import ResultsFooter from './layout/ResultsFooter';
+import ResultsTabLayout from './layout/ResultsTabLayout';
+import ResultsLoading from './ResultsLoading';
+import ResultsError from './ResultsError';
+import NoArticlesFound from './NoArticlesFound';
+import OverviewTab from './tabs/OverviewTab';
 import ArticlesTab from './tabs/articles/ArticlesTab';
 import HighlightsTab from './tabs/HighlightsTab';
-import ResultsFooter from './layout/ResultsFooter';
-import { FilterType } from './types';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import ResultsHeader from './ResultsHeader';
 
 interface ResultsContainerProps {
   segment: BusinessSegment;
@@ -24,8 +23,6 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
   segment,
   onBackToSegments
 }) => {
-  const isMobile = useIsMobile();
-  
   const {
     expandedArticleId,
     setExpandedArticleId,
@@ -35,6 +32,8 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
     setFilterType,
     viewMode,
     setViewMode,
+    activeTab,
+    setActiveTab,
     formData,
     hasCompanyData,
     relevantArticles,
@@ -50,73 +49,26 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
     error
   } = useResultsData(segment);
 
-  // Wrapper function to adapt the signature
+  // Wrapper for addHighlight to adapt the signature
   const onAddHighlight = (articleId: string, text: string, color?: string) => {
     handleAddHighlight(articleId, text, color as any);
   };
 
-  // Wrapper for setFilterType to ensure it works with FilterType
-  const onSetFilterType = (type: FilterType) => {
-    setFilterType(type);
-  };
-
   if (isLoading) {
-    return (
-      <div className="container mx-auto p-8 text-center">
-        <div className="flex flex-col items-center justify-center space-y-4">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
-          <h2 className="text-xl font-medium">Carregando relatório personalizado...</h2>
-          <p className="text-muted-foreground">
-            Estamos analisando os dados da reforma tributária para o segmento: {segment.name}
-          </p>
-        </div>
-      </div>
-    );
+    return <ResultsLoading />;
   }
   
   if (error) {
-    return (
-      <div className="container mx-auto p-8">
-        <Alert variant="destructive" className="mb-4">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>Erro ao carregar dados</AlertTitle>
-          <AlertDescription>
-            {error}
-          </AlertDescription>
-        </Alert>
-        <div className="flex justify-center mt-6">
-          <Button onClick={() => window.location.reload()} variant="outline">
-            Tentar novamente
-          </Button>
-        </div>
-      </div>
-    );
+    return <ResultsError error={error} />;
   }
 
   if (relevantArticles.length === 0) {
-    return (
-      <div className="container mx-auto p-8">
-        <Alert className="mb-4">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>Nenhum artigo encontrado</AlertTitle>
-          <AlertDescription>
-            Não foram encontrados artigos relacionados ao segmento: {segment.name}
-          </AlertDescription>
-        </Alert>
-        <div className="flex justify-center mt-6">
-          {onBackToSegments && (
-            <Button onClick={onBackToSegments} variant="outline">
-              Voltar para seleção de segmentos
-            </Button>
-          )}
-        </div>
-      </div>
-    );
+    return <NoArticlesFound segment={segment} onBackToSegments={onBackToSegments} />;
   }
 
   return (
     <div className="container mx-auto print:p-0 px-[10px] my-0 py-0">
-      {/* Novo header para resultados */}
+      {/* Header for results */}
       <ResultsHeader 
         segment={segment} 
         positiveCount={positiveCount} 
@@ -126,37 +78,21 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
       
       {hasCompanyData && <ReportActions companyData={formData} segment={segment} />}
       
-      <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="mb-6 py-0 my-0 flex justify-center w-full overflow-x-auto">
-          <TabsTrigger value="overview" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
-            <FileText className="h-3 w-3 md:h-4 md:w-4" /> 
-            {isMobile ? "Visão Geral" : "Visão Geral"}
-          </TabsTrigger>
-          <TabsTrigger value="articles" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
-            <Book className="h-3 w-3 md:h-4 md:w-4" /> 
-            {isMobile ? "Artigos" : "Artigos e Impactos"}
-          </TabsTrigger>
-          <TabsTrigger value="highlights" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
-            <Highlighter className="h-3 w-3 md:h-4 md:w-4" /> 
-            {isMobile ? `Destaques (${highlights.length})` : `Meus Destaques (${highlights.length})`}
-          </TabsTrigger>
-        </TabsList>
+      <ResultsTabLayout 
+        highlights={highlights}
+        activeTab={activeTab}
+        onTabChange={(value) => setActiveTab(value as any)}
+      >
+        {/* Overview Tab */}
+        <OverviewTab 
+          segment={segment}
+          companyData={formData}
+          hasCompanyData={hasCompanyData}
+          relevantArticles={relevantArticles}
+          setExpandedArticleId={setExpandedArticleId}
+        />
         
-        {/* Visão Geral Tab */}
-        <TabsContent value="overview">
-          <OverviewTabContent 
-            segment={segment} 
-            companyData={formData} 
-            hasCompanyData={hasCompanyData} 
-            relevantArticles={relevantArticles} 
-            onSelectArticle={articleId => {
-              setExpandedArticleId(articleId);
-              document.querySelector('[value="articles"]')?.dispatchEvent(new Event('click'));
-            }} 
-          />
-        </TabsContent>
-        
-        {/* Artigos e Impactos Tab */}
+        {/* Articles Tab */}
         <TabsContent value="articles">
           <ArticlesTab 
             segment={segment}
@@ -170,7 +106,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             filterType={filterType}
-            setFilterType={onSetFilterType}
+            setFilterType={setFilterType}
             expandedArticleId={expandedArticleId}
             setExpandedArticleId={setExpandedArticleId}
             articlesByTopic={articlesByTopic}
@@ -180,7 +116,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
           />
         </TabsContent>
         
-        {/* Meus Destaques Tab */}
+        {/* Highlights Tab */}
         <TabsContent value="highlights">
           <HighlightsTab 
             highlights={highlights}
@@ -189,9 +125,9 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
             handleRemoveHighlight={handleRemoveHighlight}
           />
         </TabsContent>
-      </Tabs>
+      </ResultsTabLayout>
       
-      {/* Rodapé do relatório */}
+      {/* Footer */}
       <div className="border-t border-gray-600">
         <ResultsFooter />
       </div>
