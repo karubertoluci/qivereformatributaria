@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import HomePage from '@/components/home/HomePage';
 import Results from '@/components/results';
+import Header from '@/components/Header';
 
 const Index = () => {
   const [selectedSegment, setSelectedSegment] = useState<BusinessSegment | null>(null);
@@ -47,6 +48,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
+      {!selectedSegment && <Header />}
       <main className="flex-grow">
         {!selectedSegment ? (
           <HomePage 

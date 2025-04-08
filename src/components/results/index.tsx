@@ -10,8 +10,6 @@ export interface ResultsProps {
 }
 
 const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
-  const navigate = useNavigate();
-
   return (
     <div className="print:bg-white">
       <ResultsContainer segment={segment} onBackToSegments={onBackToSegments} />

@@ -45,12 +45,21 @@ function App() {
             <Route path="/results/:segmentId" element={<ResultsPage />} />
             <Route path="*" element={
               <>
-                <Header />
                 <div className="flex-grow">
                   <Routes>
                     <Route path="/" element={<Index />} />
-                    <Route path="/handoff" element={<Handoff />} />
-                    <Route path="*" element={<NotFound />} />
+                    <Route path="/handoff" element={
+                      <>
+                        <Header />
+                        <Handoff />
+                      </>
+                    } />
+                    <Route path="*" element={
+                      <>
+                        <Header />
+                        <NotFound />
+                      </>
+                    } />
                   </Routes>
                 </div>
               </>
