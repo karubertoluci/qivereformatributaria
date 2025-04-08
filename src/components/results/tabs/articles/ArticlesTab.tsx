@@ -1,11 +1,13 @@
 
-import React, { useState } from 'react';
-import { Article } from '@/data/articles';
+import React, { useState, useEffect } from 'react';
+import { TabsContent } from '@/components/ui/tabs';
 import { BusinessSegment } from '@/data/segments';
-import { Topic, FilterType, ViewMode, HighlightType } from '../../types';
-import ChartSection from './ChartSection';
-import ArticlesFilters from './ArticlesFilters';
-import ArticlesContent from './ArticlesContent';
+import { Article } from '@/data/articles';
+import { FilterType, ViewMode, HighlightType, Topic } from '@/components/results/types';
+import ChartSection from './charts/ChartSection';
+import ArticlesFilters from './filters/ArticlesFilters';
+import { useIsMobile } from '@/hooks/use-mobile';
+import ArticlesContent from './content/ArticlesContent';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -15,17 +17,17 @@ interface ArticlesTabProps {
   negativeCount: number;
   topics: Topic[];
   viewMode: ViewMode;
-  setViewMode: (mode: ViewMode) => void;
+  setViewMode: (viewMode: ViewMode) => void;
   searchTerm: string;
-  setSearchTerm: (term: string) => void;
+  setSearchTerm: (searchTerm: string) => void;
   filterType: FilterType;
-  setFilterType: (type: FilterType) => void;
+  setFilterType: (filterType: FilterType) => void;
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
   articlesByTopic: Record<string, Article[]>;
   highlights: HighlightType[];
-  onAddHighlight: (text: string, color: HighlightType['color'], articleId: string) => void;
-  onRemoveHighlight: (id: string) => void;
+  handleAddHighlight: (articleId: string, text: string, color?: string) => void;
+  handleRemoveHighlight: (id: string) => void;
 }
 
 const ArticlesTab: React.FC<ArticlesTabProps> = ({
@@ -45,59 +47,65 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   setExpandedArticleId,
   articlesByTopic,
   highlights,
-  onAddHighlight,
-  onRemoveHighlight
+  handleAddHighlight,
+  handleRemoveHighlight
 }) => {
-  const [chartsCollapsed, setChartsCollapsed] = useState(false);
-  const neutralCount = 0; // Define neutralCount
+  const [expanded, setExpanded] = useState(false);
+  const [selectedBookFilter, setSelectedBookFilter] = useState<string>('');
+  const [selectedTitleFilter, setSelectedTitleFilter] = useState<string>('');
+  const isMobile = useIsMobile();
   
-  // Define displayedArticles for ArticlesContent
+  const toggleExpanded = () => setExpanded(!expanded);
+  
+  // Filter articles based on selections
   const displayedArticles = filteredArticles;
-  const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(null);
-  const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(null);
-
+  
   return (
-    <div className="space-y-6">
-      {/* Chart Section */}
+    <TabsContent value="articles" className="space-y-6">
       <ChartSection 
-        filteredArticles={filteredArticles}
+        filteredArticles={filteredArticles} 
         segmentId={segment.id}
         setExpandedArticleId={setExpandedArticleId}
-        expanded={!chartsCollapsed}
-        toggleExpanded={() => setChartsCollapsed(!chartsCollapsed)}
+        expanded={expanded}
+        toggleExpanded={toggleExpanded}
       />
       
-      {/* Search and Filters */}
-      <ArticlesFilters 
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        filterType={filterType}
-        setFilterType={setFilterType}
-        viewMode={viewMode}
-        setViewMode={setViewMode}
-        positiveCount={positiveCount}
-        negativeCount={negativeCount}
-        neutralCount={neutralCount}
-        totalCount={relevantArticles.length}
-      />
-      
-      {/* Article Content (List or Table) */}
-      <ArticlesContent 
-        filteredArticles={filteredArticles}
-        displayedArticles={displayedArticles}
-        selectedBookFilter={selectedBookFilter}
-        selectedTitleFilter={selectedTitleFilter}
-        setSelectedBookFilter={setSelectedBookFilter}
-        setSelectedTitleFilter={setSelectedTitleFilter}
-        segment={segment}
-        highlights={highlights}
-        onAddHighlight={onAddHighlight}
-        onRemoveHighlight={onRemoveHighlight}
-        positiveCount={positiveCount}
-        negativeCount={negativeCount}
-        neutralCount={neutralCount}
-      />
-    </div>
+      <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-[300px_1fr]'} gap-6`}>
+        {/* Filters sidebar */}
+        <ArticlesFilters 
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          filterType={filterType}
+          setFilterType={setFilterType}
+          positiveCount={positiveCount}
+          negativeCount={negativeCount}
+          selectedBookFilter={selectedBookFilter}
+          setSelectedBookFilter={setSelectedBookFilter}
+          selectedTitleFilter={selectedTitleFilter}
+          setSelectedTitleFilter={setSelectedTitleFilter}
+          relevantArticles={relevantArticles}
+        />
+        
+        {/* Articles list */}
+        <ArticlesContent 
+          filteredArticles={filteredArticles}
+          displayedArticles={displayedArticles}
+          selectedBookFilter={selectedBookFilter}
+          selectedTitleFilter={selectedTitleFilter}
+          setSelectedBookFilter={setSelectedBookFilter}
+          setSelectedTitleFilter={setSelectedTitleFilter}
+          expandedArticleId={expandedArticleId}
+          setExpandedArticleId={setExpandedArticleId}
+          highlights={highlights}
+          onAddHighlight={handleAddHighlight}
+          onRemoveHighlight={handleRemoveHighlight}
+          articlesByTopic={articlesByTopic}
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+          topics={topics}
+        />
+      </div>
+    </TabsContent>
   );
 };
 

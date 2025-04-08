@@ -2,16 +2,16 @@
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
-import { CompanyData } from '@/hooks/useResultsData';
+import { CompanyData } from '@/hooks/results/types';
 import OverviewTabContent from '../OverviewTabContent';
 import { TabsContent } from '@/components/ui/tabs';
 
 interface OverviewTabProps {
   segment: BusinessSegment;
-  companyData: CompanyData;
+  companyData: CompanyData | null;
   hasCompanyData: boolean;
   relevantArticles: Article[];
-  setExpandedArticleId: (id: string) => void;
+  setExpandedArticleId: (id: string | null) => void;
 }
 
 const OverviewTab: React.FC<OverviewTabProps> = ({

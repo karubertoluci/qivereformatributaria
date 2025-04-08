@@ -1,51 +1,46 @@
 
 import React from 'react';
 import { Article } from '@/data/articles';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { AlertTriangle } from 'lucide-react';
 
 interface ImpactsSectionProps {
   hasCriticalImpacts: boolean;
-  positiveCount: number;
-  negativeCount: number;
-  neutralCount: number;
+  relevantArticles: Article[];
+  allArticles: Article[];
+  segmentId: string;
+  bookId: string;
+  relevanceFilter: string | null;
 }
 
 const ImpactsSection: React.FC<ImpactsSectionProps> = ({
   hasCriticalImpacts,
-  positiveCount,
-  negativeCount,
-  neutralCount
+  relevantArticles,
+  segmentId
 }) => {
-  if (!hasCriticalImpacts && positiveCount === 0 && negativeCount === 0 && neutralCount === 0) {
-    return null;
-  }
-
+  // Count critical articles
+  const criticalArticles = relevantArticles.filter(article => 
+    article.impacts.some(impact => 
+      impact.severity >= 8 && impact.segments.includes(segmentId)
+    )
+  );
+  
+  if (!hasCriticalImpacts) return null;
+  
   return (
-    <Card className="mb-4">
-      <CardHeader>
-        <h3 className="text-lg font-semibold flex items-center gap-2">
-          {hasCriticalImpacts && <AlertTriangle className="h-5 w-5 text-destructive" />}
-          Impactos da Reforma Tributária
-        </h3>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-            <p className="font-medium text-green-600 dark:text-green-400">Favoráveis</p>
-            <p className="text-2xl font-bold">{positiveCount}</p>
-          </div>
-          <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg">
-            <p className="font-medium text-amber-600 dark:text-amber-400">Neutros</p>
-            <p className="text-2xl font-bold">{neutralCount}</p>
-          </div>
-          <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
-            <p className="font-medium text-red-600 dark:text-red-400">Desfavoráveis</p>
-            <p className="text-2xl font-bold">{negativeCount}</p>
-          </div>
+    <div className="bg-amber-50 border border-amber-200 rounded-md p-4 mb-4">
+      <div className="flex items-start gap-3">
+        <div className="mt-0.5">
+          <AlertTriangle className="h-5 w-5 text-amber-500" />
         </div>
-      </CardContent>
-    </Card>
+        <div>
+          <h3 className="font-medium text-amber-800">Atenção aos impactos críticos</h3>
+          <p className="text-amber-700 text-sm mt-1">
+            {criticalArticles.length} artigo{criticalArticles.length !== 1 ? 's' : ''} com impacto crítico 
+            para o seu negócio.
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 

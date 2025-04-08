@@ -1,96 +1,98 @@
 
 import React from 'react';
-import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
-import { Button } from '@/components/ui/button';
-import { Topic, HighlightType } from '../../../types';
-import { toast } from 'sonner';
-import ArticleCardList from '@/components/article/ArticleCardList';
+import { ViewMode, HighlightType, Topic } from '@/components/results/types';
+import ArticleTopicsView from '@/components/results/ArticleTopicsView';
+import ArticleTableView from '@/components/results/ArticleTableView';
+import ViewSwitcher from '@/components/results/ViewSwitcher';
+import NoArticlesFound from '@/components/results/NoArticlesFound';
 import ImpactsSection from '../components/ImpactsSection';
 
 interface ArticlesContentProps {
-  viewMode: 'chart';
-  displayedArticles: Article[];
   filteredArticles: Article[];
-  selectedBookFilter: string | null;
-  selectedTitleFilter: string | null;
-  setSelectedBookFilter: (bookId: string | null) => void;
-  setSelectedTitleFilter: (titleId: string | null) => void;
+  displayedArticles: Article[];
+  selectedBookFilter: string;
+  selectedTitleFilter: string;
+  setSelectedBookFilter: (value: string) => void;
+  setSelectedTitleFilter: (value: string) => void;
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
-  segment: BusinessSegment;
   highlights: HighlightType[];
   onAddHighlight: (articleId: string, text: string, color?: string) => void;
   onRemoveHighlight: (id: string) => void;
   articlesByTopic: Record<string, Article[]>;
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
   topics: Topic[];
 }
 
 const ArticlesContent: React.FC<ArticlesContentProps> = ({
-  displayedArticles,
   filteredArticles,
+  displayedArticles,
   selectedBookFilter,
   selectedTitleFilter,
   setSelectedBookFilter,
   setSelectedTitleFilter,
-  segment,
+  expandedArticleId,
+  setExpandedArticleId,
   highlights,
   onAddHighlight,
-  onRemoveHighlight
+  onRemoveHighlight,
+  articlesByTopic,
+  viewMode,
+  setViewMode,
+  topics
 }) => {
-  // Verificar se há impactos críticos
-  const hasCriticalImpacts = displayedArticles.some(article => 
-    article.impacts.some(impact => 
-      impact.segments.includes(segment.id) && 
-      impact.type === 'negative' && 
-      impact.severity === 'high'
-    )
+  const hasCriticalImpacts = filteredArticles.some(article => 
+    article.impacts.some(impact => impact.severity >= 8)
   );
 
+  // If no articles match the filters
+  if (!filteredArticles.length) {
+    return <NoArticlesFound />;
+  }
+
   return (
-    <div className="bg-muted/30 p-4 rounded-lg border">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="font-medium text-lg">
-          {displayedArticles.length} {displayedArticles.length === 1 ? 'artigo encontrado' : 'artigos encontrados'}
-        </h3>
-        {displayedArticles.length !== filteredArticles.length && (
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={() => {
-              setSelectedBookFilter(null);
-              setSelectedTitleFilter(null);
-              toast.info("Todos os filtros adicionais foram removidos");
-            }}
-          >
-            Limpar todos os filtros adicionais
-          </Button>
-        )}
-      </div>
-      
-      {/* Seção de impactos no topo */}
+    <div className="space-y-6">
+      {/* Critical impacts warning if present */}
       <ImpactsSection 
         hasCriticalImpacts={hasCriticalImpacts}
-        showAllArticles={true}
+        relevantArticles={filteredArticles}
         allArticles={filteredArticles}
-        relevantArticles={displayedArticles}
-        segmentId={segment.id}
+        segmentId={selectedBookFilter}
         bookId={selectedBookFilter}
         relevanceFilter={null}
       />
       
-      {/* Sempre renderiza a visualização de cards */}
-      <ArticleCardList 
-        articles={displayedArticles}
-        segmentId={segment.id}
-        highlights={highlights}
-        onAddHighlight={(text, color) => {
-          // We need to handle the articleId correctly
-          const selectedArticle = displayedArticles[0]; // Default to first article
-          onAddHighlight(selectedArticle.id, text, color);
-        }}
-        onRemoveHighlight={onRemoveHighlight}
-      />
+      {/* View switcher (topics/table) */}
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-medium">
+          {filteredArticles.length} artigo{filteredArticles.length !== 1 ? 's' : ''} encontrado{filteredArticles.length !== 1 ? 's' : ''}
+        </h3>
+        <ViewSwitcher viewMode={viewMode} setViewMode={setViewMode} />
+      </div>
+      
+      {/* Display articles in the selected view mode */}
+      {viewMode === 'topics' ? (
+        <ArticleTopicsView 
+          articlesByTopic={articlesByTopic}
+          expandedArticleId={expandedArticleId}
+          setExpandedArticleId={setExpandedArticleId}
+          highlights={highlights}
+          onAddHighlight={onAddHighlight}
+          onRemoveHighlight={onRemoveHighlight}
+          topics={topics}
+        />
+      ) : (
+        <ArticleTableView 
+          articles={displayedArticles}
+          expandedArticleId={expandedArticleId}
+          setExpandedArticleId={setExpandedArticleId}
+          highlights={highlights}
+          onAddHighlight={onAddHighlight}
+          onRemoveHighlight={onRemoveHighlight}
+        />
+      )}
     </div>
   );
 };

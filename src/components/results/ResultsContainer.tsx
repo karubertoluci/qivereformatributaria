@@ -25,23 +25,25 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
     isLoading,
     error,
     expandedArticleId,
-    handleArticleSelect,
-    hasCompanyData
+    formData,
+    hasCompanyData,
+    positiveCount,
+    negativeCount
   } = resultsData;
 
   useEffect(() => {
-    // Limpar o artigo expandido quando mudar de aba
+    // Clear expanded article when changing tabs
     if (expandedArticleId) {
       resultsData.setExpandedArticleId(null);
     }
   }, [activeTab, expandedArticleId, resultsData.setExpandedArticleId]);
 
-  // Se estiver carregando, mostrar indicador de loading
+  // If loading, show loading indicator
   if (isLoading) {
     return <ResultsLoading />;
   }
 
-  // Se houver erro, mostrar mensagem de erro
+  // If there's an error, show error message
   if (error) {
     return <ResultsError error={error} />;
   }
@@ -49,9 +51,10 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
   return (
     <div className="container mx-auto px-4 max-w-7xl">
       <ResultsHeader 
-        segment={segment} 
-        onBackToSegments={onBackToSegments}
-        companyName={hasCompanyData ? resultsData.formData?.nomeFantasia || '' : ''}
+        segment={segment}
+        positiveCount={positiveCount}
+        negativeCount={negativeCount}
+        companyName={hasCompanyData ? formData?.nomeFantasia || '' : ''}
       />
       
       <main className="my-8">
@@ -67,50 +70,40 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
             <TabsTrigger value="highlights">Destaques</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="overview">
-            <OverviewTab 
-              segment={segment}
-              formData={resultsData.formData}
-              hasCompanyData={hasCompanyData}
-              relevantArticles={resultsData.relevantArticles}
-              positiveCount={resultsData.positiveCount}
-              negativeCount={resultsData.negativeCount}
-              articlesByTopic={resultsData.articlesByTopic}
-              onSelectArticle={handleArticleSelect}
-              topics={resultsData.topics}
-            />
-          </TabsContent>
+          <OverviewTab 
+            segment={segment}
+            companyData={formData}
+            hasCompanyData={hasCompanyData}
+            relevantArticles={resultsData.relevantArticles}
+            setExpandedArticleId={resultsData.setExpandedArticleId}
+          />
           
-          <TabsContent value="articles">
-            <ArticlesTab 
-              segment={segment}
-              filteredArticles={resultsData.filteredArticles}
-              relevantArticles={resultsData.relevantArticles}
-              positiveCount={resultsData.positiveCount}
-              negativeCount={resultsData.negativeCount}
-              topics={resultsData.topics}
-              viewMode={resultsData.viewMode}
-              setViewMode={resultsData.setViewMode}
-              searchTerm={resultsData.searchTerm}
-              setSearchTerm={resultsData.setSearchTerm}
-              filterType={resultsData.filterType}
-              setFilterType={resultsData.setFilterType}
-              expandedArticleId={resultsData.expandedArticleId}
-              setExpandedArticleId={resultsData.setExpandedArticleId}
-              articlesByTopic={resultsData.articlesByTopic}
-              highlights={resultsData.highlights}
-              onAddHighlight={resultsData.handleAddHighlight}
-              onRemoveHighlight={resultsData.handleRemoveHighlight}
-            />
-          </TabsContent>
+          <ArticlesTab 
+            segment={segment}
+            filteredArticles={resultsData.filteredArticles}
+            relevantArticles={resultsData.relevantArticles}
+            positiveCount={positiveCount}
+            negativeCount={negativeCount}
+            topics={resultsData.topics}
+            viewMode={resultsData.viewMode}
+            setViewMode={resultsData.setViewMode}
+            searchTerm={resultsData.searchTerm}
+            setSearchTerm={resultsData.setSearchTerm}
+            filterType={resultsData.filterType}
+            setFilterType={resultsData.setFilterType}
+            expandedArticleId={resultsData.expandedArticleId}
+            setExpandedArticleId={resultsData.setExpandedArticleId}
+            articlesByTopic={resultsData.articlesByTopic}
+            highlights={resultsData.highlights}
+            handleAddHighlight={resultsData.handleAddHighlight}
+            handleRemoveHighlight={resultsData.handleRemoveHighlight}
+          />
           
-          <TabsContent value="highlights">
-            <HighlightsTab 
-              highlights={resultsData.highlights}
-              onRemoveHighlight={resultsData.handleRemoveHighlight}
-              articles={resultsData.relevantArticles}
-            />
-          </TabsContent>
+          <HighlightsTab 
+            highlights={resultsData.highlights}
+            handleRemoveHighlight={resultsData.handleRemoveHighlight}
+            articles={resultsData.relevantArticles}
+          />
         </Tabs>
       </main>
       

@@ -30,7 +30,7 @@ interface CompanyData {
 }
 
 interface CompanyOverviewProps {
-  companyData: CompanyData;
+  companyData: CompanyData | null;
   segment: BusinessSegment;
 }
 
@@ -38,6 +38,25 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
   companyData,
   segment
 }) => {
+  // Add a check for null/undefined companyData
+  if (!companyData) {
+    return (
+      <Card className="bg-white shadow-sm">
+        <CardHeader className="bg-white border-b">
+          <CardTitle className="flex items-center gap-2 text-xl font-medium text-gray-800">
+            <Building2 className="h-5 w-5 text-primary" />
+            Perfil da Empresa
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">Nenhuma informação da empresa disponível</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const formatCNPJ = (cnpj: string | undefined) => {
     if (!cnpj) return '';
     // If already formatted, return as is

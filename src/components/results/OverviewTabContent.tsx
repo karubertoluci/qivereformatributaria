@@ -2,14 +2,14 @@
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
-import { CompanyData } from '@/hooks/useResultsData';
+import { CompanyData } from '@/hooks/results/types';
 import CompanyOverview from '../report/company-overview';
 import ReformOverview from '../report/ReformOverview';
 import CompanyLegislationRelation from '../report/CompanyLegislationRelation';
 
 interface OverviewTabContentProps {
   segment: BusinessSegment;
-  companyData: CompanyData;
+  companyData: CompanyData | null;
   hasCompanyData: boolean;
   relevantArticles: Article[];
   onSelectArticle: (articleId: string) => void;
@@ -19,6 +19,7 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
   segment,
   companyData,
   hasCompanyData,
+  relevantArticles,
   onSelectArticle
 }) => {
   return (
