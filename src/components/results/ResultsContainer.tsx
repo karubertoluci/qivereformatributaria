@@ -82,21 +82,21 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
             segment={segment}
             filteredArticles={resultsData.filteredArticles}
             relevantArticles={resultsData.relevantArticles}
-            positiveCount={positiveCount}
-            negativeCount={negativeCount}
+            expandedArticleId={resultsData.expandedArticleId}
+            setExpandedArticleId={resultsData.setExpandedArticleId}
+            highlights={resultsData.highlights}
+            handleAddHighlight={resultsData.handleAddHighlight}
+            handleRemoveHighlight={resultsData.handleRemoveHighlight}
             topics={resultsData.topics}
+            articlesByTopic={resultsData.articlesByTopic}
             viewMode={resultsData.viewMode}
             setViewMode={resultsData.setViewMode}
+            positiveCount={positiveCount}
+            negativeCount={negativeCount}
             searchTerm={resultsData.searchTerm}
             setSearchTerm={resultsData.setSearchTerm}
             filterType={resultsData.filterType}
             setFilterType={resultsData.setFilterType}
-            expandedArticleId={resultsData.expandedArticleId}
-            setExpandedArticleId={resultsData.setExpandedArticleId}
-            articlesByTopic={resultsData.articlesByTopic}
-            highlights={resultsData.highlights}
-            handleAddHighlight={resultsData.handleAddHighlight}
-            handleRemoveHighlight={resultsData.handleRemoveHighlight}
           />
           
           <HighlightsTab 

@@ -23,9 +23,15 @@ interface ArticlesTabProps {
   articlesByTopic: Record<string, Article[]>;
   viewMode: 'chart';
   setViewMode: (mode: 'chart') => void;
+  positiveCount: number;
+  negativeCount: number;
+  searchTerm?: string;
+  setSearchTerm?: (term: string) => void;
+  filterType?: string;
+  setFilterType?: (type: any) => void;
 }
 
-const ArticlesTab = ({ 
+const ArticlesTab: React.FC<ArticlesTabProps> = ({ 
   segment, 
   relevantArticles,
   filteredArticles,
@@ -37,7 +43,13 @@ const ArticlesTab = ({
   topics,
   articlesByTopic,
   viewMode,
-  setViewMode
+  setViewMode,
+  positiveCount,
+  negativeCount,
+  searchTerm,
+  setSearchTerm,
+  filterType,
+  setFilterType
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(searchParams.get('book') || null);
@@ -75,6 +87,8 @@ const ArticlesTab = ({
             setSelectedTitleFilter={setSelectedTitleFilter}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
+            positiveCount={positiveCount}
+            negativeCount={negativeCount}
           />
         </aside>
 

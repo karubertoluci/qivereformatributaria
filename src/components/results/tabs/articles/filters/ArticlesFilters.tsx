@@ -12,7 +12,9 @@ interface ArticlesFiltersProps {
   setSelectedBookFilter: (bookId: string | null) => void;
   setSelectedTitleFilter: (titleId: string | null) => void;
   searchParams: URLSearchParams;
-  setSearchParams: (params: URLSearchParams) => void;
+  setSearchParams: SetURLSearchParams;
+  positiveCount: number;
+  negativeCount: number;
 }
 
 const ArticlesFilters: React.FC<ArticlesFiltersProps> = ({
@@ -22,17 +24,11 @@ const ArticlesFilters: React.FC<ArticlesFiltersProps> = ({
   setSelectedBookFilter,
   setSelectedTitleFilter,
   searchParams,
-  setSearchParams
+  setSearchParams,
+  positiveCount,
+  negativeCount
 }) => {
   // Calculate counts
-  const positiveCount = articles.filter(article => 
-    article.impacts.some(impact => impact.type === 'positive')
-  ).length;
-  
-  const negativeCount = articles.filter(article => 
-    article.impacts.some(impact => impact.type === 'negative')
-  ).length;
-  
   const neutralCount = articles.filter(article => 
     article.impacts.some(impact => impact.type === 'neutral')
   ).length;
