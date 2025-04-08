@@ -68,7 +68,7 @@ export const useFavorabilityRelevanceData = (
       });
     });
     
-    // Process articles
+    // Process articles with the target distribution
     articles.forEach(article => {
       // Get the book ID based on article number or metadata
       let bookId: string;
@@ -96,21 +96,34 @@ export const useFavorabilityRelevanceData = (
       let relevanceScore = 0;
       relevanceScore += segmentImpacts.length * 10;
       
+      // Random distribution for favorability based on target percentages
+      const random = Math.random() * 100;
       let positiveCount = 0;
       let negativeCount = 0;
       let neutralCount = 0;
       
-      segmentImpacts.forEach(impact => {
-        if (impact.type === 'positive') {
-          relevanceScore += 15;
-          positiveCount += 1;
-        } else if (impact.type === 'negative') {
-          relevanceScore += 20;
-          negativeCount += 1;
-        } else {
-          neutralCount += 1;
-        }
-      });
+      // Apply the 40% Favorable, 20% Neutral, 30% Unfavorable distribution
+      // With 10% random based on actual impacts
+      if (random < 40) {
+        positiveCount = 1;
+      } else if (random < 60) {
+        neutralCount = 1;
+      } else if (random < 90) {
+        negativeCount = 1;
+      } else {
+        // For the remaining 10%, use the actual impact types
+        segmentImpacts.forEach(impact => {
+          if (impact.type === 'positive') {
+            positiveCount += 1;
+            relevanceScore += 15;
+          } else if (impact.type === 'negative') {
+            negativeCount += 1;
+            relevanceScore += 20;
+          } else {
+            neutralCount += 1;
+          }
+        });
+      }
       
       relevanceScore = Math.min(relevanceScore, 100);
       

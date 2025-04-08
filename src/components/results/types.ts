@@ -23,4 +23,5 @@ export type HighlightType = {
 
 export type ViewMode = 'chart';
 export type FilterType = 'all' | 'positive' | 'negative' | 'neutral';
-
+export type FavorabilityType = 'Favorável' | 'Neutro' | 'Desfavorável';
+export type RelevanceType = 'Irrelevante' | 'Pouco relevante' | 'Moderadamente relevante' | 'Muito relevante';

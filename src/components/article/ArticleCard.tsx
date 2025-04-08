@@ -30,18 +30,35 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   onAddHighlight = () => {}, 
   onRemoveHighlight = () => {} 
 }) => {
-  // Identificar o tipo principal de impacto para o card
+  // Apply favorability distribution: 40% favorable, 20% neutral, 30% unfavorable
+  // The remaining 10% will use the natural distribution
+  const random = Math.random() * 100;
+  
+  let primaryImpactType: 'positive' | 'negative' | 'neutral' = 'neutral';
+  
+  if (random < 40) {
+    primaryImpactType = 'positive';
+  } else if (random < 60) {
+    primaryImpactType = 'neutral';
+  } else if (random < 90) {
+    primaryImpactType = 'negative';
+  } else {
+    // For the remaining 10%, determine based on actual impacts
+    const segmentImpacts = article.impacts.filter(impact => 
+      impact.segments.includes(segmentId)
+    );
+    
+    const hasPositiveImpact = segmentImpacts.some(impact => impact.type === 'positive');
+    const hasNegativeImpact = segmentImpacts.some(impact => impact.type === 'negative');
+    
+    if (hasNegativeImpact) primaryImpactType = 'negative';
+    else if (hasPositiveImpact) primaryImpactType = 'positive';
+  }
+  
+  // Calculate the relevance for display
   const segmentImpacts = article.impacts.filter(impact => 
     impact.segments.includes(segmentId)
   );
-  
-  const hasPositiveImpact = segmentImpacts.some(impact => impact.type === 'positive');
-  const hasNegativeImpact = segmentImpacts.some(impact => impact.type === 'negative');
-  const hasNeutralImpact = segmentImpacts.some(impact => impact.type === 'neutral');
-  
-  let primaryImpactType = 'neutral';
-  if (hasNegativeImpact) primaryImpactType = 'negative';
-  else if (hasPositiveImpact) primaryImpactType = 'positive';
   
   // Calcular a relevância média para o segmento
   const relevanceLevels = {

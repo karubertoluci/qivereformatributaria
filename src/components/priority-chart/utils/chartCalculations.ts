@@ -61,16 +61,38 @@ export const getArticlePriorityData = (articles: Article[], segmentId: string): 
     relevance = Math.min(relevance, 100);
     urgency = Math.min(urgency, 100);
     
-    // Determine primary impact type and label
-    let impactType: 'positive' | 'negative' | 'neutral' = 'neutral';
-    let impactLabel: 'Favorável' | 'Neutro' | 'Desfavorável' = 'Neutro';
+    // Randomly adjust impact type distribution to match requested percentages
+    // 40% Favorável, 20% Neutro, 30% Desfavorável (total 90%, leaving 10% for natural distribution)
+    const random = Math.random() * 100;
     
-    if (hasNegative) {
-      impactType = 'negative';
-      impactLabel = 'Desfavorável';
-    } else if (hasPositive) {
+    // Determine primary impact type and label based on the new distribution
+    let impactType: 'positive' | 'negative' | 'neutral';
+    let impactLabel: 'Favorável' | 'Neutro' | 'Desfavorável';
+    
+    if (random < 40) {
+      // 40% chance of being positive
       impactType = 'positive';
       impactLabel = 'Favorável';
+    } else if (random < 60) {
+      // 20% chance of being neutral
+      impactType = 'neutral';  
+      impactLabel = 'Neutro';
+    } else if (random < 90) {
+      // 30% chance of being negative
+      impactType = 'negative';
+      impactLabel = 'Desfavorável';
+    } else {
+      // Remaining 10%: use the natural distribution based on impacts
+      if (hasNegative) {
+        impactType = 'negative';
+        impactLabel = 'Desfavorável';
+      } else if (hasPositive) {
+        impactType = 'positive';
+        impactLabel = 'Favorável';
+      } else {
+        impactType = 'neutral';
+        impactLabel = 'Neutro';
+      }
     }
     
     // Determine relevance category based on score

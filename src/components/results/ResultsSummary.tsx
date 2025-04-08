@@ -6,6 +6,7 @@ interface ResultsSummaryProps {
   totalArticles: number;
   positiveCount: number;
   negativeCount: number;
+  neutralCount: number;
   segmentName: string;
   topics?: Topic[];
 }
@@ -14,6 +15,7 @@ const ResultsSummary: React.FC<ResultsSummaryProps> = ({
   totalArticles, 
   positiveCount, 
   negativeCount, 
+  neutralCount,
   segmentName,
   topics = []
 }) => {
@@ -24,7 +26,7 @@ const ResultsSummary: React.FC<ResultsSummaryProps> = ({
       <h3 className="font-medium mb-2">Resumo dos Impactos</h3>
       <p className="text-sm text-foreground">
         Encontramos {totalArticles} artigos relevantes para o segmento <strong>"{segmentName}"</strong>. 
-        Destes, {positiveCount} apresentam impactos potencialmente positivos e {negativeCount} apresentam 
+        Destes, {positiveCount} apresentam impactos potencialmente positivos, {neutralCount} têm impacto neutro e {negativeCount} apresentam 
         pontos de atenção que podem impactar negativamente seu negócio.
       </p>
       
