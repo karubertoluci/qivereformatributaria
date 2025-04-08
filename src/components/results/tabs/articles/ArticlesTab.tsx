@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Article } from '@/data/articles';
 import { BusinessSegment } from '@/data/segments';
-import { getArticlesByTopic } from '../../ArticlesByTopic';
 import ArticlesFilters from './ArticlesFilters';
 import ArticlesContent from './ArticlesContent';
 import ChartSection from './ChartSection';
@@ -57,6 +56,13 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   const displayedArticles = filteredArticles;
   const neutralCount = 0; // Add a default neutralCount
 
+  // Ensure viewMode is always 'chart'
+  React.useEffect(() => {
+    if (viewMode !== 'chart') {
+      setViewMode('chart');
+    }
+  }, [viewMode, setViewMode]);
+
   return (
     <div className="space-y-6">
       {/* Chart Section */}
@@ -85,7 +91,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         totalCount={relevantArticles.length}
       />
       
-      {/* Article Content (List, Table or Cards) */}
+      {/* Article Content (always Cards) */}
       <ArticlesContent 
         filteredArticles={filteredArticles}
         displayedArticles={displayedArticles}

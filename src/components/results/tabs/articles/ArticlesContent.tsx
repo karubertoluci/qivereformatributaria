@@ -2,8 +2,6 @@
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
-import ArticleTableView from '../../ArticleTableView';
-import ArticleTopicsView from '../../ArticleTopicsView';
 import { Button } from '@/components/ui/button';
 import { Topic, HighlightType } from '../../types';
 import { toast } from 'sonner';
@@ -11,7 +9,7 @@ import ArticleCardList from '@/components/article/ArticleCardList';
 import ImpactsSection from './components/ImpactsSection';
 
 interface ArticlesContentProps {
-  viewMode: 'list' | 'table' | 'chart';
+  viewMode: 'chart';
   displayedArticles: Article[];
   filteredArticles: Article[];
   selectedBookFilter: string | null;
@@ -29,21 +27,16 @@ interface ArticlesContentProps {
 }
 
 const ArticlesContent: React.FC<ArticlesContentProps> = ({
-  viewMode,
   displayedArticles,
   filteredArticles,
   selectedBookFilter,
   selectedTitleFilter,
   setSelectedBookFilter,
   setSelectedTitleFilter,
-  expandedArticleId,
-  setExpandedArticleId,
   segment,
   highlights,
   onAddHighlight,
-  onRemoveHighlight,
-  articlesByTopic,
-  topics
+  onRemoveHighlight
 }) => {
   // Verificar se há impactos críticos
   const hasCriticalImpacts = displayedArticles.some(article => 
@@ -86,43 +79,18 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
         relevanceFilter={null}
       />
       
-      {viewMode === 'table' ? (
-        <ArticleTableView 
-          articles={displayedArticles}
-          expandedArticleId={expandedArticleId}
-          setExpandedArticleId={setExpandedArticleId}
-          isTableView={true}
-          segment={segment}
-          highlights={highlights}
-          onAddHighlight={onAddHighlight}
-          onRemoveHighlight={onRemoveHighlight}
-        />
-      ) : viewMode === 'list' ? (
-        <ArticleTopicsView 
-          articlesByTopic={articlesByTopic}
-          topics={topics}
-          onSelectArticle={setExpandedArticleId}
-          expandedArticleId={expandedArticleId}
-          highlights={highlights}
-          onAddHighlight={onAddHighlight}
-          onRemoveHighlight={onRemoveHighlight}
-          filteredArticles={displayedArticles}
-          segmentId={segment.id}
-          setExpandedArticleId={setExpandedArticleId}
-        />
-      ) : (
-        <ArticleCardList 
-          articles={displayedArticles}
-          segmentId={segment.id}
-          highlights={highlights}
-          onAddHighlight={(text, color) => {
-            // We need to handle the articleId correctly
-            const selectedArticle = displayedArticles[0]; // Default to first article
-            onAddHighlight(text, color, selectedArticle.id);
-          }}
-          onRemoveHighlight={onRemoveHighlight}
-        />
-      )}
+      {/* Sempre renderiza a visualização de cards */}
+      <ArticleCardList 
+        articles={displayedArticles}
+        segmentId={segment.id}
+        highlights={highlights}
+        onAddHighlight={(text, color) => {
+          // We need to handle the articleId correctly
+          const selectedArticle = displayedArticles[0]; // Default to first article
+          onAddHighlight(text, color, selectedArticle.id);
+        }}
+        onRemoveHighlight={onRemoveHighlight}
+      />
     </div>
   );
 };

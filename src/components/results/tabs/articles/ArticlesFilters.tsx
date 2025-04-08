@@ -2,7 +2,6 @@
 import React from 'react';
 import FilterBar from '../../FilterBar';
 import ViewSwitcher from '../../ViewSwitcher';
-import { FilterType, ViewMode } from '../../types';
 import { ArticlesFiltersProps } from './ArticlesFiltersProps';
 
 const ArticlesFilters: React.FC<ArticlesFiltersProps> = ({

@@ -21,5 +21,5 @@ export type HighlightType = {
   articleId: string;
 };
 
-export type ViewMode = 'list' | 'table' | 'chart';
+export type ViewMode = 'chart';
 export type FilterType = 'all' | 'positive' | 'negative' | 'neutral';
