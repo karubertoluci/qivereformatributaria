@@ -1,17 +1,14 @@
-
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BusinessSegment } from '@/data/segments';
 import { Button } from '@/components/ui/button';
 import { FileText, Share2, Download, RefreshCw } from 'lucide-react';
-
 interface ResultsHeaderProps {
   segment: BusinessSegment;
   positiveCount: number;
   negativeCount: number;
   companyName?: string;
 }
-
 const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   segment,
   positiveCount,
@@ -20,7 +17,6 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
 }) => {
   const navigate = useNavigate();
   const displayName = companyName || "Qive Comercial Ltda";
-  
   const handleBackToHome = () => {
     // Limpar localStorage quando voltar para home
     localStorage.removeItem('selectedSegment');
@@ -28,17 +24,11 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
     // Navegar para a página inicial
     navigate('/');
   };
-  
-  return (
-    <div className="bg-white border-b py-4">
-      <div className="container mx-auto flex justify-between items-center mb-0 font-lexend px-4">
+  return <div className="border-b py-4 bg-zinc-50">
+      <div className="container mx-auto flex justify-between items-center mb-0 font-lexend px-4 bg-gray-50">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <img 
-            src="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" 
-            alt="Qive Reforma Tributária" 
-            className="h-10"
-          />
+          <img src="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" alt="Qive Reforma Tributária" className="h-10" />
         </Link>
         
         {/* Center content with file icon, title and subtitle */}
@@ -54,36 +44,22 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
         
         {/* Action buttons */}
         <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="flex items-center gap-1 h-8 px-2 sm:px-3"
-          >
+          <Button variant="outline" size="sm" className="flex items-center gap-1 h-8 px-2 sm:px-3">
             <Share2 className="h-3 w-3" />
             <span className="hidden sm:inline text-xs">Compartilhar</span>
           </Button>
           
-          <Button 
-            size="sm" 
-            className="flex items-center gap-1 h-8 px-2 sm:px-3 bg-orange-500 hover:bg-orange-600"
-          >
+          <Button size="sm" className="flex items-center gap-1 h-8 px-2 sm:px-3 bg-orange-500 hover:bg-orange-600">
             <Download className="h-3 w-3" />
             <span className="hidden sm:inline text-xs">Baixar PDF</span>
           </Button>
           
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="flex items-center gap-1 h-8 px-2 sm:px-3"
-            onClick={handleBackToHome}
-          >
+          <Button variant="outline" size="sm" className="flex items-center gap-1 h-8 px-2 sm:px-3" onClick={handleBackToHome}>
             <RefreshCw className="h-3 w-3" />
             <span className="hidden sm:inline text-xs">Novo relatório</span>
           </Button>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default ResultsHeader;
