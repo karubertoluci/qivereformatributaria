@@ -75,11 +75,11 @@ const AboutQive = () => {
           
           {/* Caixa de lembrete na parte inferior */}
           <div className="bg-gradient-to-r from-[#FF4719] to-[#FF5A30] rounded-lg p-6 flex items-start text-white shadow-md">
-            <div className="bg-white rounded-full p-3 mr-4 flex-shrink-0">
+            <div className="mr-4 flex-shrink-0">
               <img 
                 src="/lovable-uploads/c0547a5d-14ad-4bd4-8b1d-8e27a13de69f.png" 
                 alt="Logo Qive" 
-                className="h-5 w-5"
+                className="h-8 w-8"
               />
             </div>
             <div>
