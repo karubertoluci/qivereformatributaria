@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+
+const CACHE_LIMIT = 100; // Limitar a quantidade de artigos no cache para evitar exceder a quota
 
 export const useArticleData = (segment: BusinessSegment) => {
   const [segmentArticles, setSegmentArticles] = useState<any[]>([]);
@@ -41,14 +44,19 @@ export const useArticleData = (segment: BusinessSegment) => {
         if (livrosData && livrosData.length > 0) {
           console.log(`Encontrados ${livrosData.length} artigos na tabela livros_reforma`);
           
-          // Formatar artigos da tabela livros_reforma
-          const formattedArticles = livrosData.map((item: any) => {
+          // Limitar a quantidade de artigos para evitar exceder o limite de armazenamento
+          const limitedData = livrosData.slice(0, CACHE_LIMIT);
+          console.log(`Processando ${limitedData.length} artigos (limitado para evitar exceder quota do localStorage)`);
+          
+          // Formatar artigos da tabela livros_reforma com dados reduzidos
+          const formattedArticles = limitedData.map((item: any) => {
             return {
               id: `art_${item.id}`,
               number: item.artigo || "N/A",
               title: `Artigo ${item.artigo || "N/A"}`,
-              originalText: item.conteudo || "",
-              simplifiedText: item.conteudo || "",
+              // Limitar o tamanho do texto para economizar espaço
+              originalText: item.conteudo?.substring(0, 500) || "",
+              simplifiedText: item.conteudo?.substring(0, 500) || "",
               impacts: [
                 {
                   type: "positive", // Tipo de impacto padrão
@@ -70,8 +78,14 @@ export const useArticleData = (segment: BusinessSegment) => {
           console.log(`Formatados ${formattedArticles.length} artigos de livros_reforma`);
           setSegmentArticles(formattedArticles);
           
-          // Armazenar os artigos em cache para este segmento para melhorar o desempenho
-          localStorage.setItem(`segmentArticles_${segment.id}`, JSON.stringify(formattedArticles));
+          // Tentar armazenar os artigos em cache, mas com tratamento para quando exceder a quota
+          try {
+            localStorage.setItem(`segmentArticles_${segment.id}`, JSON.stringify(formattedArticles));
+          } catch (storageError) {
+            console.warn('Não foi possível armazenar em cache devido ao tamanho dos dados:', storageError);
+            // Falhar silenciosamente sem afetar a experiência do usuário
+          }
+          
           setIsLoading(false);
           return;
         }
@@ -87,8 +101,13 @@ export const useArticleData = (segment: BusinessSegment) => {
         console.log(`Usando ${mockArticles.length} artigos de exemplo para o segmento`);
         setSegmentArticles(mockArticles);
         
-        // Armazenar os artigos em cache para este segmento
-        localStorage.setItem(`segmentArticles_${segment.id}`, JSON.stringify(mockArticles));
+        // Tentar armazenar os artigos em cache com tratamento de erro
+        try {
+          localStorage.setItem(`segmentArticles_${segment.id}`, JSON.stringify(mockArticles));
+        } catch (storageError) {
+          console.warn('Não foi possível armazenar em cache devido ao tamanho dos dados:', storageError);
+          // Falhar silenciosamente
+        }
         
       } catch (error: any) {
         console.error('Erro ao buscar dados do Supabase:', error);

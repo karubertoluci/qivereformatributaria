@@ -28,6 +28,23 @@ export const hasArticleCache = (segmentId: string): boolean => {
 };
 
 /**
+ * Tenta armazenar dados no localStorage com segurança, tratando erros de quota
+ * @param key A chave para armazenar os dados
+ * @param data Os dados a serem armazenados
+ * @returns boolean indicando se o armazenamento foi bem-sucedido
+ */
+export const safelyStoreInCache = (key: string, data: any): boolean => {
+  try {
+    const jsonData = JSON.stringify(data);
+    localStorage.setItem(key, jsonData);
+    return true;
+  } catch (error) {
+    console.warn(`Não foi possível armazenar "${key}" no localStorage: ${error}`);
+    return false;
+  }
+};
+
+/**
  * Força uma atualização dos dados dos artigos limpando o cache e, opcionalmente, recarregando a página
  */
 export const forceArticleRefresh = (segmentId?: string) => {
