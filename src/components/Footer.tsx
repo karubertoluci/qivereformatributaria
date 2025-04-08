@@ -2,10 +2,12 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormDialogContext } from './home/FormDialogContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Footer = () => {
   const navigate = useNavigate();
   const { openFormDialog } = useFormDialogContext();
+  const isMobile = useIsMobile();
   
   const handleBackToHome = () => {
     // Limpar dados armazenados
@@ -19,7 +21,7 @@ const Footer = () => {
   };
   
   return (
-    <footer className="bg-[#e6e9ed] py-10">
+    <footer className="bg-black py-10 text-white">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Coluna 1: Logo e Copyright */}
@@ -31,32 +33,32 @@ const Footer = () => {
                 className="h-12" 
               />
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-400">
               &copy; {new Date().getFullYear()} Qive Reforma Tributária - Todos os direitos reservados
             </p>
           </div>
           
           {/* Coluna 2: Links Úteis */}
           <div className="flex flex-col">
-            <h3 className="text-gray-800 font-bold mb-4">Links Úteis</h3>
+            <h3 className="text-white font-bold mb-4">Links Úteis</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-gray-600 hover:text-primary text-sm">
+                <Link to="/" className="text-gray-400 hover:text-[#FF4719] text-sm transition-colors">
                   Início
                 </Link>
               </li>
               <li>
-                <Link to="/sobre" className="text-gray-600 hover:text-primary text-sm">
+                <Link to="/sobre" className="text-gray-400 hover:text-[#FF4719] text-sm transition-colors">
                   Sobre Nós
                 </Link>
               </li>
               <li>
-                <Link to="/servicos" className="text-gray-600 hover:text-primary text-sm">
+                <Link to="/servicos" className="text-gray-400 hover:text-[#FF4719] text-sm transition-colors">
                   Serviços
                 </Link>
               </li>
               <li>
-                <Link to="/handoff" className="text-gray-600 hover:text-primary text-sm">
+                <Link to="/handoff" className="text-gray-400 hover:text-[#FF4719] text-sm transition-colors">
                   Handoff
                 </Link>
               </li>
@@ -65,20 +67,20 @@ const Footer = () => {
           
           {/* Coluna 3: Políticas */}
           <div className="flex flex-col">
-            <h3 className="text-gray-800 font-bold mb-4">Políticas</h3>
+            <h3 className="text-white font-bold mb-4">Políticas</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-gray-600 hover:text-primary text-sm">
+                <a href="#" className="text-gray-400 hover:text-[#FF4719] text-sm transition-colors">
                   Termos de Uso
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-600 hover:text-primary text-sm">
+                <a href="#" className="text-gray-400 hover:text-[#FF4719] text-sm transition-colors">
                   Política de Privacidade
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-600 hover:text-primary text-sm">
+                <a href="#" className="text-gray-400 hover:text-[#FF4719] text-sm transition-colors">
                   Cookies
                 </a>
               </li>
@@ -87,7 +89,7 @@ const Footer = () => {
           
           {/* Coluna 4: Fale com Especialista */}
           <div className="flex flex-col">
-            <h3 className="text-gray-800 font-bold mb-4">Suporte</h3>
+            <h3 className="text-white font-bold mb-4">Suporte</h3>
             <div className="mb-4">
               <button 
                 onClick={openFormDialog}
@@ -99,7 +101,7 @@ const Footer = () => {
           </div>
         </div>
         
-        <div className="mt-8 text-center text-xs text-gray-500">
+        <div className="mt-8 text-center text-xs text-gray-400">
           <p>Este aplicativo não substitui a orientação profissional. Consulte um advogado para questões legais específicas.</p>
         </div>
         

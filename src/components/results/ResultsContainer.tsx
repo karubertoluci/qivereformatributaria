@@ -10,6 +10,7 @@ import ArticlesTab from './tabs/ArticlesTab';
 import HighlightsTab from './tabs/HighlightsTab';
 import ResultsFooter from './layout/ResultsFooter';
 import { FilterType } from './types';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ResultsContainerProps {
   segment: BusinessSegment;
@@ -20,6 +21,8 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
   segment,
   onBackToSegments
 }) => {
+  const isMobile = useIsMobile();
+  
   const {
     expandedArticleId,
     setExpandedArticleId,
@@ -57,15 +60,18 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
       {hasCompanyData && <ReportActions companyData={formData} segment={segment} />}
       
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="mb-6 py-0 my-0 flex justify-center w-full">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" /> Visão Geral
+        <TabsList className="mb-6 py-0 my-0 flex justify-center w-full overflow-x-auto">
+          <TabsTrigger value="overview" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
+            <FileText className="h-3 w-3 md:h-4 md:w-4" /> 
+            {isMobile ? "Visão Geral" : "Visão Geral"}
           </TabsTrigger>
-          <TabsTrigger value="articles" className="flex items-center gap-2">
-            <Book className="h-4 w-4" /> Artigos e Impactos
+          <TabsTrigger value="articles" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
+            <Book className="h-3 w-3 md:h-4 md:w-4" /> 
+            {isMobile ? "Artigos" : "Artigos e Impactos"}
           </TabsTrigger>
-          <TabsTrigger value="highlights" className="flex items-center gap-2">
-            <Highlighter className="h-4 w-4" /> Meus Destaques ({highlights.length})
+          <TabsTrigger value="highlights" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
+            <Highlighter className="h-3 w-3 md:h-4 md:w-4" /> 
+            {isMobile ? `Destaques (${highlights.length})` : `Meus Destaques (${highlights.length})`}
           </TabsTrigger>
         </TabsList>
         
@@ -119,7 +125,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
       </Tabs>
       
       {/* Rodapé do relatório com borda cinza */}
-      <div className="border-t border-gray-200 mt-8">
+      <div className="border-t border-gray-600">
         <ResultsFooter />
       </div>
     </div>

@@ -9,7 +9,7 @@ import ReformSummary from './ReformSummary';
 
 const Hero = () => {
   return (
-    <section className="bg-white pt-16 pb-8 px-4">
+    <section className="bg-white pt-10 md:pt-16 pb-8 px-4">
       <div className="container mx-auto max-w-6xl">
         <HeroBadge />
         <HeroHeading />

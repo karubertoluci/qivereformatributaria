@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 import ArticleCardHeader from './ArticleCardHeader';
 import ArticleCardSummary from './ArticleCardSummary';
@@ -33,6 +34,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   onRemoveHighlight
 }) => {
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   
   const articleHighlights = highlights.filter(h => h.articleId === article.id);
   
@@ -70,7 +72,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   
   return (
     <Card className={`shadow-sm hover:shadow transition-shadow duration-200 mb-4 ${isExpanded ? 'border-primary' : ''}`}>
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-2 pt-4 px-4 md:pb-2 md:pt-6 md:px-6">
         <ArticleCardHeader 
           article={article} 
           segmentId={segmentId}
@@ -78,7 +80,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         />
       </CardHeader>
       
-      <CardContent className="pt-0">
+      <CardContent className="pt-0 px-4 md:px-6">
         <ArticleCardSummary 
           article={article} 
           segmentId={segmentId} 
@@ -101,7 +103,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
           </>
         )}
         
-        <div className="flex justify-between items-center mt-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 gap-4">
           <Button
             variant="ghost"
             size="sm"

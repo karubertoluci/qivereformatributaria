@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
@@ -8,6 +9,7 @@ import ViewSwitcher from './ViewSwitcher';
 import ArticlesPriorityChart from '../ArticlesPriorityChart';
 import ArticleTopicsView from './ArticleTopicsView';
 import ArticleTableView from './ArticleTableView';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ArticlesTabContentProps {
   segment: BusinessSegment;
@@ -46,8 +48,10 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
   topics,
   neutralCount = 0
 }) => {
+  const isMobile = useIsMobile();
+  
   return (
-    <div className="space-y-6 mt-6">
+    <div className="space-y-4 md:space-y-6 mt-4 md:mt-6">
       <ResultsSummary 
         totalArticles={relevantArticles.length}
         positiveCount={positiveCount}
@@ -55,18 +59,20 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
         segmentName={segment.name}
       />
       
-      <FilterBar 
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        filterType={filterType}
-        setFilterType={setFilterType}
-        positiveCount={positiveCount}
-        negativeCount={negativeCount}
-        neutralCount={neutralCount}
-        totalCount={relevantArticles.length}
-      />
-      
-      <ViewSwitcher viewMode={viewMode} setViewMode={setViewMode} />
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <FilterBar 
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          filterType={filterType}
+          setFilterType={setFilterType}
+          positiveCount={positiveCount}
+          negativeCount={negativeCount}
+          neutralCount={neutralCount}
+          totalCount={relevantArticles.length}
+        />
+        
+        <ViewSwitcher viewMode={viewMode} setViewMode={setViewMode} />
+      </div>
       
       {filteredArticles.length === 0 ? (
         <div className="text-center py-8">
@@ -75,12 +81,14 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
       ) : (
         <>
           {viewMode === 'chart' && (
-            <div className="mb-8">
-              <ArticlesPriorityChart 
-                articles={filteredArticles}
-                segmentId={segment.id}
-                onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
-              />
+            <div className="mb-6 md:mb-8 overflow-x-auto">
+              <div className={isMobile ? "min-w-[500px]" : ""}>
+                <ArticlesPriorityChart 
+                  articles={filteredArticles}
+                  segmentId={segment.id}
+                  onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
+                />
+              </div>
             </div>
           )}
           
@@ -97,12 +105,16 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
           )}
           
           {viewMode === 'table' && (
-            <ArticleTableView 
-              articles={filteredArticles}
-              segment={segment}
-              expandedArticleId={expandedArticleId}
-              setExpandedArticleId={setExpandedArticleId}
-            />
+            <div className="overflow-x-auto">
+              <div className={isMobile ? "min-w-[500px]" : ""}>
+                <ArticleTableView 
+                  articles={filteredArticles}
+                  segment={segment}
+                  expandedArticleId={expandedArticleId}
+                  setExpandedArticleId={setExpandedArticleId}
+                />
+              </div>
+            </div>
           )}
         </>
       )}

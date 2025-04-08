@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Share2, UserPlus } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import ArticleUsefulness from '@/components/article/ArticleUsefulness';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ArticleCardActionsProps {
   articleId: string;
@@ -16,8 +17,10 @@ const ArticleCardActions: React.FC<ArticleCardActionsProps> = ({
   onShareArticle,
   onInviteToArticle
 }) => {
+  const isMobile = useIsMobile();
+  
   return (
-    <div className="flex flex-wrap justify-between items-center">
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full md:w-auto gap-4">
       <div className="flex flex-wrap gap-2">
         <Button 
           variant="outline" 
@@ -26,7 +29,7 @@ const ArticleCardActions: React.FC<ArticleCardActionsProps> = ({
           onClick={onShareArticle}
         >
           <Share2 className="h-3.5 w-3.5" />
-          Compartilhar
+          {!isMobile && "Compartilhar"}
         </Button>
         
         <Button 
@@ -36,11 +39,11 @@ const ArticleCardActions: React.FC<ArticleCardActionsProps> = ({
           onClick={onInviteToArticle}
         >
           <UserPlus className="h-3.5 w-3.5" />
-          Convidar para ler
+          {!isMobile && "Convidar para ler"}
         </Button>
       </div>
       
-      {/* Article usefulness section - now on the right side */}
+      {/* Article usefulness section */}
       <div className="mt-0 md:mt-0">
         <ArticleUsefulness articleId={articleId} />
       </div>
