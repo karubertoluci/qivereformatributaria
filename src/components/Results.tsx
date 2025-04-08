@@ -16,13 +16,15 @@ export interface ResultsProps {
 const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
   const navigate = useNavigate();
   
-  // Get company name from localStorage if available
+  // Obter nome da empresa do localStorage se disponível
   const formData = JSON.parse(localStorage.getItem('formData') || '{}');
   const companyName = formData?.razaoSocial || formData?.nomeFantasia || formData?.nome;
 
   const handleRefresh = () => {
     forceArticleRefresh(segment.id);
     toast.info("Atualizando dados dos artigos...");
+    // Recarregar a página para forçar a busca de novos dados
+    window.location.reload();
   };
 
   return (

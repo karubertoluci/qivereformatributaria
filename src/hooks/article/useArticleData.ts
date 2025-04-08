@@ -15,34 +15,34 @@ export const useArticleData = (segment: BusinessSegment) => {
       setError(null);
       
       try {
-        // For development, we can use cached data if available to reduce API calls
+        // Para desenvolvimento, podemos usar dados em cache para reduzir chamadas à API
         const cachedArticles = localStorage.getItem(`segmentArticles_${segment.id}`);
         if (cachedArticles) {
-          console.log(`Using cached articles for segment: ${segment.id}`);
+          console.log(`Usando artigos em cache para o segmento: ${segment.id}`);
           setSegmentArticles(JSON.parse(cachedArticles));
           setIsLoading(false);
           return;
         }
         
-        console.log(`Fetching articles from Supabase for segment: ${segment.id}`);
+        console.log(`Buscando artigos do Supabase para o segmento: ${segment.id}`);
         
-        // First check if we should load from livros_reforma table
-        // Using the generic query method to avoid TypeScript errors
+        // Verificar se devemos carregar da tabela livros_reforma
+        // Usando o cast para any para evitar erros de TypeScript
         const { data: livrosData, error: livrosError } = await supabase
           .from('livros_reforma' as any)
           .select('*');
           
         if (livrosError) {
-          console.error('Error fetching from livros_reforma:', livrosError);
+          console.error('Erro ao buscar da tabela livros_reforma:', livrosError);
           setError(`Erro ao buscar da tabela livros_reforma: ${livrosError.message}`);
           setIsLoading(false);
           return;
         }
         
         if (livrosData && livrosData.length > 0) {
-          console.log(`Fetched ${livrosData.length} articles from livros_reforma table`);
+          console.log(`Encontrados ${livrosData.length} artigos na tabela livros_reforma`);
           
-          // Format articles from livros_reforma table
+          // Formatar artigos da tabela livros_reforma
           const formattedArticles = livrosData.map((item: any) => {
             return {
               id: `art_${item.id}`,
@@ -52,7 +52,7 @@ export const useArticleData = (segment: BusinessSegment) => {
               simplifiedText: item.conteudo || "",
               impacts: [
                 {
-                  type: "positive", // Default impact type
+                  type: "positive", // Tipo de impacto padrão
                   description: `Artigo relacionado a ${segment.name}`,
                   relevance: "medium",
                   segments: [segment.id]
@@ -68,91 +68,31 @@ export const useArticleData = (segment: BusinessSegment) => {
             };
           });
           
-          console.log(`Formatted ${formattedArticles.length} articles from livros_reforma`);
+          console.log(`Formatados ${formattedArticles.length} artigos de livros_reforma`);
           setSegmentArticles(formattedArticles);
           
-          // Cache the articles for this segment to improve performance
+          // Armazenar os artigos em cache para este segmento para melhorar o desempenho
           localStorage.setItem(`segmentArticles_${segment.id}`, JSON.stringify(formattedArticles));
           setIsLoading(false);
           return;
         }
         
-        // If no data in livros_reforma, fall back to original impactos method
-        const { data: impactos, error: impactosError } = await supabase
-          .from('impactos')
-          .select('*')
-          .eq('segmento_id', segment.id);
-          
-        if (impactosError) {
-          console.error('Error fetching impacts:', impactosError);
-          setError(`Erro ao buscar impactos: ${impactosError.message}`);
-          setIsLoading(false);
-          return;
-        }
+        // Se não houver dados na tabela livros_reforma, usar dados de exemplo da aplicação
+        console.log('Não foram encontrados dados na tabela livros_reforma, usando dados de exemplo');
         
-        if (!impactos || impactos.length === 0) {
-          console.log(`No impacts found for segment: ${segment.id}`);
-          setIsLoading(false);
-          return;
-        }
+        // Filtrar artigos de exemplo com base no segmento
+        const mockArticles = articles.filter(article => 
+          article.impacts.some(impact => impact.segments.includes(segment.id))
+        );
         
-        const artigoIds = impactos.map(impacto => impacto.artigo_id);
-        console.log(`Found ${artigoIds.length} article IDs for segment: ${segment.id}`);
+        console.log(`Usando ${mockArticles.length} artigos de exemplo para o segmento`);
+        setSegmentArticles(mockArticles);
         
-        // Then fetch the articles
-        const { data: artigos, error: artigosError } = await supabase
-          .from('artigos')
-          .select('*')
-          .in('id', artigoIds);
-          
-        if (artigosError) {
-          console.error('Error fetching articles:', artigosError);
-          setError(`Erro ao buscar artigos: ${artigosError.message}`);
-          setIsLoading(false);
-          return;
-        }
+        // Armazenar os artigos em cache para este segmento
+        localStorage.setItem(`segmentArticles_${segment.id}`, JSON.stringify(mockArticles));
         
-        if (!artigos || artigos.length === 0) {
-          console.log('No articles found');
-          setIsLoading(false);
-          return;
-        }
-        
-        console.log(`Fetched ${artigos.length} articles from Supabase`);
-        
-        // Format articles with their impacts
-        const formattedArticles = artigos.map(artigo => {
-          const artigoImpactos = impactos
-            .filter(impacto => impacto.artigo_id === artigo.id)
-            .map(impacto => ({
-              type: impacto.tipo,
-              description: impacto.descricao,
-              relevance: impacto.relevancia,
-              segments: [segment.id]
-            }));
-            
-          return {
-            id: `art_${artigo.id}`,
-            number: artigo.numero.toString(),
-            title: `Artigo ${artigo.numero}`,
-            originalText: artigo.texto,
-            simplifiedText: artigo.texto_simplificado || artigo.texto,
-            impacts: artigoImpactos,
-            metadata: {
-              capituloId: artigo.capitulo_id,
-              secaoId: artigo.secao_id,
-              subsecaoId: artigo.subsecao_id
-            }
-          };
-        });
-        
-        console.log(`Formatted ${formattedArticles.length} articles with their impacts`);
-        setSegmentArticles(formattedArticles);
-        
-        // Cache the articles for this segment to improve performance
-        localStorage.setItem(`segmentArticles_${segment.id}`, JSON.stringify(formattedArticles));
       } catch (error: any) {
-        console.error('Error fetching data from Supabase:', error);
+        console.error('Erro ao buscar dados do Supabase:', error);
         setError(`Erro ao buscar dados: ${error.message}`);
       } finally {
         setIsLoading(false);
@@ -168,3 +108,6 @@ export const useArticleData = (segment: BusinessSegment) => {
     error
   };
 };
+
+// Importando dados de exemplo locais
+import { articles } from '@/data/articles';

@@ -38,45 +38,48 @@ const SearchForm: React.FC = () => {
     }
   };
 
-  // Função para buscar artigos impactados de acordo com o segmento
+  // Função para buscar artigos da tabela livros_reforma
   const fetchArticlesForSegment = async (segmentId: string) => {
     try {
-      // Buscar artigos que têm impacto para o segmento específico
-      const { data: impactos, error: impactosError } = await supabase
-        .from('impactos')
-        .select('*')
-        .eq('segmento_id', segmentId);
-        
-      if (impactosError) throw new Error(impactosError.message);
-      
-      if (!impactos || impactos.length === 0) {
-        console.log(`Nenhum artigo encontrado para o segmento: ${segmentId}`);
-        return [];
-      }
-      
-      // Obter IDs dos artigos encontrados
-      const artigoIds = impactos.map(impacto => impacto.artigo_id);
-      
-      // Buscar detalhes dos artigos
+      // Buscar os artigos da tabela livros_reforma
       const { data: artigos, error: artigosError } = await supabase
-        .from('artigos')
-        .select('*')
-        .in('id', artigoIds);
+        .from('livros_reforma' as any)
+        .select('*');
         
       if (artigosError) throw new Error(artigosError.message);
       
-      // Associar impactos aos artigos
-      if (artigos) {
-        return artigos.map(artigo => {
-          const artigoImpactos = impactos.filter(impacto => impacto.artigo_id === artigo.id);
-          return {
-            ...artigo,
-            impactos: artigoImpactos
-          };
-        });
+      if (!artigos || artigos.length === 0) {
+        console.log(`Nenhum artigo encontrado na tabela livros_reforma`);
+        return [];
       }
       
-      return [];
+      // Formatar os artigos para o formato esperado pela aplicação
+      const formattedArticles = artigos.map((artigo: any) => {
+        return {
+          id: `art_${artigo.id}`,
+          number: artigo.artigo || "N/A",
+          title: `Artigo ${artigo.artigo || "N/A"}`,
+          originalText: artigo.conteudo || "",
+          simplifiedText: artigo.conteudo || "",
+          impacts: [
+            {
+              type: "positive", // Tipo de impacto padrão
+              description: `Artigo relacionado a ${segmentId}`,
+              relevance: "medium",
+              segments: [segmentId]
+            }
+          ],
+          metadata: {
+            livro: artigo.livro,
+            titulo: artigo.titulo,
+            capitulo: artigo.capitulo,
+            secao: artigo.secao,
+            subsecao: artigo.subsecao
+          }
+        };
+      });
+      
+      return formattedArticles;
     } catch (error) {
       console.error('Erro ao buscar artigos:', error);
       throw error;
@@ -93,10 +96,31 @@ const SearchForm: React.FC = () => {
       
       // Obter o CNAE a partir dos dados da empresa
       let segmentId: string;
+      let cnaeCode: string = '';
       
       if (data.companyData?.cnaePrincipal?.codigo) {
         // Se temos o código CNAE nos dados da empresa
-        segmentId = mapCnaeToSegment(data.companyData.cnaePrincipal.codigo);
+        cnaeCode = data.companyData.cnaePrincipal.codigo;
+        segmentId = mapCnaeToSegment(cnaeCode);
+        
+        // Registrar a consulta no Supabase
+        try {
+          const { error: insertError } = await supabase
+            .from('consultas' as any)
+            .insert({
+              cnpj: data.cnpj,
+              cnae: cnaeCode,
+              consultado_em: new Date().toISOString()
+            });
+            
+          if (insertError) {
+            console.error('Erro ao registrar consulta:', insertError);
+          } else {
+            console.log('Consulta registrada com sucesso');
+          }
+        } catch (err) {
+          console.error('Erro ao tentar registrar consulta:', err);
+        }
       } else {
         // Fallback para um segmento padrão
         segmentId = 'servicos';
