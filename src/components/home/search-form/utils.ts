@@ -110,3 +110,17 @@ export const mapCnaeToSegment = (cnae: string): string => {
   // Retorna o segmento encontrado ou o padrão 'servicos'
   return segmentId || 'servicos';
 };
+
+// Função para formatar CNPJ removendo caracteres não numéricos
+export const formatCNPJForStorage = (cnpj: string): string => {
+  // Remove todos os caracteres não numéricos
+  return cnpj.replace(/\D/g, '');
+};
+
+// Função para formatar CNPJ para exibição: XX.XXX.XXX/XXXX-XX
+export const formatCNPJForDisplay = (cnpj: string): string => {
+  const digits = cnpj.replace(/\D/g, '');
+  if (digits.length !== 14) return cnpj;
+  
+  return digits.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
+};

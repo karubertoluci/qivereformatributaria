@@ -7,6 +7,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { FormValues } from '../FormDialog';
 import { Building2, CheckCircle2, XCircle } from 'lucide-react';
 import { fetchCNPJData } from '@/services/brasilApi';
+import { toast } from 'sonner';
 
 interface CNPJFieldProps {
   form: UseFormReturn<FormValues>;
@@ -55,24 +56,26 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
         const companyData = {
           cnpj: data.cnpj,
           razaoSocial: data.razao_social,
-          nomeFantasia: data.nome_fantasia,
+          nomeFantasia: data.nome_fantasia || data.razao_social,
           endereco: `${data.logradouro}, ${data.numero}, ${data.bairro}, ${data.municipio} - ${data.uf}`,
           cnaePrincipal: {
             codigo: cnaeCode,
             descricao: data.cnae_fiscal_descricao,
           },
-          cnaeSecundarios: data.cnaes_secundarios,
+          cnaeSecundarios: data.cnaes_secundarios || [],
           situacaoCadastral: data.situacao_cadastral,
           naturezaJuridica: data.natureza_juridica,
         };
         
         console.log('Company data obtained:', companyData);
+        toast.success(`CNPJ válido: ${data.razao_social}`);
         
         // Store company data in localStorage for later use
         localStorage.setItem('companyData', JSON.stringify(companyData));
       } catch (error) {
         setIsValid(false);
         console.error('Error validating CNPJ:', error);
+        toast.error('Erro ao validar CNPJ. Verifique o número e tente novamente.');
       } finally {
         setIsValidating(false);
       }

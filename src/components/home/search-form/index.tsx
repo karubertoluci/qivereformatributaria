@@ -10,6 +10,7 @@ import LoadingDialog from './LoadingDialog';
 import { useFormDialogContext } from '../FormDialogContext';
 import { supabase } from '@/integrations/supabase/client';
 import { mapCnaeToSegment } from './utils';
+import { toast } from 'sonner';
 
 const SearchForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,33 +29,43 @@ const SearchForm: React.FC = () => {
       // Get CNAE from company data
       let segmentId: string;
       let cnaeCode: string = '';
+      let companyName: string = '';
       
       if (data.companyData?.cnaePrincipal?.codigo) {
         // If we have the CNAE code in the company data
         cnaeCode = data.companyData.cnaePrincipal.codigo;
+        companyName = data.companyData.razaoSocial || data.companyData.nomeFantasia || "Empresa não identificada";
         segmentId = mapCnaeToSegment(cnaeCode);
+        
+        console.log(`CNAE: ${cnaeCode}, mapeado para segmento: ${segmentId}`);
         
         // Record the query in Supabase
         try {
+          // Remove non-numeric characters from CNPJ for storage
+          const formattedCNPJ = data.cnpj.replace(/\D/g, '');
+          
           const { error: insertError } = await supabase
             .from('consultas')
             .insert({
-              cnpj: data.cnpj,
+              cnpj: formattedCNPJ,
               cnae: cnaeCode,
               consultado_em: new Date().toISOString()
             });
             
           if (insertError) {
             console.error('Error recording query:', insertError);
+            // Continue with the flow even if the record fails
           } else {
             console.log('Query recorded successfully');
           }
         } catch (err) {
           console.error('Error trying to record query:', err);
+          // Continue with the flow even if the record fails
         }
       } else {
         // Fallback to a default segment
         segmentId = 'servicos';
+        companyName = data.nome || "Usuário";
       }
       
       // Find the corresponding segment object
@@ -108,6 +119,9 @@ const SearchForm: React.FC = () => {
         // Store segment in localStorage
         localStorage.setItem('selectedSegment', JSON.stringify(segment));
         
+        // Store company name for display
+        localStorage.setItem('companyName', companyName);
+        
         // Close the dialog and navigate to the results page
         closeFormDialog();
         navigate(`/results/${segmentId}`);
@@ -115,11 +129,13 @@ const SearchForm: React.FC = () => {
       } catch (error) {
         console.error('Error fetching data:', error);
         setError('Error fetching data. Please try again.');
+        toast.error('Erro ao buscar dados. Por favor, tente novamente.');
       }
       
     } catch (error) {
       console.error('Error processing form:', error);
       setError('An error occurred. Please try again.');
+      toast.error('Ocorreu um erro. Por favor, tente novamente.');
     } finally {
       setIsLoading(false);
     }

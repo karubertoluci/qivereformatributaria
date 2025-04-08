@@ -1,3 +1,4 @@
+
 interface CNPJResponse {
   cnpj: string;
   razao_social: string;
@@ -25,7 +26,7 @@ interface CNPJResponse {
 
 // Development mode - If we can't access the real API,
 // use simulated data for demonstration
-const useMockData = false;
+const useMockData = false; // Alterado para false para usar a API real
 const mockCnpjData: Record<string, CNPJResponse> = {
   '42988955000149': {
     cnpj: '42.988.955/0001-49',
@@ -112,50 +113,51 @@ export const fetchCNPJData = async (cnpj: string): Promise<CNPJResponse> => {
 
     console.log(`Fetching data for CNPJ: ${formattedCNPJ}`);
 
-    // If we're using simulated data or if there's an error with the API
-    if (useMockData) {
-      // Try to find the CNPJ in our mock data
-      const mockData = mockCnpjData[formattedCNPJ];
-      if (mockData) {
-        console.log('CNPJ found in simulated data:', mockData);
-        return mockData;
+    // Try to call the real API
+    try {
+      const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${formattedCNPJ}`);
+      
+      if (!response.ok) {
+        console.error(`API Error: ${response.status}`);
+        throw new Error(`API Error: ${response.status}`);
       }
       
-      // If we don't find the specific CNPJ in our mocks, choose a random one
-      const mockKeys = Object.keys(mockCnpjData);
-      const randomMock = {...mockCnpjData[mockKeys[Math.floor(Math.random() * mockKeys.length)]]};
+      const data = await response.json();
+      console.log('API response:', data);
+      return data;
+    } catch (apiError) {
+      console.error('API request failed:', apiError);
       
-      // Customize the mock with the provided CNPJ
-      randomMock.cnpj = formattedCNPJ.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
+      // If we're using simulated data or if there's an error with the API
+      if (useMockData) {
+        // Try to find the CNPJ in our mock data
+        const mockData = mockCnpjData[formattedCNPJ];
+        if (mockData) {
+          console.log('CNPJ found in simulated data:', mockData);
+          return mockData;
+        }
+        
+        // If we don't find the specific CNPJ in our mocks, choose a random one
+        const mockKeys = Object.keys(mockCnpjData);
+        const randomMock = {...mockCnpjData[mockKeys[Math.floor(Math.random() * mockKeys.length)]]};
+        
+        // Customize the mock with the provided CNPJ
+        randomMock.cnpj = formattedCNPJ.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
+        
+        console.log('CNPJ not found, using random simulated data:', randomMock);
+        return randomMock;
+      }
       
-      console.log('CNPJ not found, using random simulated data:', randomMock);
-      return randomMock;
+      throw apiError;
     }
-    
-    // Try to call the real API
-    const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${formattedCNPJ}`);
-    
-    if (!response.ok) {
-      console.error(`API Error: ${response.status}`);
-      
-      // If API fails, fallback to mock data for demo purposes
-      const mockKeys = Object.keys(mockCnpjData);
-      const randomMock = {...mockCnpjData[mockKeys[Math.floor(Math.random() * mockKeys.length)]]};
-      
-      // Customize the mock with the provided CNPJ
-      randomMock.cnpj = formattedCNPJ.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
-      console.log('API failed, using fallback simulated data:', randomMock);
-      
-      return randomMock;
-    }
-    
-    return await response.json();
   } catch (error) {
     console.error('Error fetching CNPJ data:', error);
     
     // Fallback to mock data in case of any error
     const mockKeys = Object.keys(mockCnpjData);
     const randomMock = {...mockCnpjData[mockKeys[Math.floor(Math.random() * mockKeys.length)]]};
+    randomMock.cnpj = cnpj;
+    console.log('Falling back to mock data:', randomMock);
     
     return randomMock;
   }

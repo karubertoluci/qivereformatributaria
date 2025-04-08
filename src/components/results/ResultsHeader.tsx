@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BusinessSegment } from '@/data/segments';
 import { Button } from '@/components/ui/button';
@@ -16,10 +16,30 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   segment,
   positiveCount,
   negativeCount,
-  companyName
+  companyName: propCompanyName
 }) => {
+  const [displayName, setDisplayName] = useState<string>(propCompanyName || "Qive Comercial Ltda");
   const navigate = useNavigate();
-  const displayName = companyName || "Qive Comercial Ltda";
+  
+  useEffect(() => {
+    // Try to get company name from localStorage
+    const storedCompanyName = localStorage.getItem('companyName');
+    const companyData = localStorage.getItem('companyData');
+    
+    if (storedCompanyName) {
+      setDisplayName(storedCompanyName);
+    } else if (companyData) {
+      try {
+        const parsedData = JSON.parse(companyData);
+        if (parsedData.razaoSocial || parsedData.nomeFantasia) {
+          const name = parsedData.razaoSocial || parsedData.nomeFantasia;
+          setDisplayName(name);
+        }
+      } catch (error) {
+        console.error('Error parsing company data:', error);
+      }
+    }
+  }, [propCompanyName]);
   
   const handleBackToHome = () => {
     // Clear localStorage when returning to home
