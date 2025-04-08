@@ -1,10 +1,8 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BusinessSegment } from '@/data/segments';
 import { Building2, Briefcase, MapPin, FileText, CalendarCheck, Building, BadgeCheck, Clock, Store } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-
 interface CompanyData {
   nome?: string;
   cargo?: string;
@@ -26,12 +24,10 @@ interface CompanyData {
   porte?: string;
   original?: any; // Dados originais da API
 }
-
 interface CompanyOverviewProps {
   companyData: CompanyData;
   segment: BusinessSegment;
 }
-
 const CompanyOverview: React.FC<CompanyOverviewProps> = ({
   companyData,
   segment
@@ -44,7 +40,6 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
     // Format CNPJ: XX.XXX.XXX/XXXX-XX
     return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
   };
-
   const formatDate = (dateString: string | undefined) => {
     if (!dateString) return 'Não informada';
 
@@ -59,9 +54,7 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
       return dateString;
     }
   };
-
-  return (
-    <Card className="bg-white shadow-sm">
+  return <Card className="bg-white shadow-sm">
       <CardHeader className="bg-white border-b">
         <CardTitle className="flex items-center gap-2 text-xl font-medium text-gray-800">
           <Building2 className="h-5 w-5 text-primary" />
@@ -77,12 +70,10 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
               <h3 className="text-xl font-semibold text-gray-800 text-left">
                 {companyData.razaoSocial || "Empresa Não Identificada"}
               </h3>
-              {companyData.nomeFantasia && companyData.nomeFantasia !== companyData.razaoSocial && (
-                <p className="text-sm text-gray-500 mt-1 text-left flex items-center gap-1.5">
+              {companyData.nomeFantasia && companyData.nomeFantasia !== companyData.razaoSocial && <p className="text-sm text-gray-500 mt-1 text-left flex items-center gap-1.5">
                   <Store className="h-3.5 w-3.5" />
                   Nome Fantasia: <span className="font-medium">{companyData.nomeFantasia}</span>
-                </p>
-              )}
+                </p>}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -100,52 +91,42 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
                   <span className="text-xs font-medium text-gray-500">Situação Cadastral</span>
                 </div>
                 <span className="font-semibold">
-                  {companyData.situacaoCadastral === "ATIVA" ? 
-                    <span className="text-green-600">{companyData.situacaoCadastral}</span> : 
-                    companyData.situacaoCadastral || "Não informado"}
+                  {companyData.situacaoCadastral === "ATIVA" ? <span className="text-green-600">{companyData.situacaoCadastral}</span> : companyData.situacaoCadastral || "Não informado"}
                 </span>
               </div>
               
-              {companyData.dataSituacaoCadastral && (
-                <div className="bg-white border border-gray-100 p-4 rounded-md shadow-sm">
+              {companyData.dataSituacaoCadastral && <div className="bg-white border border-gray-100 p-4 rounded-md shadow-sm">
                   <div className="flex items-center gap-2 mb-1.5">
                     <Clock className="h-4 w-4 text-primary" />
                     <span className="text-xs font-medium text-gray-500">Data da Situação</span>
                   </div>
                   <span className="font-semibold text-gray-800">{formatDate(companyData.dataSituacaoCadastral)}</span>
-                </div>
-              )}
+                </div>}
               
-              {companyData.porte && (
-                <div className="bg-white border border-gray-100 p-4 rounded-md shadow-sm">
+              {companyData.porte && <div className="bg-white border border-gray-100 p-4 rounded-md shadow-sm">
                   <div className="flex items-center gap-2 mb-1.5">
                     <Building className="h-4 w-4 text-primary" />
                     <span className="text-xs font-medium text-gray-500">Porte da Empresa</span>
                   </div>
                   <span className="font-semibold text-gray-800">{companyData.porte}</span>
-                </div>
-              )}
+                </div>}
             </div>
             
-            {companyData.naturezaJuridica && (
-              <div className="bg-white border border-gray-100 p-4 rounded-md shadow-sm">
+            {companyData.naturezaJuridica && <div className="bg-white border border-gray-100 p-4 rounded-md shadow-sm">
                 <div className="flex items-center gap-2 mb-1.5">
                   <FileText className="h-4 w-4 text-primary" />
                   <span className="text-xs font-medium text-gray-500">Natureza Jurídica</span>
                 </div>
                 <span className="font-semibold text-gray-800 text-left">{companyData.naturezaJuridica}</span>
-              </div>
-            )}
+              </div>}
 
-            {companyData.endereco && (
-              <div className="bg-white border border-gray-100 p-4 rounded-md shadow-sm">
+            {companyData.endereco && <div className="bg-white border border-gray-100 p-4 rounded-md shadow-sm">
                 <div className="flex items-center gap-2 mb-1.5">
                   <MapPin className="h-4 w-4 text-primary" />
                   <span className="text-xs font-medium text-gray-500">Endereço</span>
                 </div>
                 <span className="font-medium text-gray-700 text-left">{companyData.endereco}</span>
-              </div>
-            )}
+              </div>}
           </div>
 
           {/* Right column - CNAE info */}
@@ -157,46 +138,35 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
                 CNAE Principal
               </h4>
               
-              {companyData.cnaePrincipal?.codigo ? (
-                <div>
+              {companyData.cnaePrincipal?.codigo ? <div>
                   <div className="bg-gray-50 rounded p-3 flex justify-between items-center mb-3 border border-gray-100">
                     <span className="font-bold text-gray-800">{companyData.cnaePrincipal.codigo}</span>
                   </div>
                   <p className="text-gray-700 text-left">{companyData.cnaePrincipal.descricao}</p>
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">CNAE não identificado</p>
-              )}
+                </div> : <p className="text-sm text-muted-foreground">CNAE não identificado</p>}
               
-              {segment && (
-                <div className="mt-4 pt-4 border-t border-gray-100">
+              {segment && <div className="mt-4 pt-4 border-t border-gray-100 bg-gray-50">
                   <div className="flex items-center gap-2 mb-1">
                     <Store className="h-4 w-4 text-primary" />
                     <p className="text-sm font-medium text-primary">Segmento: {segment.name}</p>
                   </div>
                   <p className="text-sm text-gray-600 text-left">{segment.description}</p>
-                </div>
-              )}
+                </div>}
             </div>
             
             {/* CNAEs Secundários */}
-            {companyData.cnaeSecundarios && companyData.cnaeSecundarios.length > 0 ? (
-              <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+            {companyData.cnaeSecundarios && companyData.cnaeSecundarios.length > 0 ? <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
                 <h4 className="text-sm font-medium flex items-center gap-1.5 mb-3 text-primary">
                   <FileText className="h-4 w-4 text-primary" />
                   CNAEs Secundários
                 </h4>
                 <div className="max-h-48 overflow-y-auto pr-2 space-y-3">
-                  {companyData.cnaeSecundarios.map((cnae, i) => (
-                    <div key={i} className="bg-gray-50 p-3 rounded border border-gray-100">
+                  {companyData.cnaeSecundarios.map((cnae, i) => <div key={i} className="bg-gray-50 p-3 rounded border border-gray-100">
                       <p className="font-semibold text-gray-800 text-left">{cnae.codigo}</p>
                       <p className="text-sm text-gray-600 text-left">{cnae.descricao}</p>
-                    </div>
-                  ))}
+                    </div>)}
                 </div>
-              </div>
-            ) : (
-              <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+              </div> : <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
                 <h4 className="text-sm font-medium flex items-center gap-1.5 mb-3 text-primary">
                   <FileText className="h-4 w-4 text-primary" />
                   CNAEs Secundários
@@ -204,8 +174,7 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
                 <div className="bg-gray-50 p-3 rounded border border-gray-100 text-center">
                   <p className="text-gray-500">Não existem CNAEs secundários</p>
                 </div>
-              </div>
-            )}
+              </div>}
           </div>
         </div>
         
@@ -217,8 +186,6 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
           </div>
         </div>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
-
 export default CompanyOverview;
