@@ -5,12 +5,14 @@ import { useResultsData } from '@/hooks/useResultsData';
 import ReportActions from '../report/ReportActions';
 import OverviewTabContent from './OverviewTabContent';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Book, FileText, Highlighter } from 'lucide-react';
-import ArticlesTab from './tabs/ArticlesTab';
+import { Book, FileText, Highlighter, AlertTriangle } from 'lucide-react';
+import ArticlesTab from './tabs/articles/ArticlesTab';
 import HighlightsTab from './tabs/HighlightsTab';
 import ResultsFooter from './layout/ResultsFooter';
 import { FilterType } from './types';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 
 interface ResultsContainerProps {
   segment: BusinessSegment;
@@ -43,7 +45,8 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
     highlights,
     handleAddHighlight,
     handleRemoveHighlight,
-    isLoading
+    isLoading,
+    error
   } = useResultsData(segment);
 
   // Wrapper function to adapt the signature
@@ -65,6 +68,46 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
           <p className="text-muted-foreground">
             Estamos analisando os dados da reforma tributária para o segmento: {segment.name}
           </p>
+        </div>
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div className="container mx-auto p-8">
+        <Alert variant="destructive" className="mb-4">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Erro ao carregar dados</AlertTitle>
+          <AlertDescription>
+            {error}
+          </AlertDescription>
+        </Alert>
+        <div className="flex justify-center mt-6">
+          <Button onClick={() => window.location.reload()} variant="outline">
+            Tentar novamente
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (relevantArticles.length === 0) {
+    return (
+      <div className="container mx-auto p-8">
+        <Alert className="mb-4">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Nenhum artigo encontrado</AlertTitle>
+          <AlertDescription>
+            Não foram encontrados artigos relacionados ao segmento: {segment.name}
+          </AlertDescription>
+        </Alert>
+        <div className="flex justify-center mt-6">
+          {onBackToSegments && (
+            <Button onClick={onBackToSegments} variant="outline">
+              Voltar para seleção de segmentos
+            </Button>
+          )}
         </div>
       </div>
     );
