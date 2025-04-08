@@ -44,8 +44,10 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
     const digits = cnpj.replace(/\D/g, '');
     if (digits.length === 14) {
       setIsValidating(true);
+      setIsValid(null);
+      
       try {
-        console.log('Validating CNPJ:', cnpj);
+        console.log('Validando CNPJ:', cnpj);
         const data = await fetchCNPJData(cnpj);
         setIsValid(true);
         
@@ -67,14 +69,18 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
           naturezaJuridica: data.natureza_juridica,
         };
         
-        console.log('Company data obtained:', companyData);
+        console.log('Dados da empresa obtidos:', companyData);
         toast.success(`CNPJ válido: ${data.razao_social}`);
         
         // Store company data in localStorage for later use
         localStorage.setItem('companyData', JSON.stringify(companyData));
+        localStorage.setItem('companyName', data.razao_social);
+        
+        // Set CNAE code in localStorage for segment mapping
+        localStorage.setItem('cnae', cnaeCode);
       } catch (error) {
         setIsValid(false);
-        console.error('Error validating CNPJ:', error);
+        console.error('Erro ao validar CNPJ:', error);
         toast.error('Erro ao validar CNPJ. Verifique o número e tente novamente.');
       } finally {
         setIsValidating(false);

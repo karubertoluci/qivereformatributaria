@@ -9,7 +9,7 @@ import { FormValues } from './FormDialog';
 import LoadingDialog from './LoadingDialog';
 import { useFormDialogContext } from '../FormDialogContext';
 import { supabase } from '@/integrations/supabase/client';
-import { mapCnaeToSegment } from './utils';
+import { mapCnaeToSegment, formatCNPJForStorage } from './utils';
 import { toast } from 'sonner';
 
 const SearchForm: React.FC = () => {
@@ -26,23 +26,47 @@ const SearchForm: React.FC = () => {
       // Store form data for later use
       localStorage.setItem('formData', JSON.stringify(data));
       
-      // Get CNAE from company data
+      // Get CNAE from company data or localStorage
       let segmentId: string;
       let cnaeCode: string = '';
       let companyName: string = '';
+      let companyDataObj = null;
       
-      if (data.companyData?.cnaePrincipal?.codigo) {
-        // If we have the CNAE code in the company data
-        cnaeCode = data.companyData.cnaePrincipal.codigo;
-        companyName = data.companyData.razaoSocial || data.companyData.nomeFantasia || "Empresa não identificada";
+      // Tenta obter os dados da empresa do localStorage primeiro
+      const companyDataStr = localStorage.getItem('companyData');
+      if (companyDataStr) {
+        try {
+          companyDataObj = JSON.parse(companyDataStr);
+          
+          // Tenta diferentes formatos de CNAE (camelCase ou snake_case)
+          if (companyDataObj.cnaePrincipal?.codigo) {
+            cnaeCode = companyDataObj.cnaePrincipal.codigo;
+          } else if (companyDataObj.cnae_fiscal) {
+            cnaeCode = companyDataObj.cnae_fiscal.toString();
+          }
+          
+          // Tenta diferentes formatos de nome (camelCase ou snake_case)
+          companyName = companyDataObj.razaoSocial || companyDataObj.razao_social || 
+                        companyDataObj.nomeFantasia || companyDataObj.nome_fantasia || 
+                        data.nome || "Empresa não identificada";
+        } catch (err) {
+          console.error('Erro ao analisar dados da empresa do localStorage:', err);
+        }
+      }
+      
+      // Verifica se temos o CNAE code, senão busca no localStorage
+      if (!cnaeCode) {
+        cnaeCode = localStorage.getItem('cnae') || '';
+      }
+      
+      if (cnaeCode) {
         segmentId = mapCnaeToSegment(cnaeCode);
-        
         console.log(`CNAE: ${cnaeCode}, mapeado para segmento: ${segmentId}`);
         
         // Record the query in Supabase
         try {
           // Remove non-numeric characters from CNPJ for storage
-          const formattedCNPJ = data.cnpj.replace(/\D/g, '');
+          const formattedCNPJ = formatCNPJForStorage(data.cnpj);
           
           const { error: insertError } = await supabase
             .from('consultas')
@@ -53,26 +77,27 @@ const SearchForm: React.FC = () => {
             });
             
           if (insertError) {
-            console.error('Error recording query:', insertError);
+            console.error('Erro ao registrar consulta:', insertError);
             // Continue with the flow even if the record fails
           } else {
-            console.log('Query recorded successfully');
+            console.log('Consulta registrada com sucesso');
           }
         } catch (err) {
-          console.error('Error trying to record query:', err);
+          console.error('Erro ao tentar registrar consulta:', err);
           // Continue with the flow even if the record fails
         }
       } else {
         // Fallback to a default segment
         segmentId = 'servicos';
         companyName = data.nome || "Usuário";
+        toast.warning('CNAE não encontrado. Usando segmento padrão: Serviços');
       }
       
       // Find the corresponding segment object
       const segment = businessSegments.find(s => s.id === segmentId);
       
       if (!segment) {
-        throw new Error('Segment not found');
+        throw new Error('Segmento não encontrado');
       }
       
       try {
@@ -84,8 +109,11 @@ const SearchForm: React.FC = () => {
         if (artigosError) throw new Error(artigosError.message);
         
         if (!artigos || artigos.length === 0) {
-          console.log(`No articles found in the livros_reforma table`);
+          console.log(`Nenhum artigo encontrado na tabela livros_reforma`);
+          toast.warning('Nenhum artigo encontrado. O relatório pode estar incompleto.');
         } else {
+          console.log(`${artigos.length} artigos encontrados na tabela livros_reforma`);
+          
           // Format the articles to the expected format of the application
           const formattedArticles = artigos.map((artigo: any) => {
             return {
@@ -127,14 +155,14 @@ const SearchForm: React.FC = () => {
         navigate(`/results/${segmentId}`);
         
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Error fetching data. Please try again.');
+        console.error('Erro ao buscar dados:', error);
+        setError('Erro ao buscar dados. Por favor, tente novamente.');
         toast.error('Erro ao buscar dados. Por favor, tente novamente.');
       }
       
     } catch (error) {
-      console.error('Error processing form:', error);
-      setError('An error occurred. Please try again.');
+      console.error('Erro ao processar formulário:', error);
+      setError('Ocorreu um erro. Por favor, tente novamente.');
       toast.error('Ocorreu um erro. Por favor, tente novamente.');
     } finally {
       setIsLoading(false);

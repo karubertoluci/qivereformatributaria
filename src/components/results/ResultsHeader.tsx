@@ -18,7 +18,7 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   negativeCount,
   companyName: propCompanyName
 }) => {
-  const [displayName, setDisplayName] = useState<string>(propCompanyName || "Qive Comercial Ltda");
+  const [displayName, setDisplayName] = useState<string>(propCompanyName || "Empresa");
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -28,15 +28,19 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
     
     if (storedCompanyName) {
       setDisplayName(storedCompanyName);
+      console.log('Nome da empresa encontrado no localStorage:', storedCompanyName);
     } else if (companyData) {
       try {
         const parsedData = JSON.parse(companyData);
-        if (parsedData.razaoSocial || parsedData.nomeFantasia) {
-          const name = parsedData.razaoSocial || parsedData.nomeFantasia;
+        if (parsedData.razaoSocial || parsedData.razao_social || parsedData.nomeFantasia || parsedData.nome_fantasia) {
+          // Considere tanto as chaves em camelCase quanto as em snake_case
+          const name = parsedData.razaoSocial || parsedData.razao_social || 
+                       parsedData.nomeFantasia || parsedData.nome_fantasia;
           setDisplayName(name);
+          console.log('Nome da empresa extraído dos dados da empresa:', name);
         }
       } catch (error) {
-        console.error('Error parsing company data:', error);
+        console.error('Erro ao analisar os dados da empresa:', error);
       }
     }
   }, [propCompanyName]);

@@ -104,8 +104,12 @@ export const mapCnaeToSegment = (cnae: string): string => {
   const sanitizedCnae = cnae.replace(/\D/g, '');
   const firstTwoDigits = sanitizedCnae.substring(0, 2);
   
+  console.log(`Mapeando CNAE: ${cnae}, primeiros dígitos: ${firstTwoDigits}`);
+  
   // Busca no mapeamento
   const segmentId = cnaeToSegmentMap[firstTwoDigits];
+  
+  console.log(`Segmento encontrado: ${segmentId || 'servicos (padrão)'}`);
   
   // Retorna o segmento encontrado ou o padrão 'servicos'
   return segmentId || 'servicos';
