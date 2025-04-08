@@ -25,7 +25,7 @@ export const getArticlePriorityData = (articles: Article[], segmentId: string): 
     
     if (segmentImpacts.length === 0) continue;
     
-    // Calculate relevance score
+    // Calculate relevance score based on natural factors
     let relevance = 0;
     relevance += segmentImpacts.length * 10;
     
@@ -61,23 +61,40 @@ export const getArticlePriorityData = (articles: Article[], segmentId: string): 
     relevance = Math.min(relevance, 100);
     urgency = Math.min(urgency, 100);
     
-    // Randomly adjust impact type distribution to match requested percentages
-    // 40% Favorável, 20% Neutro, 30% Desfavorável (total 90%, leaving 10% for natural distribution)
+    // Apply the new distribution for relevance category: 
+    // 40% Irrelevante, 10% Pouco relevante, 40% Moderadamente relevante, 10% Muito relevante
     const random = Math.random() * 100;
+    let relevanceCategory: 'Irrelevante' | 'Pouco relevante' | 'Moderadamente relevante' | 'Muito relevante';
     
-    // Determine primary impact type and label based on the new distribution
+    if (random < 40) {
+      // 40% chance of being Irrelevante
+      relevanceCategory = 'Irrelevante';
+    } else if (random < 50) {
+      // 10% chance of being Pouco relevante
+      relevanceCategory = 'Pouco relevante';
+    } else if (random < 90) {
+      // 40% chance of being Moderadamente relevante
+      relevanceCategory = 'Moderadamente relevante';
+    } else {
+      // 10% chance of being Muito relevante
+      relevanceCategory = 'Muito relevante';
+    }
+    
+    // Determine primary impact type and label based on the favorability distribution
     let impactType: 'positive' | 'negative' | 'neutral';
     let impactLabel: 'Favorável' | 'Neutro' | 'Desfavorável';
     
-    if (random < 40) {
+    const favorabilityRandom = Math.random() * 100;
+    
+    if (favorabilityRandom < 40) {
       // 40% chance of being positive
       impactType = 'positive';
       impactLabel = 'Favorável';
-    } else if (random < 60) {
+    } else if (favorabilityRandom < 60) {
       // 20% chance of being neutral
       impactType = 'neutral';  
       impactLabel = 'Neutro';
-    } else if (random < 90) {
+    } else if (favorabilityRandom < 90) {
       // 30% chance of being negative
       impactType = 'negative';
       impactLabel = 'Desfavorável';
@@ -94,13 +111,6 @@ export const getArticlePriorityData = (articles: Article[], segmentId: string): 
         impactLabel = 'Neutro';
       }
     }
-    
-    // Determine relevance category based on score
-    let relevanceCategory: 'Irrelevante' | 'Pouco relevante' | 'Moderadamente relevante' | 'Muito relevante';
-    if (relevance >= 75) relevanceCategory = 'Muito relevante';
-    else if (relevance >= 50) relevanceCategory = 'Moderadamente relevante';
-    else if (relevance >= 25) relevanceCategory = 'Pouco relevante';
-    else relevanceCategory = 'Irrelevante';
     
     result.push({
       id: article.id,

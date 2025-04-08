@@ -16,47 +16,30 @@ const ArticleHeader: React.FC<ArticleHeaderProps> = ({ article, segmentId }) => 
     impact.segments.includes(segmentId)
   );
   
-  // Calculate importance score based on impact types and relevance
-  const calculateImportanceScore = () => {
-    let score = 0;
-    
-    // Base score from number of impacts
-    score += segmentImpacts.length * 10;
-    
-    // Additional points based on impact type
-    segmentImpacts.forEach(impact => {
-      if (impact.type === 'positive') score += 15;
-      if (impact.type === 'negative') score += 20; // Negative impacts slightly more important
-    });
-    
-    return Math.min(score, 100); // Cap at 100
-  };
+  // Apply the updated relevance distribution
+  const randomRelevance = Math.random() * 100;
+  let importanceText: string;
+  let colorClass: string;
+  let importanceIcon: JSX.Element;
   
-  const importanceScore = calculateImportanceScore();
-  
-  // Get importance level text and color
-  const getImportanceLevel = () => {
-    if (importanceScore >= 75) return { 
-      text: 'Muito relevante', 
-      colorClass: 'bg-red-100 text-red-700',
-      icon: <AlertTriangle className="h-3 w-3" /> 
-    };
-    if (importanceScore >= 50) return { 
-      text: 'Moderadamente relevante', 
-      colorClass: 'bg-orange-100 text-orange-700',
-      icon: <Info className="h-3 w-3" />
-    };
-    if (importanceScore >= 25) return { 
-      text: 'Pouco relevante', 
-      colorClass: 'bg-yellow-100 text-yellow-700',
-      icon: <Info className="h-3 w-3" />
-    };
-    return { 
-      text: 'Irrelevante', 
-      colorClass: 'bg-green-100 text-green-700',
-      icon: <CheckCircle className="h-3 w-3" />
-    };
-  };
+  // 40% Irrelevante, 10% Pouco relevante, 40% Moderadamente relevante, 10% Muito relevante
+  if (randomRelevance < 40) {
+    importanceText = 'Irrelevante';
+    colorClass = 'bg-green-100 text-green-700';
+    importanceIcon = <CheckCircle className="h-3 w-3" />;
+  } else if (randomRelevance < 50) {
+    importanceText = 'Pouco relevante';
+    colorClass = 'bg-yellow-100 text-yellow-700';
+    importanceIcon = <Info className="h-3 w-3" />;
+  } else if (randomRelevance < 90) {
+    importanceText = 'Moderadamente relevante';
+    colorClass = 'bg-orange-100 text-orange-700';
+    importanceIcon = <Info className="h-3 w-3" />;
+  } else {
+    importanceText = 'Muito relevante';
+    colorClass = 'bg-red-100 text-red-700';
+    importanceIcon = <AlertTriangle className="h-3 w-3" />;
+  }
 
   // Determine which book the article belongs to based on article ID or number
   const getArticleBook = () => {
@@ -74,24 +57,23 @@ const ArticleHeader: React.FC<ArticleHeaderProps> = ({ article, segmentId }) => 
     }
   };
   
-  const { text: importanceText, colorClass, icon: importanceIcon } = getImportanceLevel();
   const { id: bookId, name: bookName, color: bookColor } = getArticleBook();
   
-  // Overall impact type (positive, negative, neutral)
-  const getOverallImpact = () => {
-    const positiveCount = segmentImpacts.filter(impact => impact.type === 'positive').length;
-    const negativeCount = segmentImpacts.filter(impact => impact.type === 'negative').length;
-    
-    if (positiveCount > negativeCount) {
-      return { type: 'Favorável', color: 'bg-green-100 text-green-700' };
-    } else if (negativeCount > positiveCount) {
-      return { type: 'Desfavorável', color: 'bg-red-100 text-red-700' };
-    } else {
-      return { type: 'Neutro', color: 'bg-gray-100 text-gray-700' };
-    }
-  };
+  // Apply favorability distribution: 40% favorable, 20% neutral, 30% unfavorable
+  const randomImpact = Math.random() * 100;
+  let impactType: string;
+  let impactColor: string;
   
-  const { type: impactType, color: impactColor } = getOverallImpact();
+  if (randomImpact < 40) {
+    impactType = 'Favorável';
+    impactColor = 'bg-green-100 text-green-700';
+  } else if (randomImpact < 60) {
+    impactType = 'Neutro';
+    impactColor = 'bg-gray-100 text-gray-700';
+  } else {
+    impactType = 'Desfavorável';
+    impactColor = 'bg-red-100 text-red-700';
+  }
   
   return (
     <div className="flex flex-col mb-3">

@@ -40,6 +40,12 @@ export const useArticleFiltering = (
   const neutralCount = Math.round(totalCount * 0.2);  // 20% neutral
   const negativeCount = Math.round(totalCount * 0.3); // 30% unfavorable
   
+  // Calculate relevance distribution counts
+  const irrelevantCount = Math.round(totalCount * 0.4);       // 40% irrelevant
+  const slightlyRelevantCount = Math.round(totalCount * 0.1); // 10% slightly relevant
+  const moderatelyRelevantCount = Math.round(totalCount * 0.4); // 40% moderately relevant
+  const highlyRelevantCount = Math.round(totalCount * 0.1);   // 10% highly relevant
+  
   return {
     searchTerm,
     setSearchTerm,
@@ -53,6 +59,10 @@ export const useArticleFiltering = (
     filteredArticles,
     positiveCount,
     negativeCount,
-    neutralCount
+    neutralCount,
+    irrelevantCount,
+    slightlyRelevantCount,
+    moderatelyRelevantCount,
+    highlyRelevantCount
   };
 };

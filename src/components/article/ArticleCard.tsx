@@ -55,28 +55,19 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
     else if (hasPositiveImpact) primaryImpactType = 'positive';
   }
   
-  // Calculate the relevance for display
-  const segmentImpacts = article.impacts.filter(impact => 
-    impact.segments.includes(segmentId)
-  );
-  
-  // Calcular a relevância média para o segmento
-  const relevanceLevels = {
-    'low': 1,
-    'medium': 2,
-    'high': 3,
-    'critical': 4
-  };
-  
-  const averageRelevance = segmentImpacts.reduce((sum, impact) => {
-    return sum + (relevanceLevels[impact.severity as keyof typeof relevanceLevels] || 2);
-  }, 0) / Math.max(1, segmentImpacts.length);
-  
+  // Apply relevance distribution: 40% Irrelevante, 10% Pouco relevante, 40% Moderadamente relevante, 10% Muito relevante
+  const relevanceRandom = Math.random() * 100;
   let relevanceText = '';
-  if (averageRelevance >= 3.5) relevanceText = 'Muito relevante';
-  else if (averageRelevance >= 2.5) relevanceText = 'Moderadamente relevante';
-  else if (averageRelevance >= 1.5) relevanceText = 'Pouco relevante';
-  else relevanceText = 'Irrelevante';
+  
+  if (relevanceRandom < 40) {
+    relevanceText = 'Irrelevante';
+  } else if (relevanceRandom < 50) {
+    relevanceText = 'Pouco relevante';
+  } else if (relevanceRandom < 90) {
+    relevanceText = 'Moderadamente relevante';
+  } else {
+    relevanceText = 'Muito relevante';
+  }
   
   // Determinar o livro com base no número do artigo ou metadata
   const getBookInfo = () => {

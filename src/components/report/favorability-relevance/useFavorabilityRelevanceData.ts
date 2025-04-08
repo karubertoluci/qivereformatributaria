@@ -92,50 +92,48 @@ export const useFavorabilityRelevanceData = (
       
       if (segmentImpacts.length === 0) return;
       
-      // Calculate the relevance score for the article
-      let relevanceScore = 0;
-      relevanceScore += segmentImpacts.length * 10;
-      
-      // Random distribution for favorability based on target percentages
+      // Apply the new relevance distribution
+      // 40% Irrelevante, 10% Pouco relevante, 40% Moderadamente relevante, 10% Muito relevante
       const random = Math.random() * 100;
+      let relevanceLevel: string;
+      
+      if (random < 40) {
+        relevanceLevel = 'Irrelevante';
+      } else if (random < 50) {
+        relevanceLevel = 'Pouco relevante';
+      } else if (random < 90) {
+        relevanceLevel = 'Moderadamente relevante';
+      } else {
+        relevanceLevel = 'Muito relevante';
+      }
+      
+      // Apply relevance filter if present
+      if (relevanceFilter && relevanceLevel !== relevanceFilter) return;
+      
+      // Apply favorability distribution: 40% Favorable, 20% Neutral, 30% Unfavorable
+      const favorabilityRandom = Math.random() * 100;
       let positiveCount = 0;
       let negativeCount = 0;
       let neutralCount = 0;
       
-      // Apply the 40% Favorable, 20% Neutral, 30% Unfavorable distribution
-      // With 10% random based on actual impacts
-      if (random < 40) {
+      if (favorabilityRandom < 40) {
         positiveCount = 1;
-      } else if (random < 60) {
+      } else if (favorabilityRandom < 60) {
         neutralCount = 1;
-      } else if (random < 90) {
+      } else if (favorabilityRandom < 90) {
         negativeCount = 1;
       } else {
         // For the remaining 10%, use the actual impact types
         segmentImpacts.forEach(impact => {
           if (impact.type === 'positive') {
             positiveCount += 1;
-            relevanceScore += 15;
           } else if (impact.type === 'negative') {
             negativeCount += 1;
-            relevanceScore += 20;
           } else {
             neutralCount += 1;
           }
         });
       }
-      
-      relevanceScore = Math.min(relevanceScore, 100);
-      
-      // Determine relevance level
-      let relevanceLevel: string;
-      if (relevanceScore >= 75) relevanceLevel = 'Muito relevante';
-      else if (relevanceScore >= 50) relevanceLevel = 'Moderadamente relevante';
-      else if (relevanceScore >= 25) relevanceLevel = 'Pouco relevante';
-      else relevanceLevel = 'Irrelevante';
-      
-      // Apply relevance filter if present
-      if (relevanceFilter && relevanceLevel !== relevanceFilter) return;
       
       // Find the data object for this book and relevance level
       const dataObject = initialData.find(

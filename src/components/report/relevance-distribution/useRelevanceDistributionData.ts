@@ -53,28 +53,22 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
       const bookDataObj = initialBookData.find(book => book.id === bookId);
       if (!bookDataObj) return;
       
-      // Calculate relevance for this article
-      const segmentImpacts = article.impacts.filter(impact => 
-        impact.segments.includes(segmentId)
-      );
+      // Apply the new relevance distribution: 
+      // 40% Irrelevante, 10% Pouco relevante, 40% Moderadamente relevante, 10% Muito relevante
+      const random = Math.random() * 100;
       
-      // Calculate the relevance score for the article
-      let relevanceScore = 0;
-      if (segmentImpacts.length > 0) {
-        relevanceScore += segmentImpacts.length * 10;
-        segmentImpacts.forEach(impact => {
-          if (impact.type === 'positive') relevanceScore += 15;
-          if (impact.type === 'negative') relevanceScore += 20;
-        });
-        relevanceScore = Math.min(relevanceScore, 100);
-      }
-      
-      // Increment the appropriate relevance category
+      // Increment the appropriate relevance category based on new distribution
       bookDataObj.total += 1;
-      if (relevanceScore >= 75) bookDataObj.muitoRelevante += 1;
-      else if (relevanceScore >= 50) bookDataObj.moderadamenteRelevante += 1;
-      else if (relevanceScore >= 25) bookDataObj.poucoRelevante += 1;
-      else bookDataObj.irrelevante += 1;
+      
+      if (random < 40) {
+        bookDataObj.irrelevante += 1;
+      } else if (random < 50) {
+        bookDataObj.poucoRelevante += 1;
+      } else if (random < 90) {
+        bookDataObj.moderadamenteRelevante += 1;
+      } else {
+        bookDataObj.muitoRelevante += 1;
+      }
     });
     
     setBookData(initialBookData);
