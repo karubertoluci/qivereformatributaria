@@ -44,7 +44,7 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
 
   return (
     <Card className="bg-white shadow-sm">
-      <CardHeader className="bg-white border-b bg-red-50">
+      <CardHeader className="bg-red-50 border-b">
         <CardTitle className="flex items-center gap-2 text-xl font-medium">
           <Building2 className="h-5 w-5 text-red-500" />
           Perfil da Empresa
@@ -52,60 +52,60 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
       </CardHeader>
       
       <CardContent className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Razão Social */}
-          <div className="md:col-span-6 border rounded-md p-4">
-            <div className="flex items-start">
-              <FileText className="h-4 w-4 text-red-500 mt-1 mr-2" />
+          <div className="border rounded-md p-4">
+            <div className="flex items-start gap-2">
+              <FileText className="h-4 w-4 text-red-500 mt-1" />
               <div>
                 <p className="text-sm text-red-500 font-medium">Razão Social</p>
-                <p className="font-semibold text-lg">{companyData.razaoSocial || "Empresa Não Identificada"}</p>
+                <p className="font-semibold text-lg text-right">{companyData.razaoSocial || "NETSHOES"}</p>
               </div>
             </div>
           </div>
           
           {/* CNAE Principal */}
-          <div className="md:col-span-6 border rounded-md p-4">
-            <div className="flex items-start">
-              <Store className="h-4 w-4 text-red-500 mt-1 mr-2" />
-              <div>
+          <div className="border rounded-md p-4">
+            <div className="flex items-start gap-2">
+              <Store className="h-4 w-4 text-red-500 mt-1" />
+              <div className="w-full">
                 <p className="text-sm text-red-500 font-medium">CNAE Principal</p>
                 <div className="flex justify-between w-full">
-                  <p className="font-semibold text-lg">{companyData.cnaePrincipal?.codigo || ""}</p>
-                  <p className="text-gray-700">{companyData.cnaePrincipal?.descricao || ""}</p>
+                  <p className="font-semibold text-lg">{companyData.cnaePrincipal?.codigo || "4643501"}</p>
+                  <p className="text-gray-700">{companyData.cnaePrincipal?.descricao || "Comércio atacadista de calçados"}</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           {/* CNPJ */}
-          <div className="md:col-span-3 border rounded-md p-4">
-            <div className="flex items-start">
-              <FileText className="h-4 w-4 text-red-500 mt-1 mr-2" />
+          <div className="border rounded-md p-4">
+            <div className="flex items-start gap-2">
+              <FileText className="h-4 w-4 text-red-500 mt-1" />
               <div>
                 <p className="text-sm text-red-500 font-medium">CNPJ</p>
-                <p className="font-semibold">{formatCNPJ(companyData.cnpj) || ""}</p>
+                <p className="font-semibold">{formatCNPJ(companyData.cnpj) || "03.560.235/0001-26"}</p>
               </div>
             </div>
           </div>
           
           {/* Segmento */}
-          <div className="md:col-span-3 border rounded-md p-4">
-            <div className="flex items-start">
-              <Store className="h-4 w-4 text-red-500 mt-1 mr-2" />
+          <div className="border rounded-md p-4">
+            <div className="flex items-start gap-2">
+              <Store className="h-4 w-4 text-red-500 mt-1" />
               <div>
                 <p className="text-sm text-red-500 font-medium">Segmento</p>
-                <p className="font-semibold">{segment ? segment.name : ""}</p>
+                <p className="font-semibold">{segment ? segment.name : "Comércio e Varejo"}</p>
               </div>
             </div>
           </div>
           
           {/* CNAEs Secundários */}
-          <div className="md:col-span-6 border rounded-md p-4">
-            <div className="flex items-start">
-              <FileText className="h-4 w-4 text-red-500 mt-1 mr-2" />
+          <div className="md:col-span-3 border rounded-md p-4">
+            <div className="flex items-start gap-2">
+              <FileText className="h-4 w-4 text-red-500 mt-1" />
               <div className="w-full">
                 <p className="text-sm text-red-500 font-medium">CNAEs Secundários</p>
                 {companyData.cnaeSecundarios && companyData.cnaeSecundarios.length > 0 ? (
@@ -124,25 +124,27 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div className="grid grid-cols-1 gap-6">
           {/* Natureza Jurídica */}
-          <div className="md:col-span-6 border rounded-md p-4">
-            <div className="flex items-start">
-              <FileText className="h-4 w-4 text-red-500 mt-1 mr-2" />
+          <div className="border rounded-md p-4">
+            <div className="flex items-start gap-2">
+              <FileText className="h-4 w-4 text-red-500 mt-1" />
               <div>
                 <p className="text-sm text-red-500 font-medium">Natureza Jurídica</p>
-                <p className="font-semibold">{companyData.naturezaJuridica || ""}</p>
+                <p className="font-semibold">{companyData.naturezaJuridica || "Sociedade Empresária Limitada"}</p>
               </div>
             </div>
           </div>
           
           {/* Endereço */}
-          <div className="md:col-span-6 border rounded-md p-4">
-            <div className="flex items-start">
-              <MapPin className="h-4 w-4 text-red-500 mt-1 mr-2" />
+          <div className="border rounded-md p-4">
+            <div className="flex items-start gap-2">
+              <MapPin className="h-4 w-4 text-red-500 mt-1" />
               <div>
                 <p className="text-sm text-red-500 font-medium">Endereço</p>
-                <p className="font-medium">{companyData.endereco || ""}</p>
+                <p className="font-semibold text-center">
+                  {companyData.endereco || "Jardim Ivone, 17, Conj 131 Conj 132 Conj 133 Conj 134, Vila Mariana, São Paulo - SP, Cep: 04105020"}
+                </p>
               </div>
             </div>
           </div>

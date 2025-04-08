@@ -3,9 +3,9 @@ import React, { useState, useMemo } from 'react';
 import { TabsContent } from '@/components/ui/tabs';
 import { Article } from '@/data/articles';
 import { BusinessSegment } from '@/data/segments';
-import ArticlesFilters from '@/components/results/tabs/articles/filters/ArticlesFilters';
-import ArticlesContent from '@/components/results/tabs/articles/content/ArticlesContent';
-import ChartSection from '@/components/results/tabs/articles/charts/ChartSection';
+import ArticlesFilters from './articles/filters/ArticlesFilters';
+import ArticlesContent from './articles/content/ArticlesContent';
+import ChartSection from './articles/charts/ChartSection';
 import { HighlightType } from '@/components/results/types';
 import { useSearchParams } from 'react-router-dom';
 import { Topic } from '@/components/results/types';
@@ -23,9 +23,15 @@ interface ArticlesTabProps {
   articlesByTopic: Record<string, Article[]>;
   viewMode: 'chart';
   setViewMode: (mode: 'chart') => void;
+  positiveCount: number;
+  negativeCount: number;
+  searchTerm?: string;
+  setSearchTerm?: (term: string) => void;
+  filterType?: string;
+  setFilterType?: (type: any) => void;
 }
 
-const ArticlesTab = ({ 
+const ArticlesTab: React.FC<ArticlesTabProps> = ({ 
   segment, 
   relevantArticles,
   filteredArticles,
@@ -37,7 +43,13 @@ const ArticlesTab = ({
   topics,
   articlesByTopic,
   viewMode,
-  setViewMode
+  setViewMode,
+  positiveCount,
+  negativeCount,
+  searchTerm,
+  setSearchTerm,
+  filterType,
+  setFilterType
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(searchParams.get('book') || null);
@@ -52,7 +64,7 @@ const ArticlesTab = ({
     let result = filteredArticles;
 
     if (selectedBookFilter) {
-      result = result.filter(article => article.book === selectedBookFilter);
+      result = result.filter(article => article.bookId === selectedBookFilter);
     }
 
     if (selectedTitleFilter) {
@@ -75,6 +87,8 @@ const ArticlesTab = ({
             setSelectedTitleFilter={setSelectedTitleFilter}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
+            positiveCount={positiveCount}
+            negativeCount={negativeCount}
           />
         </aside>
 
