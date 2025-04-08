@@ -2,7 +2,20 @@
 import React from 'react';
 import FilterBar from '../../FilterBar';
 import ViewSwitcher from '../../ViewSwitcher';
-import { ArticlesFiltersProps } from './ArticlesFiltersProps';
+import { FilterType, ViewMode } from '../../types';
+
+interface ArticlesFiltersProps {
+  positiveCount: number;
+  negativeCount: number;
+  neutralCount: number;
+  totalCount: number;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  filterType: FilterType;
+  setFilterType: (type: FilterType) => void;
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
+}
 
 const ArticlesFilters: React.FC<ArticlesFiltersProps> = ({
   positiveCount,
