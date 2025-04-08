@@ -19,7 +19,7 @@ const TalkToExpert: React.FC<TalkToExpertProps> = ({
             <img 
               src={iconSrc} 
               alt="Qive Logo" 
-              className="w-full h-full object-contain rounded-full"
+              className="w-[90%] h-[90%] object-cover rounded-full"
             />
           </div>
           <div>
