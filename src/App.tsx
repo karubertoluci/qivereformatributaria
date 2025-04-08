@@ -24,16 +24,12 @@ const ResultsPage = () => {
     return <Navigate to="/" />;
   }
   
-  return (
-    <div className="results-page">
-      <Results segment={segment} onBackToSegments={() => {}} />
-    </div>
-  );
+  return <Results segment={segment} onBackToSegments={() => {}} />;
 };
 
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "system");
-
+  
   useEffect(() => {
     document.documentElement.setAttribute(
       "data-theme",
@@ -45,15 +41,21 @@ function App() {
     <FormDialogProvider>
       <BrowserRouter>
         <div className="flex flex-col min-h-screen">
-          <Header />
-          <div className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/results/:segmentId" element={<ResultsPage />} />
-              <Route path="/handoff" element={<Handoff />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </div>
+          <Routes>
+            <Route path="/results/:segmentId" element={<ResultsPage />} />
+            <Route path="*" element={
+              <>
+                <Header />
+                <div className="flex-grow">
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/handoff" element={<Handoff />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </div>
+              </>
+            } />
+          </Routes>
           <Footer />
           <Toaster />
         </div>

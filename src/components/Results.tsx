@@ -19,7 +19,7 @@ const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
   };
 
   return (
-    <div className="print:bg-white">
+    <div className="flex flex-col min-h-screen print:bg-white">
       <ResultsContainer segment={segment} onBackToSegments={onBackToSegments} />
     </div>
   );

@@ -8,13 +8,6 @@ const Header = () => {
   const location = useLocation();
   const { openFormDialog } = useFormDialogContext();
   
-  // Se estiver na rota de resultados, não mostrar o header comum
-  const isResultsPage = location.pathname.includes('/results/');
-  
-  if (isResultsPage) {
-    return null; // Não renderiza o header comum nas páginas de resultado
-  }
-  
   return (
     <header className="bg-white border-b font-lexend">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
