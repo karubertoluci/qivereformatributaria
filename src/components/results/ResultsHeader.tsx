@@ -71,7 +71,7 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   };
   
   return (
-    <div className="py-4 border-b border-gray-200 bg-zinc-50 shadow-sm">
+    <div className="py-4 border-b border-gray-200 bg-white shadow-sm">
       <div className="container mx-auto flex justify-between items-center font-lexend px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
