@@ -23,3 +23,4 @@ export type HighlightType = {
 
 export type ViewMode = 'chart';
 export type FilterType = 'all' | 'positive' | 'negative' | 'neutral';
+

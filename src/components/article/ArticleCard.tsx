@@ -37,7 +37,11 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   
   const hasPositiveImpact = segmentImpacts.some(impact => impact.type === 'positive');
   const hasNegativeImpact = segmentImpacts.some(impact => impact.type === 'negative');
-  const primaryImpactType = hasNegativeImpact ? 'negative' : (hasPositiveImpact ? 'positive' : 'neutral');
+  const hasNeutralImpact = segmentImpacts.some(impact => impact.type === 'neutral');
+  
+  let primaryImpactType = 'neutral';
+  if (hasNegativeImpact) primaryImpactType = 'negative';
+  else if (hasPositiveImpact) primaryImpactType = 'positive';
   
   // Calcular a relevância média para o segmento
   const relevanceLevels = {
@@ -51,11 +55,11 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
     return sum + (relevanceLevels[impact.severity as keyof typeof relevanceLevels] || 2);
   }, 0) / Math.max(1, segmentImpacts.length);
   
-  let relevanceText = 'Relevância média';
-  if (averageRelevance >= 3.5) relevanceText = 'Relevância crítica';
-  else if (averageRelevance >= 2.5) relevanceText = 'Relevância alta';
-  else if (averageRelevance >= 1.5) relevanceText = 'Relevância média';
-  else relevanceText = 'Relevância baixa';
+  let relevanceText = '';
+  if (averageRelevance >= 3.5) relevanceText = 'Muito relevante';
+  else if (averageRelevance >= 2.5) relevanceText = 'Moderadamente relevante';
+  else if (averageRelevance >= 1.5) relevanceText = 'Pouco relevante';
+  else relevanceText = 'Irrelevante';
   
   // Determinar o livro com base no número do artigo ou metadata
   const getBookInfo = () => {
@@ -112,7 +116,12 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         </p>
         
         <div className="flex flex-wrap gap-2 mt-2">
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="outline" className={`text-xs ${
+            relevanceText === 'Muito relevante' ? 'bg-green-50 text-green-700 border-green-200' :
+            relevanceText === 'Moderadamente relevante' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+            relevanceText === 'Pouco relevante' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+            'bg-gray-50 text-gray-700 border-gray-200'
+          }`}>
             {relevanceText}
           </Badge>
           

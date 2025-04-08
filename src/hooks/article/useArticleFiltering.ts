@@ -42,6 +42,10 @@ export const useArticleFiltering = (
     article.impacts.some(impact => impact.type === 'negative' && impact.segments.includes(segment.id))
   ).length;
   
+  const neutralCount = relevantArticles.filter(article => 
+    article.impacts.some(impact => impact.type === 'neutral' && impact.segments.includes(segment.id))
+  ).length;
+  
   return {
     searchTerm,
     setSearchTerm,
@@ -54,6 +58,7 @@ export const useArticleFiltering = (
     relevantArticles,
     filteredArticles,
     positiveCount,
-    negativeCount
+    negativeCount,
+    neutralCount
   };
 };

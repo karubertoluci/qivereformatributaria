@@ -17,17 +17,17 @@ interface ArticlesTabContentProps {
   relevantArticles: Article[];
   positiveCount: number;
   negativeCount: number;
+  neutralCount: number;
   viewMode: 'chart';
   setViewMode: (mode: 'chart') => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filterType: 'all' | 'positive' | 'negative';
-  setFilterType: (type: 'all' | 'positive' | 'negative') => void;
+  filterType: 'all' | 'positive' | 'negative' | 'neutral';
+  setFilterType: (type: 'all' | 'positive' | 'negative' | 'neutral') => void;
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
   articlesByTopic: Record<string, Article[]>;
   topics: Topic[];
-  neutralCount?: number;
 }
 
 const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
@@ -36,6 +36,7 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
   relevantArticles,
   positiveCount,
   negativeCount,
+  neutralCount,
   viewMode,
   setViewMode,
   searchTerm,
@@ -45,8 +46,7 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
   expandedArticleId,
   setExpandedArticleId,
   articlesByTopic,
-  topics,
-  neutralCount = 0
+  topics
 }) => {
   const isMobile = useIsMobile();
   
@@ -56,6 +56,7 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
         totalArticles={relevantArticles.length}
         positiveCount={positiveCount}
         negativeCount={negativeCount}
+        neutralCount={neutralCount}
         segmentName={segment.name}
       />
       

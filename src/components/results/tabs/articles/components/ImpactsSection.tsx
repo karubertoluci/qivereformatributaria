@@ -40,7 +40,7 @@ const ImpactsSection: React.FC<ImpactsSectionProps> = ({
   const negativeCount = finalFilteredArticles.filter(article => article.impacts.some(impact => impact.type === 'negative' && impact.segments.includes(segmentId))).length;
   const neutralCount = finalFilteredArticles.filter(article => article.impacts.some(impact => impact.type === 'neutral' && impact.segments.includes(segmentId))).length;
 
-  if (!hasCriticalImpacts && positiveCount === 0 && negativeCount === 0) {
+  if (!hasCriticalImpacts && positiveCount === 0 && negativeCount === 0 && neutralCount === 0) {
     return null;
   }
 
@@ -55,7 +55,7 @@ const ImpactsSection: React.FC<ImpactsSectionProps> = ({
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-            <p className="font-medium text-green-600 dark:text-green-400">Positivos</p>
+            <p className="font-medium text-green-600 dark:text-green-400">Favoráveis</p>
             <p className="text-2xl font-bold">{positiveCount}</p>
           </div>
           <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg">
@@ -63,7 +63,7 @@ const ImpactsSection: React.FC<ImpactsSectionProps> = ({
             <p className="text-2xl font-bold">{neutralCount}</p>
           </div>
           <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
-            <p className="font-medium text-red-600 dark:text-red-400">Negativos</p>
+            <p className="font-medium text-red-600 dark:text-red-400">Desfavoráveis</p>
             <p className="text-2xl font-bold">{negativeCount}</p>
           </div>
         </div>
