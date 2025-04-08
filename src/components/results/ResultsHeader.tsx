@@ -4,12 +4,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { BusinessSegment } from '@/data/segments';
 import { Button } from '@/components/ui/button';
 import { FileText, Share2, Download, RefreshCw } from 'lucide-react';
+
 interface ResultsHeaderProps {
   segment: BusinessSegment;
   positiveCount: number;
   negativeCount: number;
   companyName?: string;
 }
+
 const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   segment,
   positiveCount,
@@ -18,6 +20,7 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
 }) => {
   const navigate = useNavigate();
   const displayName = companyName || "Qive Comercial Ltda";
+  
   const handleBackToHome = () => {
     // Clear localStorage when returning to home
     localStorage.removeItem('selectedSegment');
@@ -25,6 +28,7 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
     // Navigate to the home page
     navigate('/');
   };
+  
   return <div className="py-4 border-b border-gray-200 bg-zinc-50">
       <div className="container mx-auto flex justify-between items-center mb-0 font-lexend px-4">
         {/* Logo */}
@@ -63,4 +67,5 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
       </div>
     </div>;
 };
+
 export default ResultsHeader;

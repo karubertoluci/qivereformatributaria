@@ -9,82 +9,13 @@ import { FormValues } from './FormDialog';
 import LoadingDialog from './LoadingDialog';
 import { useFormDialogContext } from '../FormDialogContext';
 import { supabase } from '@/integrations/supabase/client';
+import { mapCnaeToSegment } from './utils';
 
 const SearchForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { isFormDialogOpen, closeFormDialog } = useFormDialogContext();
-  
-  // Function to map CNAE (CNAE code) to a business segment
-  const mapCnaeToSegment = (cnae: string): string => {
-    // Logic to map CNAE codes to business segments
-    // This is a simplification, you can expand with a more complete mapping table
-    const firstDigits = cnae.substring(0, 2);
-    
-    // Examples of mapping (simplified)
-    switch (true) {
-      case firstDigits >= '01' && firstDigits <= '03': return 'agronegocio';
-      case firstDigits >= '10' && firstDigits <= '33': return 'industria';
-      case firstDigits >= '41' && firstDigits <= '43': return 'construcao';
-      case firstDigits >= '45' && firstDigits <= '47': return 'comercio_varejo';
-      case firstDigits >= '49' && firstDigits <= '53': return 'transporte';
-      case firstDigits >= '55' && firstDigits <= '56': return 'servicos';
-      case firstDigits >= '58' && firstDigits <= '63': return 'tecnologia';
-      case firstDigits >= '64' && firstDigits <= '66': return 'financeiro';
-      case firstDigits === '85': return 'educacao';
-      case firstDigits >= '86' && firstDigits <= '88': return 'saude';
-      default: return 'servicos'; // Default segment if no match
-    }
-  };
-
-  // Function to fetch articles from the livros_reforma table
-  const fetchArticlesForSegment = async (segmentId: string) => {
-    try {
-      // Fetch articles from the livros_reforma table
-      const { data: artigos, error: artigosError } = await supabase
-        .from('livros_reforma' as any)
-        .select('*');
-        
-      if (artigosError) throw new Error(artigosError.message);
-      
-      if (!artigos || artigos.length === 0) {
-        console.log(`No articles found in the livros_reforma table`);
-        return [];
-      }
-      
-      // Format the articles to the expected format of the application
-      const formattedArticles = artigos.map((artigo: any) => {
-        return {
-          id: `art_${artigo.id}`,
-          number: artigo.artigo || "N/A",
-          title: `Artigo ${artigo.artigo || "N/A"}`,
-          originalText: artigo.conteudo || "",
-          simplifiedText: artigo.conteudo || "",
-          impacts: [
-            {
-              type: "positive", // Default impact type
-              description: `Artigo relacionado a ${segmentId}`,
-              relevance: "medium",
-              segments: [segmentId]
-            }
-          ],
-          metadata: {
-            livro: artigo.livro,
-            titulo: artigo.titulo,
-            capitulo: artigo.capitulo,
-            secao: artigo.secao,
-            subsecao: artigo.subsecao
-          }
-        };
-      });
-      
-      return formattedArticles;
-    } catch (error) {
-      console.error('Error fetching articles:', error);
-      throw error;
-    }
-  };
 
   const handleSubmit = async (data: FormValues) => {
     try {
@@ -106,7 +37,7 @@ const SearchForm: React.FC = () => {
         // Record the query in Supabase
         try {
           const { error: insertError } = await supabase
-            .from('consultas' as any)
+            .from('consultas')
             .insert({
               cnpj: data.cnpj,
               cnae: cnaeCode,
@@ -135,11 +66,47 @@ const SearchForm: React.FC = () => {
       
       try {
         // Fetch articles related to the segment
-        const articles = await fetchArticlesForSegment(segmentId);
+        const { data: artigos, error: artigosError } = await supabase
+          .from('livros_reforma')
+          .select('*');
+          
+        if (artigosError) throw new Error(artigosError.message);
         
-        // Store in localStorage for use in the results component
+        if (!artigos || artigos.length === 0) {
+          console.log(`No articles found in the livros_reforma table`);
+        } else {
+          // Format the articles to the expected format of the application
+          const formattedArticles = artigos.map((artigo: any) => {
+            return {
+              id: `art_${artigo.id}`,
+              number: artigo.artigo || "N/A",
+              title: `Artigo ${artigo.artigo || "N/A"}`,
+              originalText: artigo.conteudo || "",
+              simplifiedText: artigo.conteudo || "",
+              impacts: [
+                {
+                  type: "positive", // Default impact type
+                  description: `Artigo relacionado a ${segmentId}`,
+                  relevance: "medium",
+                  segments: [segmentId]
+                }
+              ],
+              metadata: {
+                livro: artigo.livro,
+                titulo: artigo.titulo,
+                capitulo: artigo.capitulo,
+                secao: artigo.secao,
+                subsecao: artigo.subsecao
+              }
+            };
+          });
+          
+          // Store in localStorage for use in the results component
+          localStorage.setItem('segmentArticles', JSON.stringify(formattedArticles));
+        }
+        
+        // Store segment in localStorage
         localStorage.setItem('selectedSegment', JSON.stringify(segment));
-        localStorage.setItem('segmentArticles', JSON.stringify(articles));
         
         // Close the dialog and navigate to the results page
         closeFormDialog();
