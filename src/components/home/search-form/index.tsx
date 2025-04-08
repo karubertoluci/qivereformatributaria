@@ -87,21 +87,32 @@ const SearchForm: React.FC = () => {
             console.log('Consulta registrada com sucesso');
           }
           
-          // Now, save to the new cnae_consultas table with more details
-          const { error: cnaeError } = await supabase
-            .from('cnae_consultas')
-            .insert({
-              cnae: cnaeCode,
-              descricao: cnaeDesc,
-              cnpj: formattedCNPJ,
-              empresa: companyName,
-              segmento: segmentId
+          // Save to cnae_consultas using direct fetch to bypass TypeScript limitations
+          try {
+            const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/cnae_consultas`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+                'Prefer': 'return=minimal'
+              },
+              body: JSON.stringify({
+                cnae: cnaeCode,
+                descricao: cnaeDesc,
+                cnpj: formattedCNPJ,
+                empresa: companyName,
+                segmento: segmentId
+              })
             });
-          
-          if (cnaeError) {
-            console.error('Erro ao registrar dados detalhados do CNAE:', cnaeError);
-          } else {
-            console.log('Dados do CNAE registrados com sucesso');
+            
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            console.log('Dados detalhados do CNAE registrados com sucesso');
+          } catch (fetchError) {
+            console.error('Erro ao registrar dados detalhados do CNAE:', fetchError);
+            // Continue with the flow even if the detailed record fails
           }
         } catch (err) {
           console.error('Erro ao tentar registrar consulta:', err);

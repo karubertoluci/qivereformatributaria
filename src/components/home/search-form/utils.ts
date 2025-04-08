@@ -1,4 +1,3 @@
-
 // Mapeamento mais detalhado para CNAEs comuns
 export const cnaeToSegmentMap: Record<string, string> = {
   // Comércio e Varejo
@@ -115,10 +114,9 @@ export const mapCnaeToSegment = (cnae: string): string => {
   return segmentId || 'servicos';
 };
 
-// Função para formatar CNPJ removendo caracteres não numéricos
+// Add this helper function to format CNPJ for storage
 export const formatCNPJForStorage = (cnpj: string): string => {
-  // Remove todos os caracteres não numéricos
-  return cnpj.replace(/\D/g, '');
+  return cnpj ? cnpj.replace(/\D/g, '') : '';
 };
 
 // Função para formatar CNPJ para exibição: XX.XXX.XXX/XXXX-XX
