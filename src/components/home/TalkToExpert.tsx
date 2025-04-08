@@ -7,33 +7,33 @@ interface TalkToExpertProps {
 }
 
 const TalkToExpert: React.FC<TalkToExpertProps> = ({
-  iconSrc = "/lovable-uploads/0c928790-a8e1-4ae3-8539-e6917b68d73c.png" // Updated to use the Q icon
+  iconSrc = "/lovable-uploads/c088a371-50e0-44aa-9616-68bada9e6e45.png" // Atualizado para usar o logo redondo da QIVE
 }) => {
   const { openFormDialog } = useFormDialogContext();
   
   return (
-    <section className="bg-[#FF4719] py-12 text-white">
+    <section className="bg-[#FF4719] py-16 text-white">
       <div className="container mx-auto px-4 md:flex md:items-center md:justify-between">
-        <div className="flex items-center mb-6 md:mb-0 justify-center md:justify-start">
-          <div className="w-24 h-24 mr-6 flex-shrink-0">
+        <div className="flex items-center mb-8 md:mb-0 justify-center md:justify-start">
+          <div className="w-28 h-28 mr-8 flex-shrink-0 bg-black rounded-full flex items-center justify-center p-0.5">
             <img 
               src={iconSrc} 
-              alt="Qive Icon" 
-              className="w-full h-full object-contain"
+              alt="Qive Logo" 
+              className="w-full h-full object-contain rounded-full"
             />
           </div>
           <div className="text-left">
-            <h2 className="text-2xl md:text-3xl font-medium">
+            <h2 className="text-2xl md:text-3xl font-bold mb-2">
               Qive na Reforma: fale com um especialista
             </h2>
-            <p className="text-lg md:text-xl mt-2 font-normal">
+            <p className="text-lg md:text-xl font-normal opacity-90">
               e saiba como podemos te ajudar
             </p>
           </div>
         </div>
         <button 
           onClick={openFormDialog}
-          className="bg-white text-[#FF4719] hover:bg-orange-50 transition-colors px-6 py-3 rounded-md font-medium shadow-md w-full md:w-auto"
+          className="bg-white text-[#FF4719] hover:bg-orange-50 transition-colors px-8 py-4 rounded-lg font-medium shadow-md w-full md:w-auto text-lg"
         >
           Falar com um especialista
         </button>
