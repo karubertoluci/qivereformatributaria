@@ -5,7 +5,7 @@ import { HighlightType } from '@/components/results/types';
 import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronUp } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -39,8 +39,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   const articleHighlights = highlights.filter(h => h.articleId === article.id);
   
   const handleShareArticle = () => {
-    // In a real app, we would implement proper sharing functionality
-    // For now, just copy the URL to clipboard
     navigator.clipboard.writeText(window.location.href)
       .then(() => {
         toast({
@@ -58,35 +56,29 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   };
   
   const handleInviteToArticle = () => {
-    // This would normally open a dialog to invite others
     toast({
       title: "Convite",
       description: "Funcionalidade de convite será implementada em breve.",
     });
   };
   
-  // Wrapper for the highlight function
   const handleAddHighlight = (text: string, color: HighlightType['color']) => {
     onAddHighlight(article.id, text, color);
   };
   
-  // Determine border color based on impact type
+  // Determine a cor da borda com base no tipo de impacto
   const getBorderClass = () => {
-    const segmentImpacts = article.impacts.filter(impact => 
-      impact.segments.includes(segmentId)
-    );
-    
-    // Apply favorability distribution
+    // Aplicar distribuição de favorabilidade: 40% favorável, 20% neutro, 30% desfavorável
     const randomImpact = Math.random() * 100;
     
-    if (randomImpact < 40) return 'border-l-4 border-l-green-500'; // Favorable
-    if (randomImpact < 60) return ''; // Neutral (no special border)
-    return 'border-l-4 border-l-red-500'; // Unfavorable
+    if (randomImpact < 40) return 'border-l-4 border-l-green-500'; // Favorável
+    if (randomImpact < 60) return ''; // Neutro (sem borda especial)
+    return 'border-l-4 border-l-red-500'; // Desfavorável
   };
   
   return (
-    <Card className={`shadow-sm hover:shadow transition-shadow duration-200 mb-4 ${isExpanded ? 'border-primary' : ''} ${getBorderClass()}`}>
-      <CardHeader className="pb-2 pt-4 px-4 md:pb-2 md:pt-6 md:px-6">
+    <Card className={`shadow-sm hover:shadow transition-shadow duration-200 mb-4 ${isExpanded ? 'border-primary/70' : ''} ${getBorderClass()}`}>
+      <CardHeader className="pb-2 pt-4 px-4 md:pb-3 md:pt-5 md:px-5">
         <ArticleCardHeader 
           article={article} 
           segmentId={segmentId}
@@ -94,7 +86,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         />
       </CardHeader>
       
-      <CardContent className="pt-0 px-4 md:px-6">
+      <CardContent className="pt-1 px-4 md:px-5">
         <ArticleCardSummary 
           article={article} 
           segmentId={segmentId} 
@@ -138,12 +130,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
           </div>
         )}
       </CardContent>
-      
-      {!isExpanded && (
-        <CardFooter className="pt-0 px-4 pb-4 md:px-6">
-          {/* "Ver detalhes" button moved to ArticleCardSummary */}
-        </CardFooter>
-      )}
     </Card>
   );
 };

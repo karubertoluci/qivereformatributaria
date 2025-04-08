@@ -19,10 +19,6 @@ const ArticleCardHeader: React.FC<ArticleCardHeaderProps> = ({
 }) => {
   // Get impact type for the segment
   const getImpactType = () => {
-    const segmentImpacts = article.impacts.filter(impact => 
-      impact.segments.includes(segmentId)
-    );
-
     // Apply favorability distribution: 40% favorable, 20% neutral, 30% unfavorable
     const randomImpact = Math.random() * 100;
     
@@ -74,10 +70,10 @@ const ArticleCardHeader: React.FC<ArticleCardHeaderProps> = ({
   
   return (
     <div className="flex flex-col space-y-2">
-      {/* Article Number and Title */}
+      {/* Título do Artigo */}
       <div className="flex justify-between items-start">
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" className="bg-primary/10 text-primary">
+        <div className="flex flex-col">
+          <Badge variant="outline" className="bg-primary/10 text-primary self-start mb-1">
             Artigo {article.number}
           </Badge>
           
@@ -87,36 +83,37 @@ const ArticleCardHeader: React.FC<ArticleCardHeaderProps> = ({
         </div>
       </div>
       
-      {/* Metadata row: Book, Chapter, Section */}
-      <div className="flex flex-wrap gap-2 text-xs">
-        <Badge variant="outline" className="bg-blue-100 text-blue-700 flex items-center gap-1">
-          <Book className="h-3 w-3" />
-          Livro {bookId}: {bookTitle}
+      {/* Metadados: Livro, Capítulo, Seção, Subseção - agrupados por categoria */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-4 text-xs">
+        <Badge variant="outline" className="bg-blue-100 text-blue-700 flex items-center gap-1 justify-start">
+          <Book className="h-3 w-3 flex-shrink-0" />
+          <span className="truncate">Livro {bookId}: {bookTitle}</span>
         </Badge>
         
-        <Badge variant="outline" className="bg-gray-100 text-gray-700 flex items-center gap-1">
-          <Bookmark className="h-3 w-3" />
-          {chapter}
+        <Badge variant="outline" className="bg-gray-100 text-gray-700 flex items-center gap-1 justify-start">
+          <Bookmark className="h-3 w-3 flex-shrink-0" />
+          <span className="truncate">{chapter}</span>
         </Badge>
         
-        <Badge variant="outline" className="bg-gray-100 text-gray-700 flex items-center gap-1">
-          <Layers className="h-3 w-3" />
-          {section}
+        <Badge variant="outline" className="bg-gray-100 text-gray-700 flex items-center gap-1 justify-start">
+          <Layers className="h-3 w-3 flex-shrink-0" />
+          <span className="truncate">{section}</span>
         </Badge>
         
         {subsection && (
-          <Badge variant="outline" className="bg-gray-100 text-gray-700 flex items-center gap-1">
-            <FileText className="h-3 w-3" />
-            {subsection}
+          <Badge variant="outline" className="bg-gray-100 text-gray-700 flex items-center gap-1 justify-start">
+            <FileText className="h-3 w-3 flex-shrink-0" />
+            <span className="truncate">{subsection}</span>
           </Badge>
         )}
       </div>
       
-      {/* Impact and Relevance row */}
-      <div className="flex flex-wrap gap-2">
+      {/* Impacto e Relevância - destacados visualmente */}
+      <div className="flex flex-wrap gap-2 pt-1">
         <Badge 
           variant="outline" 
           className={cn(
+            "font-medium",
             impactType === 'positive' ? 'bg-green-100 text-green-700' : 
             impactType === 'negative' ? 'bg-red-100 text-red-700' : 
             'bg-gray-100 text-gray-700'
@@ -126,7 +123,7 @@ const ArticleCardHeader: React.FC<ArticleCardHeaderProps> = ({
                    impactType === 'negative' ? 'Desfavorável' : 'Neutro'}
         </Badge>
         
-        <Badge variant="outline" className={relevanceColor}>
+        <Badge variant="outline" className={cn("font-medium", relevanceColor)}>
           Relevância: {relevanceLevel}
         </Badge>
       </div>

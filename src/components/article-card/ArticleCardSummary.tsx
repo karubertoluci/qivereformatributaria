@@ -26,50 +26,45 @@ const ArticleCardSummary: React.FC<ArticleCardSummaryProps> = ({
 }) => {
   return (
     <div className="space-y-4">
-      {/* Original Text (when not expanded) */}
+      {/* Texto Original - sempre visível quando não expandido */}
       {!expanded && (
-        <div>
+        <div className="bg-muted/50 rounded-md border border-muted p-3 mt-2">
           <h4 className="text-sm font-bold flex items-center mb-2">
             <FileText className="h-4 w-4 mr-1 text-blue-500" />
             Texto Original da Lei
           </h4>
-          <div className="text-xs p-3 bg-muted rounded-md border border-muted">
-            {article.originalText.substring(0, 100)}
-            {article.originalText.length > 100 && "..."}
-          </div>
+          <p className="text-xs text-muted-foreground">
+            {article.originalText.substring(0, 150)}
+            {article.originalText.length > 150 && "..."}
+          </p>
         </div>
       )}
       
-      {/* Simplified Text Summary */}
-      <div>
-        <h4 className="text-sm font-bold flex items-center mb-2">
-          <BookOpen className="h-4 w-4 mr-1 text-amber-500" />
-          {expanded ? "Texto Simplificado" : "Resumo"}
-        </h4>
-        <div className="text-sm p-3 bg-secondary/50 rounded-md border border-secondary/50">
-          {expanded ? (
+      {/* Texto Simplificado - visível apenas quando expandido */}
+      {expanded && (
+        <div className="mt-2">
+          <h4 className="text-sm font-bold flex items-center mb-2">
+            <BookOpen className="h-4 w-4 mr-1 text-amber-500" />
+            Texto Simplificado
+          </h4>
+          <div className="text-sm p-3 bg-secondary/50 rounded-md border border-secondary/50">
             <HighlightedText 
               text={article.simplifiedText} 
               highlights={highlights}
               articleId={article.id}
               onAddHighlight={onAddHighlight}
             />
-          ) : (
-            <>
-              {article.simplifiedText.substring(0, 150)}
-              {article.simplifiedText.length > 150 && "..."}
-            </>
-          )}
+          </div>
         </div>
-      </div>
+      )}
       
-      {/* CTA Button for "Ver detalhes" when not expanded */}
+      {/* CTA Button - somente quando não expandido */}
       {!expanded && (
         <Button 
           onClick={onToggleExpand}
           variant="outline" 
           size="sm" 
-          className="w-full mt-2 border-primary text-primary hover:bg-primary/10"
+          className="w-full mt-3 border-primary text-primary hover:bg-primary/10"
         >
           Ver detalhes
           <ChevronDown className="h-4 w-4 ml-1" />
