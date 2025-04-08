@@ -67,7 +67,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
   }
 
   return (
-    <div className="container mx-auto print:p-0 px-[10px] my-0 py-0 bg-white">
+    <div className="container mx-auto print:p-0 px-[10px] my-0 py-0">
       {/* Header for results */}
       <ResultsHeader 
         segment={segment} 

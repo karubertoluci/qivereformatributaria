@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
@@ -10,7 +11,6 @@ interface ResultsTabLayoutProps {
   onTabChange: (tab: string) => void;
 }
 
-// Se necessário, adicione classes bg-white para garantir o fundo branco consistente
 const ResultsTabLayout: React.FC<ResultsTabLayoutProps> = ({
   children,
   highlights,
@@ -18,42 +18,36 @@ const ResultsTabLayout: React.FC<ResultsTabLayoutProps> = ({
   onTabChange
 }) => {
   return (
-    <div className="bg-white">
+    <div className="bg-gray-100">
       <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-        <TabsList className="w-full bg-white border-b rounded-none justify-start h-12 p-0">
+        <TabsList className="w-full bg-gray-100 justify-start p-0 h-12 rounded-none border-b-0">
           <TabsTrigger 
             value="overview" 
-            className="flex-1 max-w-[200px] data-[state=active]:bg-white rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary h-full"
+            className="flex items-center gap-2 rounded-none h-full border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-white mx-0 px-6"
           >
-            <span className="flex items-center justify-center gap-2">
-              <BarChart4 className="h-4 w-4" />
-              Visão Geral
-            </span>
+            <BarChart4 className="h-4 w-4" />
+            <span>Visão Geral</span>
           </TabsTrigger>
           
           <TabsTrigger 
             value="articles" 
-            className="flex-1 max-w-[200px] data-[state=active]:bg-white rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary h-full"
+            className="flex items-center gap-2 rounded-none h-full border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-white mx-0 px-6"
           >
-            <span className="flex items-center justify-center gap-2">
-              <FileText className="h-4 w-4" />
-              Artigos e Impactos
-            </span>
+            <FileText className="h-4 w-4" />
+            <span>Artigos e Impactos</span>
           </TabsTrigger>
           
           <TabsTrigger 
             value="highlights" 
-            className="flex-1 max-w-[200px] data-[state=active]:bg-white rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary h-full"
+            className="flex items-center gap-2 rounded-none h-full border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-white mx-0 px-6"
           >
-            <div className="flex items-center justify-center gap-2">
-              <Highlighter className="h-4 w-4" />
-              Meus Destaques
-              {highlights.length > 0 && (
-                <Badge variant="outline" className="ml-1 h-5 px-1.5">
-                  {highlights.length}
-                </Badge>
-              )}
-            </div>
+            <Highlighter className="h-4 w-4" />
+            <span>Meus Destaques</span>
+            {highlights.length > 0 && (
+              <Badge variant="outline" className="ml-1 h-5 px-1.5">
+                {highlights.length}
+              </Badge>
+            )}
           </TabsTrigger>
         </TabsList>
         

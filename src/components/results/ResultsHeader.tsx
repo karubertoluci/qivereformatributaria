@@ -30,8 +30,8 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   };
   
   return (
-    <div className="border-b py-4 bg-white">
-      <div className="container mx-auto flex justify-between items-center mb-0 font-lexend px-4 bg-white">
+    <div className="py-4 bg-gray-100">
+      <div className="container mx-auto flex justify-between items-center mb-0 font-lexend px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img src="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" alt="Qive Reforma Tributária" className="h-10" />
