@@ -16,13 +16,13 @@ const SearchForm: React.FC = () => {
   const navigate = useNavigate();
   const { isFormDialogOpen, closeFormDialog } = useFormDialogContext();
   
-  // Função para associar o CNAE (código CNAE) a um segmento de negócio
+  // Function to map CNAE (CNAE code) to a business segment
   const mapCnaeToSegment = (cnae: string): string => {
-    // Lógica para mapear códigos CNAE para segmentos de negócio
-    // Esta é uma simplificação, você pode expandir com uma tabela de mapeamento mais completa
+    // Logic to map CNAE codes to business segments
+    // This is a simplification, you can expand with a more complete mapping table
     const firstDigits = cnae.substring(0, 2);
     
-    // Exemplos de mapeamento (simplificado)
+    // Examples of mapping (simplified)
     switch (true) {
       case firstDigits >= '01' && firstDigits <= '03': return 'agronegocio';
       case firstDigits >= '10' && firstDigits <= '33': return 'industria';
@@ -34,14 +34,14 @@ const SearchForm: React.FC = () => {
       case firstDigits >= '64' && firstDigits <= '66': return 'financeiro';
       case firstDigits === '85': return 'educacao';
       case firstDigits >= '86' && firstDigits <= '88': return 'saude';
-      default: return 'servicos'; // Segmento padrão se não houver correspondência
+      default: return 'servicos'; // Default segment if no match
     }
   };
 
-  // Função para buscar artigos da tabela livros_reforma
+  // Function to fetch articles from the livros_reforma table
   const fetchArticlesForSegment = async (segmentId: string) => {
     try {
-      // Buscar os artigos da tabela livros_reforma
+      // Fetch articles from the livros_reforma table
       const { data: artigos, error: artigosError } = await supabase
         .from('livros_reforma' as any)
         .select('*');
@@ -49,11 +49,11 @@ const SearchForm: React.FC = () => {
       if (artigosError) throw new Error(artigosError.message);
       
       if (!artigos || artigos.length === 0) {
-        console.log(`Nenhum artigo encontrado na tabela livros_reforma`);
+        console.log(`No articles found in the livros_reforma table`);
         return [];
       }
       
-      // Formatar os artigos para o formato esperado pela aplicação
+      // Format the articles to the expected format of the application
       const formattedArticles = artigos.map((artigo: any) => {
         return {
           id: `art_${artigo.id}`,
@@ -63,7 +63,7 @@ const SearchForm: React.FC = () => {
           simplifiedText: artigo.conteudo || "",
           impacts: [
             {
-              type: "positive", // Tipo de impacto padrão
+              type: "positive", // Default impact type
               description: `Artigo relacionado a ${segmentId}`,
               relevance: "medium",
               segments: [segmentId]
@@ -81,7 +81,7 @@ const SearchForm: React.FC = () => {
       
       return formattedArticles;
     } catch (error) {
-      console.error('Erro ao buscar artigos:', error);
+      console.error('Error fetching articles:', error);
       throw error;
     }
   };
@@ -91,19 +91,19 @@ const SearchForm: React.FC = () => {
       setIsLoading(true);
       setError(null);
       
-      // Armazenar dados do formulário para uso posterior
+      // Store form data for later use
       localStorage.setItem('formData', JSON.stringify(data));
       
-      // Obter o CNAE a partir dos dados da empresa
+      // Get CNAE from company data
       let segmentId: string;
       let cnaeCode: string = '';
       
       if (data.companyData?.cnaePrincipal?.codigo) {
-        // Se temos o código CNAE nos dados da empresa
+        // If we have the CNAE code in the company data
         cnaeCode = data.companyData.cnaePrincipal.codigo;
         segmentId = mapCnaeToSegment(cnaeCode);
         
-        // Registrar a consulta no Supabase
+        // Record the query in Supabase
         try {
           const { error: insertError } = await supabase
             .from('consultas' as any)
@@ -114,45 +114,45 @@ const SearchForm: React.FC = () => {
             });
             
           if (insertError) {
-            console.error('Erro ao registrar consulta:', insertError);
+            console.error('Error recording query:', insertError);
           } else {
-            console.log('Consulta registrada com sucesso');
+            console.log('Query recorded successfully');
           }
         } catch (err) {
-          console.error('Erro ao tentar registrar consulta:', err);
+          console.error('Error trying to record query:', err);
         }
       } else {
-        // Fallback para um segmento padrão
+        // Fallback to a default segment
         segmentId = 'servicos';
       }
       
-      // Buscar o objeto de segmento correspondente
+      // Find the corresponding segment object
       const segment = businessSegments.find(s => s.id === segmentId);
       
       if (!segment) {
-        throw new Error('Segmento não encontrado');
+        throw new Error('Segment not found');
       }
       
       try {
-        // Buscar artigos relacionados ao segmento
+        // Fetch articles related to the segment
         const articles = await fetchArticlesForSegment(segmentId);
         
-        // Armazenar no localStorage para uso no componente de resultados
+        // Store in localStorage for use in the results component
         localStorage.setItem('selectedSegment', JSON.stringify(segment));
         localStorage.setItem('segmentArticles', JSON.stringify(articles));
         
-        // Fechar o diálogo e navegar para a página de resultados
+        // Close the dialog and navigate to the results page
         closeFormDialog();
         navigate(`/results/${segmentId}`);
         
       } catch (error) {
-        console.error('Erro ao buscar dados:', error);
-        setError('Erro ao buscar dados. Por favor, tente novamente.');
+        console.error('Error fetching data:', error);
+        setError('Error fetching data. Please try again.');
       }
       
     } catch (error) {
-      console.error('Erro ao processar o formulário:', error);
-      setError('Ocorreu um erro. Por favor, tente novamente.');
+      console.error('Error processing form:', error);
+      setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }

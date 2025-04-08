@@ -24,8 +24,8 @@ interface CNPJResponse {
   porte: string;
 }
 
-// Modo de desenvolvimento - Se não conseguir acessar a API real,
-// utilizamos dados simulados para demonstração
+// Development mode - If we can't access the real API,
+// use simulated data for demonstration
 const useMockData = true;
 const mockCnpjData: Record<string, CNPJResponse> = {
   '42988955000149': {
@@ -104,49 +104,49 @@ const mockCnpjData: Record<string, CNPJResponse> = {
 
 export const fetchCNPJData = async (cnpj: string): Promise<CNPJResponse> => {
   try {
-    // Remove caracteres não numéricos do CNPJ
+    // Remove non-numeric characters from CNPJ
     const formattedCNPJ = cnpj.replace(/\D/g, '');
     
     if (formattedCNPJ.length !== 14) {
-      throw new Error('CNPJ inválido: deve conter 14 dígitos');
+      throw new Error('Invalid CNPJ: must contain 14 digits');
     }
 
-    console.log(`Buscando dados para o CNPJ: ${formattedCNPJ}`);
+    console.log(`Fetching data for CNPJ: ${formattedCNPJ}`);
 
-    // Simula um delay para parecer uma chamada de API real
+    // Simulate a delay to mimic a real API call
     await new Promise(resolve => setTimeout(resolve, 800));
 
-    // Se estamos usando dados simulados ou se ocorrer erro na API
+    // If we're using simulated data or if there's an error with the API
     if (useMockData) {
-      // Tenta encontrar o CNPJ no mockdata
+      // Try to find the CNPJ in our mock data
       const mockData = mockCnpjData[formattedCNPJ];
       if (mockData) {
-        console.log('CNPJ encontrado nos dados simulados:', mockData);
+        console.log('CNPJ found in simulated data:', mockData);
         return mockData;
       }
       
-      // Se não encontrar o CNPJ específico nos mocks, escolhe um aleatório
+      // If we don't find the specific CNPJ in our mocks, choose a random one
       const mockKeys = Object.keys(mockCnpjData);
       const randomMock = {...mockCnpjData[mockKeys[Math.floor(Math.random() * mockKeys.length)]]};
       
-      // Personaliza o mock com o CNPJ informado
+      // Customize the mock with the provided CNPJ
       randomMock.cnpj = formattedCNPJ.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
       
-      console.log('CNPJ não encontrado, usando dados simulados aleatórios:', randomMock);
+      console.log('CNPJ not found, using random simulated data:', randomMock);
       return randomMock;
     }
     
-    // Tentativa de chamar a API real
+    // Try to call the real API
     const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${formattedCNPJ}`);
     
     if (!response.ok) {
-      console.error(`Erro na API: ${response.status}`);
-      throw new Error(`Erro ao consultar CNPJ: ${response.status}`);
+      console.error(`API Error: ${response.status}`);
+      throw new Error(`Error querying CNPJ: ${response.status}`);
     }
     
     return await response.json();
   } catch (error) {
-    console.error('Erro ao buscar dados do CNPJ:', error);
+    console.error('Error fetching CNPJ data:', error);
     throw error;
   }
 };

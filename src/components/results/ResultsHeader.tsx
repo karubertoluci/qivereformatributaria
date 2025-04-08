@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BusinessSegment } from '@/data/segments';
@@ -18,10 +19,10 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   const navigate = useNavigate();
   const displayName = companyName || "Qive Comercial Ltda";
   const handleBackToHome = () => {
-    // Limpar localStorage quando voltar para home
+    // Clear localStorage when returning to home
     localStorage.removeItem('selectedSegment');
     localStorage.removeItem('cnae');
-    // Navegar para a página inicial
+    // Navigate to the home page
     navigate('/');
   };
   return <div className="py-4 border-b border-gray-200 bg-zinc-50">

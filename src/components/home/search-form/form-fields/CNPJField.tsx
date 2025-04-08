@@ -44,7 +44,7 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
     if (digits.length === 14) {
       setIsValidating(true);
       try {
-        console.log('Validando CNPJ:', cnpj);
+        console.log('Validating CNPJ:', cnpj);
         const data = await fetchCNPJData(cnpj);
         setIsValid(true);
         
@@ -66,7 +66,7 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
           naturezaJuridica: data.natureza_juridica,
         };
         
-        console.log('Dados da empresa obtidos:', companyData);
+        console.log('Company data obtained:', companyData);
         
         // Store company data in localStorage for later use
         localStorage.setItem('companyData', JSON.stringify(companyData));
