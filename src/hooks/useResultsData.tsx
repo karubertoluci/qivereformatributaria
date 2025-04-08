@@ -13,7 +13,7 @@ export const useResultsData = (segment: BusinessSegment) => {
   const [expandedArticleId, setExpandedArticleId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<FilterType>('all');
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [viewMode, setViewMode] = useState<ViewMode>('chart');
   const [activeTab, setActiveTab] = useState<'overview' | 'articles'>('overview');
   const [highlights, setHighlights] = useState<HighlightType[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -78,7 +78,7 @@ export const useResultsData = (segment: BusinessSegment) => {
     setExpandedArticleId(articleId);
     
     if (viewMode === 'chart') {
-      setViewMode('list');
+      // No need to change view mode since it's already 'chart'
       setTimeout(() => {
         const element = document.getElementById(`article-${articleId}`);
         if (element) {

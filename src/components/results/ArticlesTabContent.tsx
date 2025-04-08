@@ -17,8 +17,8 @@ interface ArticlesTabContentProps {
   relevantArticles: Article[];
   positiveCount: number;
   negativeCount: number;
-  viewMode: 'list' | 'table' | 'chart';
-  setViewMode: (mode: 'list' | 'table' | 'chart') => void;
+  viewMode: 'chart';
+  setViewMode: (mode: 'chart') => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   filterType: 'all' | 'positive' | 'negative';
@@ -80,42 +80,16 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
         </div>
       ) : (
         <>
-          {viewMode === 'chart' && (
-            <div className="mb-6 md:mb-8 overflow-x-auto">
-              <div className={isMobile ? "min-w-[500px]" : ""}>
-                <ArticlesPriorityChart 
-                  articles={filteredArticles}
-                  segmentId={segment.id}
-                  onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
-                />
-              </div>
+          {/* Always show chart view since it's now the only option */}
+          <div className="mb-6 md:mb-8 overflow-x-auto">
+            <div className={isMobile ? "min-w-[500px]" : ""}>
+              <ArticlesPriorityChart 
+                articles={filteredArticles}
+                segmentId={segment.id}
+                onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
+              />
             </div>
-          )}
-          
-          {viewMode === 'list' && (
-            <ArticleTopicsView 
-              filteredArticles={filteredArticles}
-              articlesByTopic={articlesByTopic}
-              topics={topics}
-              segmentId={segment.id}
-              expandedArticleId={expandedArticleId}
-              setExpandedArticleId={setExpandedArticleId}
-              onSelectArticle={(id) => setExpandedArticleId(id)}
-            />
-          )}
-          
-          {viewMode === 'table' && (
-            <div className="overflow-x-auto">
-              <div className={isMobile ? "min-w-[500px]" : ""}>
-                <ArticleTableView 
-                  articles={filteredArticles}
-                  segment={segment}
-                  expandedArticleId={expandedArticleId}
-                  setExpandedArticleId={setExpandedArticleId}
-                />
-              </div>
-            </div>
-          )}
+          </div>
         </>
       )}
     </div>

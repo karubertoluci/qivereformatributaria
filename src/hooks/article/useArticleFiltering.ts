@@ -12,7 +12,7 @@ export const useArticleFiltering = (
 ) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<FilterType>('all');
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [viewMode, setViewMode] = useState<ViewMode>('chart');
   const [expandedArticleId, setExpandedArticleId] = useState<string | null>(null);
   
   // Use segmentArticles if available, otherwise fallback to static articles
