@@ -1,11 +1,8 @@
-
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { AlertTriangle, FileText, Calendar, BookOpen, ArrowRight } from 'lucide-react';
-
 const HowItWorks = () => {
-  return (
-    <section className="py-16 bg-gray-50">
+  return <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4 max-w-5xl">
         <h2 className="text-3xl font-bold text-center mb-4">A Reforma Tributária em Resumo</h2>
         
@@ -30,19 +27,19 @@ const HowItWorks = () => {
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start">
                   <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Criação da CBS (federal) substituindo PIS e COFINS</span>
+                  <span className="text-left">Criação da CBS (federal) substituindo PIS e COFINS</span>
                 </li>
                 <li className="flex items-start">
                   <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Implementação do IBS (estadual/municipal) em substituição ao ICMS e ISS</span>
+                  <span className="text-left">Implementação do IBS (estadual/municipal) em substituição ao ICMS e ISS</span>
                 </li>
                 <li className="flex items-start">
                   <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Adoção do sistema de crédito amplo e não cumulativo</span>
+                  <span className="text-left">Adoção do sistema de crédito amplo e não cumulativo</span>
                 </li>
                 <li className="flex items-start">
                   <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Princípio do destino para a tributação</span>
+                  <span className="text-left">Princípio do destino para a tributação</span>
                 </li>
               </ul>
             </Card>
@@ -57,19 +54,19 @@ const HowItWorks = () => {
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start">
                   <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span><strong>2026:</strong> Início da implementação gradual</span>
+                  <span className="text-left"><strong>2026:</strong> Início da implementação gradual</span>
                 </li>
                 <li className="flex items-start">
                   <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span><strong>2026-2028:</strong> Teste do novo sistema com alíquotas reduzidas</span>
+                  <span className="text-left"><strong>2026-2028:</strong> Teste do novo sistema com alíquotas reduzidas</span>
                 </li>
                 <li className="flex items-start">
                   <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span><strong>2029-2033:</strong> Período de transição com redução gradual dos tributos antigos</span>
+                  <span className="text-left"><strong>2029-2033:</strong> Período de transição com redução gradual dos tributos antigos</span>
                 </li>
                 <li className="flex items-start">
                   <ArrowRight className="h-5 w-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span><strong>2033:</strong> Implementação completa do novo sistema</span>
+                  <span className="text-left"><strong>2033:</strong> Implementação completa do novo sistema</span>
                 </li>
               </ul>
             </Card>
@@ -88,8 +85,6 @@ const HowItWorks = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default HowItWorks;
