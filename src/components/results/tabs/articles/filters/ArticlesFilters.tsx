@@ -3,7 +3,7 @@ import React from 'react';
 import FilterBar from '../../../FilterBar';
 import { FilterType } from '../../../types';
 import { Article } from '@/data/articles';
-import { URLSearchParams } from 'react-router-dom';
+import { SetURLSearchParams } from 'react-router-dom';
 
 interface ArticlesFiltersProps {
   articles: Article[];
