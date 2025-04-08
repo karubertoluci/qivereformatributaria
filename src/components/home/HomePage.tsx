@@ -63,7 +63,7 @@ const HomePage: React.FC<HomePageProps> = ({ onCnaeSubmit, onSelectSegment }) =>
       <AboutQive />
       
       {/* New floor: Talk to an expert */}
-      <TalkToExpert iconSrc="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" />
+      <TalkToExpert iconSrc="/lovable-uploads/5f4d33c6-7b3a-495b-8f95-2e636a6a8093.png" />
       
       {/* New floor: Sector tags */}
       <SectorTags />
