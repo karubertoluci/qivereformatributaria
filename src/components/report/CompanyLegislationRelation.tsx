@@ -32,54 +32,51 @@ const CompanyLegislationRelation: React.FC<CompanyLegislationRelationProps> = ({
       }
       
       try {
-        // Buscar impactos para o segmento
-        const { data: impacts, error: impactsError } = await supabase
-          .from('impactos')
-          .select('*')
-          .eq('segmento_id', segment.id);
+        // Como não temos uma tabela de impactos, vamos usar diretamente a tabela livros_reforma
+        const { data: livrosData, error: livrosError } = await supabase
+          .from('livros_reforma' as any)
+          .select('*');
           
-        if (impactsError) throw impactsError;
+        if (livrosError) throw livrosError;
         
-        if (!impacts || impacts.length === 0) {
+        if (!livrosData || livrosData.length === 0) {
           setLoading(false);
           return;
         }
         
-        // Obter IDs dos artigos
-        const articleIds = impacts.map(impact => impact.artigo_id);
-        
-        // Buscar detalhes dos artigos
-        const { data: articles, error: articlesError } = await supabase
-          .from('artigos')
-          .select('*')
-          .in('id', articleIds);
+        // Formatar artigos para o formato esperado pelo componente
+        const formattedArticles = livrosData.map(artigo => {
+          // Criar um impacto padrão para cada artigo baseado no segmento
+          const articleImpacts = [
+            {
+              type: "positive", // Tipo de impacto padrão
+              description: `Artigo relacionado a ${segment.name}`,
+              relevance: "medium",
+              segments: [segment.id]
+            }
+          ];
           
-        if (articlesError) throw articlesError;
+          return {
+            id: `art_${artigo.id}`,
+            number: artigo.artigo || "N/A",
+            title: `Artigo ${artigo.artigo || "N/A"}`,
+            originalText: artigo.conteudo || "",
+            simplifiedText: artigo.conteudo || "",
+            impacts: articleImpacts,
+            metadata: {
+              livro: artigo.livro,
+              titulo: artigo.titulo,
+              capitulo: artigo.capitulo,
+              secao: artigo.secao,
+              subsecao: artigo.subsecao
+            }
+          };
+        });
         
-        if (articles) {
-          // Formatar artigos para o formato esperado pelo componente
-          const formattedArticles = articles.map(article => {
-            const articleImpacts = impacts
-              .filter(impact => impact.artigo_id === article.id)
-              .map(impact => ({
-                type: impact.tipo,
-                description: impact.descricao,
-                relevance: impact.relevancia,
-                segments: [segment.id]
-              }));
-            
-            return {
-              id: `art_${article.id}`,
-              number: article.numero.toString(),
-              title: `Artigo ${article.numero}`,
-              originalText: article.texto,
-              simplifiedText: article.texto_simplificado || article.texto,
-              impacts: articleImpacts
-            };
-          });
-          
-          setArticles(formattedArticles);
-        }
+        setArticles(formattedArticles);
+        
+        // Armazenar os artigos em cache para este segmento para melhorar o desempenho
+        localStorage.setItem(`segmentArticles_${segment.id}`, JSON.stringify(formattedArticles));
       } catch (error) {
         console.error('Erro ao buscar artigos:', error);
       } finally {
