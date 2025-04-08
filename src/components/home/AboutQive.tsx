@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FileText, Search, LightbulbIcon, BookOpen, Globe, Share2, Zap, Shield, BarChart4 } from 'lucide-react';
+import { FileText, Search, LightbulbIcon, BookOpen, Globe, Share2, Zap, BarChart4 } from 'lucide-react';
 
 const AboutQive = () => {
   return <section className="bg-gradient-to-b from-gray-50 to-orange-50 py-16">
@@ -76,7 +76,11 @@ const AboutQive = () => {
           {/* Caixa de lembrete na parte inferior */}
           <div className="bg-gradient-to-r from-[#FF4719] to-[#FF5A30] rounded-lg p-6 flex items-start text-white shadow-md">
             <div className="bg-white rounded-full p-3 mr-4 flex-shrink-0">
-              <Shield className="h-5 w-5 text-[#FF4719]" />
+              <img 
+                src="/lovable-uploads/c0547a5d-14ad-4bd4-8b1d-8e27a13de69f.png" 
+                alt="Logo Qive" 
+                className="h-5 w-5"
+              />
             </div>
             <div>
               <h4 className="font-bold text-lg mb-2">E lembre-se...</h4>
