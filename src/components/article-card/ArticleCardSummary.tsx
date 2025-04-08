@@ -2,6 +2,8 @@
 import React from 'react';
 import { Article } from '@/data/articles';
 import { Button } from '../ui/button';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 import { 
   Dialog,
   DialogContent,
@@ -27,18 +29,39 @@ const ArticleCardSummary: React.FC<ArticleCardSummaryProps> = ({
   onAddHighlight,
   onRemoveHighlight
 }) => {
-  // Limit the original text to 150 characters
-  const truncatedText = article.originalText.length > 150
-    ? article.originalText.substring(0, 150) + "..."
+  // Limit the original text to 100 characters
+  const truncatedText = article.originalText.length > 100
+    ? article.originalText.substring(0, 100) + "..."
     : article.originalText;
+
+  // Get relevance level
+  const getRelevanceInfo = () => {
+    const randomRelevance = Math.random() * 100;
+    
+    if (randomRelevance < 40) {
+      return { label: 'Irrelevante', color: 'bg-gray-100 text-gray-700 border-gray-200' };
+    } else if (randomRelevance < 50) {
+      return { label: 'Pouco relevante', color: 'bg-blue-100 text-blue-700 border-blue-200' };
+    } else if (randomRelevance < 90) {
+      return { label: 'Moderadamente relevante', color: 'bg-amber-100 text-amber-700 border-amber-200' };
+    } else {
+      return { label: 'Muito relevante', color: 'bg-green-100 text-green-700 border-green-200' };
+    }
+  };
+  
+  const { label: relevanceLabel, color: relevanceColor } = getRelevanceInfo();
 
   return (
     <div className="space-y-4">
-      {/* Texto Original - sempre visível */}
-      <div className="bg-white rounded-md p-3 mt-2 space-y-3 border border-border/30">
-        <p className="text-sm font-medium">
+      {/* Original Text */}
+      <div className="mt-2 space-y-3">
+        <p className="text-sm">
           {truncatedText}
         </p>
+        
+        <Badge variant="outline" className={cn("text-xs py-1 px-3", relevanceColor)}>
+          {relevanceLabel}
+        </Badge>
         
         {/* CTA Button - Dialog trigger */}
         <Dialog>
@@ -46,7 +69,7 @@ const ArticleCardSummary: React.FC<ArticleCardSummaryProps> = ({
             <Button 
               variant="outline" 
               size="sm" 
-              className="w-full mt-3 text-primary border-primary hover:bg-primary/10"
+              className="w-full mt-2 text-primary border-primary hover:bg-primary/10"
             >
               Ver detalhes do artigo
             </Button>

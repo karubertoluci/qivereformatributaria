@@ -23,13 +23,21 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   onAddHighlight,
   onRemoveHighlight
 }) => {
-  // Aplicar a distribuição de favorabilidade: 40% favorável, 20% neutro, 30% desfavorável
-  const randomImpact = Math.random() * 100;
+  // Determine impact type for card border
+  const getImpactType = () => {
+    const randomImpact = Math.random() * 100;
+    
+    if (randomImpact < 40) return 'positive';
+    if (randomImpact < 60) return 'neutral';
+    return 'negative';
+  };
+  
+  const impactType = getImpactType();
   
   let borderClass = '';
-  if (randomImpact < 40) {
+  if (impactType === 'positive') {
     borderClass = 'border-l-4 border-l-green-500'; // Favorável
-  } else if (randomImpact >= 60) {
+  } else if (impactType === 'negative') {
     borderClass = 'border-l-4 border-l-red-500'; // Desfavorável
   }
   
@@ -48,7 +56,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         />
       </CardHeader>
       
-      <CardContent className="pt-0 px-4">
+      <CardContent className="pt-0 px-4 pb-4">
         <ArticleCardSummary 
           article={article} 
           segmentId={segmentId}
