@@ -29,6 +29,7 @@ const SearchForm: React.FC = () => {
       // Get CNAE from company data or localStorage
       let segmentId: string;
       let cnaeCode: string = '';
+      let cnaeDesc: string = '';
       let companyName: string = '';
       let companyDataObj = null;
       
@@ -41,8 +42,10 @@ const SearchForm: React.FC = () => {
           // Tenta diferentes formatos de CNAE (camelCase ou snake_case)
           if (companyDataObj.cnaePrincipal?.codigo) {
             cnaeCode = companyDataObj.cnaePrincipal.codigo;
+            cnaeDesc = companyDataObj.cnaePrincipal.descricao || '';
           } else if (companyDataObj.cnae_fiscal) {
             cnaeCode = companyDataObj.cnae_fiscal.toString();
+            cnaeDesc = companyDataObj.cnae_fiscal_descricao || '';
           }
           
           // Tenta diferentes formatos de nome (camelCase ou snake_case)
@@ -68,6 +71,7 @@ const SearchForm: React.FC = () => {
           // Remove non-numeric characters from CNPJ for storage
           const formattedCNPJ = formatCNPJForStorage(data.cnpj);
           
+          // First, save to consultas table (existing functionality)
           const { error: insertError } = await supabase
             .from('consultas')
             .insert({
@@ -81,6 +85,23 @@ const SearchForm: React.FC = () => {
             // Continue with the flow even if the record fails
           } else {
             console.log('Consulta registrada com sucesso');
+          }
+          
+          // Now, save to the new cnae_consultas table with more details
+          const { error: cnaeError } = await supabase
+            .from('cnae_consultas')
+            .insert({
+              cnae: cnaeCode,
+              descricao: cnaeDesc,
+              cnpj: formattedCNPJ,
+              empresa: companyName,
+              segmento: segmentId
+            });
+          
+          if (cnaeError) {
+            console.error('Erro ao registrar dados detalhados do CNAE:', cnaeError);
+          } else {
+            console.log('Dados do CNAE registrados com sucesso');
           }
         } catch (err) {
           console.error('Erro ao tentar registrar consulta:', err);

@@ -8,6 +8,8 @@ import { FormValues } from '../FormDialog';
 import { Building2, CheckCircle2, XCircle } from 'lucide-react';
 import { fetchCNPJData } from '@/services/brasilApi';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { mapCnaeToSegment } from '../utils';
 
 interface CNPJFieldProps {
   form: UseFormReturn<FormValues>;
@@ -33,6 +35,34 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
       return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8)}`;
     } else {
       return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8, 12)}-${digits.slice(12, 14)}`;
+    }
+  };
+
+  // Save CNAE data to Supabase
+  const saveCnaeToSupabase = async (cnpj: string, cnae: string, descricao: string, empresa: string) => {
+    try {
+      // Map CNAE to segment
+      const segmento = mapCnaeToSegment(cnae);
+      
+      // Insert data into cnae_consultas table
+      const { error } = await supabase
+        .from('cnae_consultas')
+        .insert({
+          cnae: cnae,
+          descricao: descricao,
+          cnpj: cnpj.replace(/\D/g, ''), // Store only digits
+          empresa: empresa,
+          segmento: segmento
+        });
+        
+      if (error) {
+        console.error('Erro ao salvar dados do CNAE no Supabase:', error);
+      } else {
+        console.log('Dados do CNAE salvos com sucesso no Supabase');
+      }
+    } catch (error) {
+      console.error('Erro ao tentar salvar CNAE no Supabase:', error);
+      // Continue with the flow even if saving to Supabase fails
     }
   };
 
@@ -87,6 +117,16 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
         
         // Auto-preencher o nome no formulário
         form.setValue('nome', data.nome_fantasia || data.razao_social);
+        
+        // Save CNAE data to Supabase
+        if (cnaeCode && data.cnae_fiscal_descricao) {
+          saveCnaeToSupabase(
+            data.cnpj,
+            cnaeCode,
+            data.cnae_fiscal_descricao,
+            data.razao_social
+          );
+        }
       } catch (error) {
         setIsValid(false);
         console.error('Erro ao validar CNPJ:', error);

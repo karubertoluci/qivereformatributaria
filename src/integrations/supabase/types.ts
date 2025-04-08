@@ -67,6 +67,36 @@ export type Database = {
           },
         ]
       }
+      cnae_consultas: {
+        Row: {
+          cnae: string
+          cnpj: string | null
+          consultado_em: string | null
+          descricao: string | null
+          empresa: string | null
+          id: string
+          segmento: string | null
+        }
+        Insert: {
+          cnae: string
+          cnpj?: string | null
+          consultado_em?: string | null
+          descricao?: string | null
+          empresa?: string | null
+          id?: string
+          segmento?: string | null
+        }
+        Update: {
+          cnae?: string
+          cnpj?: string | null
+          consultado_em?: string | null
+          descricao?: string | null
+          empresa?: string | null
+          id?: string
+          segmento?: string | null
+        }
+        Relationships: []
+      }
       consultas: {
         Row: {
           cnae: string | null
