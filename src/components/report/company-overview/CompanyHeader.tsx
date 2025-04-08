@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Store } from 'lucide-react';
+import InfoCard from './InfoCard';
 
 interface CompanyHeaderProps {
   razaoSocial?: string;
@@ -12,15 +13,19 @@ const CompanyHeader: React.FC<CompanyHeaderProps> = ({
   nomeFantasia
 }) => {
   return (
-    <div className="mb-6 bg-white p-4 rounded-md border border-gray-100">
-      <h3 className="text-xl font-semibold text-gray-800">
+    <div className="mb-6">
+      <h3 className="text-xl font-semibold text-gray-800 mb-4">
         {razaoSocial || "Empresa Não Identificada"}
       </h3>
+      
       {nomeFantasia && nomeFantasia !== razaoSocial && (
-        <p className="text-sm text-gray-600 mt-1 flex items-center gap-1.5">
-          <Store className="h-3.5 w-3.5" />
-          Nome Fantasia: <span className="font-medium">{nomeFantasia}</span>
-        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InfoCard 
+            icon={<Store className="h-4 w-4 text-primary" />}
+            label="Razão Social"
+            value={nomeFantasia}
+          />
+        </div>
       )}
     </div>
   );

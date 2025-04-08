@@ -1,106 +1,108 @@
-
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { TabsContent } from '@/components/ui/tabs';
 import { Article } from '@/data/articles';
 import { BusinessSegment } from '@/data/segments';
-import { getArticlesByTopic } from '../ArticlesByTopic';
-import ArticlesFilters from './articles/ArticlesFilters';
-import ArticlesContent from './articles/ArticlesContent';
-import ChartSection from './articles/ChartSection';
-import { Topic, FilterType, ViewMode } from '../types';
+import ArticlesFilters from '../ArticlesFilters';
+import ArticlesContent from '../ArticlesContent';
+import ChartSection from '../ChartSection';
+import { HighlightType } from '@/components/results/types';
+import { useSearchParams } from 'react-router-dom';
+import { Topic } from '@/components/results/types';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
-  filteredArticles: Article[];
   relevantArticles: Article[];
-  positiveCount: number;
-  negativeCount: number;
-  topics: Topic[];
-  viewMode: ViewMode;
-  setViewMode: (mode: ViewMode) => void;
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
-  filterType: FilterType;
-  setFilterType: (type: FilterType) => void;
+  filteredArticles: Article[];
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
-  articlesByTopic: Record<string, Article[]>;
-  highlights: any[];
-  onAddHighlight: (articleId: string, text: string) => void;
-  onRemoveHighlight: (id: string) => void;
+  highlights: HighlightType[];
+  handleAddHighlight: (articleId: string, text: string, color?: HighlightType['color']) => void;
+  handleRemoveHighlight: (id: string) => void;
+  topics: Topic[];
 }
 
-const ArticlesTab: React.FC<ArticlesTabProps> = ({
-  segment,
-  filteredArticles,
+const ArticlesTab = ({ 
+  segment, 
   relevantArticles,
-  positiveCount,
-  negativeCount,
-  topics,
-  viewMode,
-  setViewMode,
-  searchTerm,
-  setSearchTerm,
-  filterType,
-  setFilterType,
+  filteredArticles,
   expandedArticleId,
   setExpandedArticleId,
-  articlesByTopic,
   highlights,
-  onAddHighlight,
-  onRemoveHighlight
+  handleAddHighlight,
+  handleRemoveHighlight,
+  topics
 }) => {
-  const [chartsCollapsed, setChartsCollapsed] = useState(false);
-  const neutralCount = 0; // Define neutralCount
-  
-  // Define displayedArticles for ArticlesContent
-  const displayedArticles = filteredArticles;
-  const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(null);
-  const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(searchParams.get('book') || null);
+  const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(searchParams.get('title') || null);
+  const [expanded, setExpanded] = useState<boolean>(false);
+
+  const toggleExpanded = () => {
+    setExpanded(!expanded);
+  };
+
+  const displayedArticles = useMemo(() => {
+    let result = filteredArticles;
+
+    if (selectedBookFilter) {
+      result = result.filter(article => article.book === selectedBookFilter);
+    }
+
+    if (selectedTitleFilter) {
+      result = result.filter(article => article.title === selectedTitleFilter);
+    }
+
+    return result;
+  }, [filteredArticles, selectedBookFilter, selectedTitleFilter]);
 
   return (
-    <div className="space-y-6">
-      {/* Chart Section */}
-      <ChartSection 
-        filteredArticles={filteredArticles}
-        segmentId={segment.id}
-        setExpandedArticleId={setExpandedArticleId}
-        expanded={!chartsCollapsed}
-        toggleExpanded={() => setChartsCollapsed(!chartsCollapsed)}
-      />
-      
-      {/* Search and Filters */}
-      <ArticlesFilters 
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        filterType={filterType}
-        setFilterType={setFilterType}
-        viewMode={viewMode}
-        setViewMode={setViewMode}
-        positiveCount={positiveCount}
-        negativeCount={negativeCount}
-        neutralCount={neutralCount}
-        totalCount={relevantArticles.length}
-      />
-      
-      {/* Article Content (List or Table) */}
-      <ArticlesContent 
-        filteredArticles={filteredArticles}
-        displayedArticles={displayedArticles}
-        selectedBookFilter={selectedBookFilter || ''}
-        selectedTitleFilter={selectedTitleFilter || ''}
-        setSelectedBookFilter={(val) => setSelectedBookFilter(val)}
-        setSelectedTitleFilter={(val) => setSelectedTitleFilter(val)}
-        segment={segment}
-        topics={topics}
-        viewMode={viewMode}
-        expandedArticleId={expandedArticleId}
-        setExpandedArticleId={setExpandedArticleId}
-        articlesByTopic={articlesByTopic}
-        highlights={highlights}
-        onAddHighlight={onAddHighlight}
-        onRemoveHighlight={onRemoveHighlight}
-      />
-    </div>
+    <TabsContent value="articles" className="pb-12">
+      <div className="grid md:grid-cols-12 gap-6">
+        {/* Sidebar filters - 3 cols on desktop */}
+        <aside className="md:col-span-3 md:sticky md:top-[80px] h-fit">
+          <ArticlesFilters 
+            articles={relevantArticles}
+            selectedBookFilter={selectedBookFilter}
+            selectedTitleFilter={selectedTitleFilter}
+            setSelectedBookFilter={setSelectedBookFilter}
+            setSelectedTitleFilter={setSelectedTitleFilter}
+            searchParams={searchParams}
+            setSearchParams={setSearchParams}
+          />
+        </aside>
+
+        {/* Main content - 9 cols on desktop */}
+        <main className="md:col-span-9">
+          <div className="flex flex-col space-y-6">
+            {/* Chart section */}
+            <ChartSection 
+              filteredArticles={filteredArticles}
+              segmentId={segment.id}
+              relevantArticles={relevantArticles}
+              setExpandedArticleId={setExpandedArticleId}
+              expanded={expanded}
+              toggleExpanded={toggleExpanded}
+            />
+            
+            {/* Articles content */}
+            <ArticlesContent 
+              filteredArticles={filteredArticles}
+              displayedArticles={displayedArticles}
+              selectedBookFilter={selectedBookFilter}
+              selectedTitleFilter={selectedTitleFilter}
+              setSelectedBookFilter={setSelectedBookFilter}
+              setSelectedTitleFilter={setSelectedTitleFilter}
+              expandedArticleId={expandedArticleId}
+              setExpandedArticleId={setExpandedArticleId}
+              highlights={highlights}
+              onAddHighlight={handleAddHighlight}
+              onRemoveHighlight={handleRemoveHighlight}
+              topics={topics}
+            />
+          </div>
+        </main>
+      </div>
+    </TabsContent>
   );
 };
 
