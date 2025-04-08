@@ -63,8 +63,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       <ChartSection 
         filteredArticles={filteredArticles}
         segmentId={segment.id}
-        segment={segment}
-        relevantArticles={relevantArticles}
         setExpandedArticleId={setExpandedArticleId}
         expanded={!chartsCollapsed}
         toggleExpanded={() => setChartsCollapsed(!chartsCollapsed)}
@@ -88,10 +86,10 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       <ArticlesContent 
         filteredArticles={filteredArticles}
         displayedArticles={displayedArticles}
-        selectedBookFilter={selectedBookFilter}
-        selectedTitleFilter={selectedTitleFilter}
-        setSelectedBookFilter={setSelectedBookFilter}
-        setSelectedTitleFilter={setSelectedTitleFilter}
+        selectedBookFilter={selectedBookFilter || ''}
+        selectedTitleFilter={selectedTitleFilter || ''}
+        setSelectedBookFilter={(val) => setSelectedBookFilter(val)}
+        setSelectedTitleFilter={(val) => setSelectedTitleFilter(val)}
         segment={segment}
         topics={topics}
         viewMode={viewMode}
