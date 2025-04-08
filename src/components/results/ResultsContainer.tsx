@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
-import { useResultsData } from '@/hooks/useResultsData';
+import { useResultsData } from '@/hooks/results';
 import ReportActions from '../report/ReportActions';
 import { TabsContent } from '@/components/ui/tabs';
 import ResultsHeader from './ResultsHeader';
