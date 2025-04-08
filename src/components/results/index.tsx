@@ -11,7 +11,7 @@ export interface ResultsProps {
 
 const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
   return (
-    <div className="print:bg-white">
+    <div className="w-full bg-white print:bg-white">
       <ResultsContainer segment={segment} onBackToSegments={onBackToSegments} />
     </div>
   );

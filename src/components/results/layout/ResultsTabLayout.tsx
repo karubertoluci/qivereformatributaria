@@ -1,47 +1,67 @@
-
 import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Book, FileText, Highlighter } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
+import { BarChart4, FileText, Highlighter } from 'lucide-react';
 
 interface ResultsTabLayoutProps {
   children: React.ReactNode;
   highlights: any[];
-  activeTab?: string;
-  onTabChange?: (value: string) => void;
+  activeTab: string;
+  onTabChange: (tab: string) => void;
 }
 
-const ResultsTabLayout: React.FC<ResultsTabLayoutProps> = ({ 
-  children, 
+// Se necessário, adicione classes bg-white para garantir o fundo branco consistente
+const ResultsTabLayout: React.FC<ResultsTabLayoutProps> = ({
+  children,
   highlights,
-  activeTab = "overview",
+  activeTab,
   onTabChange
 }) => {
-  const isMobile = useIsMobile();
-
   return (
-    <Tabs 
-      defaultValue={activeTab} 
-      className="w-full"
-      onValueChange={onTabChange}
-    >
-      <TabsList className="mb-6 py-0 my-0 flex justify-center w-full overflow-x-auto">
-        <TabsTrigger value="overview" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
-          <FileText className="h-3 w-3 md:h-4 md:w-4" /> 
-          {isMobile ? "Visão Geral" : "Visão Geral"}
-        </TabsTrigger>
-        <TabsTrigger value="articles" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
-          <Book className="h-3 w-3 md:h-4 md:w-4" /> 
-          {isMobile ? "Artigos" : "Artigos e Impactos"}
-        </TabsTrigger>
-        <TabsTrigger value="highlights" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
-          <Highlighter className="h-3 w-3 md:h-4 md:w-4" /> 
-          {isMobile ? `Destaques (${highlights.length})` : `Meus Destaques (${highlights.length})`}
-        </TabsTrigger>
-      </TabsList>
-      
-      {children}
-    </Tabs>
+    <div className="bg-white">
+      <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
+        <TabsList className="w-full bg-white border-b rounded-none justify-start h-12 p-0">
+          <TabsTrigger 
+            value="overview" 
+            className="flex-1 max-w-[200px] data-[state=active]:bg-white rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary h-full"
+          >
+            <span className="flex items-center justify-center gap-2">
+              <BarChart4 className="h-4 w-4" />
+              Visão Geral
+            </span>
+          </TabsTrigger>
+          
+          <TabsTrigger 
+            value="articles" 
+            className="flex-1 max-w-[200px] data-[state=active]:bg-white rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary h-full"
+          >
+            <span className="flex items-center justify-center gap-2">
+              <FileText className="h-4 w-4" />
+              Artigos e Impactos
+            </span>
+          </TabsTrigger>
+          
+          <TabsTrigger 
+            value="highlights" 
+            className="flex-1 max-w-[200px] data-[state=active]:bg-white rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary h-full"
+          >
+            <div className="flex items-center justify-center gap-2">
+              <Highlighter className="h-4 w-4" />
+              Meus Destaques
+              {highlights.length > 0 && (
+                <Badge variant="outline" className="ml-1 h-5 px-1.5">
+                  {highlights.length}
+                </Badge>
+              )}
+            </div>
+          </TabsTrigger>
+        </TabsList>
+        
+        <div className="bg-white pt-4 pb-8">
+          {children}
+        </div>
+      </Tabs>
+    </div>
   );
 };
 

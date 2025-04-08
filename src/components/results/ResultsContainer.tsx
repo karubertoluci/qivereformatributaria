@@ -67,7 +67,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
   }
 
   return (
-    <div className="container mx-auto print:p-0 px-[10px] my-0 py-0">
+    <div className="container mx-auto print:p-0 px-[10px] my-0 py-0 bg-white">
       {/* Header for results */}
       <ResultsHeader 
         segment={segment} 
@@ -93,7 +93,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
         />
         
         {/* Articles Tab */}
-        <TabsContent value="articles">
+        <TabsContent value="articles" className="bg-white">
           <ArticlesTab 
             segment={segment}
             filteredArticles={filteredArticles}
@@ -117,7 +117,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
         </TabsContent>
         
         {/* Highlights Tab */}
-        <TabsContent value="highlights">
+        <TabsContent value="highlights" className="bg-white">
           <HighlightsTab 
             highlights={highlights}
             relevantArticles={relevantArticles}
@@ -128,7 +128,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
       </ResultsTabLayout>
       
       {/* Footer */}
-      <div className="border-t border-gray-600">
+      <div className="border-t border-gray-600 bg-white">
         <ResultsFooter />
       </div>
     </div>
