@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { businessSegments } from '@/data/segments';
+import { Dialog } from '@/components/ui/dialog';
 import FormDialog from './FormDialog';
 import SearchFormButton from './SearchFormButton';
 import { FormValues } from './FormDialog';
@@ -135,9 +136,9 @@ const SearchForm: React.FC = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      {isFormDialogOpen && (
+      <Dialog open={isFormDialogOpen} onOpenChange={closeFormDialog}>
         <FormDialog onSubmit={handleSubmit} isLoading={isLoading} />
-      )}
+      </Dialog>
       
       {isLoading && (
         <LoadingDialog 

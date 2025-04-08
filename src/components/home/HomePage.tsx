@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Hero from './hero/Hero';
 import SearchForm from './search-form';
 import HowItWorks from './HowItWorks';
@@ -19,28 +19,13 @@ const HomePage: React.FC<HomePageProps> = ({
   onCnaeSubmit,
   onSelectSegment
 }) => {
-  // Quando um usuário preenche o formulário com dados da empresa,
-  // armazenamos no localStorage para usar na página de resultados
-  React.useEffect(() => {
+  // Load previous state from localStorage if it exists (for persistence between page refreshes)
+  useEffect(() => {
     // Limpar dados anteriores quando a página carrega
     localStorage.removeItem('companyData');
     // Também removemos dados de artigos do segmento para garantir que serão buscados novamente
     localStorage.removeItem('segmentArticles');
   }, []);
-
-  const handleFormSubmission = (cnae: string, segment?: BusinessSegment) => {
-    // Salvar os dados do formulário no localStorage antes de navegar
-    const formData = JSON.parse(localStorage.getItem('formData') || '{}');
-    if (formData) {
-      localStorage.setItem('companyData', JSON.stringify(formData));
-    }
-
-    if (segment) {
-      onSelectSegment(segment);
-    } else {
-      onCnaeSubmit(cnae);
-    }
-  };
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-12rem)]">

@@ -46,11 +46,15 @@ export type FormValues = z.infer<typeof formSchema> & {
 interface FormDialogProps {
   onSubmit: (data: FormValues) => void;
   isLoading: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 const FormDialog: React.FC<FormDialogProps> = ({ 
   onSubmit, 
-  isLoading 
+  isLoading,
+  open,
+  onOpenChange
 }) => {
   console.log("FormDialog renderizado");
   
