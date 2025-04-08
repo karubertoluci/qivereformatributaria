@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import ArticleContent from './';
+import ArticleContent from './ArticleContent';
 
 interface ArticleCardProps {
   article: Article;

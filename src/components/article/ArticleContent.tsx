@@ -14,13 +14,15 @@ interface ArticleContentProps {
   segmentId: string;
   highlights: HighlightType[];
   onAddHighlight: (text: string, color: HighlightType['color']) => void;
+  onRemoveHighlight: (id: string) => void;
 }
 
 const ArticleContent: React.FC<ArticleContentProps> = ({ 
   article, 
   segmentId,
   highlights,
-  onAddHighlight
+  onAddHighlight,
+  onRemoveHighlight
 }) => {
   return (
     <div className="space-y-4">
