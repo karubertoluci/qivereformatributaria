@@ -21,7 +21,10 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
   const { formData } = useCompanyData();
   
   // Use company name from props first, then from formData if available
-  const displayName = companyName || formData?.nomeFantasia || formData?.razaoSocial || "sua empresa";
+  const displayName = companyName || 
+                     (formData?.companyData?.nomeFantasia || formData?.companyData?.nome_fantasia) || 
+                     (formData?.companyData?.razaoSocial || formData?.companyData?.razao_social) || 
+                     "sua empresa";
   
   const handleBackToHome = () => {
     // Limpar localStorage quando voltar para home

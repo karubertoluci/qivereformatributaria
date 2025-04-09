@@ -1,55 +1,81 @@
 
-import { Article } from '@/data/articles';
-import { Topic, HighlightType, FilterType, ViewMode } from '@/components/results/types';
+// If this file doesn't exist, we'll create it with proper type definitions
+export interface CNAEData {
+  codigo: string;
+  descricao: string;
+}
 
-export interface CompanyData {
-  nome?: string;
-  cargo?: string;
+export interface CompanyApiData {
   cnpj?: string;
+  razao_social?: string;
+  nome_fantasia?: string;
+  cnae_fiscal?: number;
+  cnae_fiscal_descricao?: string;
+  cnaes_secundarios?: Array<CNAEData>;
+  situacao_cadastral?: string;
+  data_situacao_cadastral?: string;
+  natureza_juridica?: string;
+  logradouro?: string;
+  numero?: string;
+  complemento?: string;
+  bairro?: string;
+  cep?: string;
+  uf?: string;
+  municipio?: string;
+  ddd_telefone_1?: string;
+  capital_social?: number;
+  porte?: string;
+  // For alternate naming conventions
   razaoSocial?: string;
   nomeFantasia?: string;
-  endereco?: string;
-  cnaePrincipal?: {
-    codigo: string;
-    descricao: string;
-  };
-  cnaeSecundarios?: {
-    codigo: string;
-    descricao: string;
-  }[];
+  cnaePrincipal?: CNAEData;
+  cnaeSecundarios?: Array<CNAEData>;
   situacaoCadastral?: string;
   dataSituacaoCadastral?: string;
   naturezaJuridica?: string;
+  endereco?: string;
   capitalSocial?: number;
-  porte?: string;
   telefone?: string;
-  original?: any; // Dados originais da API
 }
 
+export interface PersonalData {
+  nome: string;
+  cargo: string;
+  email: string;
+  telefone?: string;
+  cnpj: string;
+  possuiContaQive: boolean;
+}
+
+export interface CompanyData extends Partial<PersonalData> {
+  companyData?: CompanyApiData;
+}
+
+// ResultsData interface used by components that display the report
 export interface ResultsData {
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filterType: FilterType;
-  setFilterType: (type: FilterType) => void;
-  viewMode: ViewMode;
-  setViewMode: (mode: ViewMode) => void;
-  activeTab: 'overview' | 'articles' | 'highlights';
-  setActiveTab: (tab: 'overview' | 'articles' | 'highlights') => void;
+  filterType: string;
+  setFilterType: (type: any) => void;
+  viewMode: string;
+  setViewMode: (mode: any) => void;
+  activeTab: string;
+  setActiveTab: (tab: any) => void;
   formData: CompanyData | null;
   hasCompanyData: boolean;
-  relevantArticles: Article[];
-  filteredArticles: Article[];
-  articlesByTopic: Record<string, Article[]>;
+  relevantArticles: any[];
+  filteredArticles: any[];
+  articlesByTopic: any;
   positiveCount: number;
   negativeCount: number;
-  handleArticleSelect: (articleId: string) => void;
-  topics: Topic[];
+  handleArticleSelect: (id: string) => void;
+  topics: any[];
   isLoading: boolean;
   error: string | null;
-  highlights: HighlightType[];
-  setHighlights: (highlights: HighlightType[]) => void;
-  handleAddHighlight: (articleId: string, text: string, color?: HighlightType['color']) => void;
+  highlights: any[];
+  setHighlights: (highlights: any[]) => void;
+  handleAddHighlight: (articleId: string, text: string, color?: string) => void;
   handleRemoveHighlight: (id: string) => void;
 }

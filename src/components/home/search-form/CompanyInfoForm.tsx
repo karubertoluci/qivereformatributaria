@@ -46,14 +46,19 @@ const CompanyInfoForm: React.FC<CompanyInfoFormProps> = ({ onSubmit, isLoading }
         // Store full form data in localStorage for future use
         const formData = {
           ...data,
-          ...companyData
+          companyData
         };
-        localStorage.setItem('formData', JSON.stringify(formData));
         
-        // Merge form data with additional company data
+        // Important: Store personal info separately from company data
+        localStorage.setItem('formData', JSON.stringify({
+          ...data,
+          companyData
+        }));
+        
+        // Pass both personal and company data
         onSubmit({
           ...data,
-          companyData, // This won't be part of the form schema, but will be available in the onSubmit handler
+          companyData,
         });
       } catch (error) {
         console.error('Error parsing company data from localStorage:', error);
