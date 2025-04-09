@@ -71,9 +71,7 @@ const SearchFormDialogs: React.FC<SearchFormDialogsProps> = ({
         
         // Show success toast
         const companyName = formData?.companyData?.nomeFantasia || 
-                         formData?.companyData?.nome_fantasia || 
-                         formData?.companyData?.razaoSocial || 
-                         formData?.companyData?.razao_social ||
+                         formData?.companyData?.razaoSocial ||
                          "empresa";
         toast.success(`Relatório para ${companyName} está pronto!`);
         
