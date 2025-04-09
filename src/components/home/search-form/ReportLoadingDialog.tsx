@@ -48,6 +48,9 @@ const ReportLoadingDialog: React.FC<ReportLoadingDialogProps> = ({
     30
   );
   
+  console.log("ReportLoadingDialog - Estado do modal:", open);
+  console.log("ReportLoadingDialog - Dados da empresa:", companyData);
+  
   // Atualiza o progresso e as mensagens de status com atraso simulado
   useEffect(() => {
     if (!open) return;

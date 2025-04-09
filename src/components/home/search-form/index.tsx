@@ -9,10 +9,22 @@ import { useFormSubmit } from './hooks/useFormSubmit';
 const SearchForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { closeFormDialog } = useFormDialogContext();
-  const { handleSubmit } = useFormSubmit();
+  const { handleSubmit, isSubmitting } = useFormSubmit();
 
   const onSubmit = async (data: FormValues) => {
-    await handleSubmit(data, closeFormDialog);
+    console.log("SearchForm: Formulário submetido, preparando para mostrar carregamento");
+    
+    // Fecha o modal do formulário primeiro
+    closeFormDialog();
+    
+    // Pequeno delay para garantir que o modal do formulário fechou completamente
+    setTimeout(() => {
+      setIsLoading(true);
+      console.log("SearchForm: Iniciando carregamento do relatório");
+      
+      // Agora processa o formulário
+      handleSubmit(data);
+    }, 300);
   };
 
   return (

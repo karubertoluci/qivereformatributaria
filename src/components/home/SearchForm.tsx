@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
@@ -33,6 +34,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
   const { isFormDialogOpen, openFormDialog, closeFormDialog } = useFormDialogContext();
   
   console.log("Estado do modal no SearchForm:", isFormDialogOpen);
+  console.log("Estado do loading no SearchForm:", isLoading);
   
   const filteredSegments = businessSegments.filter(segment => 
     segment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -53,16 +55,19 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
     
     setFormData(formData);
     
+    // Primeiro fechamos o modal do formulário
     closeFormDialog();
     
+    // Depois de um pequeno delay, abrimos o modal de carregamento
     setTimeout(() => {
       setIsLoading(true);
       console.log("Iniciando carregamento do relatório");
-    }, 100);
+    }, 300);
   };
   
   const handleLoadingComplete = () => {
     setLoadingCompleted(true);
+    setIsLoading(false); // Certifique-se de fechar o modal de carregamento
     
     if (activeTab === 'cnae' && formData?.companyData?.cnaePrincipal?.codigo) {
       console.log("Usando CNAE para submissão:", formData.companyData.cnaePrincipal.codigo);
@@ -172,19 +177,16 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
         />
       </Dialog>
       
-      <Dialog open={isLoading} onOpenChange={(open) => {
-        if (!open && !loadingCompleted) setIsLoading(false);
-      }}>
-        <ReportLoadingDialog 
-          open={isLoading}
-          onOpenChange={(open) => {
-            if (!open && !loadingCompleted) setIsLoading(false);
-          }}
-          onComplete={handleLoadingComplete}
-          companyName={formData?.nome || ""}
-          companyData={formData?.companyData}
-        />
-      </Dialog>
+      {/* Garante que o modal de carregamento esteja sempre aberto quando isLoading é true */}
+      <ReportLoadingDialog 
+        open={isLoading}
+        onOpenChange={(open) => {
+          if (!open && !loadingCompleted) setIsLoading(false);
+        }}
+        onComplete={handleLoadingComplete}
+        companyName={formData?.nome || ""}
+        companyData={formData?.companyData}
+      />
     </>
   );
 };
