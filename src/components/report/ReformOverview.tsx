@@ -1,16 +1,14 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BusinessSegment } from '@/data/segments';
 import { Info, FileText } from 'lucide-react';
-
 interface ReformOverviewProps {
   segment: BusinessSegment;
 }
-
-const ReformOverview: React.FC<ReformOverviewProps> = ({ segment }) => {
-  return (
-    <Card>
+const ReformOverview: React.FC<ReformOverviewProps> = ({
+  segment
+}) => {
+  return <Card>
       <CardHeader className="bg-gradient-to-r from-rose-50 to-white border-b">
         <CardTitle className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-rose-500" />
@@ -21,7 +19,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({ segment }) => {
         <div className="space-y-6">
           <div className="mb-4">
             <h3 className="text-lg font-medium mb-2">Visão Geral da Reforma Tributária</h3>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-left">
               A Reforma Tributária (PEC 45/2023) representa uma das maiores mudanças no sistema tributário 
               brasileiro nas últimas décadas. Seu objetivo principal é simplificar a tributação sobre 
               o consumo, substituindo cinco tributos (PIS, Cofins, IPI, ICMS e ISS) por um Imposto sobre 
@@ -95,10 +93,8 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({ segment }) => {
           </div>
         </div>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
-
 function getSegmentImpacts(segmentId: string): string {
   const impactsBySegment: Record<string, string> = {
     comercio_varejo: "Para empresas do comércio varejista, a reforma trará várias mudanças significativas, incluindo a possibilidade de créditos amplos na cadeia produtiva e a eliminação da cumulatividade tributária. No entanto, a elevação das alíquotas pode pressionar margens, exigindo ajustes de preços. O setor poderá se beneficiar da simplificação fiscal e redução de custos de conformidade.",
@@ -112,9 +108,6 @@ function getSegmentImpacts(segmentId: string): string {
     financeiro: "O setor financeiro enfrentará desafios particulares na reforma, com possível regime específico devido às peculiaridades de suas operações. Bancos e instituições financeiras precisarão fazer adaptações significativas em seus sistemas tributários, com possíveis impactos em produtos e serviços oferecidos aos clientes.",
     transporte: "Para empresas de transporte e logística, a reforma pode trazer benefícios com a uniformização de regras entre estados e municípios, eliminando complexidades no transporte interestadual. O setor poderá se beneficiar da não-cumulatividade plena, mas precisará adaptar-se a novas regras de creditamento e controle fiscal."
   };
-  
-  return impactsBySegment[segmentId] || 
-    "Este segmento terá impactos diversos com a reforma tributária, incluindo a substituição do sistema atual por um IVA dual, mudanças na forma de apuração de créditos e adaptação a novas regras de compliance fiscal. É importante analisar detalhadamente cada artigo para entender os efeitos específicos para seu negócio.";
+  return impactsBySegment[segmentId] || "Este segmento terá impactos diversos com a reforma tributária, incluindo a substituição do sistema atual por um IVA dual, mudanças na forma de apuração de créditos e adaptação a novas regras de compliance fiscal. É importante analisar detalhadamente cada artigo para entender os efeitos específicos para seu negócio.";
 }
-
 export default ReformOverview;
