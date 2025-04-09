@@ -98,14 +98,7 @@ const ResultsFooter: React.FC<ResultsFooterProps> = ({
           </div>
         </div>
         
-        <div className="text-center border-t border-gray-800 pt-6 bg-transparent">
-          <p className="text-sm text-transparent">
-            Relatório gerado pela Qive Reforma Tributária 2025
-          </p>
-          <p className="mt-1 text-xs text-transparent">
-            © {new Date().getFullYear()} Qive. Todos os direitos reservados.
-          </p>
-        </div>
+        
       </div>
     </footer>;
 };
