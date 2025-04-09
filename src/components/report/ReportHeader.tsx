@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FileText, Download, Share2, RefreshCw } from 'lucide-react';
 import { BusinessSegment } from '@/data/segments';
 import { Button } from '@/components/ui/button';
+import { useCompanyData } from '@/hooks/results/useCompanyData';
 
 interface ReportHeaderProps {
   segment: BusinessSegment;
@@ -17,7 +18,10 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
   companyName,
 }) => {
   const navigate = useNavigate();
-  const displayName = companyName || "sua empresa";
+  const { formData } = useCompanyData();
+  
+  // Use company name from props first, then from formData if available
+  const displayName = companyName || formData?.nomeFantasia || formData?.razaoSocial || "sua empresa";
   
   const handleBackToHome = () => {
     // Limpar localStorage quando voltar para home
@@ -43,7 +47,7 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
         <div className="flex flex-col text-center mx-auto max-w-md sm:max-w-lg">
           <h2 className="text-xl font-bold flex items-center gap-2 justify-center">
             <FileText className="h-4 w-4 shrink-0 text-rose-500" />
-            <span className="truncate">Relatório para {displayName}</span>
+            <span className="truncate">{displayName}</span>
           </h2>
           <p className="text-sm text-muted-foreground">
             Análise de impactos da reforma tributária no segmento <span className="font-medium">{segment.name}</span>
