@@ -3,6 +3,8 @@ import React from 'react';
 import FilterBar from '@/components/results/FilterBar';
 import ViewSwitcher from '@/components/results/ViewSwitcher';
 import { FilterType, ViewMode } from '@/components/results/types';
+import { Article } from '@/data/articles';
+import { Badge } from '@/components/ui/badge';
 
 interface ArticlesFiltersProps {
   positiveCount: number;

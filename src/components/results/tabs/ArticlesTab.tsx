@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { TabsContent } from '@/components/ui/tabs';
 import { Article } from '@/data/articles';
@@ -77,20 +78,43 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
     return result;
   }, [filteredArticles, selectedBookFilter, selectedTitleFilter]);
 
+  // Calculate neutral count
+  const neutralCount = relevantArticles.filter(article => 
+    article.impacts.some(impact => impact.type === 'neutral' && impact.segments.includes(segment.id))
+  ).length;
+
+  // Extract book and title lists
+  const books = useMemo(() => {
+    const allBooks = relevantArticles.map(article => article.metadata?.bookId || article.metadata?.livro).filter(Boolean);
+    return Array.from(new Set(allBooks));
+  }, [relevantArticles]);
+  
+  const titles = useMemo(() => {
+    const allTitles = relevantArticles.map(article => article.title).filter(Boolean);
+    return Array.from(new Set(allTitles));
+  }, [relevantArticles]);
+
   return (
     <TabsContent value="articles" className="pb-12">
       <div className="grid md:grid-cols-12 gap-6">
         <aside className="md:col-span-3 md:sticky md:top-[80px] h-fit">
           <ArticlesFilters 
-            articles={relevantArticles}
-            selectedBookFilter={selectedBookFilter}
-            selectedTitleFilter={selectedTitleFilter}
-            setSelectedBookFilter={setSelectedBookFilter}
-            setSelectedTitleFilter={setSelectedTitleFilter}
-            searchParams={searchParams}
-            setSearchParams={setSearchParams}
             positiveCount={positiveCount}
             negativeCount={negativeCount}
+            neutralCount={neutralCount}
+            totalCount={relevantArticles.length}
+            searchTerm={searchTerm || ''}
+            setSearchTerm={setSearchTerm || (() => {})}
+            filterType={filterType || 'all'}
+            setFilterType={setFilterType || (() => {})}
+            viewMode={viewMode}
+            setViewMode={setViewMode}
+            selectedBookFilter={selectedBookFilter}
+            setSelectedBookFilter={setSelectedBookFilter}
+            selectedTitleFilter={selectedTitleFilter}
+            setSelectedTitleFilter={setSelectedTitleFilter}
+            books={books}
+            titles={titles}
           />
         </aside>
 
@@ -116,11 +140,14 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
               highlights={highlights}
               onAddHighlight={handleAddHighlight}
               onRemoveHighlight={handleRemoveHighlight}
-              topics={topics}
               articlesByTopic={articlesByTopic}
               viewMode={viewMode}
               setViewMode={setViewMode}
+              topics={topics}
               segment={segment}
+              positiveCount={positiveCount}
+              negativeCount={negativeCount}
+              neutralCount={neutralCount}
             />
           </div>
         </main>
