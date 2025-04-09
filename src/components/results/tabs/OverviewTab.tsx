@@ -1,10 +1,11 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
 import { CompanyData } from '@/hooks/results/types';
 import OverviewTabContent from '../OverviewTabContent';
 import { TabsContent } from '@/components/ui/tabs';
+import { useCompanyData } from '@/hooks/results/useCompanyData';
 
 interface OverviewTabProps {
   segment: BusinessSegment;
@@ -21,6 +22,14 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
   relevantArticles,
   setExpandedArticleId
 }) => {
+  // Get the refreshCompanyData function
+  const { refreshCompanyData } = useCompanyData();
+  
+  // Refresh company data when the tab is shown
+  useEffect(() => {
+    refreshCompanyData();
+  }, []);
+  
   const handleSelectArticle = (articleId: string) => {
     setExpandedArticleId(articleId);
     document.querySelector('[value="articles"]')?.dispatchEvent(new Event('click'));

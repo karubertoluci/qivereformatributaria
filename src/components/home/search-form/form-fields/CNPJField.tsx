@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -134,6 +135,9 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
         console.log('Dados da empresa obtidos:', companyData);
         toast.success(`CNPJ válido: ${data.razao_social}`);
         
+        // Clear any existing company data before setting new data
+        localStorage.removeItem('companyData');
+        
         // Store company data in localStorage for later use
         localStorage.setItem('companyData', JSON.stringify(companyData));
         localStorage.setItem('companyName', data.razao_social);
@@ -152,6 +156,11 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
             data.cnae_fiscal_descricao,
             data.razao_social
           );
+        }
+        
+        // If we're in the results page, reload to refresh data
+        if (window.location.pathname.includes('/results/')) {
+          window.location.reload();
         }
       } catch (error) {
         setIsValid(false);

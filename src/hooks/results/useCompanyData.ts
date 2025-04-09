@@ -52,8 +52,45 @@ export const useCompanyData = () => {
     }
   }, []);
 
+  // Add a function to refresh the company data
+  const refreshCompanyData = () => {
+    try {
+      const companyDataStr = localStorage.getItem('companyData');
+      if (companyDataStr) {
+        const companyData = JSON.parse(companyDataStr);
+        console.log('Dados da empresa atualizados:', companyData);
+        
+        // Format the data to ensure consistency
+        const formattedData: CompanyData = {
+          cnpj: companyData.cnpj,
+          razaoSocial: companyData.razaoSocial || companyData.razao_social,
+          nomeFantasia: companyData.nomeFantasia || companyData.nome_fantasia || companyData.razaoSocial || companyData.razao_social,
+          endereco: companyData.endereco,
+          cnaePrincipal: companyData.cnaePrincipal || {
+            codigo: companyData.cnae_fiscal?.toString() || '',
+            descricao: companyData.cnae_fiscal_descricao || ''
+          },
+          cnaeSecundarios: companyData.cnaeSecundarios || companyData.cnaes_secundarios || [],
+          situacaoCadastral: companyData.situacaoCadastral || companyData.situacao_cadastral,
+          dataSituacaoCadastral: companyData.dataSituacaoCadastral || companyData.data_situacao_cadastral,
+          naturezaJuridica: companyData.naturezaJuridica || companyData.natureza_juridica,
+          capitalSocial: companyData.capitalSocial || companyData.capital_social,
+          porte: companyData.porte,
+          telefone: companyData.telefone || companyData.ddd_telefone_1,
+          original: companyData.original || companyData
+        };
+        
+        setFormData(formattedData);
+        localStorage.setItem('companyName', formattedData.razaoSocial || '');
+      }
+    } catch (e) {
+      console.error('Erro ao atualizar dados da empresa:', e);
+    }
+  };
+
   return { 
     formData, 
-    hasCompanyData: formData !== null 
+    hasCompanyData: formData !== null,
+    refreshCompanyData 
   };
 };
