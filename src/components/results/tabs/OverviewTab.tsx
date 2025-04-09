@@ -29,21 +29,19 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
       <CompanyOverview 
         segment={segment}
         companyData={companyData}
-        hasCompanyData={hasCompanyData}
       />
       
       <ReformOverview segment={segment} />
       
       <div className="grid md:grid-cols-2 gap-6">
         <ImpactDistributionChart 
-          segment={segment}
+          segmentId={segment.id}
           articles={relevantArticles}
         />
         
         <RelevanceDistributionChart 
           articles={relevantArticles}
           segmentId={segment.id}
-          onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
         />
       </div>
     </TabsContent>
