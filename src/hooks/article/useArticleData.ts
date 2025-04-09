@@ -28,7 +28,7 @@ export const useArticleData = (segment: BusinessSegment) => {
         
         console.log(`Buscando artigos do Supabase para o segmento: ${segment.id}`);
         
-        // Buscar da tabela livros_reforma - sem filtrar por CNAE ou CNPJ para mostrar todos
+        // Buscar todos os artigos da tabela livros_reforma sem limites
         const { data: livrosData, error: livrosError } = await supabase
           .from('livros_reforma')
           .select('*');
@@ -43,11 +43,7 @@ export const useArticleData = (segment: BusinessSegment) => {
         if (livrosData && livrosData.length > 0) {
           console.log(`Encontrados ${livrosData.length} artigos na tabela livros_reforma`);
           
-          // Mostrar todos os 545 artigos disponíveis
-          const totalArticles = livrosData.length;
-          console.log(`Processando todos os ${totalArticles} artigos disponíveis`);
-          
-          // Formatar artigos da tabela livros_reforma com dados reduzidos
+          // Formatar todos os artigos da tabela livros_reforma
           const formattedArticles = livrosData.map((item: any) => {
             return {
               id: `art_${item.id}`,

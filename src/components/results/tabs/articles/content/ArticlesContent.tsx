@@ -108,11 +108,22 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
             segmentId={segment.id}
             highlights={highlights || []}
             onAddHighlight={(text, color) => {
-              if (safeDisplayedArticles.length > 0 && safeDisplayedArticles[0]) {
-                onAddHighlight(safeDisplayedArticles[0].id || '', text, color);
+              if (safeDisplayedArticles.length > 0 && safeDisplayedArticles[0] && safeDisplayedArticles[0].id) {
+                onAddHighlight(safeDisplayedArticles[0].id, text, color);
               }
             }}
             onRemoveHighlight={onRemoveHighlight}
+          />
+        ) : viewMode === 'topic' ? (
+          <ArticleTopicsView 
+            topics={topics}
+            articlesByTopic={articlesByTopic}
+            expandedArticleId={expandedArticleId}
+            setExpandedArticleId={setExpandedArticleId}
+            highlights={highlights}
+            onAddHighlight={onAddHighlight}
+            onRemoveHighlight={onRemoveHighlight}
+            segment={segment}
           />
         ) : (
           <ArticleTableView 
