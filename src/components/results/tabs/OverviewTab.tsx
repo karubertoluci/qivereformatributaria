@@ -27,6 +27,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
   
   // Refresh company data when the tab is shown
   useEffect(() => {
+    console.log('OverviewTab montado - atualizando dados da empresa');
     refreshCompanyData();
   }, [refreshCompanyData]);
   

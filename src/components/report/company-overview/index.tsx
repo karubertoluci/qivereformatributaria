@@ -20,8 +20,9 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
   
   // Use the latest company data from localStorage
   useEffect(() => {
+    console.log('CompanyOverview montado - atualizando dados da empresa');
     refreshCompanyData();
-  }, []);
+  }, [refreshCompanyData]);
   
   // Add a check for null/undefined companyData
   if (!propCompanyData) {
@@ -50,6 +51,9 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
     // Format CNPJ: XX.XXX.XXX/XXXX-XX
     return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
   };
+
+  console.log('Renderizando CompanyOverview com dados:', propCompanyData);
+  console.log('CNAEs Secundários:', propCompanyData.cnaeSecundarios);
 
   return (
     <Card className="bg-white shadow-sm rounded-lg overflow-hidden border">

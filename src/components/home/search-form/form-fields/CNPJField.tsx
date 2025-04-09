@@ -41,11 +41,14 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
   // Save CNAE data to Supabase
   const saveCnaeToSupabase = async (cnpj: string, cnae: string, descricao: string, empresa: string) => {
     try {
+      console.log('Tentando salvar CNAE no Supabase:', { cnpj, cnae, descricao, empresa });
+      
       // Map CNAE to segment
       const segmento = mapCnaeToSegment(cnae);
+      console.log('Segmento mapeado:', segmento);
       
-      // First, save basic data to the consultas table (which is already in the TypeScript types)
-      const { error } = await supabase
+      // First, save basic data to the consultas table
+      const { error: consultasError } = await supabase
         .from('consultas')
         .insert({
           cnae: cnae,
@@ -53,40 +56,30 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
           consultado_em: new Date().toISOString()
         });
         
-      if (error) {
-        console.error('Erro ao salvar dados do CNAE no Supabase:', error);
+      if (consultasError) {
+        console.error('Erro ao salvar dados na tabela consultas:', consultasError);
       } else {
-        console.log('Dados do CNAE salvos com sucesso no Supabase');
-        
-        // Use a direct fetch call to save the additional data to cnae_consultas
-        // This bypasses the TypeScript limitations until types are regenerated
-        try {
-          const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/cnae_consultas`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
-              'Prefer': 'return=minimal'
-            },
-            body: JSON.stringify({
-              cnae: cnae,
-              descricao: descricao,
-              cnpj: cnpj.replace(/\D/g, ''),
-              empresa: empresa,
-              segmento: segmento
-            })
-          });
-          
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          
-          console.log('Dados detalhados do CNAE salvos com sucesso');
-        } catch (fetchError) {
-          console.error('Erro ao salvar dados detalhados:', fetchError);
-          // Continue with the flow even if saving detailed data fails
-        }
+        console.log('Dados salvos com sucesso na tabela consultas');
       }
+      
+      // Then save to cnae_consultas table
+      const { error: cnaeConsultasError } = await supabase
+        .from('cnae_consultas')
+        .insert({
+          cnae: cnae,
+          descricao: descricao,
+          cnpj: cnpj.replace(/\D/g, ''),
+          empresa: empresa,
+          segmento: segmento,
+          consultado_em: new Date().toISOString()
+        });
+      
+      if (cnaeConsultasError) {
+        console.error('Erro ao salvar dados na tabela cnae_consultas:', cnaeConsultasError);
+      } else {
+        console.log('Dados salvos com sucesso na tabela cnae_consultas');
+      }
+      
     } catch (error) {
       console.error('Erro ao tentar salvar CNAE no Supabase:', error);
       // Continue with the flow even if saving to Supabase fails
@@ -106,10 +99,12 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
       try {
         console.log('Validando CNPJ:', cnpj);
         const data = await fetchCNPJData(cnpj);
+        console.log('Dados recebidos da API:', data);
         setIsValid(true);
         
         // Convert the CNAE code from number to string for consistency
         const cnaeCode = data.cnae_fiscal ? data.cnae_fiscal.toString() : '';
+        console.log('CNAE extraído:', cnaeCode);
         
         // Create company data object with all API fields maintained in their original format
         const companyData = {
@@ -121,7 +116,10 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
             codigo: cnaeCode,
             descricao: data.cnae_fiscal_descricao,
           },
-          cnaeSecundarios: data.cnaes_secundarios || [],
+          cnaeSecundarios: data.cnaes_secundarios ? data.cnaes_secundarios.map((cnae: any) => ({
+            codigo: cnae.codigo.toString(),
+            descricao: cnae.descricao
+          })) : [],
           situacaoCadastral: data.situacao_cadastral,
           dataSituacaoCadastral: data.data_situacao_cadastral,
           naturezaJuridica: data.natureza_juridica,
@@ -132,7 +130,7 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
           original: data
         };
         
-        console.log('Dados da empresa obtidos:', companyData);
+        console.log('Dados da empresa formatados:', companyData);
         toast.success(`CNPJ válido: ${data.razao_social}`);
         
         // Clear any existing company data before setting new data

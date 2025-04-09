@@ -1,13 +1,14 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { CompanyData } from './types';
 
 export const useCompanyData = () => {
   const [formData, setFormData] = useState<CompanyData | null>(null);
   
-  // Load company data from localStorage
-  useEffect(() => {
+  // Load company data from localStorage as a callback function
+  const refreshCompanyData = useCallback(() => {
     try {
+      console.log('Atualizando dados da empresa do localStorage');
       // First try to load from companyData (from API)
       const companyDataStr = localStorage.getItem('companyData');
       if (companyDataStr) {
@@ -24,7 +25,11 @@ export const useCompanyData = () => {
             codigo: companyData.cnae_fiscal?.toString() || '',
             descricao: companyData.cnae_fiscal_descricao || ''
           },
-          cnaeSecundarios: companyData.cnaeSecundarios || companyData.cnaes_secundarios || [],
+          cnaeSecundarios: companyData.cnaeSecundarios || 
+                          companyData.cnaes_secundarios?.map((cnae: any) => ({
+                            codigo: typeof cnae.codigo === 'number' ? cnae.codigo.toString() : cnae.codigo,
+                            descricao: cnae.descricao
+                          })) || [],
           situacaoCadastral: companyData.situacaoCadastral || companyData.situacao_cadastral,
           dataSituacaoCadastral: companyData.dataSituacaoCadastral || companyData.data_situacao_cadastral,
           naturezaJuridica: companyData.naturezaJuridica || companyData.natureza_juridica,
@@ -34,6 +39,7 @@ export const useCompanyData = () => {
           original: companyData.original || companyData
         };
         
+        console.log('Dados da empresa formatados:', formattedData);
         setFormData(formattedData);
         
         // Set company name in localStorage for easy access by other components
@@ -52,41 +58,10 @@ export const useCompanyData = () => {
     }
   }, []);
 
-  // Add a function to refresh the company data
-  const refreshCompanyData = () => {
-    try {
-      const companyDataStr = localStorage.getItem('companyData');
-      if (companyDataStr) {
-        const companyData = JSON.parse(companyDataStr);
-        console.log('Dados da empresa atualizados:', companyData);
-        
-        // Format the data to ensure consistency
-        const formattedData: CompanyData = {
-          cnpj: companyData.cnpj,
-          razaoSocial: companyData.razaoSocial || companyData.razao_social,
-          nomeFantasia: companyData.nomeFantasia || companyData.nome_fantasia || companyData.razaoSocial || companyData.razao_social,
-          endereco: companyData.endereco,
-          cnaePrincipal: companyData.cnaePrincipal || {
-            codigo: companyData.cnae_fiscal?.toString() || '',
-            descricao: companyData.cnae_fiscal_descricao || ''
-          },
-          cnaeSecundarios: companyData.cnaeSecundarios || companyData.cnaes_secundarios || [],
-          situacaoCadastral: companyData.situacaoCadastral || companyData.situacao_cadastral,
-          dataSituacaoCadastral: companyData.dataSituacaoCadastral || companyData.data_situacao_cadastral,
-          naturezaJuridica: companyData.naturezaJuridica || companyData.natureza_juridica,
-          capitalSocial: companyData.capitalSocial || companyData.capital_social,
-          porte: companyData.porte,
-          telefone: companyData.telefone || companyData.ddd_telefone_1,
-          original: companyData.original || companyData
-        };
-        
-        setFormData(formattedData);
-        localStorage.setItem('companyName', formattedData.razaoSocial || '');
-      }
-    } catch (e) {
-      console.error('Erro ao atualizar dados da empresa:', e);
-    }
-  };
+  // Initial load of company data
+  useEffect(() => {
+    refreshCompanyData();
+  }, [refreshCompanyData]);
 
   return { 
     formData, 

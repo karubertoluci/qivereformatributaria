@@ -16,8 +16,9 @@ const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
   
   // Check for CNPJ changes when component mounts
   useEffect(() => {
+    console.log('Results montado - atualizando dados da empresa');
     refreshCompanyData();
-  }, []);
+  }, [refreshCompanyData]);
   
   const handleRefresh = () => {
     forceArticleRefresh(segment.id);
