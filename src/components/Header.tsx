@@ -1,23 +1,20 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link, useLocation } from 'react-router-dom';
 import { useFormDialogContext } from './home/FormDialogContext';
 import { Menu, X } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-
 const Header = () => {
   const location = useLocation();
-  const { openFormDialog } = useFormDialogContext();
+  const {
+    openFormDialog
+  } = useFormDialogContext();
   const isMobile = useIsMobile();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
-  
-  return (
-    <header className="bg-white border-b font-lexend">
+  return <header className="bg-white border-b font-lexend">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between bg-slate-50">
         {/* Logo */}
         <Link to="/" className="flex items-center">
@@ -33,7 +30,7 @@ const Header = () => {
         <nav className="hidden md:flex items-center space-x-10">
           <Link to="/" className="text-gray-800 hover:text-orange-500 transition-colors font-medium lowercase">
             relatório por setor
-            {location.pathname === '/' && <span className="absolute bottom-0 left-0 w-full h-1 bg-orange-500"></span>}
+            {location.pathname === '/'}
           </Link>
           <a href="#" className="text-gray-800 hover:text-orange-500 transition-colors font-medium lowercase">
             webinars
@@ -53,55 +50,31 @@ const Header = () => {
       </div>
       
       {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-t py-4">
+      {mobileMenuOpen && <div className="md:hidden bg-white border-t py-4">
           <div className="container mx-auto px-4">
             <nav className="flex flex-col space-y-4">
-              <Link 
-                to="/" 
-                className="text-gray-800 hover:text-orange-500 transition-colors font-medium lowercase py-2" 
-                onClick={() => setMobileMenuOpen(false)}
-              >
+              <Link to="/" className="text-gray-800 hover:text-orange-500 transition-colors font-medium lowercase py-2" onClick={() => setMobileMenuOpen(false)}>
                 relatório por setor
               </Link>
-              <a 
-                href="#" 
-                className="text-gray-800 hover:text-orange-500 transition-colors font-medium lowercase py-2" 
-                onClick={() => setMobileMenuOpen(false)}
-              >
+              <a href="#" className="text-gray-800 hover:text-orange-500 transition-colors font-medium lowercase py-2" onClick={() => setMobileMenuOpen(false)}>
                 webinars
               </a>
-              <a 
-                href="#" 
-                className="text-gray-800 hover:text-orange-500 transition-colors font-medium lowercase py-2" 
-                onClick={() => setMobileMenuOpen(false)}
-              >
+              <a href="#" className="text-gray-800 hover:text-orange-500 transition-colors font-medium lowercase py-2" onClick={() => setMobileMenuOpen(false)}>
                 planilha
               </a>
-              <a 
-                href="#" 
-                className="text-gray-800 hover:text-orange-500 transition-colors font-medium lowercase py-2" 
-                onClick={() => setMobileMenuOpen(false)}
-              >
+              <a href="#" className="text-gray-800 hover:text-orange-500 transition-colors font-medium lowercase py-2" onClick={() => setMobileMenuOpen(false)}>
                 calculadora
               </a>
               
-              <Button 
-                variant="default" 
-                className="bg-orange-500 hover:bg-orange-600 text-white font-normal text-sm rounded mt-2 w-full py-2" 
-                onClick={() => {
-                  openFormDialog();
-                  setMobileMenuOpen(false);
-                }}
-              >
+              <Button variant="default" className="bg-orange-500 hover:bg-orange-600 text-white font-normal text-sm rounded mt-2 w-full py-2" onClick={() => {
+            openFormDialog();
+            setMobileMenuOpen(false);
+          }}>
                 Falar com a Qive sobre a Reforma
               </Button>
             </nav>
           </div>
-        </div>
-      )}
-    </header>
-  );
+        </div>}
+    </header>;
 };
-
 export default Header;
