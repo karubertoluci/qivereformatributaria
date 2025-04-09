@@ -46,10 +46,12 @@ export const useResultsData = (segment: BusinessSegment) => {
     localStorage.setItem('highlights', JSON.stringify(highlights));
   }, [highlights]);
   
+  // Use all articles without filtering by segment
   const relevantArticles = segmentArticles.length > 0 
     ? segmentArticles 
     : [];
   
+  // Filter by search term only, not by segment
   const filteredArticles = relevantArticles
     .filter(article => 
       article.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -57,19 +59,18 @@ export const useResultsData = (segment: BusinessSegment) => {
     )
     .filter(article => {
       if (filterType === 'all') return true;
-      return article.impacts.some(
-        impact => impact.type === filterType && impact.segments.includes(segment.id)
-      );
+      return article.impacts.some(impact => impact.type === filterType);
     });
   
   const articlesByTopic = getArticlesByTopic(filteredArticles);
 
+  // Count impacts without segment filtering
   const positiveCount = relevantArticles.filter(article => 
-    article.impacts.some(impact => impact.type === 'positive' && impact.segments.includes(segment.id))
+    article.impacts.some(impact => impact.type === 'positive')
   ).length;
   
   const negativeCount = relevantArticles.filter(article => 
-    article.impacts.some(impact => impact.type === 'negative' && impact.segments.includes(segment.id))
+    article.impacts.some(impact => impact.type === 'negative')
   ).length;
   
   const handleArticleSelect = (articleId: string) => {

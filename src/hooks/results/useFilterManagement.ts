@@ -8,7 +8,7 @@ export const useFilterManagement = (relevantArticles: Article[]) => {
   const [filterType, setFilterType] = useState<FilterType>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('chart');
 
-  // Filter articles based on search term and filter type
+  // Filter articles based only on search term, without segment filtering
   const filteredArticles = useMemo(() => {
     return relevantArticles
       .filter(article => 

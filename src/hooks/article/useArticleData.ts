@@ -18,15 +18,15 @@ export const useArticleData = (segment: BusinessSegment) => {
       
       try {
         // Para desenvolvimento, podemos usar dados em cache para reduzir chamadas à API
-        const cachedArticles = localStorage.getItem(`segmentArticles_${segment.id}`);
+        const cachedArticles = localStorage.getItem(`allArticles`);
         if (cachedArticles) {
-          console.log(`Usando artigos em cache para o segmento: ${segment.id}`);
+          console.log(`Usando artigos em cache`);
           setSegmentArticles(JSON.parse(cachedArticles));
           setIsLoading(false);
           return;
         }
         
-        console.log(`Buscando artigos do Supabase para o segmento: ${segment.id}`);
+        console.log(`Buscando todos os artigos do Supabase`);
         
         // Buscar todos os artigos da tabela livros_reforma sem limites
         const { data: livrosData, error: livrosError } = await supabase
@@ -76,7 +76,7 @@ export const useArticleData = (segment: BusinessSegment) => {
           
           // Tentar armazenar os artigos em cache, mas com tratamento para quando exceder a quota
           try {
-            localStorage.setItem(`segmentArticles_${segment.id}`, JSON.stringify(formattedArticles));
+            localStorage.setItem(`allArticles`, JSON.stringify(formattedArticles));
           } catch (storageError) {
             console.warn('Não foi possível armazenar em cache devido ao tamanho dos dados:', storageError);
             // Se falhar ao salvar no cache, limpe o cache existente para evitar inconsistências
@@ -98,7 +98,7 @@ export const useArticleData = (segment: BusinessSegment) => {
         setSegmentArticles(mockArticles);
         
         // Tentar armazenar os artigos em cache com tratamento de erro
-        safelyStoreInCache(`segmentArticles_${segment.id}`, mockArticles);
+        safelyStoreInCache(`allArticles`, mockArticles);
         
       } catch (error: any) {
         console.error('Erro ao buscar dados do Supabase:', error);
