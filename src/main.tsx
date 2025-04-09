@@ -14,6 +14,12 @@ if (!container) {
 // Create a root
 const root = createRoot(container);
 
+// Clear any stored state that might cause automatic navigation to results
+localStorage.removeItem('selectedSegment');
+localStorage.removeItem('cnae');
+localStorage.removeItem('companyData');
+localStorage.removeItem('segmentArticles');
+
 // Initial render
 root.render(
   <React.StrictMode>

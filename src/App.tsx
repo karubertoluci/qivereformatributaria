@@ -33,26 +33,23 @@ function App() {
       <BrowserRouter>
         <div className="flex flex-col min-h-screen">
           <Routes>
+            {/* Default route is the Index/Home page */}
+            <Route path="/" element={<Index />} />
+            
+            {/* Results route now accessible only through direct URL navigation */}
             <Route path="/results/:segmentId" element={<ResultsPage />} />
+            
+            <Route path="/handoff" element={
+              <>
+                <Header />
+                <Handoff />
+              </>
+            } />
+            
             <Route path="*" element={
               <>
-                <div className="flex-grow">
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/handoff" element={
-                      <>
-                        <Header />
-                        <Handoff />
-                      </>
-                    } />
-                    <Route path="*" element={
-                      <>
-                        <Header />
-                        <NotFound />
-                      </>
-                    } />
-                  </Routes>
-                </div>
+                <Header />
+                <NotFound />
               </>
             } />
           </Routes>

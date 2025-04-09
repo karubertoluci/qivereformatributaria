@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import HomePage from '@/components/home/HomePage';
 import Results from '@/components/Results';
@@ -10,18 +10,7 @@ const Index = () => {
   const [selectedSegment, setSelectedSegment] = useState<BusinessSegment | null>(null);
   const [cnae, setCnae] = useState<string>('');
   
-  // Load previous state from localStorage if it exists (for persistence between page refreshes)
-  useEffect(() => {
-    const storedSegment = localStorage.getItem('selectedSegment');
-    if (storedSegment) {
-      setSelectedSegment(JSON.parse(storedSegment));
-    }
-    
-    const storedCnae = localStorage.getItem('cnae');
-    if (storedCnae) {
-      setCnae(storedCnae);
-    }
-  }, []);
+  // Remove the previous localStorage loading logic to ensure we always start fresh
   
   const handleDirectSegmentSelect = (segment: BusinessSegment | null) => {
     if (segment) {
