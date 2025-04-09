@@ -1,15 +1,12 @@
 
-import React, { useState, useMemo, useEffect } from 'react';
-import { TabsContent } from '@/components/ui/tabs';
+import React from 'react';
 import { Article } from '@/data/articles';
 import { BusinessSegment } from '@/data/segments';
-import ArticlesFilters from './articles/filters/ArticlesFilters';
-import ArticlesContent from './articles/content/ArticlesContent';
-import ChartSection from './articles/charts/ChartSection';
 import { HighlightType, ViewMode, FilterType, Topic } from '@/components/results/types';
-import { useSearchParams } from 'react-router-dom';
-import ActiveFilters from './articles/ActiveFilters';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import ArticlesLayout from './articles/components/ArticlesLayout';
+import ArticlesSidebar from './articles/components/ArticlesSidebar';
+import ArticlesMain from './articles/components/ArticlesMain';
+import { useArticlesTab } from './articles/hooks/useArticlesTab';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -52,163 +49,78 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   filterType,
   setFilterType
 }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(searchParams.get('book') || null);
-  const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(searchParams.get('title') || null);
-  const [expanded, setExpanded] = useState<boolean>(false);
-  const [chartBookFilter, setChartBookFilter] = useState<string | null>(null);
-  const [chartRelevanceFilter, setChartRelevanceFilter] = useState<string | null>(null);
-
-  // Make the sidebar filter and chart filter work together
-  useEffect(() => {
-    if (chartBookFilter && chartBookFilter !== selectedBookFilter) {
-      setSelectedBookFilter(chartBookFilter);
-    }
-  }, [chartBookFilter]);
-
-  const toggleExpanded = () => {
-    setExpanded(!expanded);
-  };
-
-  // Handle chart filter changes
-  const handleChartFilterChange = (bookId: string | null, relevanceLevel: string | null) => {
-    setChartBookFilter(bookId);
-    setChartRelevanceFilter(relevanceLevel);
-  };
-
-  const displayedArticles = useMemo(() => {
-    let result = filteredArticles;
-
-    if (selectedBookFilter) {
-      result = result.filter(article => {
-        if (article.metadata?.bookId) {
-          return article.metadata.bookId === selectedBookFilter;
-        }
-        return article.metadata?.livro === selectedBookFilter;
-      });
-    }
-
-    if (selectedTitleFilter) {
-      result = result.filter(article => article.title === selectedTitleFilter);
-    }
-
-    return result;
-  }, [filteredArticles, selectedBookFilter, selectedTitleFilter]);
-
-  // Calculate neutral count
-  const neutralCount = relevantArticles.filter(article => 
-    article.impacts.some(impact => impact.type === 'neutral' && impact.segments.includes(segment.id))
-  ).length;
-
-  // Extract book and title lists
-  const books = useMemo(() => {
-    const allBooks = relevantArticles.map(article => article.metadata?.bookId || article.metadata?.livro).filter(Boolean);
-    return Array.from(new Set(allBooks));
-  }, [relevantArticles]);
-  
-  const titles = useMemo(() => {
-    const allTitles = relevantArticles.map(article => article.title).filter(Boolean);
-    return Array.from(new Set(allTitles));
-  }, [relevantArticles]);
-
-  // Get the displayed book and title names for ActiveFilters
-  const bookName = selectedBookFilter ? `Livro ${selectedBookFilter}` : '';
-  const titleName = selectedTitleFilter && titles.find(t => t === selectedTitleFilter) || '';
+  // Use our custom hook for the articles tab state
+  const {
+    selectedBookFilter,
+    setSelectedBookFilter,
+    selectedTitleFilter,
+    setSelectedTitleFilter,
+    expanded,
+    toggleExpanded,
+    chartBookFilter,
+    setChartBookFilter,
+    chartRelevanceFilter,
+    setChartRelevanceFilter,
+    displayedArticles,
+    books,
+    titles,
+    bookName,
+    titleName,
+    neutralCount
+  } = useArticlesTab(filteredArticles, relevantArticles, segment);
 
   return (
-    <TabsContent value="articles" className="pb-12">
-      <div className="grid md:grid-cols-12 gap-6">
-        <aside className="md:col-span-3 md:sticky md:top-[80px] h-fit">
-          <ArticlesFilters 
-            positiveCount={positiveCount}
-            negativeCount={negativeCount}
-            neutralCount={neutralCount}
-            totalCount={relevantArticles.length}
-            searchTerm={searchTerm || ''}
-            setSearchTerm={setSearchTerm || (() => {})}
-            filterType={filterType || 'all'}
-            setFilterType={setFilterType || (() => {})}
-            viewMode={viewMode}
-            setViewMode={setViewMode}
-            selectedBookFilter={selectedBookFilter}
-            setSelectedBookFilter={(bookId) => {
-              setSelectedBookFilter(bookId);
-              setChartBookFilter(bookId); // Sync with chart filter
-            }}
-            selectedTitleFilter={selectedTitleFilter}
-            setSelectedTitleFilter={setSelectedTitleFilter}
-            books={books}
-            titles={titles}
-          />
-        </aside>
-
-        <main className="md:col-span-9">
-          <div className="flex flex-col space-y-6">
-            <ActiveFilters 
-              selectedBookFilter={selectedBookFilter}
-              selectedTitleFilter={selectedTitleFilter}
-              onClearBookFilter={() => {
-                setSelectedBookFilter(null);
-                setChartBookFilter(null); // Sync with chart filter
-              }}
-              onClearTitleFilter={() => setSelectedTitleFilter(null)}
-              bookName={bookName}
-              titleName={titleName}
-              relevanceFilter={chartRelevanceFilter}
-              onClearRelevanceFilter={() => setChartRelevanceFilter(null)}
-            />
-            
-            {/* Box 1: Visualização dos artigos */}
-            <Card className="shadow-md">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xl">Visualização dos artigos</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ChartSection 
-                  filteredArticles={filteredArticles}
-                  segmentId={segment.id}
-                  setExpandedArticleId={setExpandedArticleId}
-                  expanded={expanded}
-                  toggleExpanded={toggleExpanded}
-                />
-              </CardContent>
-            </Card>
-            
-            {/* Box 2: Artigos */}
-            <Card className="shadow-md">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xl">Artigos</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ArticlesContent 
-                  filteredArticles={filteredArticles}
-                  displayedArticles={displayedArticles}
-                  selectedBookFilter={selectedBookFilter}
-                  selectedTitleFilter={selectedTitleFilter}
-                  setSelectedBookFilter={setSelectedBookFilter}
-                  setSelectedTitleFilter={setSelectedTitleFilter}
-                  expandedArticleId={expandedArticleId}
-                  setExpandedArticleId={setExpandedArticleId}
-                  highlights={highlights}
-                  onAddHighlight={handleAddHighlight}
-                  onRemoveHighlight={handleRemoveHighlight}
-                  articlesByTopic={articlesByTopic}
-                  viewMode={viewMode}
-                  setViewMode={setViewMode}
-                  topics={topics}
-                  segment={segment}
-                  positiveCount={positiveCount}
-                  negativeCount={negativeCount}
-                  neutralCount={neutralCount}
-                  filteredBookId={chartBookFilter}
-                  filteredRelevance={chartRelevanceFilter}
-                />
-              </CardContent>
-            </Card>
-          </div>
-        </main>
-      </div>
-    </TabsContent>
+    <ArticlesLayout segment={segment}>
+      <ArticlesSidebar
+        positiveCount={positiveCount}
+        negativeCount={negativeCount}
+        neutralCount={neutralCount}
+        totalCount={relevantArticles.length}
+        searchTerm={searchTerm || ''}
+        setSearchTerm={setSearchTerm || (() => {})}
+        filterType={filterType || 'all'}
+        setFilterType={setFilterType || (() => {})}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        selectedBookFilter={selectedBookFilter}
+        setSelectedBookFilter={setSelectedBookFilter}
+        selectedTitleFilter={selectedTitleFilter}
+        setSelectedTitleFilter={setSelectedTitleFilter}
+        books={books}
+        titles={titles}
+        syncChartBookFilter={setChartBookFilter}
+      />
+      
+      <ArticlesMain
+        segment={segment}
+        filteredArticles={filteredArticles}
+        displayedArticles={displayedArticles}
+        selectedBookFilter={selectedBookFilter}
+        selectedTitleFilter={selectedTitleFilter}
+        setSelectedBookFilter={setSelectedBookFilter}
+        setSelectedTitleFilter={setSelectedTitleFilter}
+        expandedArticleId={expandedArticleId}
+        setExpandedArticleId={setExpandedArticleId}
+        highlights={highlights}
+        handleAddHighlight={handleAddHighlight}
+        handleRemoveHighlight={handleRemoveHighlight}
+        articlesByTopic={articlesByTopic}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        topics={topics}
+        positiveCount={positiveCount}
+        negativeCount={negativeCount}
+        neutralCount={neutralCount}
+        bookName={bookName}
+        titleName={titleName}
+        expanded={expanded}
+        toggleExpanded={toggleExpanded}
+        chartBookFilter={chartBookFilter}
+        setChartBookFilter={setChartBookFilter}
+        chartRelevanceFilter={chartRelevanceFilter}
+        setChartRelevanceFilter={setChartRelevanceFilter}
+      />
+    </ArticlesLayout>
   );
 };
 
