@@ -4,6 +4,7 @@ import { BusinessSegment } from '@/data/segments';
 import ResultsContainer from './results/ResultsContainer';
 import { toast } from 'sonner';
 import { useCompanyData } from '@/hooks/results/useCompanyData';
+import { AnimatePresence } from 'framer-motion';
 
 export interface ResultsProps {
   segment: BusinessSegment;
@@ -27,12 +28,12 @@ const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
   }, [formData, hasCompanyData]);
   
   return (
-    <div className="flex flex-col min-h-screen print:bg-white">
+    <AnimatePresence mode="wait">
       <ResultsContainer 
         segment={segment} 
         onBackToSegments={onBackToSegments} 
       />
-    </div>
+    </AnimatePresence>
   );
 };
 

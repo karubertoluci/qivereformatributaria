@@ -4,6 +4,7 @@ import { BusinessSegment } from '@/data/segments';
 import HomePage from '@/components/home/HomePage';
 import Results from '@/components/Results';
 import Header from '@/components/Header';
+import { AnimatePresence } from 'framer-motion';
 
 const Index = () => {
   const [selectedSegment, setSelectedSegment] = useState<BusinessSegment | null>(null);
@@ -50,14 +51,19 @@ const Index = () => {
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       {!selectedSegment && <Header />}
       <main className="flex-grow">
-        {!selectedSegment ? (
-          <HomePage 
-            onCnaeSubmit={handleSubmitCnae}
-            onSelectSegment={handleDirectSegmentSelect}
-          />
-        ) : (
-          <Results segment={selectedSegment} onBackToSegments={handleBackToHome} />
-        )}
+        <HomePage 
+          onCnaeSubmit={handleSubmitCnae}
+          onSelectSegment={handleDirectSegmentSelect}
+        />
+        
+        <AnimatePresence>
+          {selectedSegment && (
+            <Results 
+              segment={selectedSegment} 
+              onBackToSegments={handleBackToHome} 
+            />
+          )}
+        </AnimatePresence>
       </main>
     </div>
   );

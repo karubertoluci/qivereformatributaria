@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,6 +11,9 @@ import ResultsLoading from './ResultsLoading';
 import ResultsError from './ResultsError';
 import { useResultsData } from '@/hooks/results';
 import { FilterType, ViewMode } from '@/hooks/results/types';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '../ui/alert-dialog';
+import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface ResultsContainerProps {
   segment: BusinessSegment;
@@ -18,6 +22,7 @@ interface ResultsContainerProps {
 
 const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSegments }) => {
   const resultsData = useResultsData(segment);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   
   const { 
     activeTab, 
@@ -53,67 +58,104 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
     ? (formData.companyData.nome_fantasia || formData.companyData.nomeFantasia || formData.companyData.razao_social || formData.companyData.razaoSocial || '') 
     : '';
 
+  const handleCloseClick = () => {
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmClose = () => {
+    setShowConfirmDialog(false);
+    onBackToSegments();
+  };
+
+  const handleCancelClose = () => {
+    setShowConfirmDialog(false);
+  };
+
   return (
-    <div className="container mx-auto px-4 max-w-7xl">
-      <ResultsHeader 
-        segment={segment}
-        positiveCount={positiveCount}
-        negativeCount={negativeCount}
-        companyName={companyName}
-      />
-      
-      <main className="my-8">
-        <Tabs 
-          defaultValue="overview" 
-          value={activeTab} 
-          onValueChange={(value) => setActiveTab(value as 'overview' | 'articles' | 'highlights')}
-          className="w-full"
-        >
-          <TabsList className="mb-6">
-            <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-            <TabsTrigger value="articles">Artigos</TabsTrigger>
-            <TabsTrigger value="highlights">Destaques</TabsTrigger>
-          </TabsList>
-          
-          <OverviewTab 
-            segment={segment}
-            companyData={formData}
-            hasCompanyData={hasCompanyData}
-            relevantArticles={resultsData.relevantArticles}
-            setExpandedArticleId={resultsData.setExpandedArticleId}
-          />
-          
-          <ArticlesTab 
-            segment={segment}
-            filteredArticles={resultsData.filteredArticles}
-            relevantArticles={resultsData.relevantArticles}
-            expandedArticleId={resultsData.expandedArticleId}
-            setExpandedArticleId={resultsData.setExpandedArticleId}
-            highlights={resultsData.highlights}
-            handleAddHighlight={resultsData.handleAddHighlight}
-            handleRemoveHighlight={resultsData.handleRemoveHighlight}
-            topics={resultsData.topics}
-            articlesByTopic={resultsData.articlesByTopic}
-            viewMode={resultsData.viewMode as ViewMode}
-            setViewMode={resultsData.setViewMode as (mode: ViewMode) => void}
-            positiveCount={positiveCount}
-            negativeCount={negativeCount}
-            searchTerm={resultsData.searchTerm}
-            setSearchTerm={resultsData.setSearchTerm}
-            filterType={resultsData.filterType as FilterType}
-            setFilterType={resultsData.setFilterType as (type: FilterType) => void}
-          />
-          
-          <HighlightsTab 
-            highlights={resultsData.highlights}
-            handleRemoveHighlight={resultsData.handleRemoveHighlight}
-            articles={resultsData.relevantArticles}
-          />
-        </Tabs>
-      </main>
-      
-      <ResultsFooter />
-    </div>
+    <motion.div 
+      className="fixed inset-0 z-50 bg-white overflow-auto"
+      initial={{ y: "100%" }}
+      animate={{ y: 0 }}
+      exit={{ y: "100%" }}
+      transition={{ type: "spring", damping: 25, stiffness: 200 }}
+    >
+      <div className="container mx-auto px-4 max-w-7xl">
+        <ResultsHeader 
+          segment={segment}
+          positiveCount={positiveCount}
+          negativeCount={negativeCount}
+          companyName={companyName}
+          onCloseClick={handleCloseClick}
+        />
+        
+        <main className="my-8">
+          <Tabs 
+            defaultValue="overview" 
+            value={activeTab} 
+            onValueChange={(value) => setActiveTab(value as 'overview' | 'articles' | 'highlights')}
+            className="w-full"
+          >
+            <TabsList className="mb-6">
+              <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+              <TabsTrigger value="articles">Artigos</TabsTrigger>
+              <TabsTrigger value="highlights">Destaques</TabsTrigger>
+            </TabsList>
+            
+            <OverviewTab 
+              segment={segment}
+              companyData={formData}
+              hasCompanyData={hasCompanyData}
+              relevantArticles={resultsData.relevantArticles}
+              setExpandedArticleId={resultsData.setExpandedArticleId}
+            />
+            
+            <ArticlesTab 
+              segment={segment}
+              filteredArticles={resultsData.filteredArticles}
+              relevantArticles={resultsData.relevantArticles}
+              expandedArticleId={resultsData.expandedArticleId}
+              setExpandedArticleId={resultsData.setExpandedArticleId}
+              highlights={resultsData.highlights}
+              handleAddHighlight={resultsData.handleAddHighlight}
+              handleRemoveHighlight={resultsData.handleRemoveHighlight}
+              topics={resultsData.topics}
+              articlesByTopic={resultsData.articlesByTopic}
+              viewMode={resultsData.viewMode as ViewMode}
+              setViewMode={resultsData.setViewMode as (mode: ViewMode) => void}
+              positiveCount={positiveCount}
+              negativeCount={negativeCount}
+              searchTerm={resultsData.searchTerm}
+              setSearchTerm={resultsData.setSearchTerm}
+              filterType={resultsData.filterType as FilterType}
+              setFilterType={resultsData.setFilterType as (type: FilterType) => void}
+            />
+            
+            <HighlightsTab 
+              highlights={resultsData.highlights}
+              handleRemoveHighlight={resultsData.handleRemoveHighlight}
+              articles={resultsData.relevantArticles}
+            />
+          </Tabs>
+        </main>
+        
+        <ResultsFooter />
+      </div>
+
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Fechar relatório</AlertDialogTitle>
+            <AlertDialogDescription>
+              Deseja realmente fechar seu relatório?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleCancelClose}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmClose}>Sim, fechar</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </motion.div>
   );
 };
 

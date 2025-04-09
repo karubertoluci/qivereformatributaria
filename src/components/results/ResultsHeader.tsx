@@ -1,9 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { BusinessSegment } from '@/data/segments';
 import { Button } from '@/components/ui/button';
-import { FileText, Share2, Download, RefreshCw } from 'lucide-react';
+import { Share2, Download, X } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 interface ResultsHeaderProps {
@@ -11,16 +11,17 @@ interface ResultsHeaderProps {
   positiveCount: number;
   negativeCount: number;
   companyName?: string;
+  onCloseClick: () => void;
 }
 
 const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   segment,
   positiveCount,
   negativeCount,
-  companyName: propCompanyName
+  companyName: propCompanyName,
+  onCloseClick
 }) => {
   const [displayName, setDisplayName] = useState<string>(propCompanyName || "Empresa");
-  const navigate = useNavigate();
   
   useEffect(() => {
     // Try to get company name from different sources in order of priority
@@ -81,16 +82,8 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
     ? `${displayName.substring(0, 20)}...` 
     : displayName;
   
-  const handleBackToHome = () => {
-    // Clear localStorage when returning to home
-    localStorage.removeItem('selectedSegment');
-    localStorage.removeItem('cnae');
-    // Navigate to the home page
-    navigate('/');
-  };
-  
   return (
-    <div className="py-4 border-b border-gray-200 bg-white shadow-sm">
+    <div className="py-4 border-b border-gray-200 bg-white shadow-sm sticky top-0 z-10">
       <div className="container mx-auto flex justify-between items-center font-lexend px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
@@ -124,9 +117,14 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
             <span className="hidden sm:inline text-xs">Baixar PDF</span>
           </Button>
           
-          <Button variant="outline" size="sm" className="flex items-center gap-1 h-8 px-2 sm:px-3" onClick={handleBackToHome}>
-            <RefreshCw className="h-3 w-3" />
-            <span className="hidden sm:inline text-xs">Novo relatório</span>
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="flex items-center gap-1 h-8 px-2 sm:px-3" 
+            onClick={onCloseClick}
+          >
+            <X className="h-4 w-4" />
+            <span className="hidden sm:inline text-xs">Fechar</span>
           </Button>
         </div>
       </div>
