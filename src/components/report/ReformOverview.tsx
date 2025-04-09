@@ -18,7 +18,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
       <CardContent className="pt-6">
         <div className="space-y-6">
           <div className="mb-4">
-            <h3 className="text-lg font-medium mb-2">Visão Geral da Reforma Tributária</h3>
+            <h3 className="text-lg font-medium mb-2 text-left">Visão Geral da Reforma Tributária</h3>
             <p className="text-muted-foreground text-left">
               A Reforma Tributária (PEC 45/2023) representa uma das maiores mudanças no sistema tributário 
               brasileiro nas últimas décadas. Seu objetivo principal é simplificar a tributação sobre 
@@ -31,7 +31,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
           <div className="p-4 bg-rose-50 rounded-lg flex gap-3">
             <Info className="h-5 w-5 text-rose-500 flex-shrink-0 mt-1" />
             <div>
-              <h4 className="font-medium">Principais mudanças:</h4>
+              <h4 className="font-medium text-left">Principais mudanças:</h4>
               <ul className="list-disc list-inside space-y-1 mt-2 text-sm">
                 <li>Substituição de cinco tributos por um sistema IVA dual</li>
                 <li>Cobrança do imposto no destino (onde ocorre o consumo), não na origem</li>
