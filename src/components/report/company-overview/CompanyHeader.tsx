@@ -15,7 +15,7 @@ const CompanyHeader: React.FC<CompanyHeaderProps> = ({
         <div className="bg-rose-100 p-1.5 rounded-md">
           <Building2 className="h-6 w-6 text-rose-500" />
         </div>
-        Perfil da Empresa
+        {companyName ? `Perfil da Empresa: ${companyName}` : "Perfil da Empresa"}
       </h2>
     </div>
   );

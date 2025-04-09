@@ -37,6 +37,9 @@ const Footer = () => {
             <p className="text-sm text-gray-400">
               &copy; {new Date().getFullYear()} Qive Reforma Tributária - Todos os direitos reservados
             </p>
+            <p className="text-sm text-gray-400 mt-2">
+              Relatório gerado pela Qive - Sua parceira estratégica na transição fiscal
+            </p>
           </div>
           
           {/* Coluna 2: Links Úteis */}
@@ -115,6 +118,13 @@ const Footer = () => {
           <button onClick={handleBackToHome} className="text-[#FF4719] hover:text-[#e5340a] transition-colors text-sm font-medium">
             Voltar para a página inicial
           </button>
+        </div>
+
+        {/* Copyright footer section */}
+        <div className="border-t border-gray-800 mt-8 pt-6 text-center">
+          <p className="text-gray-500 text-sm">
+            &copy; {new Date().getFullYear()} Qive Soluções Tributárias. Todos os direitos reservados.
+          </p>
         </div>
       </div>
     </footer>

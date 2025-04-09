@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
@@ -76,8 +77,6 @@ const ResultsFooter: React.FC<ResultsFooterProps> = ({
             <button onClick={openFormDialog} className="bg-[#FF4719] hover:bg-[#e5340a] text-white px-6 py-3 rounded text-sm font-medium transition-colors">
               Fale com Especialista
             </button>
-            
-            
           </div>
           
           <div className="flex flex-wrap justify-center gap-8 mb-6">
@@ -98,7 +97,11 @@ const ResultsFooter: React.FC<ResultsFooterProps> = ({
           </div>
         </div>
         
-        
+        {/* Adding new copyright and report generation info */}
+        <div className="text-center text-gray-500 text-sm mt-6">
+          <p className="mb-2">Relatório gerado pela Qive Reforma Tributária 2025 - Sua parceira estratégica na transição fiscal</p>
+          <p>&copy; {new Date().getFullYear()} Qive Soluções Tributárias. Todos os direitos reservados.</p>
+        </div>
       </div>
     </footer>;
 };
