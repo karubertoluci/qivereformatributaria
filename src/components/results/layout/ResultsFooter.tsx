@@ -1,13 +1,14 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
 import { useFormDialogContext } from '@/components/home/FormDialogContext';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Info, AlertCircle, Download, Share2, Clock, Shield } from 'lucide-react';
+import { Bot, AlertCircle, Download, Share2, Clock, Shield } from 'lucide-react';
+
 interface ResultsFooterProps {
   logoSrc?: string;
 }
+
 const ResultsFooter: React.FC<ResultsFooterProps> = ({
   logoSrc = "/lovable-uploads/a6337190-c94c-4bbd-a525-b41d6b7a4f4c.png"
 }) => {
@@ -16,16 +17,15 @@ const ResultsFooter: React.FC<ResultsFooterProps> = ({
     openFormDialog
   } = useFormDialogContext();
   const isMobile = useIsMobile();
+
   const handleBackToHome = () => {
-    // Clear stored data
     localStorage.removeItem('selectedSegment');
     localStorage.removeItem('cnae');
     localStorage.removeItem('formData');
-    // Navigate to home page
     navigate('/');
-    // Reload page to ensure everything is reset
     window.location.reload();
   };
+
   return <footer className="bg-black text-white pt-10 pb-6">
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center mb-8">
@@ -34,7 +34,6 @@ const ResultsFooter: React.FC<ResultsFooterProps> = ({
           <Separator className="bg-gray-700 w-full my-6" />
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mb-8">
-            {/* Disclaimer section */}
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
               <div className="flex items-center gap-2 mb-3">
                 <AlertCircle className="h-5 w-5 text-[#FF4719]" />
@@ -46,10 +45,9 @@ const ResultsFooter: React.FC<ResultsFooterProps> = ({
               </p>
             </div>
             
-            {/* IA usage section */}
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
               <div className="flex items-center gap-2 mb-3">
-                <Info className="h-5 w-5 text-[#FF4719]" />
+                <Bot className="h-5 w-5 text-[#FF4719]" />
                 <h3 className="text-base font-semibold">Inteligência Artificial</h3>
               </div>
               <p className="text-sm text-gray-400">
@@ -59,7 +57,6 @@ const ResultsFooter: React.FC<ResultsFooterProps> = ({
               </p>
             </div>
             
-            {/* Data accuracy section */}
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
               <div className="flex items-center gap-2 mb-3">
                 <Shield className="h-5 w-5 text-[#FF4719]" />
@@ -97,7 +94,6 @@ const ResultsFooter: React.FC<ResultsFooterProps> = ({
           </div>
         </div>
         
-        {/* Adding new copyright and report generation info */}
         <div className="text-center text-gray-500 text-sm mt-6">
           <p className="mb-2">Relatório gerado pela Qive Reforma Tributária 2025 - Sua parceira estratégica na transição fiscal</p>
           <p>&copy; {new Date().getFullYear()} Qive Soluções Tributárias. Todos os direitos reservados.</p>
@@ -105,4 +101,5 @@ const ResultsFooter: React.FC<ResultsFooterProps> = ({
       </div>
     </footer>;
 };
+
 export default ResultsFooter;
