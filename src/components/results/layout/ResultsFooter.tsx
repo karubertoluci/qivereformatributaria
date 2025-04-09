@@ -1,22 +1,20 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
 import { useFormDialogContext } from '@/components/home/FormDialogContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Info, AlertCircle, Download, Share2, Clock, Shield } from 'lucide-react';
-
 interface ResultsFooterProps {
   logoSrc?: string;
 }
-
-const ResultsFooter: React.FC<ResultsFooterProps> = ({ 
-  logoSrc = "/lovable-uploads/a6337190-c94c-4bbd-a525-b41d6b7a4f4c.png",
+const ResultsFooter: React.FC<ResultsFooterProps> = ({
+  logoSrc = "/lovable-uploads/a6337190-c94c-4bbd-a525-b41d6b7a4f4c.png"
 }) => {
   const navigate = useNavigate();
-  const { openFormDialog } = useFormDialogContext();
+  const {
+    openFormDialog
+  } = useFormDialogContext();
   const isMobile = useIsMobile();
-  
   const handleBackToHome = () => {
     // Clear stored data
     localStorage.removeItem('selectedSegment');
@@ -27,16 +25,10 @@ const ResultsFooter: React.FC<ResultsFooterProps> = ({
     // Reload page to ensure everything is reset
     window.location.reload();
   };
-  
-  return (
-    <footer className="bg-black text-white pt-10 pb-6">
+  return <footer className="bg-black text-white pt-10 pb-6">
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center mb-8">
-          <img 
-            src={logoSrc} 
-            alt="Qive Logo" 
-            className="h-12 w-auto mb-4" 
-          />
+          <img src={logoSrc} alt="Qive Logo" className="h-12 w-auto mb-4" />
           
           <Separator className="bg-gray-700 w-full my-6" />
           
@@ -81,19 +73,11 @@ const ResultsFooter: React.FC<ResultsFooterProps> = ({
           </div>
           
           <div className="flex flex-col sm:flex-row items-center gap-4 mb-8">
-            <button 
-              onClick={openFormDialog}
-              className="bg-[#FF4719] hover:bg-[#e5340a] text-white px-6 py-3 rounded text-sm font-medium transition-colors"
-            >
+            <button onClick={openFormDialog} className="bg-[#FF4719] hover:bg-[#e5340a] text-white px-6 py-3 rounded text-sm font-medium transition-colors">
               Fale com Especialista
             </button>
             
-            <button 
-              onClick={handleBackToHome}
-              className="text-[#FF4719] hover:text-[#e5340a] transition-colors text-sm font-medium px-4 py-3"
-            >
-              Voltar para a página inicial
-            </button>
+            
           </div>
           
           <div className="flex flex-wrap justify-center gap-8 mb-6">
@@ -123,8 +107,6 @@ const ResultsFooter: React.FC<ResultsFooterProps> = ({
           </p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default ResultsFooter;
