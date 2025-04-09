@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -183,6 +182,18 @@ hr {
 /* Adicionar classes para gradientes consistentes */
 .header-gradient {
   @apply bg-gradient-to-r from-rose-50 to-white;
+}
+
+.section-header {
+  @apply flex items-center gap-3 text-xl font-medium text-gray-800;
+}
+
+.section-icon-container {
+  @apply bg-rose-100 p-2 rounded-md;
+}
+
+.section-icon {
+  @apply h-5 w-5 text-rose-500;
 }
 
 .card-gradient {

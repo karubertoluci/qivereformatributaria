@@ -10,6 +10,7 @@ interface ChartHeaderProps {
   icon?: React.ReactNode;
   tooltipContent?: string;
   bookId?: string | null;
+  useGradient?: boolean;
 }
 
 const ChartHeader: React.FC<ChartHeaderProps> = ({ 
@@ -17,13 +18,18 @@ const ChartHeader: React.FC<ChartHeaderProps> = ({
   description, 
   icon, 
   tooltipContent,
-  bookId
+  bookId,
+  useGradient = false
 }) => {
   return (
-    <div className="flex flex-row items-start justify-between">
+    <div className={`flex flex-row items-start justify-between ${useGradient ? 'header-gradient p-4 rounded-t-lg' : ''}`}>
       <div>
         <CardTitle className="text-xl flex items-center gap-2">
-          {icon}
+          {icon && (
+            <div className={icon ? "bg-rose-100 p-1.5 rounded-md" : ""}>
+              {icon}
+            </div>
+          )}
           {title}
           {bookId && <span className="text-sm font-normal ml-1">(Livro {bookId})</span>}
         </CardTitle>
