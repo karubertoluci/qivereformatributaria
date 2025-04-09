@@ -3,7 +3,7 @@ import React, { useState, useMemo } from 'react';
 import { TabsContent } from '@/components/ui/tabs';
 import { Article } from '@/data/articles';
 import { BusinessSegment } from '@/data/segments';
-import { HighlightType, ViewMode, FilterType, Topic } from '@/components/results/types';
+import { HighlightType, ViewMode, FilterType, Topic, HighlightColor } from '@/components/results/types';
 import { useSearchParams } from 'react-router-dom';
 import ArticlesFilters from '@/components/results/tabs/articles/filters/ArticlesFilters';
 import ArticlesContent from '@/components/results/tabs/articles/content/ArticlesContent';
@@ -17,7 +17,7 @@ interface ArticlesTabProps {
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
   highlights: HighlightType[];
-  handleAddHighlight: (articleId: string, text: string, color?: HighlightType['color']) => void;
+  handleAddHighlight: (articleId: string, text: string, color?: HighlightColor) => void;
   handleRemoveHighlight: (id: string) => void;
   topics: Topic[];
   articlesByTopic: Record<string, Article[]>;

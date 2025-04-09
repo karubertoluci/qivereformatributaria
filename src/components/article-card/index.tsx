@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Article } from '@/data/articles';
-import { HighlightType } from '@/components/results/types';
+import { HighlightType, HighlightColor } from '@/components/results/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { FileText, BookOpen } from 'lucide-react';
@@ -13,7 +13,7 @@ interface ArticleCardProps {
   article: Article;
   segmentId: string;
   highlights: HighlightType[];
-  onAddHighlight: (articleId: string, text: string, color: HighlightType['color']) => void;
+  onAddHighlight: (articleId: string, text: string, color: HighlightColor) => void;
   onRemoveHighlight: (id: string) => void;
 }
 
@@ -83,7 +83,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   
   const articleHighlights = highlights.filter(h => h.articleId === article.id);
   
-  const handleAddHighlight = (text: string, color: HighlightType['color']) => {
+  const handleAddHighlight = (text: string, color: HighlightColor) => {
     onAddHighlight(article.id, text, color);
   };
   

@@ -3,7 +3,7 @@ import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
 import { Button } from '@/components/ui/button';
-import { HighlightType } from '@/components/results/types';
+import { HighlightType, HighlightColor } from '@/components/results/types';
 import { toast } from 'sonner';
 import ArticleCardList from '@/components/article/ArticleCardList';
 import ImpactsSection from '@/components/results/tabs/articles/components/ImpactsSection';
@@ -17,7 +17,7 @@ interface ArticlesContentProps {
   setSelectedTitleFilter: (titleId: string | null) => void;
   segment: BusinessSegment;
   highlights: HighlightType[];
-  onAddHighlight: (text: string, color: HighlightType['color'], articleId: string) => void;
+  onAddHighlight: (articleId: string, text: string, color: HighlightColor) => void;
   onRemoveHighlight: (id: string) => void;
   positiveCount: number;
   negativeCount: number;
@@ -87,9 +87,7 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
           articles={displayedArticles}
           segmentId={segment.id}
           highlights={highlights}
-          onAddHighlight={(articleId, text, color) => {
-            onAddHighlight(text, color, articleId);
-          }}
+          onAddHighlight={(articleId, text, color) => onAddHighlight(articleId, text, color)}
           onRemoveHighlight={onRemoveHighlight}
         />
       </div>

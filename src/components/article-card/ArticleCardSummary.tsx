@@ -9,14 +9,14 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import ArticleContent from '../article';
-import { HighlightType } from '../results/types';
+import { HighlightType, HighlightColor } from '@/components/results/types';
 import { ArrowRight } from 'lucide-react';
 
 interface ArticleCardSummaryProps {
   article: Article;
   segmentId: string;
   highlights: HighlightType[];
-  onAddHighlight: (text: string, color: HighlightType['color']) => void;
+  onAddHighlight: (text: string, color: HighlightColor) => void;
   onRemoveHighlight: (id: string) => void;
 }
 

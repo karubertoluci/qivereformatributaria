@@ -2,14 +2,14 @@
 import React from 'react';
 import { Article } from '@/data/articles';
 import ArticleCard from '../article-card';
-import { HighlightType } from '@/components/results/types';
+import { HighlightType, HighlightColor } from '@/components/results/types';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface ArticleCardListProps {
   articles: Article[];
   segmentId: string;
   highlights?: HighlightType[];
-  onAddHighlight?: (articleId: string, text: string, color: HighlightType['color']) => void;
+  onAddHighlight?: (articleId: string, text: string, color: HighlightColor) => void;
   onRemoveHighlight?: (id: string) => void;
   isLoading?: boolean;
 }
@@ -54,7 +54,7 @@ const ArticleCardList: React.FC<ArticleCardListProps> = ({
               article={article} 
               segmentId={segmentId}
               highlights={highlights}
-              onAddHighlight={(text, color) => onAddHighlight(article.id, text, color)}
+              onAddHighlight={(articleId, text, color) => onAddHighlight(articleId, text, color)}
               onRemoveHighlight={onRemoveHighlight}
             />
           ))
