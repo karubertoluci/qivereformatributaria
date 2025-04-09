@@ -5,6 +5,7 @@ import { FileText, Book, Bookmark, Layers } from 'lucide-react';
 import { CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { getArticleBook } from '@/components/report/legislation-books/utils';
 
 interface ArticleCardHeaderProps {
   article: Article;
@@ -27,15 +28,13 @@ const ArticleCardHeader: React.FC<ArticleCardHeaderProps> = ({
 
   const { type: impactType, label: impactLabel, color: impactColor } = getImpactType();
   
-  // Get book information using the new 30/40/30 distribution
+  // Get book information using the consistent distribution from getArticleBook
   const getBookInfo = () => {
-    const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
-                      parseInt(article.id.replace(/\D/g, ''));
-    const randomValue = (articleNum % 100) / 100;  // Deterministic distribution
+    const bookId = getArticleBook(article);
     
-    if (randomValue < 0.3) {
+    if (bookId === 'I') {
       return { id: 'I', title: 'CBS', color: 'bg-blue-100 text-blue-700' };
-    } else if (randomValue < 0.7) {
+    } else if (bookId === 'II') {
       return { id: 'II', title: 'IBS', color: 'bg-amber-100 text-amber-700' };
     } else {
       return { id: 'III', title: 'IS', color: 'bg-purple-100 text-purple-700' };
