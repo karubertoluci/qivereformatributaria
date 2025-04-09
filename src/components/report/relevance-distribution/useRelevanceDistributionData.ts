@@ -17,8 +17,8 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
   const [bookData, setBookData] = useState<RelevanceBookData[]>([]);
   
   useEffect(() => {
-    if (!articles || !Array.isArray(articles)) {
-      console.warn('useRelevanceDistributionData: Invalid articles array', articles);
+    if (!articles || !Array.isArray(articles) || articles.length === 0) {
+      console.warn('useRelevanceDistributionData: Invalid or empty articles array', articles);
       return;
     }
     
@@ -63,17 +63,21 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
         return;
       }
       
-      // Determine relevance based on article number
+      // Determine relevance category based on article number
       const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
       
-      // Calculate relevance category using consistent logic
+      // Calculate relevance category using consistent logic - same as in article cards
       let relevanceCategory;
-      if (articleNum % 10 < 2) {
-        relevanceCategory = 'irrelevante'; // 20% of articles
-      } else if (articleNum % 10 < 4) {
-        relevanceCategory = 'poucoRelevante'; // 20% of articles
-      } else if (articleNum % 10 < 9) {
-        relevanceCategory = 'moderadamenteRelevante'; // 50% of articles
+      
+      // Use the same distribution logic as in ArticleHeader.tsx
+      const randomRelevance = (articleNum % 100) / 100 * 100; // Create deterministic distribution
+      
+      if (randomRelevance < 40) {
+        relevanceCategory = 'irrelevante'; // 40% of articles
+      } else if (randomRelevance < 50) {
+        relevanceCategory = 'poucoRelevante'; // 10% of articles
+      } else if (randomRelevance < 90) {
+        relevanceCategory = 'moderadamenteRelevante'; // 40% of articles
       } else {
         relevanceCategory = 'muitoRelevante'; // 10% of articles
       }

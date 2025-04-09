@@ -7,6 +7,7 @@ import BookDistributionChart from '@/components/report/BookDistributionChart';
 import FavorabilityRelevanceChart from '@/components/report/FavorabilityRelevanceChart';
 import ImpactDistributionChart from '@/components/report/ImpactDistributionChart';
 import RelevanceDistributionChart from '@/components/report/RelevanceDistributionChart';
+import { filterArticlesByRelevance } from '@/components/report/charts/utils/chartCalculations';
 
 interface ChartSectionProps {
   filteredArticles: Article[];
@@ -48,19 +49,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
     
     // Apply relevance filter
     if (selectedRelevance) {
-      // This would need a proper implementation based on how relevance is determined
-      const total = result.length;
-      const sortedArticles = [...result].sort((a, b) => a.id.localeCompare(b.id));
-      
-      if (selectedRelevance === 'Irrelevante') {
-        result = sortedArticles.slice(0, Math.ceil(total * 0.2)); // 20%
-      } else if (selectedRelevance === 'Pouco relevante') {
-        result = sortedArticles.slice(Math.ceil(total * 0.2), Math.ceil(total * 0.4)); // 20%
-      } else if (selectedRelevance === 'Moderadamente relevante') {
-        result = sortedArticles.slice(Math.ceil(total * 0.4), Math.ceil(total * 0.9)); // 50%
-      } else if (selectedRelevance === 'Muito relevante') {
-        result = sortedArticles.slice(Math.ceil(total * 0.9)); // 10%
-      }
+      result = filterArticlesByRelevance(result, segmentId, selectedRelevance);
     }
     
     return result;
@@ -109,6 +98,8 @@ const ChartSection: React.FC<ChartSectionProps> = ({
                   }
                 }}
                 selectedBook={selectedBookId}
+                onSelectRelevance={setSelectedRelevance}
+                selectedRelevance={selectedRelevance}
               />
             </div>
             
@@ -118,6 +109,8 @@ const ChartSection: React.FC<ChartSectionProps> = ({
                 articles={safeArticles}
                 segmentId={segmentId}
                 bookId={selectedBookId}
+                onRelevanceFilter={setSelectedRelevance}
+                selectedRelevance={selectedRelevance}
               />
             </div>
             

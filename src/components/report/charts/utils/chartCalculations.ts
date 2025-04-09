@@ -46,16 +46,18 @@ export const calculateRelevanceGroups = (filteredArticles: Article[], segmentId:
       return; // Skip this article
     }
     
-    // Determine relevance category based on article number
+    // Determine relevance category based on article number - use same logic as in useRelevanceDistributionData
     const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
+    const randomRelevance = (articleNum % 100) / 100 * 100; // Create deterministic distribution
+    
     let groupIndex;
     
-    if (articleNum % 10 < 2) {
-      groupIndex = 0; // Irrelevante - 20% of articles
-    } else if (articleNum % 10 < 4) {
-      groupIndex = 1; // Pouco relevante - 20% of articles
-    } else if (articleNum % 10 < 9) {
-      groupIndex = 2; // Moderadamente relevante - 50% of articles
+    if (randomRelevance < 40) {
+      groupIndex = 0; // Irrelevante - 40% of articles
+    } else if (randomRelevance < 50) {
+      groupIndex = 1; // Pouco relevante - 10% of articles
+    } else if (randomRelevance < 90) {
+      groupIndex = 2; // Moderadamente relevante - 40% of articles
     } else {
       groupIndex = 3; // Muito relevante - 10% of articles
     }
@@ -131,15 +133,16 @@ export const filterArticlesByRelevance = (articles: Article[], segmentId: string
   
   return articles.filter(article => {
     const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
+    const randomRelevance = (articleNum % 100) / 100 * 100; // Create deterministic distribution
     
     if (relevanceLevel === 'Irrelevante') {
-      return articleNum % 10 < 2; // 20% of articles
+      return randomRelevance < 40; // 40% of articles
     } else if (relevanceLevel === 'Pouco relevante' || relevanceLevel === 'Pouco Relevante') {
-      return articleNum % 10 >= 2 && articleNum % 10 < 4; // 20% of articles
+      return randomRelevance >= 40 && randomRelevance < 50; // 10% of articles
     } else if (relevanceLevel === 'Moderadamente relevante' || relevanceLevel === 'Moderadamente Relevante') {
-      return articleNum % 10 >= 4 && articleNum % 10 < 9; // 50% of articles
+      return randomRelevance >= 50 && randomRelevance < 90; // 40% of articles
     } else if (relevanceLevel === 'Muito relevante' || relevanceLevel === 'Muito Relevante') {
-      return articleNum % 10 >= 9; // 10% of articles
+      return randomRelevance >= 90; // 10% of articles
     }
     
     return false;
