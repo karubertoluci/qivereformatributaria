@@ -3,7 +3,7 @@ import React from 'react';
 import { TabsContent } from '@/components/ui/tabs';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
-import { CompanyData } from '@/hooks/useResultsData';
+import { CompanyData } from '@/hooks/results/types';
 import CompanyOverview from '@/components/report/CompanyOverview';
 import ReformOverview from '@/components/report/ReformOverview';
 
