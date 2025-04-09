@@ -3,6 +3,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormDialogContext } from './home/FormDialogContext';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Info, AlertCircle, Shield, Building2 } from 'lucide-react';
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -65,26 +66,29 @@ const Footer = () => {
             </ul>
           </div>
           
-          {/* Coluna 3: Políticas */}
+          {/* Coluna 3: IA e Análises */}
           <div className="flex flex-col">
-            <h3 className="text-white font-bold mb-4">Políticas</h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="#" className="text-gray-400 hover:text-[#FF4719] text-sm transition-colors">
-                  Termos de Uso
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-[#FF4719] text-sm transition-colors">
-                  Política de Privacidade
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-[#FF4719] text-sm transition-colors">
-                  Cookies
-                </a>
-              </li>
-            </ul>
+            <h3 className="text-white font-bold mb-4">Inteligência Artificial</h3>
+            <div className="space-y-4">
+              <div className="flex items-start gap-2">
+                <Info className="h-4 w-4 text-[#FF4719] mt-0.5 flex-shrink-0" />
+                <p className="text-gray-400 text-sm">
+                  Análises baseadas em IA com dados atualizados da Reforma Tributária 2025
+                </p>
+              </div>
+              <div className="flex items-start gap-2">
+                <Shield className="h-4 w-4 text-[#FF4719] mt-0.5 flex-shrink-0" />
+                <p className="text-gray-400 text-sm">
+                  Privacidade e confidencialidade dos dados da sua empresa garantidos
+                </p>
+              </div>
+              <div className="flex items-start gap-2">
+                <Building2 className="h-4 w-4 text-[#FF4719] mt-0.5 flex-shrink-0" />
+                <p className="text-gray-400 text-sm">
+                  Análise personalizada para diversos segmentos de negócios
+                </p>
+              </div>
+            </div>
           </div>
           
           {/* Coluna 4: Fale com Especialista */}
@@ -93,19 +97,21 @@ const Footer = () => {
             <div className="mb-4">
               <button 
                 onClick={openFormDialog}
-                className="bg-[#FF4719] hover:bg-[#e5340a] text-white px-6 py-3 rounded text-sm inline-block transition-colors"
+                className="bg-[#FF4719] hover:bg-[#e5340a] text-white px-6 py-3 rounded text-sm inline-block transition-colors w-full sm:w-auto"
               >
                 Fale com Especialista
               </button>
             </div>
+            <div className="flex items-start gap-2 mt-4">
+              <AlertCircle className="h-4 w-4 text-[#FF4719] mt-0.5 flex-shrink-0" />
+              <p className="text-gray-400 text-xs">
+                Este aplicativo não substitui a orientação profissional. Consulte um advogado para questões legais específicas.
+              </p>
+            </div>
           </div>
         </div>
         
-        <div className="mt-8 text-center text-xs text-gray-400">
-          <p>Este aplicativo não substitui a orientação profissional. Consulte um advogado para questões legais específicas.</p>
-        </div>
-        
-        <div className="mt-4 text-center">
+        <div className="mt-8 text-center">
           <button onClick={handleBackToHome} className="text-[#FF4719] hover:text-[#e5340a] transition-colors text-sm font-medium">
             Voltar para a página inicial
           </button>
