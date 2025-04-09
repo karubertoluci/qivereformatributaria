@@ -51,7 +51,7 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
   );
 
   return (
-    <div className="container mx-auto bg-muted/30 p-4 rounded-lg border">
+    <div className="bg-muted/30 p-4 rounded-lg border">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-medium text-lg">
           {displayedArticles.length} {displayedArticles.length === 1 ? 'artigo encontrado' : 'artigos encontrados'}
@@ -77,23 +77,22 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
         relevantArticles={displayedArticles}
         allArticles={filteredArticles}
         segmentId={segment.id}
-        bookId={selectedBookFilter}
+        bookId={selectedBookFilter || ''}
         relevanceFilter={null}
       />
       
-      {/* Sempre renderiza a visualização de cards */}
-      <ArticleCardList 
-        articles={displayedArticles}
-        segmentId={segment.id}
-        highlights={highlights}
-        onAddHighlight={(text, color) => {
-          // We need the articleId, which should be passed from the selected article
-          if (displayedArticles.length > 0) {
-            onAddHighlight(text, color, displayedArticles[0].id);
-          }
-        }}
-        onRemoveHighlight={onRemoveHighlight}
-      />
+      {/* Sempre renderiza a visualização de cards - 3 por linha */}
+      <div className="mt-4">
+        <ArticleCardList 
+          articles={displayedArticles}
+          segmentId={segment.id}
+          highlights={highlights}
+          onAddHighlight={(articleId, text, color) => {
+            onAddHighlight(text, color, articleId);
+          }}
+          onRemoveHighlight={onRemoveHighlight}
+        />
+      </div>
     </div>
   );
 };

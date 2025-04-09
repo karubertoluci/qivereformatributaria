@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Article } from '@/data/articles';
-import ArticleCard from './ArticleCard';
+import ArticleCard from '../article-card';
 import { HighlightType } from '@/components/results/types';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -9,7 +9,7 @@ interface ArticleCardListProps {
   articles: Article[];
   segmentId: string;
   highlights?: HighlightType[];
-  onAddHighlight?: (text: string, color: HighlightType['color']) => void;
+  onAddHighlight?: (articleId: string, text: string, color: HighlightType['color']) => void;
   onRemoveHighlight?: (id: string) => void;
   isLoading?: boolean;
 }
@@ -31,7 +31,7 @@ const ArticleCardList: React.FC<ArticleCardListProps> = ({
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {Array.from({ length: 9 }).map((_, i) => (
+        {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="space-y-3">
             <Skeleton className="h-[200px] w-full rounded-lg" />
           </div>

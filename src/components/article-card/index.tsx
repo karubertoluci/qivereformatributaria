@@ -87,18 +87,15 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
     onAddHighlight(article.id, text, color);
   };
   
-  // Format book title in uppercase if available
-  const bookTitle = article.metadata?.titulo ? article.metadata.titulo.toUpperCase() : '';
-  
   return (
     <Card className={cn("shadow-sm hover:shadow transition-shadow duration-200 mb-4", borderClass)}>
-      <CardContent className="p-4 flex flex-col gap-3">
-        {/* 1. Header: Article number + Impact badges */}
-        <div className="flex justify-between items-center">
-          <span className="flex items-center gap-1 text-sm font-medium">
+      <CardContent className="p-4 flex flex-col h-full">
+        {/* Cabeçalho com número do artigo e badges */}
+        <div className="flex justify-between items-start mb-2">
+          <div className="flex items-center gap-1.5">
             <FileText className="h-4 w-4 text-gray-500" />
-            Art. {article.number || 'N/A'}
-          </span>
+            <span className="font-medium">Art. {article.number || 'N/A'}</span>
+          </div>
           
           <div className="flex gap-1.5">
             <Badge 
@@ -116,25 +113,20 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
           </div>
         </div>
         
-        {/* 2. Book information */}
-        <div className="flex items-center gap-1 text-xs text-gray-600">
+        {/* Informação sobre o livro - compacta */}
+        <div className="flex items-center gap-1 text-xs text-gray-600 mb-3">
           <BookOpen className="h-3.5 w-3.5 flex-shrink-0" />
-          <span className="line-clamp-2">{getSimplifiedBook()}</span>
+          <span className="line-clamp-1">{getSimplifiedBook()}</span>
         </div>
         
-        {/* 3. MAIN CONTENT: Article text (most important) */}
-        <p className="text-sm text-gray-800 font-medium">
-          {article.simplifiedText || 'Sem texto disponível'}
-        </p>
-        
-        {/* 4. Article title if available */}
-        {bookTitle && (
-          <p className="text-xs text-gray-500 line-clamp-2">
-            {bookTitle}
+        {/* CONTEÚDO PRINCIPAL: Texto do artigo (elemento mais importante) */}
+        <div className="flex-grow">
+          <p className="text-sm text-gray-800 font-medium mb-4 line-clamp-4">
+            {article.simplifiedText || 'Sem texto disponível'}
           </p>
-        )}
+        </div>
         
-        {/* 5. CTA button */}
+        {/* Botão CTA na parte inferior */}
         <ArticleCardSummary 
           article={article} 
           segmentId={segmentId} 

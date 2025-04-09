@@ -30,7 +30,7 @@ const ArticleCardSummary: React.FC<ArticleCardSummaryProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="w-full text-sm text-red-500 hover:text-red-600 hover:underline transition-colors flex items-center justify-center gap-1 mt-auto">
+        <button className="w-full text-sm text-red-500 hover:text-red-600 hover:underline transition-colors flex items-center justify-center gap-1 mt-2">
           Ver detalhes do artigo
           <ArrowRight className="h-3.5 w-3.5" />
         </button>
