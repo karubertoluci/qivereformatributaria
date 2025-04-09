@@ -31,6 +31,21 @@ export const useCompanyData = () => {
           if (companyName) {
             localStorage.setItem('companyName', companyName);
           }
+          
+          // Create properly formatted CNAE arrays if they don't exist
+          if (!parsedFormData.companyData.cnaeSecundarios && parsedFormData.companyData.cnaes_secundarios) {
+            parsedFormData.companyData.cnaeSecundarios = parsedFormData.companyData.cnaes_secundarios;
+          }
+          
+          if (!parsedFormData.companyData.cnaePrincipal && parsedFormData.companyData.cnae_fiscal) {
+            parsedFormData.companyData.cnaePrincipal = {
+              codigo: parsedFormData.companyData.cnae_fiscal.toString(),
+              descricao: parsedFormData.companyData.cnae_fiscal_descricao || ''
+            };
+          }
+          
+          console.log('Formatted company data:', parsedFormData);
+          setFormData(parsedFormData);
         }
       } else {
         // As a fallback, try loading just company data

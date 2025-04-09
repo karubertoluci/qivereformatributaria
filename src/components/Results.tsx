@@ -11,13 +11,17 @@ export interface ResultsProps {
 }
 
 const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
-  const { refreshCompanyData } = useCompanyData();
+  const { formData, refreshCompanyData } = useCompanyData();
   
   // Check for CNPJ changes when component mounts
   useEffect(() => {
     console.log('Results mounted - updating company data');
     refreshCompanyData();
   }, [refreshCompanyData]);
+  
+  useEffect(() => {
+    console.log('Company data in Results:', formData);
+  }, [formData]);
   
   return (
     <div className="flex flex-col min-h-screen print:bg-white">

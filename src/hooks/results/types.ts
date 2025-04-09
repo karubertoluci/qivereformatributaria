@@ -53,6 +53,7 @@ export interface CompanyData {
   nomeFantasia?: string;
   razaoSocial?: string;
   cnaeSecundarios?: Array<CNAEData>;
+  cnpj?: string;
 }
 
 // Adding these type definitions that were missing

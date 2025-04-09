@@ -18,17 +18,20 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
   companyData: propCompanyData,
   segment
 }) => {
-  // Access the refreshCompanyData function
-  const { refreshCompanyData } = useCompanyData();
+  // Access the company data hook directly to ensure we have the latest data
+  const { formData, refreshCompanyData } = useCompanyData();
   
   // Use the latest company data from localStorage
   useEffect(() => {
-    console.log('CompanyOverview montado - atualizando dados da empresa');
+    console.log('CompanyOverview mounted - updating company data');
     refreshCompanyData();
   }, [refreshCompanyData]);
   
+  // Use the latest data from the hook or the prop data
+  const finalCompanyData = formData || propCompanyData;
+  
   // Add a check for null/undefined companyData
-  if (!propCompanyData) {
+  if (!finalCompanyData) {
     return (
       <Card className="bg-white shadow-sm">
         <CompanyHeader />
@@ -37,8 +40,8 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
     );
   }
 
-  console.log('Renderizando CompanyOverview com dados:', propCompanyData);
-  console.log('CNAEs Secundários:', propCompanyData.cnaeSecundarios);
+  console.log('Rendering CompanyOverview with data:', finalCompanyData);
+  console.log('CNAEs Secundários:', finalCompanyData.companyData?.cnaeSecundarios);
 
   return (
     <Card className="bg-white shadow-sm rounded-lg overflow-hidden border">
@@ -47,10 +50,10 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
       <CardContent className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Left Column - Company Information */}
-          <CompanyInfoSection companyData={propCompanyData} segment={segment} />
+          <CompanyInfoSection companyData={finalCompanyData} segment={segment} />
 
           {/* Right Column - CNAE Information */}
-          <CNAESection companyData={propCompanyData} />
+          <CNAESection companyData={finalCompanyData} />
         </div>
       </CardContent>
     </Card>

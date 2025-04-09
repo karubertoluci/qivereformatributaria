@@ -75,7 +75,7 @@ const CNAESection: React.FC<CNAESectionProps> = ({
             </div>
           ) : (
             <div className="flex-grow flex items-center justify-center h-full border border-dashed rounded-lg border-gray-200 p-6">
-              <p className="text-gray-500 text-center">Não há CNAEs secundários registrados para esta empresa</p>
+              <p className="text-gray-500 text-center">Não existem CNAEs secundários para esta empresa</p>
             </div>
           )}
         </div>
