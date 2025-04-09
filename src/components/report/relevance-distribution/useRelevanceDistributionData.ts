@@ -132,7 +132,9 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
       if (article.impacts.some(impact => impact.segments.includes(segmentId))) {
         // Increment the appropriate counter based on relevance category
         if (relevanceCategory in bookCounts[bookId]) {
-          bookCounts[bookId][relevanceCategory as keyof typeof bookCounts[bookId]]++;
+          // Corrigir o erro TypeScript usando tipo keyof e asserção de tipo
+          const relevanceKey = relevanceCategory as keyof typeof bookCounts[typeof bookId];
+          bookCounts[bookId][relevanceKey]++;
           bookCounts[bookId].total++;
         } else {
           console.log(`Unknown relevance category: ${relevanceCategory}`);
