@@ -8,26 +8,26 @@ interface ChartExpandToggleProps {
   toggleExpanded: () => void;
 }
 
-const ChartExpandToggle: React.FC<ChartExpandToggleProps> = ({
-  expanded,
-  toggleExpanded
+const ChartExpandToggle: React.FC<ChartExpandToggleProps> = ({ 
+  expanded, 
+  toggleExpanded 
 }) => {
   return (
-    <Button 
-      variant="ghost" 
-      size="sm" 
-      onClick={toggleExpanded} 
-      className="flex items-center gap-1 text-muted-foreground hover:text-foreground"
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={toggleExpanded}
+      className="flex items-center gap-1 text-gray-500 hover:text-gray-700"
     >
       {expanded ? (
         <>
+          <span>Mostrar menos</span>
           <ChevronUp className="h-4 w-4" />
-          <span>Menos gráficos</span>
         </>
       ) : (
         <>
+          <span>Mostrar mais</span>
           <ChevronDown className="h-4 w-4" />
-          <span>Mais gráficos</span>
         </>
       )}
     </Button>

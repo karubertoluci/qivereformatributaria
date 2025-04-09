@@ -3,9 +3,9 @@ import React, { useState, useMemo } from 'react';
 import { TabsContent } from '@/components/ui/tabs';
 import { Article } from '@/data/articles';
 import { BusinessSegment } from '@/data/segments';
-import ArticlesFilters from './articles/filters/ArticlesFilters';
-import ArticlesContent from './articles/content/ArticlesContent';
-import ChartSection from './articles/charts/ChartSection';
+import ArticlesFilters from '@/components/results/tabs/articles/filters/ArticlesFilters';
+import ArticlesContent from '@/components/results/tabs/articles/content/ArticlesContent';
+import ChartSection from '@/components/results/tabs/articles/charts/ChartSection';
 import { HighlightType, ViewMode, FilterType, Topic } from '@/components/results/types';
 import { useSearchParams } from 'react-router-dom';
 
@@ -96,7 +96,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
 
   return (
     <TabsContent value="articles" className="pb-12">
-      <div className="grid md:grid-cols-12 gap-4">
+      <div className="grid md:grid-cols-12 gap-6">
         <aside className="md:col-span-3 md:sticky md:top-[80px] h-fit">
           <ArticlesFilters 
             positiveCount={positiveCount}
