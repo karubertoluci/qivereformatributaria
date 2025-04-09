@@ -7,6 +7,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { CheckCircle2 } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
 
 interface CompanyData {
   cnpj?: string;
@@ -26,6 +27,7 @@ interface LoadingDialogProps {
   companyData?: CompanyData;
 }
 
+// Este componente foi substituído pelo ReportLoadingDialog.tsx, mas mantido para compatibilidade
 const LoadingDialog: React.FC<LoadingDialogProps> = ({ 
   open, 
   onOpenChange, 
@@ -98,13 +100,8 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({
         
         <div className="py-6">
           <div className="mb-8">
-            <div className="h-2 w-full bg-gray-200 rounded-full mb-2">
-              <div 
-                className="h-2 bg-orange-500 rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              ></div>
-            </div>
-            <p className="text-xs text-gray-500 text-right">{progress}%</p>
+            <Progress value={progress} className="h-2 w-full bg-gray-200 rounded-full" />
+            <p className="text-xs text-gray-500 text-right mt-1">{progress}%</p>
           </div>
           
           <div className="space-y-6 max-h-[60vh] overflow-auto pr-2">

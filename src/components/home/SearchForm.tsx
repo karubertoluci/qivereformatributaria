@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useFormDialogContext } from './FormDialogContext';
 import FormDialog from './search-form/FormDialog';
-import LoadingDialog from './search-form/LoadingDialog';
+import ReportLoadingDialog from './search-form/ReportLoadingDialog';
 import { businessSegments, BusinessSegment } from '@/data/segments';
 
 // Extend the BusinessSegment interface locally for component use
@@ -32,6 +32,8 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
   const [searchTerm, setSearchTerm] = React.useState('');
   const [activeTab, setActiveTab] = React.useState('segment');
   const [isLoading, setIsLoading] = React.useState(false);
+  const [loadingCompleted, setLoadingCompleted] = React.useState(false);
+  const [formData, setFormData] = React.useState<any>(null);
   const { isFormDialogOpen, openFormDialog, closeFormDialog } = useFormDialogContext();
   
   console.log("Estado do modal no SearchForm:", isFormDialogOpen);
@@ -55,31 +57,34 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
     // Salvar dados no localStorage para uso posterior
     localStorage.setItem('formData', JSON.stringify(formData));
     
-    // Simular carregamento
-    setIsLoading(true);
+    // Salvar dados do formulário para uso no diálogo de carregamento
+    setFormData(formData);
     
-    setTimeout(() => {
-      setIsLoading(false);
-      closeFormDialog();
-      
-      // Selecionar segmento com base no CNAE ou na seleção direta
-      if (activeTab === 'cnae' && formData.companyData?.cnaePrincipal?.codigo) {
-        console.log("Usando CNAE para submissão:", formData.companyData.cnaePrincipal.codigo);
-        onCnaeSubmit(formData.companyData.cnaePrincipal.codigo);
-      } else {
-        // Encontrar o segmento que corresponde ao CNAE na descrição da empresa ou escolher o primeiro segmento
-        const selectedSegment = formData.companyData?.cnaePrincipal?.descricao
-          ? businessSegments.find(s => 
-              getSegmentKeywords(s as SegmentWithUI).some(k => 
-                formData.companyData.cnaePrincipal.descricao.toLowerCase().includes(k.toLowerCase())
-              )
-            ) || businessSegments[0]
-          : filteredSegments[0];
-          
-        console.log("Selecionando segmento:", selectedSegment);
-        onSelectSegment(selectedSegment);
-      }
-    }, 2000);
+    // Fechar o diálogo do formulário e iniciar o carregamento
+    closeFormDialog();
+    setIsLoading(true);
+  };
+  
+  const handleLoadingComplete = () => {
+    setLoadingCompleted(true);
+    
+    // Selecionar segmento com base no CNAE ou na seleção direta
+    if (activeTab === 'cnae' && formData?.companyData?.cnaePrincipal?.codigo) {
+      console.log("Usando CNAE para submissão:", formData.companyData.cnaePrincipal.codigo);
+      onCnaeSubmit(formData.companyData.cnaePrincipal.codigo);
+    } else {
+      // Encontrar o segmento que corresponde ao CNAE na descrição da empresa ou escolher o primeiro segmento
+      const selectedSegment = formData?.companyData?.cnaePrincipal?.descricao
+        ? businessSegments.find(s => 
+            getSegmentKeywords(s as SegmentWithUI).some(k => 
+              formData.companyData.cnaePrincipal.descricao.toLowerCase().includes(k.toLowerCase())
+            )
+          ) || businessSegments[0]
+        : filteredSegments[0];
+        
+      console.log("Selecionando segmento:", selectedSegment);
+      onSelectSegment(selectedSegment);
+    }
   };
 
   return (
@@ -161,13 +166,12 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
         </CardContent>
       </Card>
 
-      {/* Modificamos a implementação do Dialog para usar openState explicitamente */}
       <Dialog open={isFormDialogOpen} onOpenChange={(open) => {
         if (!open) closeFormDialog();
       }}>
         <FormDialog 
           onSubmit={handleDialogSubmit} 
-          isLoading={isLoading} 
+          isLoading={false} 
           open={isFormDialogOpen}
           onOpenChange={(open) => {
             if (!open) closeFormDialog();
@@ -176,13 +180,16 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
       </Dialog>
       
       <Dialog open={isLoading} onOpenChange={(open) => {
-        if (!open) setIsLoading(false);
+        if (!open && !loadingCompleted) setIsLoading(false);
       }}>
-        <LoadingDialog 
-          open={isLoading} 
-          onOpenChange={() => {}} 
-          progress={50} 
-          companyName="Sua empresa" 
+        <ReportLoadingDialog 
+          open={isLoading}
+          onOpenChange={(open) => {
+            if (!open && !loadingCompleted) setIsLoading(false);
+          }}
+          onComplete={handleLoadingComplete}
+          companyName={formData?.nome || ""}
+          companyData={formData?.companyData}
         />
       </Dialog>
     </>
