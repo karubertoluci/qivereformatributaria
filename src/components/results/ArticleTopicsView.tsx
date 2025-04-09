@@ -32,7 +32,7 @@ const ArticleTopicsView: React.FC<ArticleTopicsViewProps> = ({
 }) => {
   return (
     <Tabs defaultValue="all" className="w-full">
-      <TabsList className="mb-4">
+      <TabsList className="mb-4 w-full justify-start overflow-x-auto">
         <TabsTrigger value="all">Todos</TabsTrigger>
         {topics.map(topic => (
           <TabsTrigger key={topic.id} value={topic.id}>
@@ -42,7 +42,7 @@ const ArticleTopicsView: React.FC<ArticleTopicsViewProps> = ({
       </TabsList>
       
       <TabsContent value="all">
-        <div className="space-y-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filteredArticles.map(article => (
             <div key={article.id} id={`article-${article.id}`}>
               <ArticleCard 
@@ -73,7 +73,7 @@ const ArticleTopicsView: React.FC<ArticleTopicsViewProps> = ({
             <p className="text-sm text-gray-600">{topic.description}</p>
           </div>
           
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {articlesByTopic[topic.id]?.length > 0 ? (
               articlesByTopic[topic.id].map(article => (
                 <div key={article.id} id={`article-${article.id}`}>
@@ -96,9 +96,11 @@ const ArticleTopicsView: React.FC<ArticleTopicsViewProps> = ({
                 </div>
               ))
             ) : (
-              <p className="text-gray-500 text-center py-4">
-                Nenhum artigo encontrado nesta categoria.
-              </p>
+              <div className="col-span-full">
+                <p className="text-gray-500 text-center py-4">
+                  Nenhum artigo encontrado nesta categoria.
+                </p>
+              </div>
             )}
           </div>
         </TabsContent>

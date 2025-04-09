@@ -80,7 +80,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
       exit={{ y: "100%" }}
       transition={{ type: "spring", damping: 25, stiffness: 200 }}
     >
-      <div className="container mx-auto px-4 max-w-7xl">
+      <div className="w-full px-0 mx-auto">
         <ResultsHeader 
           segment={segment}
           positiveCount={positiveCount}
@@ -89,7 +89,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
           onCloseClick={handleCloseClick}
         />
         
-        <main className="my-8">
+        <main className="my-4">
           <ResultsTabLayout
             activeTab={activeTab}
             onTabChange={(value) => setActiveTab(value as 'overview' | 'articles' | 'highlights')}

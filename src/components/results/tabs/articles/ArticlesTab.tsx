@@ -101,8 +101,8 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   }, [relevantArticles]);
 
   return (
-    <TabsContent value="articles" className="pb-12">
-      <div className="grid md:grid-cols-12 gap-6">
+    <TabsContent value="articles" className="pb-8 px-4">
+      <div className="grid md:grid-cols-12 gap-4">
         <aside className="md:col-span-3 md:sticky md:top-[80px] h-fit">
           <ArticlesFilters 
             positiveCount={positiveCount}
@@ -125,7 +125,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         </aside>
 
         <main className="md:col-span-9">
-          <div className="flex flex-col space-y-6">
+          <div className="flex flex-col space-y-4">
             <ChartSection 
               filteredArticles={filteredArticles || []}
               segmentId={segment.id}
