@@ -34,7 +34,7 @@ const Footer = () => {
           
           {/* Coluna 2: Links Úteis */}
           <div className="flex flex-col">
-            <h3 className="text-white font-bold mb-4 text-center">Links Úteis</h3>
+            <h3 className="text-white font-bold mb-4 text-left">Links Úteis</h3>
             <ul className="space-y-2">
               <li>
                 <Link to="/" className="text-gray-400 hover:text-[#FF4719] text-sm transition-colors">
