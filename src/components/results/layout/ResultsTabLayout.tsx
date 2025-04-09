@@ -2,7 +2,7 @@
 import React from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Highlighter, LayoutDashboard } from 'lucide-react';
+import { File, List, Star } from 'lucide-react';
 
 interface ResultsTabLayoutProps {
   children: React.ReactNode;
@@ -26,7 +26,7 @@ const ResultsTabLayout: React.FC<ResultsTabLayoutProps> = ({
               value="overview" 
               className="flex items-center gap-2 rounded-none h-full border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-gray-900 text-gray-500 mx-0 px-6"
             >
-              <LayoutDashboard className="h-4 w-4" />
+              <File className="h-4 w-4" />
               <span>Visão Geral</span>
             </TabsTrigger>
             
@@ -34,7 +34,7 @@ const ResultsTabLayout: React.FC<ResultsTabLayoutProps> = ({
               value="articles" 
               className="flex items-center gap-2 rounded-none h-full border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-gray-900 text-gray-500 mx-0 px-6"
             >
-              <FileText className="h-4 w-4" />
+              <List className="h-4 w-4" />
               <span>Artigos e Impactos</span>
             </TabsTrigger>
             
@@ -42,7 +42,7 @@ const ResultsTabLayout: React.FC<ResultsTabLayoutProps> = ({
               value="highlights" 
               className="flex items-center gap-2 rounded-none h-full border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-gray-900 text-gray-500 mx-0 px-6"
             >
-              <Highlighter className="h-4 w-4" />
+              <Star className="h-4 w-4" />
               <span>Meus Destaques</span>
               {highlights.length > 0 && (
                 <Badge 
