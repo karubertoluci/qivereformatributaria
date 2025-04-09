@@ -63,9 +63,8 @@ const ChartSection: React.FC<ChartSectionProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg border p-4 mb-6">
+    <div className="w-full">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-medium text-lg">Visualizações dos artigos</h3>
         <ChartExpandToggle 
           expanded={expanded} 
           toggleExpanded={toggleExpanded} 

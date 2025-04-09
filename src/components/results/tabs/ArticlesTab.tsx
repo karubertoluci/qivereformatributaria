@@ -9,6 +9,7 @@ import ChartSection from './articles/charts/ChartSection';
 import { HighlightType, ViewMode, FilterType, Topic } from '@/components/results/types';
 import { useSearchParams } from 'react-router-dom';
 import ActiveFilters from './articles/ActiveFilters';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -157,37 +158,53 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
               onClearRelevanceFilter={() => setChartRelevanceFilter(null)}
             />
             
-            <ChartSection 
-              filteredArticles={filteredArticles}
-              segmentId={segment.id}
-              setExpandedArticleId={setExpandedArticleId}
-              expanded={expanded}
-              toggleExpanded={toggleExpanded}
-            />
+            {/* Box 1: Visualização dos artigos */}
+            <Card className="shadow-md">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xl">Visualização dos artigos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ChartSection 
+                  filteredArticles={filteredArticles}
+                  segmentId={segment.id}
+                  setExpandedArticleId={setExpandedArticleId}
+                  expanded={expanded}
+                  toggleExpanded={toggleExpanded}
+                />
+              </CardContent>
+            </Card>
             
-            <ArticlesContent 
-              filteredArticles={filteredArticles}
-              displayedArticles={displayedArticles}
-              selectedBookFilter={selectedBookFilter}
-              selectedTitleFilter={selectedTitleFilter}
-              setSelectedBookFilter={setSelectedBookFilter}
-              setSelectedTitleFilter={setSelectedTitleFilter}
-              expandedArticleId={expandedArticleId}
-              setExpandedArticleId={setExpandedArticleId}
-              highlights={highlights}
-              onAddHighlight={handleAddHighlight}
-              onRemoveHighlight={handleRemoveHighlight}
-              articlesByTopic={articlesByTopic}
-              viewMode={viewMode}
-              setViewMode={setViewMode}
-              topics={topics}
-              segment={segment}
-              positiveCount={positiveCount}
-              negativeCount={negativeCount}
-              neutralCount={neutralCount}
-              filteredBookId={chartBookFilter}
-              filteredRelevance={chartRelevanceFilter}
-            />
+            {/* Box 2: Artigos */}
+            <Card className="shadow-md">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xl">Artigos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ArticlesContent 
+                  filteredArticles={filteredArticles}
+                  displayedArticles={displayedArticles}
+                  selectedBookFilter={selectedBookFilter}
+                  selectedTitleFilter={selectedTitleFilter}
+                  setSelectedBookFilter={setSelectedBookFilter}
+                  setSelectedTitleFilter={setSelectedTitleFilter}
+                  expandedArticleId={expandedArticleId}
+                  setExpandedArticleId={setExpandedArticleId}
+                  highlights={highlights}
+                  onAddHighlight={handleAddHighlight}
+                  onRemoveHighlight={handleRemoveHighlight}
+                  articlesByTopic={articlesByTopic}
+                  viewMode={viewMode}
+                  setViewMode={setViewMode}
+                  topics={topics}
+                  segment={segment}
+                  positiveCount={positiveCount}
+                  negativeCount={negativeCount}
+                  neutralCount={neutralCount}
+                  filteredBookId={chartBookFilter}
+                  filteredRelevance={chartRelevanceFilter}
+                />
+              </CardContent>
+            </Card>
           </div>
         </main>
       </div>
