@@ -99,7 +99,7 @@ const ResultsFooter: React.FC<ResultsFooterProps> = ({
         </div>
         
         <div className="text-center border-t border-gray-800 pt-6">
-          <p className="text-gray-400 text-sm">
+          <p className="text-sm text-transparent">
             Relatório gerado pela Qive Reforma Tributária 2025
           </p>
           <p className="mt-1 text-xs text-transparent">
