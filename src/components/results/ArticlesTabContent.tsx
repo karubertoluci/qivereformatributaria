@@ -50,7 +50,7 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
   const isMobile = useIsMobile();
   
   return (
-    <div className="space-y-4 md:space-y-6 mt-4 md:mt-6">
+    <div className="container mx-auto space-y-4 md:space-y-6 mt-4 md:mt-6">
       <ResultsSummary 
         totalArticles={relevantArticles.length}
         positiveCount={positiveCount}

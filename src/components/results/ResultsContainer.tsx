@@ -90,52 +90,54 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
         />
         
         <main className="my-4">
-          <ResultsTabLayout
-            activeTab={activeTab}
-            onTabChange={(value) => setActiveTab(value as 'overview' | 'articles' | 'highlights')}
-            highlights={highlights}
-          >
-            {activeTab === 'overview' && (
-              <OverviewTab 
-                segment={segment}
-                companyData={formData}
-                hasCompanyData={hasCompanyData}
-                relevantArticles={resultsData.relevantArticles}
-                setExpandedArticleId={resultsData.setExpandedArticleId}
-              />
-            )}
-            
-            {activeTab === 'articles' && (
-              <ArticlesTab 
-                segment={segment}
-                relevantArticles={resultsData.relevantArticles}
-                filteredArticles={resultsData.filteredArticles}
-                expandedArticleId={resultsData.expandedArticleId}
-                setExpandedArticleId={resultsData.setExpandedArticleId}
-                highlights={resultsData.highlights}
-                handleAddHighlight={resultsData.handleAddHighlight}
-                handleRemoveHighlight={resultsData.handleRemoveHighlight}
-                topics={resultsData.topics}
-                articlesByTopic={resultsData.articlesByTopic}
-                viewMode={resultsData.viewMode}
-                setViewMode={resultsData.setViewMode}
-                positiveCount={resultsData.positiveCount}
-                negativeCount={resultsData.negativeCount}
-                searchTerm={resultsData.searchTerm}
-                setSearchTerm={resultsData.setSearchTerm}
-                filterType={resultsData.filterType}
-                setFilterType={resultsData.setFilterType}
-              />
-            )}
-            
-            {activeTab === 'highlights' && (
-              <HighlightsTab 
-                highlights={resultsData.highlights}
-                handleRemoveHighlight={resultsData.handleRemoveHighlight}
-                articles={resultsData.relevantArticles}
-              />
-            )}
-          </ResultsTabLayout>
+          <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24">
+            <ResultsTabLayout
+              activeTab={activeTab}
+              onTabChange={(value) => setActiveTab(value as 'overview' | 'articles' | 'highlights')}
+              highlights={highlights}
+            >
+              {activeTab === 'overview' && (
+                <OverviewTab 
+                  segment={segment}
+                  companyData={formData}
+                  hasCompanyData={hasCompanyData}
+                  relevantArticles={resultsData.relevantArticles}
+                  setExpandedArticleId={resultsData.setExpandedArticleId}
+                />
+              )}
+              
+              {activeTab === 'articles' && (
+                <ArticlesTab 
+                  segment={segment}
+                  relevantArticles={resultsData.relevantArticles}
+                  filteredArticles={resultsData.filteredArticles}
+                  expandedArticleId={resultsData.expandedArticleId}
+                  setExpandedArticleId={resultsData.setExpandedArticleId}
+                  highlights={resultsData.highlights}
+                  handleAddHighlight={resultsData.handleAddHighlight}
+                  handleRemoveHighlight={resultsData.handleRemoveHighlight}
+                  topics={resultsData.topics}
+                  articlesByTopic={resultsData.articlesByTopic}
+                  viewMode={resultsData.viewMode}
+                  setViewMode={resultsData.setViewMode}
+                  positiveCount={resultsData.positiveCount}
+                  negativeCount={resultsData.negativeCount}
+                  searchTerm={resultsData.searchTerm}
+                  setSearchTerm={resultsData.setSearchTerm}
+                  filterType={resultsData.filterType}
+                  setFilterType={resultsData.setFilterType}
+                />
+              )}
+              
+              {activeTab === 'highlights' && (
+                <HighlightsTab 
+                  highlights={resultsData.highlights}
+                  handleRemoveHighlight={resultsData.handleRemoveHighlight}
+                  articles={resultsData.relevantArticles}
+                />
+              )}
+            </ResultsTabLayout>
+          </div>
         </main>
         
         <ResultsFooter />

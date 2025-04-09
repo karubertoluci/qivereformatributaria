@@ -23,7 +23,7 @@ const OverviewTabContent: React.FC<OverviewTabContentProps> = ({
   onSelectArticle
 }) => {
   return (
-    <div className="space-y-6 mt-6">
+    <div className="container mx-auto space-y-6 mt-6">
       {hasCompanyData && (
         <CompanyOverview companyData={companyData} segment={segment} />
       )}
