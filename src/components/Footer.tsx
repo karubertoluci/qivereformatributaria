@@ -43,9 +43,9 @@ const Footer = () => {
           </div>
           
           {/* Coluna 2: Links Úteis */}
-          <div className="flex flex-col">
+          <div className="flex flex-col items-start">
             <h3 className="text-white font-bold mb-4">Links Úteis</h3>
-            <ul className="space-y-2">
+            <ul className="space-y-2 text-left w-full">
               <li>
                 <Link to="/" className="text-gray-400 hover:text-[#FF4719] text-sm transition-colors">
                   Início

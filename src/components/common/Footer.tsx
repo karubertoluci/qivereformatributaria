@@ -1,14 +1,17 @@
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormDialogContext } from '../home/FormDialogContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Info, AlertCircle, Shield, Building2 } from 'lucide-react';
+
 const Footer = () => {
   const navigate = useNavigate();
   const {
     openFormDialog
   } = useFormDialogContext();
   const isMobile = useIsMobile();
+
   const handleBackToHome = () => {
     // Limpar dados armazenados
     localStorage.removeItem('selectedSegment');
@@ -19,6 +22,7 @@ const Footer = () => {
     // Recarregar a página para garantir que tudo seja resetado
     window.location.reload();
   };
+
   return <footer className="bg-black py-10 text-white">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -33,9 +37,9 @@ const Footer = () => {
           </div>
           
           {/* Coluna 2: Links Úteis */}
-          <div className="flex flex-col">
-            <h3 className="text-white font-bold mb-4 text-left">Links Úteis</h3>
-            <ul className="space-y-2">
+          <div className="flex flex-col items-start">
+            <h3 className="text-white font-bold mb-4">Links Úteis</h3>
+            <ul className="space-y-2 text-left w-full">
               <li>
                 <Link to="/" className="text-gray-400 hover:text-[#FF4719] text-sm transition-colors">
                   Início
@@ -105,4 +109,5 @@ const Footer = () => {
       </div>
     </footer>;
 };
+
 export default Footer;
