@@ -5,7 +5,7 @@ import { Article } from '@/data/articles';
 import { getArticlesByTopic, topics } from '@/components/results/ArticlesByTopic';
 import { HighlightType, FilterType, ViewMode } from '@/components/results/types';
 import { useArticleData } from './article';
-import { CompanyData } from './results/types';
+// Removed the CompanyData import to avoid conflict with the local declaration
 
 export const useResultsData = (segment: BusinessSegment) => {
   const [expandedArticleId, setExpandedArticleId] = useState<string | null>(null);
@@ -173,6 +173,7 @@ export const useResultsData = (segment: BusinessSegment) => {
   };
 };
 
+// Define CompanyData type locally instead of importing it
 export type CompanyData = {
   nome?: string;
   cargo?: string;
