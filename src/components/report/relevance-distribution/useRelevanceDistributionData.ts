@@ -64,13 +64,14 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
       let bookId = article.metadata.bookId || article.metadata.livro;
       
       if (!bookId) {
-        // If no metadata, determine from article number
+        // Using the updated distribution: 30% Book I, 40% Book II, 30% Book III
         const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
                           parseInt(article.id.replace(/\D/g, ''));
+        const randomValue = (articleNum % 100) / 100;  // Create deterministic distribution
         
-        if (articleNum <= 200) bookId = 'I';
-        else if (articleNum <= 350) bookId = 'II';
-        else bookId = 'III';
+        if (randomValue < 0.3) bookId = 'I';  // 30% in Book I
+        else if (randomValue < 0.7) bookId = 'II'; // 40% in Book II
+        else bookId = 'III'; // 30% in Book III
       }
       
       // Normalize book ID (remove "Livro " prefix if present)
@@ -78,7 +79,7 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
         bookId = bookId.replace('Livro ', '');
       }
       
-      if (!bookCounts[bookId]) {
+      if (!bookCounts[bookId as string]) {
         console.log(`Unknown book ID: ${bookId} for article ${article.id}, defaulting to Book I`);
         bookId = 'I'; // Default to Book I if unknown
       }
@@ -86,16 +87,15 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
       // First check if article has relevance in metadata
       let relevanceCategory: string = '';
       if (article.metadata.relevancia) {
-        relevanceCategory = article.metadata.relevancia.toLowerCase();
-        
-        // Map relevance categories to our keys
-        if (relevanceCategory.includes('irrelevante')) {
+        // Map to our standard category names
+        const rawRelevance = article.metadata.relevancia;
+        if (rawRelevance.includes('Irrelevante')) {
           relevanceCategory = 'irrelevante';
-        } else if (relevanceCategory.includes('pouco')) {
+        } else if (rawRelevance.includes('Pouco')) {
           relevanceCategory = 'poucoRelevante';
-        } else if (relevanceCategory.includes('moderadamente')) {
+        } else if (rawRelevance.includes('Moderadamente')) {
           relevanceCategory = 'moderadamenteRelevante';
-        } else if (relevanceCategory.includes('muito')) {
+        } else if (rawRelevance.includes('Muito')) {
           relevanceCategory = 'muitoRelevante';
         } else {
           // Default if unknown
@@ -120,9 +120,9 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
       // Only count the article if it's valid for the segment
       if (article.impacts.some(impact => impact.segments.includes(segmentId))) {
         // Increment the appropriate counter based on relevance category
-        if (relevanceCategory in bookCounts[bookId]) {
-          bookCounts[bookId][relevanceCategory as keyof typeof bookCounts[bookId]]++;
-          bookCounts[bookId].total++;
+        if (relevanceCategory in bookCounts[bookId as string]) {
+          bookCounts[bookId as string][relevanceCategory as keyof typeof bookCounts[typeof bookId]]++;
+          bookCounts[bookId as string].total++;
         } else {
           console.log(`Unknown relevance category: ${relevanceCategory}`);
         }

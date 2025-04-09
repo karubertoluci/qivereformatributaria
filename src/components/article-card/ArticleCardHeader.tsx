@@ -27,14 +27,15 @@ const ArticleCardHeader: React.FC<ArticleCardHeaderProps> = ({
 
   const { type: impactType, label: impactLabel, color: impactColor } = getImpactType();
   
-  // Get book information
+  // Get book information using the new 30/40/30 distribution
   const getBookInfo = () => {
     const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
                       parseInt(article.id.replace(/\D/g, ''));
+    const randomValue = (articleNum % 100) / 100;  // Deterministic distribution
     
-    if (articleNum <= 180) {
+    if (randomValue < 0.3) {
       return { id: 'I', title: 'CBS', color: 'bg-blue-100 text-blue-700' };
-    } else if (articleNum <= 300) {
+    } else if (randomValue < 0.7) {
       return { id: 'II', title: 'IBS', color: 'bg-amber-100 text-amber-700' };
     } else {
       return { id: 'III', title: 'IS', color: 'bg-purple-100 text-purple-700' };

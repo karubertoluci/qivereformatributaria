@@ -36,7 +36,7 @@ export const RelevanceChartTooltip: React.FC<TooltipProps<any, any>> = ({ active
           
           const relevanceKey = entry.dataKey as keyof typeof relevanceNames;
           const name = relevanceNames[relevanceKey] || entry.name || entry.dataKey;
-          const color = colors[relevanceKey] || entry.fill;
+          const color = colors[relevanceKey] || entry.color; // Changed from entry.fill to entry.color
           
           return (
             <div key={`item-${index}`} className="flex justify-between items-center text-sm">
