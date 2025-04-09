@@ -10,15 +10,19 @@ interface FavorabilityRelevanceChartProps {
   articles: any[];
   segmentId: string;
   bookId?: string | null;
+  onRelevanceFilter?: (relevanceLevel: string | null) => void;
+  selectedRelevance?: string | null;
 }
 
 const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({ 
   articles, 
   segmentId,
-  bookId = 'I'
+  bookId = 'I',
+  onRelevanceFilter,
+  selectedRelevance
 }) => {
   const [selectedFavorability, setSelectedFavorability] = useState<string | null>(null);
-  const { relevanceTotals } = useFavorabilityRelevanceData(articles, segmentId, null);
+  const { relevanceTotals } = useFavorabilityRelevanceData(articles, segmentId, selectedRelevance);
   const bookName = bookId ? `Livro ${bookId}` : '';
   
   return (
@@ -89,9 +93,9 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
               </div>
               <button 
                 className="w-full mt-3 text-xs py-1 px-2 bg-gray-100 hover:bg-gray-200 rounded text-center"
-                onClick={() => null} // Implementar filtro futuro
+                onClick={() => onRelevanceFilter && onRelevanceFilter(item.relevanceLevel === selectedRelevance ? null : item.relevanceLevel)}
               >
-                Filtrar
+                {item.relevanceLevel === selectedRelevance ? 'Remover filtro' : 'Filtrar'}
               </button>
             </div>
           ))}
