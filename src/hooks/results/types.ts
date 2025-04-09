@@ -47,8 +47,12 @@ export interface PersonalData {
   possuiContaQive: boolean;
 }
 
-export interface CompanyData extends Partial<PersonalData> {
+export interface CompanyData {
   companyData?: CompanyApiData;
+  // Including necessary properties that will be accessed directly
+  nomeFantasia?: string;
+  razaoSocial?: string;
+  cnaeSecundarios?: Array<CNAEData>;
 }
 
 // ResultsData interface used by components that display the report
@@ -57,10 +61,10 @@ export interface ResultsData {
   setExpandedArticleId: (id: string | null) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filterType: string;
-  setFilterType: (type: any) => void;
-  viewMode: string;
-  setViewMode: (mode: any) => void;
+  filterType: 'all' | 'positive' | 'negative' | 'neutral';
+  setFilterType: (type: 'all' | 'positive' | 'negative' | 'neutral') => void;
+  viewMode: 'chart' | 'table';
+  setViewMode: (mode: 'chart' | 'table') => void;
   activeTab: string;
   setActiveTab: (tab: any) => void;
   formData: CompanyData | null;

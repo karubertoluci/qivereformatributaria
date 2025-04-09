@@ -1,24 +1,26 @@
 
 import React from 'react';
 import { FileText, Briefcase } from 'lucide-react';
-import { CompanyApiData } from '@/hooks/results/types';
+import { CompanyApiData, CompanyData, CNAEData } from '@/hooks/results/types';
 
 interface CNAESectionProps {
-  companyData: {
-    companyData?: CompanyApiData;
-  };
+  companyData: CompanyData;
 }
 
 const CNAESection: React.FC<CNAESectionProps> = ({
   companyData
 }) => {
+  // Access companyData safely
   const company = companyData.companyData || {};
+  
+  // Get principal CNAE, with fallbacks for different API response formats
   const cnaePrincipal = company.cnaePrincipal || 
     (company.cnae_fiscal ? { 
       codigo: company.cnae_fiscal.toString(), 
       descricao: company.cnae_fiscal_descricao || '' 
     } : null);
     
+  // Get secondary CNAEs, with fallbacks for different API response formats
   const cnaeSecundarios = company.cnaeSecundarios || company.cnaes_secundarios || [];
   
   return (
@@ -60,7 +62,7 @@ const CNAESection: React.FC<CNAESectionProps> = ({
           
           {cnaeSecundarios && cnaeSecundarios.length > 0 ? (
             <div className="space-y-3 overflow-auto max-h-[400px] pr-1">
-              {cnaeSecundarios.map((cnae, i) => (
+              {cnaeSecundarios.map((cnae: CNAEData, i: number) => (
                 <div key={i} className="flex items-center justify-between border border-gray-100 p-3 rounded-md">
                   <div className="px-2 py-1 bg-rose-50 rounded-md mr-2">
                     <p className="font-semibold text-gray-800 text-sm">{cnae.codigo}</p>

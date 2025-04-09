@@ -10,6 +10,7 @@ import HighlightsTab from './tabs/HighlightsTab';
 import ResultsLoading from './ResultsLoading';
 import ResultsError from './ResultsError';
 import { useResultsData } from '@/hooks/results';
+import { FilterType, ViewMode } from '@/hooks/results/types';
 
 interface ResultsContainerProps {
   segment: BusinessSegment;
@@ -48,13 +49,18 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
     return <ResultsError error={error} />;
   }
 
+  // Get company name from formData if available
+  const companyName = hasCompanyData && formData?.companyData 
+    ? (formData.companyData.nome_fantasia || formData.companyData.nomeFantasia || '') 
+    : '';
+
   return (
     <div className="container mx-auto px-4 max-w-7xl">
       <ResultsHeader 
         segment={segment}
         positiveCount={positiveCount}
         negativeCount={negativeCount}
-        companyName={hasCompanyData ? formData?.nomeFantasia || '' : ''}
+        companyName={companyName}
       />
       
       <main className="my-8">
@@ -89,14 +95,14 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
             handleRemoveHighlight={resultsData.handleRemoveHighlight}
             topics={resultsData.topics}
             articlesByTopic={resultsData.articlesByTopic}
-            viewMode={resultsData.viewMode}
-            setViewMode={resultsData.setViewMode}
+            viewMode={resultsData.viewMode as ViewMode}
+            setViewMode={resultsData.setViewMode as (mode: ViewMode) => void}
             positiveCount={positiveCount}
             negativeCount={negativeCount}
             searchTerm={resultsData.searchTerm}
             setSearchTerm={resultsData.setSearchTerm}
-            filterType={resultsData.filterType}
-            setFilterType={resultsData.setFilterType}
+            filterType={resultsData.filterType as FilterType}
+            setFilterType={resultsData.setFilterType as (type: FilterType) => void}
           />
           
           <HighlightsTab 

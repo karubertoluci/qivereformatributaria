@@ -1,6 +1,4 @@
 
-import { Article } from "@/data/articles";
-
 export type FilterType = 'all' | 'positive' | 'negative' | 'neutral';
 export type ViewMode = 'chart' | 'table';
 export type HighlightColor = 'yellow' | 'green' | 'blue' | 'purple' | 'pink';
@@ -44,7 +42,7 @@ export interface ImpactData {
 export interface BookData {
   id: string;
   name: string;
-  articles: Article[];
+  articles: any[];
   count: number;
   color: string;
 }
