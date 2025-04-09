@@ -1,8 +1,7 @@
 
 import React from 'react';
 import { Article } from '@/data/articles';
-import { FileText, Book, Bookmark, Layers } from 'lucide-react';
-import { CardTitle } from '@/components/ui/card';
+import { FileText, BookOpen } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
@@ -27,65 +26,70 @@ const ArticleCardHeader: React.FC<ArticleCardHeaderProps> = ({
 
   const { type: impactType, label: impactLabel, color: impactColor } = getImpactType();
   
-  // Get book information
-  const getBookInfo = () => {
-    const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
-                      parseInt(article.id.replace(/\D/g, ''));
+  // Get relevance level
+  const getRelevanceInfo = () => {
+    const randomRelevance = Math.random() * 100;
     
-    if (articleNum <= 180) {
-      return { id: 'I', title: 'CBS', color: 'bg-blue-100 text-blue-700' };
-    } else if (articleNum <= 300) {
-      return { id: 'II', title: 'IBS', color: 'bg-amber-100 text-amber-700' };
+    if (randomRelevance < 40) {
+      return { label: 'Irrelevante', color: 'bg-gray-100 text-gray-700 border-gray-200' };
+    } else if (randomRelevance < 50) {
+      return { label: 'Pouco relevante', color: 'bg-blue-100 text-blue-700 border-blue-200' };
+    } else if (randomRelevance < 90) {
+      return { label: 'Moderadamente relevante', color: 'bg-amber-100 text-amber-700 border-amber-200' };
     } else {
-      return { id: 'III', title: 'IS', color: 'bg-purple-100 text-purple-700' };
+      return { label: 'Muito relevante', color: 'bg-green-100 text-green-700 border-green-200' };
     }
   };
   
-  const { id: bookId, title: bookTitle, color: bookColor } = getBookInfo();
+  const { label: relevanceLabel, color: relevanceColor } = getRelevanceInfo();
   
-  // Get metadata (chapter, section, subsection)
-  const chapter = article.metadata?.chapter || 'Capítulo 1';
-  const section = article.metadata?.section || 'Seção I';
-  const subsection = article.metadata?.subsection;
+  // Simplify book display
+  const getSimplifiedBook = () => {
+    if (article.metadata?.bookId) {
+      return `Livro ${article.metadata.bookId}`;
+    }
+    if (article.metadata?.livro) {
+      return `Livro ${article.metadata.livro}`;
+    }
+    const articleNum = parseInt((article.number || '').replace(/\D/g, '')) || 0;
+    if (articleNum <= 180) return 'Livro I';
+    if (articleNum <= 300) return 'Livro II';
+    return 'Livro III';
+  };
   
   return (
     <div className="flex flex-col space-y-2">
-      {/* Header with title and impact badge */}
+      {/* Header with article number and impact badge */}
       <div className="flex items-start justify-between">
-        <div className="flex items-center gap-2">
-          <FileText className="h-5 w-5 text-muted-foreground" />
-          <CardTitle className="text-base font-medium">
-            Artigo {article.number}
-          </CardTitle>
+        <div className="flex items-center gap-1.5">
+          <FileText className="h-4 w-4 text-muted-foreground" />
+          <span className="text-base font-medium">
+            Art. {article.number}
+          </span>
         </div>
         
-        <Badge variant="outline" className={cn("text-xs py-0.5 px-2", impactColor)}>
-          {impactLabel}
-        </Badge>
+        <div className="flex gap-1.5">
+          <Badge variant="outline" className={cn("text-xs py-0.5 px-2", impactColor)}>
+            {impactLabel}
+          </Badge>
+          
+          <Badge variant="outline" className={cn("text-xs py-0.5 px-2", relevanceColor)}>
+            {relevanceLabel}
+          </Badge>
+        </div>
       </div>
       
-      {/* Book info */}
-      <div className="flex flex-wrap gap-2 mt-1">
-        <Badge variant="outline" className={cn("text-xs py-0.5 px-2 flex items-center gap-1", bookColor)}>
-          <Book className="h-3 w-3" />
-          Livro {bookId}: {bookTitle}
-        </Badge>
+      {/* Book and title info */}
+      <div className="mt-1.5 flex flex-col text-xs text-muted-foreground">
+        <div className="flex items-center gap-1">
+          <BookOpen className="h-3.5 w-3.5 flex-shrink-0" />
+          <span>{getSimplifiedBook()}</span>
+        </div>
         
-        <Badge variant="outline" className="bg-gray-100 text-gray-700 text-xs py-0.5 px-2 flex items-center gap-1">
-          <Bookmark className="h-3 w-3" />
-          {chapter}
-        </Badge>
-        
-        <Badge variant="outline" className="bg-gray-100 text-gray-700 text-xs py-0.5 px-2 flex items-center gap-1">
-          <Layers className="h-3 w-3" />
-          {section}
-        </Badge>
-        
-        {subsection && (
-          <Badge variant="outline" className="bg-gray-100 text-gray-700 text-xs py-0.5 px-2 flex items-center gap-1">
-            <FileText className="h-3 w-3" />
-            {subsection}
-          </Badge>
+        {article.metadata?.titulo && (
+          <p className="line-clamp-2 mt-0.5 text-left">
+            {article.metadata.titulo}
+          </p>
         )}
       </div>
     </div>
