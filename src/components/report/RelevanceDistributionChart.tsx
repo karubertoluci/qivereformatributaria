@@ -51,6 +51,21 @@ const RelevanceDistributionChart: React.FC<RelevanceDistributionChartProps> = ({
   
   console.log('Rendering RelevanceDistributionChart with data:', bookData);
 
+  // Early return with loading message if there's no data yet
+  if (!bookData || bookData.length === 0) {
+    return (
+      <Card className="shadow-md border border-gray-200">
+        <CardHeader className="pb-2 border-b border-gray-200">
+          <CardTitle className="text-xl">Distribuição de Artigos por Livro</CardTitle>
+          <CardDescription>Carregando dados...</CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  // Check if we have no data with relevant articles (all zeroes)
+  const hasData = bookData.some(book => book.total > 0);
+
   return (
     <Card className="shadow-md border border-gray-200">
       <CardHeader className="pb-2 border-b border-gray-200">
@@ -66,121 +81,129 @@ const RelevanceDistributionChart: React.FC<RelevanceDistributionChartProps> = ({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={bookData}
-              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-              barGap={0}
-              barCategoryGap={40}
-            >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis 
-                dataKey="name" 
-                tick={{ fill: '#64748b' }}
-                axisLine={{ stroke: '#e5e7eb' }}
-                tickLine={false}
-              />
-              <YAxis 
-                label={{ value: 'Artigos', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#64748b', fontSize: 12 } }}
-                tick={{ fill: '#64748b' }}
-                axisLine={{ stroke: '#e5e7eb' }}
-                tickLine={false}
-              />
-              <Tooltip content={<RelevanceChartTooltip />} />
-              <Bar 
-                dataKey="muitoRelevante" 
-                name="Muito relevante"
-                stackId="a" 
-                fill={colorScheme.muitoRelevante}
-                isAnimationActive={false}
-                className="cursor-pointer"
-                onClick={(data) => handleBookSelect(data?.id || null)}
-              >
-                {bookData.map((entry, index) => (
-                  <Cell 
-                    key={`cell-muito-${index}`} 
-                    cursor="pointer"
-                    stroke={selectedBook === entry.id ? '#000' : 'transparent'}
-                    strokeWidth={selectedBook === entry.id ? 2 : 0}
+        {!hasData ? (
+          <div className="py-8 text-center text-muted-foreground">
+            Nenhum artigo encontrado para o segmento selecionado.
+          </div>
+        ) : (
+          <>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={bookData}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  barGap={0}
+                  barCategoryGap={40}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis 
+                    dataKey="name" 
+                    tick={{ fill: '#64748b' }}
+                    axisLine={{ stroke: '#e5e7eb' }}
+                    tickLine={false}
                   />
-                ))}
-              </Bar>
-              <Bar 
-                dataKey="moderadamenteRelevante" 
-                name="Moderadamente relevante"
-                stackId="a" 
-                fill={colorScheme.moderadamenteRelevante}
-                isAnimationActive={false}
-                className="cursor-pointer"
-                onClick={(data) => handleBookSelect(data?.id || null)}
-              >
-                {bookData.map((entry, index) => (
-                  <Cell 
-                    key={`cell-moderadamente-${index}`} 
-                    cursor="pointer"
-                    stroke={selectedBook === entry.id ? '#000' : 'transparent'}
-                    strokeWidth={selectedBook === entry.id ? 2 : 0}
+                  <YAxis 
+                    label={{ value: 'Artigos', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#64748b', fontSize: 12 } }}
+                    tick={{ fill: '#64748b' }}
+                    axisLine={{ stroke: '#e5e7eb' }}
+                    tickLine={false}
                   />
-                ))}
-              </Bar>
-              <Bar 
-                dataKey="poucoRelevante" 
-                name="Pouco relevante"
-                stackId="a" 
-                fill={colorScheme.poucoRelevante}
-                isAnimationActive={false}
-                className="cursor-pointer"
-                onClick={(data) => handleBookSelect(data?.id || null)}
-              >
-                {bookData.map((entry, index) => (
-                  <Cell 
-                    key={`cell-pouco-${index}`} 
-                    cursor="pointer"
-                    stroke={selectedBook === entry.id ? '#000' : 'transparent'}
-                    strokeWidth={selectedBook === entry.id ? 2 : 0}
+                  <Tooltip content={<RelevanceChartTooltip />} />
+                  <Bar 
+                    dataKey="muitoRelevante" 
+                    name="Muito relevante"
+                    stackId="a" 
+                    fill={colorScheme.muitoRelevante}
+                    isAnimationActive={false}
+                    className="cursor-pointer"
+                    onClick={(data) => handleBookSelect(data?.id || null)}
+                  >
+                    {bookData.map((entry, index) => (
+                      <Cell 
+                        key={`cell-muito-${index}`} 
+                        cursor="pointer"
+                        stroke={selectedBook === entry.id ? '#000' : 'transparent'}
+                        strokeWidth={selectedBook === entry.id ? 2 : 0}
+                      />
+                    ))}
+                  </Bar>
+                  <Bar 
+                    dataKey="moderadamenteRelevante" 
+                    name="Moderadamente relevante"
+                    stackId="a" 
+                    fill={colorScheme.moderadamenteRelevante}
+                    isAnimationActive={false}
+                    className="cursor-pointer"
+                    onClick={(data) => handleBookSelect(data?.id || null)}
+                  >
+                    {bookData.map((entry, index) => (
+                      <Cell 
+                        key={`cell-moderadamente-${index}`} 
+                        cursor="pointer"
+                        stroke={selectedBook === entry.id ? '#000' : 'transparent'}
+                        strokeWidth={selectedBook === entry.id ? 2 : 0}
+                      />
+                    ))}
+                  </Bar>
+                  <Bar 
+                    dataKey="poucoRelevante" 
+                    name="Pouco relevante"
+                    stackId="a" 
+                    fill={colorScheme.poucoRelevante}
+                    isAnimationActive={false}
+                    className="cursor-pointer"
+                    onClick={(data) => handleBookSelect(data?.id || null)}
+                  >
+                    {bookData.map((entry, index) => (
+                      <Cell 
+                        key={`cell-pouco-${index}`} 
+                        cursor="pointer"
+                        stroke={selectedBook === entry.id ? '#000' : 'transparent'}
+                        strokeWidth={selectedBook === entry.id ? 2 : 0}
+                      />
+                    ))}
+                  </Bar>
+                  <Bar 
+                    dataKey="irrelevante" 
+                    name="Irrelevante"
+                    stackId="a" 
+                    fill={colorScheme.irrelevante}
+                    isAnimationActive={false}
+                    className="cursor-pointer"
+                    onClick={(data) => handleBookSelect(data?.id || null)}
+                  >
+                    {bookData.map((entry, index) => (
+                      <Cell 
+                        key={`cell-irrelevante-${index}`} 
+                        cursor="pointer"
+                        stroke={selectedBook === entry.id ? '#000' : 'transparent'}
+                        strokeWidth={selectedBook === entry.id ? 2 : 0}
+                      />
+                    ))}
+                  </Bar>
+                  <Legend 
+                    content={<RelevanceChartLegend 
+                      colorScheme={colorScheme} 
+                      selectedRelevance={selectedRelevance}
+                      onSelectRelevance={handleRelevanceSelect}
+                    />} 
+                    layout="horizontal"
+                    verticalAlign="bottom"
+                    align="center"
+                    wrapperStyle={{ paddingTop: 20 }}
                   />
-                ))}
-              </Bar>
-              <Bar 
-                dataKey="irrelevante" 
-                name="Irrelevante"
-                stackId="a" 
-                fill={colorScheme.irrelevante}
-                isAnimationActive={false}
-                className="cursor-pointer"
-                onClick={(data) => handleBookSelect(data?.id || null)}
-              >
-                {bookData.map((entry, index) => (
-                  <Cell 
-                    key={`cell-irrelevante-${index}`} 
-                    cursor="pointer"
-                    stroke={selectedBook === entry.id ? '#000' : 'transparent'}
-                    strokeWidth={selectedBook === entry.id ? 2 : 0}
-                  />
-                ))}
-              </Bar>
-              <Legend 
-                content={<RelevanceChartLegend 
-                  colorScheme={colorScheme} 
-                  selectedRelevance={selectedRelevance}
-                  onSelectRelevance={handleRelevanceSelect}
-                />} 
-                layout="horizontal"
-                verticalAlign="bottom"
-                align="center"
-                wrapperStyle={{ paddingTop: 20 }}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-        
-        <RelevanceBookCards 
-          bookData={bookData}
-          selectedBook={selectedBook}
-          onSelectBook={handleBookSelect}
-          colorScheme={colorScheme}
-        />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            
+            <RelevanceBookCards 
+              bookData={bookData}
+              selectedBook={selectedBook}
+              onSelectBook={handleBookSelect}
+              colorScheme={colorScheme}
+            />
+          </>
+        )}
       </CardContent>
     </Card>
   );
