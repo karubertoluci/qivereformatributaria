@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -61,7 +60,6 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
         positiveCount={positiveCount}
         negativeCount={negativeCount}
         companyName={companyName}
-        onBackToSegments={onBackToSegments}
       />
       
       <main className="my-8">

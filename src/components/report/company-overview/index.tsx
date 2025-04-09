@@ -30,6 +30,13 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
   // Use the latest data from the hook or the prop data
   const finalCompanyData = formData || propCompanyData;
   
+  // Get company name
+  const companyName = finalCompanyData?.companyData ? 
+    (finalCompanyData.companyData.nome_fantasia || 
+     finalCompanyData.companyData.nomeFantasia || 
+     finalCompanyData.companyData.razao_social || 
+     finalCompanyData.companyData.razaoSocial || '') : '';
+  
   // Add a check for null/undefined companyData
   if (!finalCompanyData || !finalCompanyData.companyData) {
     return (
@@ -44,7 +51,7 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
   
   return (
     <Card className="bg-white shadow-sm rounded-lg overflow-hidden border">
-      <CompanyHeader />
+      <CompanyHeader companyName={companyName} />
       
       <CardContent className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

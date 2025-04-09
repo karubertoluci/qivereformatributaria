@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { BusinessSegment } from '@/data/segments';
 import { Button } from '@/components/ui/button';
 import { FileText, Share2, Download, RefreshCw } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 interface ResultsHeaderProps {
   segment: BusinessSegment;
@@ -62,6 +63,24 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
     }
   }, [propCompanyName]);
   
+  // Function to get initials for Avatar
+  const getInitials = (name: string): string => {
+    if (!name) return '';
+    
+    const words = name.trim().split(/\s+/);
+    
+    if (words.length >= 2) {
+      return (words[0][0] + words[1][0]).toUpperCase();
+    }
+    
+    return name.substring(0, 2).toUpperCase();
+  };
+  
+  // Truncate company name if longer than 20 characters
+  const truncatedName = displayName.length > 20 
+    ? `${displayName.substring(0, 20)}...` 
+    : displayName;
+  
   const handleBackToHome = () => {
     // Clear localStorage when returning to home
     localStorage.removeItem('selectedSegment');
@@ -81,8 +100,12 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
         {/* Center content with file icon, title and subtitle */}
         <div className="text-center mx-auto max-w-md sm:max-w-lg flex flex-col items-center">
           <h2 className="text-xl font-bold flex items-center gap-2 justify-center">
-            <FileText className="h-5 w-5 shrink-0 text-primary" />
-            <span className="truncate">{displayName}</span>
+            <Avatar className="h-8 w-8 bg-orange-100 text-orange-600">
+              <AvatarFallback className="bg-orange-100 text-orange-600 font-medium text-sm">
+                {getInitials(displayName)}
+              </AvatarFallback>
+            </Avatar>
+            <span className="truncate" title={displayName}>{truncatedName}</span>
           </h2>
           <p className="text-sm text-muted-foreground">
             Análise de impactos da reforma tributária no segmento {segment.name}
