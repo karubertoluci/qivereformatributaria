@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { CircleNotch, CheckCircle } from 'lucide-react';
+import { Loader2, CheckCircle } from 'lucide-react';
 
 interface CompanyLoadingAnimationProps {
   companyName: string;
@@ -66,7 +66,7 @@ const CompanyLoadingAnimation: React.FC<CompanyLoadingAnimationProps> = ({
       
       <div className="flex justify-center">
         {!isComplete ? (
-          <CircleNotch className="h-10 w-10 text-orange-500 animate-spin" />
+          <Loader2 className="h-10 w-10 text-orange-500 animate-spin" />
         ) : (
           <CheckCircle className="h-10 w-10 text-green-500" />
         )}
