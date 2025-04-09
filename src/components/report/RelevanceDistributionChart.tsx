@@ -48,6 +48,8 @@ const RelevanceDistributionChart: React.FC<RelevanceDistributionChartProps> = ({
     poucoRelevante: '#6b7280', // cinza
     irrelevante: '#d1d5db', // cinza claro
   };
+  
+  console.log('Rendering RelevanceDistributionChart with data:', bookData);
 
   return (
     <Card className="shadow-md border border-gray-200">
@@ -92,6 +94,8 @@ const RelevanceDistributionChart: React.FC<RelevanceDistributionChartProps> = ({
                 stackId="a" 
                 fill={colorScheme.muitoRelevante}
                 isAnimationActive={false}
+                className="cursor-pointer"
+                onClick={(data) => handleBookSelect(data?.id || null)}
               >
                 {bookData.map((entry, index) => (
                   <Cell 
@@ -108,6 +112,8 @@ const RelevanceDistributionChart: React.FC<RelevanceDistributionChartProps> = ({
                 stackId="a" 
                 fill={colorScheme.moderadamenteRelevante}
                 isAnimationActive={false}
+                className="cursor-pointer"
+                onClick={(data) => handleBookSelect(data?.id || null)}
               >
                 {bookData.map((entry, index) => (
                   <Cell 
@@ -124,6 +130,8 @@ const RelevanceDistributionChart: React.FC<RelevanceDistributionChartProps> = ({
                 stackId="a" 
                 fill={colorScheme.poucoRelevante}
                 isAnimationActive={false}
+                className="cursor-pointer"
+                onClick={(data) => handleBookSelect(data?.id || null)}
               >
                 {bookData.map((entry, index) => (
                   <Cell 
@@ -140,6 +148,8 @@ const RelevanceDistributionChart: React.FC<RelevanceDistributionChartProps> = ({
                 stackId="a" 
                 fill={colorScheme.irrelevante}
                 isAnimationActive={false}
+                className="cursor-pointer"
+                onClick={(data) => handleBookSelect(data?.id || null)}
               >
                 {bookData.map((entry, index) => (
                   <Cell 
@@ -147,7 +157,6 @@ const RelevanceDistributionChart: React.FC<RelevanceDistributionChartProps> = ({
                     cursor="pointer"
                     stroke={selectedBook === entry.id ? '#000' : 'transparent'}
                     strokeWidth={selectedBook === entry.id ? 2 : 0}
-                    onClick={() => handleBookSelect(entry.id)}
                   />
                 ))}
               </Bar>

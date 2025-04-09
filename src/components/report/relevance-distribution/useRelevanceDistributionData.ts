@@ -29,7 +29,7 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
       { id: 'III', name: 'Livro III', description: 'IS' }
     ];
     
-    // Count actual articles by book and relevance level
+    // Initialize book counts with zeros
     const bookCounts: Record<string, {
       irrelevante: number;
       poucoRelevante: number;
@@ -41,6 +41,8 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
       'II': { irrelevante: 0, poucoRelevante: 0, moderadamenteRelevante: 0, muitoRelevante: 0, total: 0 },
       'III': { irrelevante: 0, poucoRelevante: 0, moderadamenteRelevante: 0, muitoRelevante: 0, total: 0 },
     };
+    
+    console.log(`Processing ${articles.length} articles for relevance distribution`);
     
     // Process each article to count by book and relevance
     articles.forEach(article => {
@@ -63,8 +65,9 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
       
       // Determine relevance based on article number
       const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
-      let relevanceCategory;
       
+      // Calculate relevance category using consistent logic
+      let relevanceCategory;
       if (articleNum % 10 < 2) {
         relevanceCategory = 'irrelevante'; // 20% of articles
       } else if (articleNum % 10 < 4) {
@@ -79,6 +82,8 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
       bookCounts[bookId][relevanceCategory]++;
       bookCounts[bookId].total++;
     });
+    
+    console.log('Book distribution data:', bookCounts);
     
     // Create final data format
     const finalBookData: RelevanceBookData[] = booksMetadata.map(book => ({

@@ -1,3 +1,4 @@
+
 import { Article, ArticleImpact } from '@/data/articles';
 
 interface RelevanceGroup {
@@ -26,6 +27,8 @@ export const calculateRelevanceGroups = (filteredArticles: Article[], segmentId:
     console.warn('calculateRelevanceGroups received invalid articles:', filteredArticles);
     filteredArticles = [];
   }
+  
+  console.log(`Calculating relevance groups for ${filteredArticles.length} articles`);
   
   // Define relevance groups
   const groups: RelevanceGroup[] = [
@@ -59,18 +62,24 @@ export const calculateRelevanceGroups = (filteredArticles: Article[], segmentId:
     
     groups[groupIndex].total += 1;
     
-    // Determine favorability (consistent with other charts)
-    const random = Math.random() * 100;
+    // Count favorability based on article impacts
+    let hasPositive = false;
+    let hasNegative = false;
+    let hasNeutral = false;
     
-    if (random < 40) {
-      // 40% chance of being positive
-      groups[groupIndex].positive += 1;
-    } else if (random < 60) {
-      // 20% chance of being neutral
+    article.impacts.forEach(impact => {
+      if (impact.type === 'positive') hasPositive = true;
+      else if (impact.type === 'negative') hasNegative = true;
+      else hasNeutral = true;
+    });
+    
+    if (hasPositive) groups[groupIndex].positive += 1;
+    if (hasNegative) groups[groupIndex].negative += 1;
+    if (hasNeutral) groups[groupIndex].neutral += 1;
+    
+    // If no specific impacts, default to neutral
+    if (!hasPositive && !hasNegative && !hasNeutral) {
       groups[groupIndex].neutral += 1;
-    } else {
-      // 40% chance of being negative
-      groups[groupIndex].negative += 1;
     }
     
     // Check for critical impacts
@@ -84,6 +93,7 @@ export const calculateRelevanceGroups = (filteredArticles: Article[], segmentId:
     }
   });
   
+  console.log('Calculated relevance groups:', groups);
   return groups;
 };
 
@@ -116,6 +126,8 @@ export const filterArticlesByRelevance = (articles: Article[], segmentId: string
   if (!articles || !Array.isArray(articles) || articles.length === 0) {
     return [];
   }
+  
+  console.log(`Filtering ${articles.length} articles by relevance level: ${relevanceLevel}`);
   
   return articles.filter(article => {
     const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
