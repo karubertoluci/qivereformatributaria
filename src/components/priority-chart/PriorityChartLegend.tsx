@@ -19,24 +19,6 @@ const PriorityChartLegend: React.FC = () => {
           <span className="text-sm">Neutro</span>
         </div>
       </div>
-      
-      <div className="flex flex-col space-y-2">
-        <h4 className="text-sm font-medium mb-1">Relevância</h4>
-        <div className="flex items-center gap-2">
-          <span className="text-sm">Baixa</span>
-          <div className="w-16 h-2 bg-gradient-to-r from-gray-300 to-gray-400 rounded"></div>
-          <span className="text-sm">Alta</span>
-        </div>
-      </div>
-      
-      <div className="flex flex-col space-y-2">
-        <h4 className="text-sm font-medium mb-1">Urgência</h4>
-        <div className="flex items-center gap-2">
-          <span className="text-sm">Baixa</span>
-          <div className="w-16 h-2 bg-gradient-to-r from-gray-300 to-red-500 rounded"></div>
-          <span className="text-sm">Alta</span>
-        </div>
-      </div>
     </div>
   );
 };

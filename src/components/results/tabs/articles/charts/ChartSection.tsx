@@ -7,7 +7,6 @@ import BookDistributionChart from '@/components/report/BookDistributionChart';
 import FavorabilityRelevanceChart from '@/components/report/FavorabilityRelevanceChart';
 import ImpactDistributionChart from '@/components/report/ImpactDistributionChart';
 import RelevanceDistributionChart from '@/components/report/RelevanceDistributionChart';
-import ArticlesPriorityChart from '@/components/ArticlesPriorityChart';
 
 interface ChartSectionProps {
   filteredArticles: Article[];
@@ -87,18 +86,6 @@ const ChartSection: React.FC<ChartSectionProps> = ({
       <div className={`overflow-x-auto transition-all duration-300 ${expanded ? 'max-h-[2000px]' : 'max-h-[1200px]'}`}>
         <div className={isMobile ? "min-w-[500px]" : ""}>
           <div className="space-y-6">
-            {/* Priority Chart - Always show this first */}
-            <div className="mb-6">
-              <ArticlesPriorityChart 
-                articles={displayedArticles}
-                segmentId={segmentId}
-                onSelectArticle={handleArticleSelect}
-                bookId={selectedBookId}
-                relevanceFilter={selectedRelevance}
-                selectedArticleId={selectedArticleId}
-              />
-            </div>
-            
             {/* 1. Distribuição de Artigos por Livro (Gráfico de Barras Empilhadas) */}
             <div className="mb-6">
               <RelevanceDistributionChart 

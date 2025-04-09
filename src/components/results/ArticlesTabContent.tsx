@@ -6,7 +6,6 @@ import { Topic } from './types';
 import ResultsSummary from './ResultsSummary';
 import FilterBar from './FilterBar';
 import ViewSwitcher from './ViewSwitcher';
-import ArticlesPriorityChart from '../ArticlesPriorityChart';
 import ArticleTopicsView from './ArticleTopicsView';
 import ArticleTableView from './ArticleTableView';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -81,15 +80,9 @@ const ArticlesTabContent: React.FC<ArticlesTabContentProps> = ({
         </div>
       ) : (
         <>
-          {/* Always show chart view since it's now the only option */}
-          <div className="mb-6 md:mb-8 overflow-x-auto">
-            <div className={isMobile ? "min-w-[500px]" : ""}>
-              <ArticlesPriorityChart 
-                articles={filteredArticles}
-                segmentId={segment.id}
-                onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
-              />
-            </div>
+          {/* Show chart view or other views based on the viewMode */}
+          <div className="mb-6 md:mb-8">
+            {/* No charts are displayed here anymore */}
           </div>
         </>
       )}
