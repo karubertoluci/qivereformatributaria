@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import ArticleContent from '../article';
 import { HighlightType } from '../results/types';
+import { ArrowRight } from 'lucide-react';
 
 interface ArticleCardSummaryProps {
   article: Article;
@@ -29,8 +30,9 @@ const ArticleCardSummary: React.FC<ArticleCardSummaryProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="w-full text-sm text-blue-600 hover:underline text-left mt-auto">
+        <button className="w-full text-sm text-red-500 hover:text-red-600 hover:underline transition-colors flex items-center justify-center gap-1 mt-auto">
           Ver detalhes do artigo
+          <ArrowRight className="h-3.5 w-3.5" />
         </button>
       </DialogTrigger>
       <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">

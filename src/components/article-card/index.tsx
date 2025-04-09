@@ -87,50 +87,54 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
     onAddHighlight(article.id, text, color);
   };
   
+  // Format book title in uppercase if available
+  const bookTitle = article.metadata?.titulo ? article.metadata.titulo.toUpperCase() : '';
+  
   return (
     <Card className={cn("shadow-sm hover:shadow transition-shadow duration-200 mb-4", borderClass)}>
-      <CardContent className="p-4 flex flex-col gap-2">
-        {/* 1. Topo do card: Article number + Book */}
-        <div className="flex justify-between items-center text-xs text-gray-600 font-medium">
-          <span className="flex items-center gap-1">
-            <FileText className="h-3 w-3" />
+      <CardContent className="p-4 flex flex-col gap-3">
+        {/* 1. Header: Article number + Impact badges */}
+        <div className="flex justify-between items-center">
+          <span className="flex items-center gap-1 text-sm font-medium">
+            <FileText className="h-4 w-4 text-gray-500" />
             Art. {article.number || 'N/A'}
           </span>
-          <span className="flex items-center gap-1">
-            <BookOpen className="h-3 w-3" />
-            {getSimplifiedBook()}
-          </span>
+          
+          <div className="flex gap-1.5">
+            <Badge 
+              variant={impactType === 'positive' ? 'default' : impactType === 'negative' ? 'destructive' : 'secondary'} 
+              className={impactType === 'positive' ? 'bg-green-500 text-xs py-0.5' : 
+                        impactType === 'negative' ? 'bg-red-500 text-xs py-0.5' : 
+                        'text-xs py-0.5'}
+            >
+              {impactLabel}
+            </Badge>
+            
+            <Badge variant="outline" className={`text-xs py-0.5 ${relevanceColor}`}>
+              {relevanceText}
+            </Badge>
+          </div>
         </div>
         
-        {/* 2. Bloco principal: Article text */}
-        <p className="line-clamp-3 text-sm text-gray-800">
+        {/* 2. Book information */}
+        <div className="flex items-center gap-1 text-xs text-gray-600">
+          <BookOpen className="h-3.5 w-3.5 flex-shrink-0" />
+          <span className="line-clamp-2">{getSimplifiedBook()}</span>
+        </div>
+        
+        {/* 3. MAIN CONTENT: Article text (most important) */}
+        <p className="text-sm text-gray-800 font-medium">
           {article.simplifiedText || 'Sem texto disponível'}
         </p>
         
-        {/* 3. Badges: Impact and relevance */}
-        <div className="flex gap-2 text-xs">
-          <Badge 
-            variant={impactType === 'positive' ? 'default' : impactType === 'negative' ? 'destructive' : 'secondary'} 
-            className={impactType === 'positive' ? 'bg-green-500 text-xs py-0.5' : 
-                      impactType === 'negative' ? 'bg-red-500 text-xs py-0.5' : 
-                      'text-xs py-0.5'}
-          >
-            {impactLabel}
-          </Badge>
-          
-          <Badge variant="outline" className={`text-xs py-0.5 ${relevanceColor}`}>
-            {relevanceText}
-          </Badge>
-        </div>
-        
-        {/* 4. Título: Article title */}
-        {article.metadata?.titulo && (
+        {/* 4. Article title if available */}
+        {bookTitle && (
           <p className="text-xs text-gray-500 line-clamp-2">
-            {article.metadata.titulo}
+            {bookTitle}
           </p>
         )}
         
-        {/* 5. CTA: View article details */}
+        {/* 5. CTA button */}
         <ArticleCardSummary 
           article={article} 
           segmentId={segmentId} 
