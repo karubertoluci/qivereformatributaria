@@ -1,17 +1,21 @@
 
 import React from 'react';
-import { RelevanceBookData } from './useRelevanceDistributionData';
+
+interface BookData {
+  id: string;
+  name: string;
+  total: number;
+  muitoRelevante: number;
+  moderadamenteRelevante: number;
+  poucoRelevante: number;
+  irrelevante: number;
+}
 
 interface RelevanceBookCardsProps {
-  bookData: RelevanceBookData[];
+  bookData: BookData[];
   selectedBook: string | null;
   onSelectBook: (bookId: string | null) => void;
-  colorScheme: {
-    muitoRelevante: string;
-    moderadamenteRelevante: string;
-    poucoRelevante: string;
-    irrelevante: string;
-  };
+  colorScheme: Record<string, string>;
 }
 
 const RelevanceBookCards: React.FC<RelevanceBookCardsProps> = ({
@@ -20,71 +24,45 @@ const RelevanceBookCards: React.FC<RelevanceBookCardsProps> = ({
   onSelectBook,
   colorScheme
 }) => {
+  const handleBookClick = (bookId: string) => {
+    onSelectBook(bookId === selectedBook ? null : bookId);
+  };
+  
+  if (!bookData || bookData.length === 0 || bookData.every(book => book.total === 0)) {
+    return null;
+  }
+  
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+    <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
       {bookData.map((book) => (
         <div 
           key={book.id}
-          className={`bg-gray-50 p-3 rounded-lg border cursor-pointer hover:shadow transition-shadow
-            ${selectedBook === book.id ? 'ring-2 ring-primary shadow-sm' : ''}`}
-          onClick={() => onSelectBook(book.id)}
+          className={`p-4 rounded-lg border cursor-pointer transition-all ${selectedBook === book.id ? 'border-primary shadow-md' : 'border-gray-200 hover:border-gray-300'}`}
+          onClick={() => handleBookClick(book.id)}
         >
-          <div className="font-semibold mb-1">
-            {book.name}: {book.description}
+          <div className="flex justify-between items-center mb-2">
+            <h4 className="text-base font-medium">{book.name}</h4>
+            <span className="text-sm font-medium">{book.total} artigos</span>
           </div>
           
-          <div className="space-y-1 text-sm mb-2">
-            <div className="flex justify-between">
-              <span className="flex items-center">
-                <span 
-                  className="w-2 h-2 rounded-sm mr-1.5"
-                  style={{ backgroundColor: colorScheme.irrelevante }}
-                ></span>
-                Irrelevante
-              </span>
-              <span>{book.irrelevante}</span>
+          <div className="space-y-2 mt-2">
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: colorScheme.muitoRelevante }}></div>
+              <span className="text-xs">Muito relevante: {book.muitoRelevante}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="flex items-center">
-                <span 
-                  className="w-2 h-2 rounded-sm mr-1.5"
-                  style={{ backgroundColor: colorScheme.poucoRelevante }}
-                ></span>
-                Pouco relevante
-              </span>
-              <span>{book.poucoRelevante}</span>
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: colorScheme.moderadamenteRelevante }}></div>
+              <span className="text-xs">Moderadamente: {book.moderadamenteRelevante}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="flex items-center">
-                <span 
-                  className="w-2 h-2 rounded-sm mr-1.5"
-                  style={{ backgroundColor: colorScheme.moderadamenteRelevante }}
-                ></span>
-                Moderadamente
-              </span>
-              <span>{book.moderadamenteRelevante}</span>
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: colorScheme.poucoRelevante }}></div>
+              <span className="text-xs">Pouco relevante: {book.poucoRelevante}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="flex items-center">
-                <span 
-                  className="w-2 h-2 rounded-sm mr-1.5"
-                  style={{ backgroundColor: colorScheme.muitoRelevante }}
-                ></span>
-                Muito relevante
-              </span>
-              <span>{book.muitoRelevante}</span>
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: colorScheme.irrelevante }}></div>
+              <span className="text-xs">Irrelevante: {book.irrelevante}</span>
             </div>
           </div>
-          
-          <button 
-            className="w-full mt-1 text-xs py-1 px-2 bg-gray-100 hover:bg-gray-200 rounded text-center"
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelectBook(selectedBook === book.id ? null : book.id);
-            }}
-          >
-            Filtrar
-          </button>
         </div>
       ))}
     </div>

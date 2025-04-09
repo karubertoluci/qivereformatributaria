@@ -17,10 +17,11 @@ export const useArticleFiltering = (
   
   // Use segmentArticles if available, otherwise fallback to static articles
   // Não filtra por segmento para mostrar todos os artigos
-  const relevantArticles = segmentArticles.length > 0 
+  const relevantArticles = segmentArticles && segmentArticles.length > 0 
     ? segmentArticles 
     : articles;
   
+  // Apply filtering based on search term and filter type
   const filteredArticles = relevantArticles
     .filter(article => 
       article.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -37,15 +38,20 @@ export const useArticleFiltering = (
       );
     });
   
-  // Apply the favorability distribution: 40% positive, 20% neutral, 30% negative
-  const totalCount = relevantArticles.length;
-  const positiveCount = Math.round(totalCount * 0.4); // 40% favorable
-  const neutralCount = Math.round(totalCount * 0.2);  // 20% neutral
-  const negativeCount = Math.round(totalCount * 0.3); // 30% unfavorable
-  const otherCount = totalCount - positiveCount - neutralCount - negativeCount;
+  // Calculate impact counts for the distribution charts
+  const positiveCount = filteredArticles.filter(article => 
+    article.impacts.some(impact => impact.type === 'positive')
+  ).length;
+  
+  const negativeCount = filteredArticles.filter(article => 
+    article.impacts.some(impact => impact.type === 'negative')
+  ).length;
+  
+  const neutralCount = filteredArticles.length - positiveCount - negativeCount;
   
   // Apply the relevance distribution: 
   // 40% Irrelevante, 10% Pouco relevante, 40% Moderadamente relevante, 10% Muito relevante
+  const totalCount = filteredArticles.length;
   const irrelevantCount = Math.round(totalCount * 0.4);       // 40% irrelevant
   const slightlyRelevantCount = Math.round(totalCount * 0.1); // 10% slightly relevant
   const moderatelyRelevantCount = Math.round(totalCount * 0.4); // 40% moderately relevant
@@ -65,7 +71,6 @@ export const useArticleFiltering = (
     positiveCount,
     negativeCount,
     neutralCount,
-    otherCount,
     irrelevantCount,
     slightlyRelevantCount,
     moderatelyRelevantCount,

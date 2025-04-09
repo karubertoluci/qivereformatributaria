@@ -30,13 +30,12 @@ const ChartSection: React.FC<ChartSectionProps> = ({
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
   const [selectedRelevance, setSelectedRelevance] = useState<string | null>(null);
   const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
-
-  // Debug the filtered articles
+  
+  // Add debug log to track articles being passed to charts
   useEffect(() => {
     console.log(`ChartSection received ${safeArticles.length} articles for segment ${segmentId}`);
-    // Log a sample of articles to debug
     if (safeArticles.length > 0) {
-      console.log(`Sample article metadata:`, safeArticles[0].metadata);
+      console.log('First article:', safeArticles[0]);
     }
   }, [safeArticles, segmentId]);
 
@@ -134,7 +133,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
       <div className={`overflow-x-auto transition-all duration-300 ${expanded ? 'max-h-[2000px]' : 'max-h-[1200px]'}`}>
         <div className={isMobile ? "min-w-[500px]" : ""}>
           <div className="space-y-6">
-            {/* 1. Distribuição de Artigos por Livro (Gráfico de Barras Empilhadas) */}
+            {/* 1. Distribuição de Artigos por Livro e relevância */}
             <div className="mb-6">
               <RelevanceDistributionChart 
                 articles={safeArticles}
