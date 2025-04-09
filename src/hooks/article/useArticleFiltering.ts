@@ -16,11 +16,10 @@ export const useArticleFiltering = (
   const [expandedArticleId, setExpandedArticleId] = useState<string | null>(null);
   
   // Use segmentArticles if available, otherwise fallback to static articles
+  // Não filtra por segmento para mostrar todos os artigos
   const relevantArticles = segmentArticles.length > 0 
     ? segmentArticles 
-    : articles.filter(article => 
-        article.impacts.some(impact => impact.segments.includes(segment.id))
-      );
+    : articles;
   
   const filteredArticles = relevantArticles
     .filter(article => 
@@ -29,8 +28,12 @@ export const useArticleFiltering = (
     )
     .filter(article => {
       if (filterType === 'all') return true;
+      
+      // Se não houver impactos, manter o artigo visível
+      if (!article.impacts || article.impacts.length === 0) return true;
+      
       return article.impacts.some(
-        impact => impact.type === filterType && impact.segments.includes(segment.id)
+        impact => impact.type === filterType
       );
     });
   

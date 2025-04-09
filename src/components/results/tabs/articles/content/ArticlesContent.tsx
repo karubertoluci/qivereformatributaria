@@ -47,7 +47,7 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
   segment
 }) => {
   const hasCriticalImpacts = filteredArticles.some(article => 
-    article.impacts.some(impact => {
+    article.impacts && article.impacts.some(impact => {
       if (typeof impact.severity === 'number') {
         return impact.severity >= 8;
       } else if (typeof impact.severity === 'string') {

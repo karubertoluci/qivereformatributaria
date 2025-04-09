@@ -18,6 +18,9 @@ export const useFilterManagement = (relevantArticles: Article[]) => {
       .filter(article => {
         if (filterType === 'all') return true;
         
+        // Se não houver impactos, manter o artigo visível
+        if (!article.impacts || article.impacts.length === 0) return true;
+        
         return article.impacts.some(impact => {
           // Map the filter type to the impact type in the article
           if (filterType === 'positive') return impact.type === 'positive';

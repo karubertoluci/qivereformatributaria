@@ -29,7 +29,7 @@ export const useArticleData = (segment: BusinessSegment) => {
         
         console.log(`Buscando artigos do Supabase para o segmento: ${segment.id}`);
         
-        // Buscar da tabela livros_reforma
+        // Buscar da tabela livros_reforma - sem filtrar por CNAE ou CNPJ para mostrar todos
         const { data: livrosData, error: livrosError } = await supabase
           .from('livros_reforma')
           .select('*');
@@ -93,12 +93,10 @@ export const useArticleData = (segment: BusinessSegment) => {
         // Se não houver dados na tabela livros_reforma, usar dados de exemplo da aplicação
         console.log('Não foram encontrados dados na tabela livros_reforma, usando dados de exemplo');
         
-        // Filtrar artigos de exemplo com base no segmento
-        const mockArticles = articles.filter(article => 
-          article.impacts.some(impact => impact.segments.includes(segment.id))
-        );
+        // Usar todos os artigos de exemplo, sem filtrar por segmento
+        const mockArticles = articles;
         
-        console.log(`Usando ${mockArticles.length} artigos de exemplo para o segmento`);
+        console.log(`Usando ${mockArticles.length} artigos de exemplo`);
         setSegmentArticles(mockArticles);
         
         // Tentar armazenar os artigos em cache com tratamento de erro

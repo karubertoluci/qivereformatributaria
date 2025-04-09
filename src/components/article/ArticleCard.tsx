@@ -44,9 +44,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
     primaryImpactType = 'negative';
   } else {
     // For the remaining 10%, determine based on actual impacts
-    const segmentImpacts = article.impacts.filter(impact => 
+    const segmentImpacts = article.impacts?.filter(impact => 
       impact.segments.includes(segmentId)
-    );
+    ) || [];
     
     const hasPositiveImpact = segmentImpacts.some(impact => impact.type === 'positive');
     const hasNegativeImpact = segmentImpacts.some(impact => impact.type === 'negative');
@@ -75,10 +75,15 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
       return `Livro ${article.metadata.bookId}`;
     }
     
+    if (article.metadata?.livro) {
+      return `Livro ${article.metadata.livro}`;
+    }
+    
     const articleNum = parseInt(article.number.replace(/\D/g, '')) || 0;
     if (articleNum <= 180) return 'Livro I';
     if (articleNum <= 300) return 'Livro II';
-    return 'Livro III';
+    if (articleNum <= 450) return 'Livro III';
+    return 'Livro IV';
   };
   
   return (
@@ -133,9 +138,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
             {relevanceText}
           </Badge>
           
-          {article.metadata?.title && (
+          {article.metadata?.titulo && (
             <Badge variant="outline" className="text-xs">
-              Título: {article.metadata.title}
+              {article.metadata.titulo}
             </Badge>
           )}
         </div>
