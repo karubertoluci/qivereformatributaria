@@ -8,6 +8,7 @@ import { useSearchParams } from 'react-router-dom';
 import ArticlesFilters from '@/components/results/tabs/articles/filters/ArticlesFilters';
 import ArticlesContent from '@/components/results/tabs/articles/content/ArticlesContent';
 import ChartSection from '@/components/results/tabs/articles/charts/ChartSection';
+import ActiveFilters from '@/components/results/tabs/articles/ActiveFilters';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -94,63 +95,70 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
     return Array.from(new Set(allTitles));
   }, [relevantArticles]);
 
+  // Get the displayed book and title names for ActiveFilters
+  const bookName = selectedBookFilter ? `Livro ${selectedBookFilter}` : '';
+  const titleName = selectedTitleFilter && titles.find(t => t === selectedTitleFilter) || '';
+
   return (
     <TabsContent value="articles" className="pb-12">
-      <div className="grid md:grid-cols-12 gap-6">
-        <aside className="md:col-span-3 md:sticky md:top-[80px] h-fit">
-          <ArticlesFilters 
-            positiveCount={positiveCount}
-            negativeCount={negativeCount}
-            neutralCount={neutralCount}
-            totalCount={relevantArticles.length}
-            searchTerm={searchTerm || ''}
-            setSearchTerm={setSearchTerm || (() => {})}
-            filterType={filterType || 'all'}
-            setFilterType={setFilterType || (() => {})}
-            viewMode={viewMode}
-            setViewMode={setViewMode}
-            selectedBookFilter={selectedBookFilter}
-            setSelectedBookFilter={setSelectedBookFilter}
-            selectedTitleFilter={selectedTitleFilter}
-            setSelectedTitleFilter={setSelectedTitleFilter}
-            books={books}
-            titles={titles}
-          />
-        </aside>
+      <ArticlesFilters 
+        positiveCount={positiveCount}
+        negativeCount={negativeCount}
+        neutralCount={neutralCount}
+        totalCount={relevantArticles.length}
+        searchTerm={searchTerm || ''}
+        setSearchTerm={setSearchTerm || (() => {})}
+        filterType={filterType || 'all'}
+        setFilterType={setFilterType || (() => {})}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        selectedBookFilter={selectedBookFilter}
+        setSelectedBookFilter={setSelectedBookFilter}
+        selectedTitleFilter={selectedTitleFilter}
+        setSelectedTitleFilter={setSelectedTitleFilter}
+        books={books}
+        titles={titles}
+      />
+      
+      <ActiveFilters 
+        selectedBookFilter={selectedBookFilter}
+        selectedTitleFilter={selectedTitleFilter}
+        onClearBookFilter={() => setSelectedBookFilter(null)}
+        onClearTitleFilter={() => setSelectedTitleFilter(null)}
+        bookName={bookName}
+        titleName={titleName}
+      />
 
-        <main className="md:col-span-9">
-          <div className="flex flex-col space-y-6">
-            <ChartSection 
-              filteredArticles={filteredArticles}
-              segmentId={segment.id}
-              setExpandedArticleId={setExpandedArticleId}
-              expanded={expanded}
-              toggleExpanded={toggleExpanded}
-            />
-            
-            <ArticlesContent 
-              filteredArticles={filteredArticles}
-              displayedArticles={displayedArticles}
-              selectedBookFilter={selectedBookFilter}
-              selectedTitleFilter={selectedTitleFilter}
-              setSelectedBookFilter={setSelectedBookFilter}
-              setSelectedTitleFilter={setSelectedTitleFilter}
-              expandedArticleId={expandedArticleId}
-              setExpandedArticleId={setExpandedArticleId}
-              highlights={highlights}
-              onAddHighlight={handleAddHighlight}
-              onRemoveHighlight={handleRemoveHighlight}
-              articlesByTopic={articlesByTopic}
-              viewMode={viewMode}
-              setViewMode={setViewMode}
-              topics={topics}
-              segment={segment}
-              positiveCount={positiveCount}
-              negativeCount={negativeCount}
-              neutralCount={neutralCount}
-            />
-          </div>
-        </main>
+      <div className="space-y-6">
+        <ChartSection 
+          filteredArticles={filteredArticles}
+          segmentId={segment.id}
+          setExpandedArticleId={setExpandedArticleId}
+          expanded={expanded}
+          toggleExpanded={toggleExpanded}
+        />
+        
+        <ArticlesContent 
+          filteredArticles={filteredArticles}
+          displayedArticles={displayedArticles}
+          selectedBookFilter={selectedBookFilter}
+          selectedTitleFilter={selectedTitleFilter}
+          setSelectedBookFilter={setSelectedBookFilter}
+          setSelectedTitleFilter={setSelectedTitleFilter}
+          expandedArticleId={expandedArticleId}
+          setExpandedArticleId={setExpandedArticleId}
+          highlights={highlights}
+          onAddHighlight={handleAddHighlight}
+          onRemoveHighlight={handleRemoveHighlight}
+          articlesByTopic={articlesByTopic}
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+          topics={topics}
+          segment={segment}
+          positiveCount={positiveCount}
+          negativeCount={negativeCount}
+          neutralCount={neutralCount}
+        />
       </div>
     </TabsContent>
   );

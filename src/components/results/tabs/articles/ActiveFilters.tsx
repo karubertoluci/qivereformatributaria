@@ -21,7 +21,9 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
   bookName,
   titleName
 }) => {
-  if (!selectedBookFilter && !selectedTitleFilter) {
+  if ((!selectedBookFilter && !selectedTitleFilter) || 
+      (selectedBookFilter === 'all' && (!selectedTitleFilter || selectedTitleFilter === 'all')) || 
+      (selectedTitleFilter === 'all' && (!selectedBookFilter || selectedBookFilter === 'all'))) {
     return null;
   }
   
