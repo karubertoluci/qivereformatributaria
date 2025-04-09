@@ -4,7 +4,7 @@ import { TabsContent } from '@/components/ui/tabs';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
 import { CompanyData } from '@/hooks/results/types';
-import CompanyOverview from '@/components/report/CompanyOverview';
+import CompanyOverview from '@/components/report/company-overview';
 import ReformOverview from '@/components/report/ReformOverview';
 
 interface OverviewTabProps {
