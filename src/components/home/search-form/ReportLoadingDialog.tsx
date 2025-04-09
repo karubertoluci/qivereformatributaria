@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import CompanyLoadingAnimation from './CompanyLoadingAnimation';
 
 interface ReportLoadingDialogProps {
@@ -49,6 +49,9 @@ const ReportLoadingDialog: React.FC<ReportLoadingDialogProps> = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-hidden">
+        <DialogHeader>
+          <DialogTitle>Processando informações</DialogTitle>
+        </DialogHeader>
         <CompanyLoadingAnimation 
           companyName={companyName || "sua empresa"} 
           companyData={companyData}

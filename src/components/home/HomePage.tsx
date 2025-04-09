@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import Hero from './hero/Hero';
 import SearchForm from './search-form';
@@ -19,11 +18,10 @@ const HomePage: React.FC<HomePageProps> = ({
   onCnaeSubmit,
   onSelectSegment
 }) => {
-  // Load previous state from localStorage if it exists (for persistence between page refreshes)
+  // Effect to prepare for a fresh session
   useEffect(() => {
-    // Clear previous data when the page loads
-    localStorage.removeItem('companyData');
-    // Also remove segment article data to ensure they will be fetched again
+    // We'll keep formData in localStorage to preserve company information
+    // Just ensure we're not keeping stale article data
     localStorage.removeItem('segmentArticles');
   }, []);
 

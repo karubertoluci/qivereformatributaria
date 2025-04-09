@@ -5,7 +5,7 @@ import FormDialog from './FormDialog';
 import { FormValues } from './types/companyData';
 import SearchFormLoading from './SearchFormLoading';
 import { useFormDialogContext } from '../FormDialogContext';
-import { BusinessSegment } from '@/data/segments';
+import { BusinessSegment, businessSegments } from '@/data/segments';
 import { toast } from 'sonner';
 
 interface SearchFormDialogsProps {
@@ -48,17 +48,26 @@ const SearchFormDialogs: React.FC<SearchFormDialogsProps> = ({
     // Redirect to results section by selecting the segment
     if (formData?.companyData?.cnaePrincipal?.descricao) {
       // Try to find a matching segment based on CNAE description
-      import('@/data/segments').then(({ businessSegments }) => {
-        // Find a segment that may be related to the company's CNAE
-        // This is a simplified approach - in a real app, you might have a more sophisticated mapping
-        const foundSegment = businessSegments.find(segment => 
-          formData.companyData?.cnaePrincipal?.descricao?.toLowerCase().includes(segment.name.toLowerCase())
-        ) || businessSegments[0]; // Default to first segment if no match
-        
-        console.log("Selecting segment after loading:", foundSegment);
-        toast.success(`Relatório para ${formData.companyData?.nomeFantasia || formData.companyData?.razaoSocial || "empresa"} está pronto!`);
+      // Find a segment that may be related to the company's CNAE
+      // This is a simplified approach - in a real app, you might have a more sophisticated mapping
+      const descLower = formData.companyData.cnaePrincipal.descricao.toLowerCase();
+      const foundSegment = businessSegments.find(segment => 
+        descLower.includes(segment.name.toLowerCase())
+      ) || businessSegments[0]; // Default to first segment if no match
+      
+      console.log("Selecting segment after loading:", foundSegment);
+      toast.success(`Relatório para ${formData.companyData?.nomeFantasia || formData.companyData?.razaoSocial || "empresa"} está pronto!`);
+      
+      // Important: Call the onSelectSegment callback to trigger the segment selection
+      setTimeout(() => {
         onSelectSegment(foundSegment);
-      });
+      }, 500);
+    } else {
+      // If no CNAE description is available, default to the first segment
+      toast.success("Relatório está pronto!");
+      setTimeout(() => {
+        onSelectSegment(businessSegments[0]);
+      }, 500);
     }
   };
 

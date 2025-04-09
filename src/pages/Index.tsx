@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import HomePage from '@/components/home/HomePage';
 import Results from '@/components/Results';
@@ -10,10 +10,23 @@ const Index = () => {
   const [selectedSegment, setSelectedSegment] = useState<BusinessSegment | null>(null);
   const [cnae, setCnae] = useState<string>('');
   
-  // Remove the previous localStorage loading logic to ensure we always start fresh
+  // Check if we have a previously selected segment in localStorage
+  useEffect(() => {
+    const storedSegment = localStorage.getItem('selectedSegment');
+    if (storedSegment) {
+      try {
+        const parsedSegment = JSON.parse(storedSegment);
+        setSelectedSegment(parsedSegment);
+      } catch (error) {
+        console.error('Error parsing stored segment:', error);
+        localStorage.removeItem('selectedSegment');
+      }
+    }
+  }, []);
   
   const handleDirectSegmentSelect = (segment: BusinessSegment | null) => {
     if (segment) {
+      console.log("Segment selected:", segment.name);
       setSelectedSegment(segment);
       // Store in localStorage for persistence
       localStorage.setItem('selectedSegment', JSON.stringify(segment));
@@ -40,19 +53,19 @@ const Index = () => {
     <div className="min-h-screen flex flex-col bg-background text-foreground w-full max-w-full">
       {!selectedSegment && <Header />}
       <main className="flex-grow w-full max-w-full">
-        <HomePage 
-          onCnaeSubmit={handleSubmitCnae}
-          onSelectSegment={handleDirectSegmentSelect}
-        />
-        
-        <AnimatePresence>
-          {selectedSegment && (
+        {!selectedSegment ? (
+          <HomePage 
+            onCnaeSubmit={handleSubmitCnae}
+            onSelectSegment={handleDirectSegmentSelect}
+          />
+        ) : (
+          <AnimatePresence mode="wait">
             <Results 
               segment={selectedSegment} 
               onBackToSegments={handleBackToHome} 
             />
-          )}
-        </AnimatePresence>
+          </AnimatePresence>
+        )}
       </main>
     </div>
   );
