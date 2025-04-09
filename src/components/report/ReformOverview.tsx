@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BusinessSegment } from '@/data/segments';
-import { Info, FileText } from 'lucide-react';
+import { Info, FileText, CircleDot } from 'lucide-react';
 
 interface ReformOverviewProps {
   segment: BusinessSegment;
@@ -34,16 +35,37 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
             
             <div className="p-4 bg-rose-50 rounded-lg flex gap-3">
               <Info className="h-5 w-5 text-rose-500 flex-shrink-0 mt-1" />
-              <div>
+              <div className="w-full">
                 <h4 className="font-medium text-left">Principais mudanças:</h4>
-                <ul className="list-disc list-inside space-y-1 mt-2 text-sm">
-                  <li>Substituição de cinco tributos por um sistema IVA dual</li>
-                  <li>Cobrança do imposto no destino (onde ocorre o consumo), não na origem</li>
-                  <li>Não-cumulatividade plena (créditos amplos de insumos)</li>
-                  <li>Alíquota padrão nacional estimada entre 25% e 27%</li>
-                  <li>Cashback para famílias de baixa renda</li>
-                  <li>Criação de regimes diferenciados para setores específicos</li>
-                  <li>Período de transição de 8 anos (2026-2033)</li>
+                <ul className="space-y-2 mt-2 text-sm">
+                  <li className="flex items-start gap-2 text-left">
+                    <CircleDot className="h-4 w-4 text-rose-500 flex-shrink-0 mt-1" />
+                    <span>Substituição de cinco tributos por um sistema IVA dual</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-left">
+                    <CircleDot className="h-4 w-4 text-rose-500 flex-shrink-0 mt-1" />
+                    <span>Cobrança do imposto no destino (onde ocorre o consumo), não na origem</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-left">
+                    <CircleDot className="h-4 w-4 text-rose-500 flex-shrink-0 mt-1" />
+                    <span>Não-cumulatividade plena (créditos amplos de insumos)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-left">
+                    <CircleDot className="h-4 w-4 text-rose-500 flex-shrink-0 mt-1" />
+                    <span>Alíquota padrão nacional estimada entre 25% e 27%</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-left">
+                    <CircleDot className="h-4 w-4 text-rose-500 flex-shrink-0 mt-1" />
+                    <span>Cashback para famílias de baixa renda</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-left">
+                    <CircleDot className="h-4 w-4 text-rose-500 flex-shrink-0 mt-1" />
+                    <span>Criação de regimes diferenciados para setores específicos</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-left">
+                    <CircleDot className="h-4 w-4 text-rose-500 flex-shrink-0 mt-1" />
+                    <span>Período de transição de 8 anos (2026-2033)</span>
+                  </li>
                 </ul>
               </div>
             </div>
