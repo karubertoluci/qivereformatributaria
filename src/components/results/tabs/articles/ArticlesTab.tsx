@@ -3,11 +3,11 @@ import React, { useState, useMemo } from 'react';
 import { TabsContent } from '@/components/ui/tabs';
 import { Article } from '@/data/articles';
 import { BusinessSegment } from '@/data/segments';
+import { HighlightType, ViewMode, FilterType, Topic } from '@/components/results/types';
+import { useSearchParams } from 'react-router-dom';
 import ArticlesFilters from '@/components/results/tabs/articles/filters/ArticlesFilters';
 import ArticlesContent from '@/components/results/tabs/articles/content/ArticlesContent';
 import ChartSection from '@/components/results/tabs/articles/charts/ChartSection';
-import { HighlightType, ViewMode, FilterType, Topic } from '@/components/results/types';
-import { useSearchParams } from 'react-router-dom';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;

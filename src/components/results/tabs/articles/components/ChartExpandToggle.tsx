@@ -21,12 +21,12 @@ const ChartExpandToggle: React.FC<ChartExpandToggleProps> = ({
     >
       {expanded ? (
         <>
-          <span>Mostrar menos</span>
+          <span>Show less</span>
           <ChevronUp className="h-4 w-4" />
         </>
       ) : (
         <>
-          <span>Mostrar mais</span>
+          <span>Show more</span>
           <ChevronDown className="h-4 w-4" />
         </>
       )}
