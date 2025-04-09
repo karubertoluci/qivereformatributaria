@@ -1,9 +1,7 @@
 
 import { useState, useMemo } from 'react';
 import { Article } from '@/data/articles';
-
-export type FilterType = 'all' | 'positive' | 'negative' | 'neutral';
-export type ViewMode = 'chart' | 'table';
+import { FilterType, ViewMode } from './types';
 
 export const useFilterManagement = (relevantArticles: Article[]) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
