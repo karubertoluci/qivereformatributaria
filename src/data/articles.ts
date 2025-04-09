@@ -1,3 +1,4 @@
+
 export interface ArticleImpact {
   type: 'positive' | 'negative' | 'neutral';
   description: string;
@@ -14,6 +15,7 @@ export interface ArticleMetadata {
   subsection?: string;
   relevanceScore?: number;
   impactType?: 'positive' | 'negative' | 'neutral';
+  livro?: string; // Adding the livro property that was missing
 }
 
 export interface Article {

@@ -69,7 +69,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         if (article.metadata?.bookId) {
           return article.metadata.bookId === selectedBookFilter;
         }
-        // Fallback para propriedade bookId legada se existir
+        // Fallback para propriedade livro no metadata
         return article.metadata?.livro === selectedBookFilter;
       });
     }
