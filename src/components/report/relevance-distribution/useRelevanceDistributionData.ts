@@ -54,26 +54,36 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
     
     // Process each article to count by book and relevance
     articles.forEach(article => {
-      // Skip articles without metadata
-      if (!article.metadata) {
-        console.log(`Article ${article.id} has no metadata, skipping`);
-        return;
-      }
+      // Determine which book this article belongs to
+      let bookId: string;
       
-      // Determine which book this article belongs to - first try using metadata
-      let bookId = article.metadata.bookId || article.metadata.livro;
-      
-      if (!bookId) {
-        // If no metadata, determine from article number
-        const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
-                          parseInt(article.id.replace(/\D/g, ''));
-        
+      // First try metadata.bookId
+      if (article.metadata?.bookId) {
+        bookId = article.metadata.bookId;
+      } 
+      // Then try metadata.livro
+      else if (article.metadata?.livro) {
+        // Extract roman numeral from strings like "LIVRO I - DO IMPOSTO..."
+        const match = article.metadata.livro.match(/LIVRO\s+([IVX]+)/i);
+        if (match && match[1]) {
+          bookId = match[1]; // Just the roman numeral
+        } else {
+          // Default if pattern doesn't match
+          const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
+          if (articleNum <= 200) bookId = 'I';
+          else if (articleNum <= 350) bookId = 'II';
+          else bookId = 'III';
+        }
+      } 
+      // Finally fall back to article number logic
+      else {
+        const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
         if (articleNum <= 200) bookId = 'I';
         else if (articleNum <= 350) bookId = 'II';
         else bookId = 'III';
       }
       
-      // Normalize book ID (remove "Livro " prefix if present)
+      // Normalize book ID 
       if (typeof bookId === 'string' && bookId.startsWith('Livro ')) {
         bookId = bookId.replace('Livro ', '');
       }
@@ -83,9 +93,11 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
         bookId = 'I'; // Default to Book I if unknown
       }
       
+      // Calculate relevance category
+      let relevanceCategory: string;
+      
       // First check if article has relevance in metadata
-      let relevanceCategory: string = '';
-      if (article.metadata.relevancia) {
+      if (article.metadata?.relevancia) {
         relevanceCategory = article.metadata.relevancia.toLowerCase();
         
         // Map relevance categories to our keys
@@ -102,10 +114,9 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
           relevanceCategory = 'moderadamenteRelevante';
         }
       } else {
-        // Calculate relevance category using consistent logic with other components
+        // Deterministic distribution based on article number
         const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
         
-        // Deterministic distribution based on article number
         if (articleNum % 10 < 2) {
           relevanceCategory = 'irrelevante'; // 20% of articles
         } else if (articleNum % 10 < 4) {

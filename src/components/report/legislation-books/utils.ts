@@ -8,6 +8,15 @@ export const getArticleBook = (article: Article): string => {
     return article.metadata.bookId;
   }
   
+  // If article has metadata.livro, clean it and use that
+  if (article.metadata?.livro) {
+    // Extract just the roman numeral from strings like "LIVRO I - DO IMPOSTO..."
+    const match = article.metadata.livro.match(/LIVRO\s+([IVX]+)/i);
+    if (match && match[1]) {
+      return match[1]; // Return just the roman numeral
+    }
+  }
+  
   // Otherwise determine based on article number
   const id = parseInt(article.id.replace(/\D/g, '')) || parseInt(article.number.replace(/\D/g, ''));
   if (id < 200) return 'I';
