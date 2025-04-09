@@ -10,11 +10,9 @@ export const getArticleBook = (article: Article): string => {
   
   // Otherwise determine based on article number
   const id = parseInt(article.id.replace(/\D/g, '')) || parseInt(article.number.replace(/\D/g, ''));
-  const randomValue = (id % 100) / 100;  // Deterministic distribution
-  
-  if (randomValue < 0.3) return 'I';      // 30% in Book I
-  if (randomValue < 0.7) return 'II';     // 40% in Book II
-  return 'III';                           // 30% in Book III
+  if (id < 200) return 'I';
+  if (id >= 200 && id < 350) return 'II';
+  return 'III';
 };
 
 export const prepareChartData = (articles: Article[]) => {

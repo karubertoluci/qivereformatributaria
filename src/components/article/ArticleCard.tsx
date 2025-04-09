@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,8 +7,6 @@ import { Article } from '@/data/articles';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ArticleContent from './ArticleContent';
 import { HighlightType } from '@/components/results/types';
-import { getArticleBook } from '@/components/report/legislation-books/utils';
-
 interface ArticleCardProps {
   article: Article;
   segmentId: string;
@@ -17,7 +14,6 @@ interface ArticleCardProps {
   onAddHighlight?: (text: string, color: HighlightType['color']) => void;
   onRemoveHighlight?: (id: string) => void;
 }
-
 const ArticleCard: React.FC<ArticleCardProps> = ({
   article,
   segmentId,
@@ -61,19 +57,20 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
     relevanceText = 'Muito relevante';
   }
 
-  // Determinar o livro com base no getArticleBook para consistência
+  // Determinar o livro com base no número do artigo ou metadata
   const getBookInfo = () => {
-    const bookId = getArticleBook(article);
-    let bookName = '';
-    
-    if (bookId === 'I') bookName = 'Livro I';
-    else if (bookId === 'II') bookName = 'Livro II';
-    else if (bookId === 'III') bookName = 'Livro III';
-    else bookName = 'Livro IV';
-    
-    return bookName;
+    if (article.metadata?.bookId) {
+      return `Livro ${article.metadata.bookId}`;
+    }
+    if (article.metadata?.livro) {
+      return `Livro ${article.metadata.livro}`;
+    }
+    const articleNum = parseInt((article.number || '').replace(/\D/g, '')) || 0;
+    if (articleNum <= 180) return 'Livro I';
+    if (articleNum <= 300) return 'Livro II';
+    if (articleNum <= 450) return 'Livro III';
+    return 'Livro IV';
   };
-
   return <Card className={`mb-4 border-l-4 hover:shadow-md transition-all ${primaryImpactType === 'positive' ? 'border-l-green-500' : primaryImpactType === 'negative' ? 'border-l-red-500' : 'border-l-gray-300'}`}>
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
@@ -126,5 +123,4 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
       </CardFooter>
     </Card>;
 };
-
 export default ArticleCard;

@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge';
 import { FileText, Book, Info, AlertTriangle, CheckCircle, Bookmark, Layers } from 'lucide-react';
 import { Article } from '@/data/articles';
 import { cn } from '@/lib/utils';
-import { getArticleBook } from '@/components/report/legislation-books/utils';
 
 interface ArticleHeaderProps {
   article: Article;
@@ -42,20 +41,22 @@ const ArticleHeader: React.FC<ArticleHeaderProps> = ({ article, segmentId }) => 
     importanceIcon = <AlertTriangle className="h-3 w-3" />;
   }
 
-  // Determine which book the article belongs to using the getArticleBook utility
-  const getArticleBookInfo = () => {
-    const bookId = getArticleBook(article);
+  // Determine which book the article belongs to based on article ID or number
+  const getArticleBook = () => {
+    // For demonstration purposes, determining book based on article ID or number logic
+    const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
+                      parseInt(article.id.replace(/\D/g, ''));
     
-    if (bookId === 'I') {
+    if (articleNum <= 180) {
       return { id: 'I', name: 'CBS', color: 'bg-blue-100 text-blue-700' };
-    } else if (bookId === 'II') {
+    } else if (articleNum <= 300) {
       return { id: 'II', name: 'IBS', color: 'bg-amber-100 text-amber-700' };
     } else {
       return { id: 'III', name: 'IS', color: 'bg-purple-100 text-purple-700' };
     }
   };
   
-  const { id: bookId, name: bookName, color: bookColor } = getArticleBookInfo();
+  const { id: bookId, name: bookName, color: bookColor } = getArticleBook();
   
   // Get metadata (chapter, section, subsection)
   const chapter = article.metadata?.chapter || 'Capítulo 1';
