@@ -81,7 +81,7 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
     : `${safeDisplayedArticles.length} artigos encontrados`;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
       {/* Alerta de impactos críticos se houver */}
       <ImpactsSection 
         hasCriticalImpacts={hasCriticalImpacts}

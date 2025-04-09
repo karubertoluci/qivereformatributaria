@@ -3,9 +3,9 @@ import React, { useState, useMemo } from 'react';
 import { TabsContent } from '@/components/ui/tabs';
 import { Article } from '@/data/articles';
 import { BusinessSegment } from '@/data/segments';
-import ArticlesFilters from './filters/ArticlesFilters';
-import ArticlesContent from './content/ArticlesContent';
-import ChartSection from './charts/ChartSection';
+import ArticlesFilters from './articles/filters/ArticlesFilters';
+import ArticlesContent from './articles/content/ArticlesContent';
+import ChartSection from './articles/charts/ChartSection';
 import { HighlightType, ViewMode, FilterType, Topic } from '@/components/results/types';
 import { useSearchParams } from 'react-router-dom';
 
@@ -32,23 +32,23 @@ interface ArticlesTabProps {
 
 const ArticlesTab: React.FC<ArticlesTabProps> = ({ 
   segment, 
-  relevantArticles = [],
-  filteredArticles = [],
+  relevantArticles,
+  filteredArticles,
   expandedArticleId,
   setExpandedArticleId,
-  highlights = [],
+  highlights,
   handleAddHighlight,
   handleRemoveHighlight,
-  topics = [],
-  articlesByTopic = {},
+  topics,
+  articlesByTopic,
   viewMode,
   setViewMode,
-  positiveCount = 0,
-  negativeCount = 0,
-  searchTerm = '',
-  setSearchTerm = () => {},
-  filterType = 'all',
-  setFilterType = () => {}
+  positiveCount,
+  negativeCount,
+  searchTerm,
+  setSearchTerm,
+  filterType,
+  setFilterType
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(searchParams.get('book') || null);
@@ -78,41 +78,35 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
     return result;
   }, [filteredArticles, selectedBookFilter, selectedTitleFilter]);
 
-  // Calculate neutral count safely
-  const neutralCount = (relevantArticles || []).filter(article => 
-    article.impacts && article.impacts.some(impact => 
-      impact.type === 'neutral' && impact.segments && impact.segments.includes(segment.id)
-    )
+  // Calculate neutral count
+  const neutralCount = relevantArticles.filter(article => 
+    article.impacts.some(impact => impact.type === 'neutral' && impact.segments.includes(segment.id))
   ).length;
 
   // Extract book and title lists
   const books = useMemo(() => {
-    const allBooks = (relevantArticles || []).map(article => 
-      article.metadata?.bookId || article.metadata?.livro
-    ).filter(Boolean);
+    const allBooks = relevantArticles.map(article => article.metadata?.bookId || article.metadata?.livro).filter(Boolean);
     return Array.from(new Set(allBooks));
   }, [relevantArticles]);
   
   const titles = useMemo(() => {
-    const allTitles = (relevantArticles || []).map(article => 
-      article.title
-    ).filter(Boolean);
+    const allTitles = relevantArticles.map(article => article.title).filter(Boolean);
     return Array.from(new Set(allTitles));
   }, [relevantArticles]);
 
   return (
-    <TabsContent value="articles" className="pb-8 px-4">
+    <TabsContent value="articles" className="pb-12">
       <div className="grid md:grid-cols-12 gap-4">
         <aside className="md:col-span-3 md:sticky md:top-[80px] h-fit">
           <ArticlesFilters 
             positiveCount={positiveCount}
             negativeCount={negativeCount}
             neutralCount={neutralCount}
-            totalCount={relevantArticles ? relevantArticles.length : 0}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            filterType={filterType}
-            setFilterType={setFilterType}
+            totalCount={relevantArticles.length}
+            searchTerm={searchTerm || ''}
+            setSearchTerm={setSearchTerm || (() => {})}
+            filterType={filterType || 'all'}
+            setFilterType={setFilterType || (() => {})}
             viewMode={viewMode}
             setViewMode={setViewMode}
             selectedBookFilter={selectedBookFilter}
@@ -125,9 +119,9 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         </aside>
 
         <main className="md:col-span-9">
-          <div className="flex flex-col space-y-4">
+          <div className="flex flex-col space-y-6">
             <ChartSection 
-              filteredArticles={filteredArticles || []}
+              filteredArticles={filteredArticles}
               segmentId={segment.id}
               setExpandedArticleId={setExpandedArticleId}
               expanded={expanded}
@@ -135,7 +129,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             />
             
             <ArticlesContent 
-              filteredArticles={filteredArticles || []}
+              filteredArticles={filteredArticles}
               displayedArticles={displayedArticles}
               selectedBookFilter={selectedBookFilter}
               selectedTitleFilter={selectedTitleFilter}

@@ -116,6 +116,21 @@ footer {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Fix for cards container to stretch to full width */
+.grid {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Ensure article cards take up maximum available space */
+.articles-content {
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Ajuste para o link "Fale com Especialista" no rodapé */

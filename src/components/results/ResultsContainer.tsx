@@ -80,7 +80,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
       exit={{ y: "100%" }}
       transition={{ type: "spring", damping: 25, stiffness: 200 }}
     >
-      <div className="w-full px-0 mx-auto">
+      <div className="w-full mx-auto">
         <ResultsHeader 
           segment={segment}
           positiveCount={positiveCount}

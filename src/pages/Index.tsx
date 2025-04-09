@@ -48,9 +48,9 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
+    <div className="min-h-screen flex flex-col bg-background text-foreground w-full max-w-full">
       {!selectedSegment && <Header />}
-      <main className="flex-grow w-full">
+      <main className="flex-grow w-full max-w-full">
         <HomePage 
           onCnaeSubmit={handleSubmitCnae}
           onSelectSegment={handleDirectSegmentSelect}
