@@ -27,10 +27,9 @@ const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
   // First filter by book if bookId is provided
   const bookFilteredArticles = bookId ? articles.filter(article => {
     const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
-    if (bookId === 'I') return articleNum <= 180;
-    if (bookId === 'II') return articleNum > 180 && articleNum <= 300;
-    if (bookId === 'III') return articleNum > 300 && articleNum <= 450;
-    return articleNum > 450;
+    if (bookId === 'I') return articleNum <= 200;
+    if (bookId === 'II') return articleNum > 200 && articleNum <= 350;
+    return articleNum > 350;
   }) : articles;
 
   // Then filter by relevance if needed

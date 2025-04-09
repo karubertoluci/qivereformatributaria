@@ -1,5 +1,6 @@
+
 import { Article } from '@/data/articles';
-import { BookData, BOOK_DEFINITIONS, BOOK_TITLES } from './index';
+import { BOOK_DEFINITIONS, BOOK_TITLES } from './constants';
 
 export const getArticleBook = (article: Article): string => {
   // If article has metadata.bookId, use that directly
@@ -9,10 +10,9 @@ export const getArticleBook = (article: Article): string => {
   
   // Otherwise determine based on article number
   const id = parseInt(article.id.replace(/\D/g, '')) || parseInt(article.number.replace(/\D/g, ''));
-  if (id < 150) return 'I';
-  if (id >= 150 && id < 250) return 'II';
-  if (id >= 250 && id < 350) return 'III';
-  return 'IV';
+  if (id < 200) return 'I';
+  if (id >= 200 && id < 350) return 'II';
+  return 'III';
 };
 
 export const prepareChartData = (articles: Article[]) => {

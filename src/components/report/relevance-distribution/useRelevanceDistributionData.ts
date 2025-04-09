@@ -26,8 +26,7 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
     const booksMetadata = [
       { id: 'I', name: 'Livro I', description: 'CBS' },
       { id: 'II', name: 'Livro II', description: 'IBS' },
-      { id: 'III', name: 'Livro III', description: 'IS' },
-      { id: 'IV', name: 'Livro IV', description: 'Outras Disposições' }
+      { id: 'III', name: 'Livro III', description: 'IS' }
     ];
     
     // Fixed data based on the image
@@ -56,16 +55,6 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
         id: 'III',
         name: 'Livro III',
         description: 'IS',
-        irrelevante: 2,
-        poucoRelevante: 5,
-        moderadamenteRelevante: 10,
-        muitoRelevante: 12,
-        total: 29
-      },
-      {
-        id: 'IV',
-        name: 'Livro IV',
-        description: 'Outras Disposições',
         irrelevante: 2,
         poucoRelevante: 5,
         moderadamenteRelevante: 10,

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Article } from '@/data/articles';
 import { BookData, BOOK_META } from './types';
@@ -33,10 +32,9 @@ export const useBookDistributionData = (articles: Article[]) => {
         const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
                           parseInt(article.id.replace(/\D/g, ''));
         
-        if (articleNum <= 150) bookId = 'I';
-        else if (articleNum <= 250) bookId = 'II';
-        else if (articleNum <= 350) bookId = 'III';
-        else bookId = 'IV';
+        if (articleNum <= 200) bookId = 'I';
+        else if (articleNum <= 350) bookId = 'II';
+        else bookId = 'III';
       }
       
       // Update article count
@@ -55,7 +53,7 @@ export const useBookDistributionData = (articles: Article[]) => {
     
     // Convert map to array and sort by bookId
     setData(Array.from(bookMap.values()).sort((a, b) => {
-      // Sort by bookId (I, II, III, IV)
+      // Sort by bookId (I, II, III)
       return a.bookId.localeCompare(b.bookId);
     }));
   }, [articles]);
