@@ -45,11 +45,11 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
               </p>
             </div>
             
-            <div className="p-4 bg-rose-50 rounded-lg h-full">
+            <div className="p-4 bg-rose-50 rounded-lg h-full flex flex-col">
               <h4 className="font-medium text-left flex items-center gap-2 mb-3">
                 Principais mudanças:
               </h4>
-              <ul className="space-y-2 mt-2 text-sm">
+              <ul className="space-y-2 mt-2 text-sm flex-grow">
                 <li className="flex items-start gap-2 text-left">
                   <Replace className="h-4 w-4 text-rose-500 flex-shrink-0 mt-1" />
                   <span>Substituição de cinco tributos por um sistema IVA dual</span>
@@ -90,9 +90,9 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
               </p>
             </div>
             
-            <div className="p-4 border rounded-lg bg-secondary/10 h-full">
+            <div className="p-4 border rounded-lg bg-secondary/10 h-full flex flex-col">
               <h4 className="font-medium mb-3 text-left">Cronograma de Implementação</h4>
-              <div className="space-y-3">
+              <div className="space-y-3 flex-grow">
                 <div className="flex gap-3">
                   <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center flex-shrink-0">
                     2023-2024

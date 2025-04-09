@@ -1,11 +1,13 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
+import { TabsContent } from '@/components/ui/tabs';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
-import { CompanyData } from '@/hooks/results/types';
-import OverviewTabContent from '../OverviewTabContent';
-import { TabsContent } from '@/components/ui/tabs';
-import { useCompanyData } from '@/hooks/results/useCompanyData';
+import { CompanyData } from '@/hooks/useResultsData';
+import CompanyOverview from '@/components/report/CompanyOverview';
+import ReformOverview from '@/components/report/ReformOverview';
+import ImpactDistributionChart from '@/components/report/ImpactDistributionChart';
+import RelevanceDistributionChart from '@/components/report/RelevanceDistributionChart';
 
 interface OverviewTabProps {
   segment: BusinessSegment;
@@ -22,29 +24,28 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
   relevantArticles,
   setExpandedArticleId
 }) => {
-  // Get the refreshCompanyData function
-  const { refreshCompanyData } = useCompanyData();
-  
-  // Refresh company data when the tab is shown
-  useEffect(() => {
-    console.log('OverviewTab montado - atualizando dados da empresa');
-    refreshCompanyData();
-  }, [refreshCompanyData]);
-  
-  const handleSelectArticle = (articleId: string) => {
-    setExpandedArticleId(articleId);
-    document.querySelector('[value="articles"]')?.dispatchEvent(new Event('click'));
-  };
-  
   return (
-    <TabsContent value="overview">
-      <OverviewTabContent 
-        segment={segment} 
-        companyData={companyData} 
-        hasCompanyData={hasCompanyData} 
-        relevantArticles={relevantArticles} 
-        onSelectArticle={handleSelectArticle} 
+    <TabsContent value="overview" className="space-y-6">
+      <CompanyOverview 
+        segment={segment}
+        companyData={companyData}
+        hasCompanyData={hasCompanyData}
       />
+      
+      <ReformOverview segment={segment} />
+      
+      <div className="grid md:grid-cols-2 gap-6">
+        <ImpactDistributionChart 
+          segment={segment}
+          articles={relevantArticles}
+        />
+        
+        <RelevanceDistributionChart 
+          articles={relevantArticles}
+          segmentId={segment.id}
+          onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
+        />
+      </div>
     </TabsContent>
   );
 };

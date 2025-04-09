@@ -5,6 +5,8 @@ import { BusinessSegment } from '@/data/segments';
 import { useIsMobile } from '@/hooks/use-mobile';
 import ArticlesPriorityChart from '@/components/ArticlesPriorityChart';
 import ChartExpandToggle from '../components/ChartExpandToggle';
+import LegislationBooks from '@/components/report/LegislationBooks';
+import FavorabilityRelevanceChart from '@/components/report/FavorabilityRelevanceChart';
 
 interface ChartSectionProps {
   filteredArticles: Article[];
@@ -26,20 +28,41 @@ const ChartSection: React.FC<ChartSectionProps> = ({
   return (
     <div className="bg-white rounded-lg border p-4 mb-6">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-medium text-lg">Distribuição de impactos</h3>
+        <h3 className="font-medium text-lg">Visualizações dos artigos</h3>
         <ChartExpandToggle 
           expanded={expanded} 
           toggleExpanded={toggleExpanded} 
         />
       </div>
 
-      <div className={`overflow-x-auto transition-all duration-300 ${expanded ? 'max-h-[600px]' : 'max-h-[300px]'}`}>
+      <div className={`overflow-x-auto transition-all duration-300 ${expanded ? 'max-h-[1500px]' : 'max-h-[300px]'}`}>
         <div className={isMobile ? "min-w-[500px]" : ""}>
-          <ArticlesPriorityChart 
-            articles={filteredArticles}
-            segmentId={segmentId}
-            onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
-          />
+          <div className="space-y-6">
+            {/* Articles Priority Chart */}
+            <div className="mb-6">
+              <ArticlesPriorityChart 
+                articles={filteredArticles}
+                segmentId={segmentId}
+                onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
+              />
+            </div>
+            
+            {/* Legislation Books Chart */}
+            <div className="mb-6">
+              <LegislationBooks 
+                articles={filteredArticles}
+                onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
+              />
+            </div>
+            
+            {/* Favorability Relevance Chart */}
+            <div>
+              <FavorabilityRelevanceChart 
+                articles={filteredArticles}
+                segmentId={segmentId}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
