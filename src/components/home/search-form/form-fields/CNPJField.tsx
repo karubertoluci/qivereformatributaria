@@ -10,6 +10,7 @@ import { formatCNPJInput } from './utils/cnpj-formatter';
 import ValidationStatus from './cnpj-validation/ValidationStatus';
 import { validateCNPJ } from './cnpj-validation/cnpj-validator';
 import CompanyCard from './CompanyCard';
+import ApiStatusIndicator from './cnpj-validation/ApiStatusIndicator';
 
 interface CNPJFieldProps {
   form: UseFormReturn<FormValues>;
@@ -19,6 +20,7 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
   const [isValidating, setIsValidating] = useState(false);
   const [isValid, setIsValid] = useState<boolean | null>(null);
   const [companyData, setCompanyData] = useState<any>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
   
   // Verificar dados da empresa no localStorage quando o componente monta
   useEffect(() => {
@@ -37,16 +39,28 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
   // Lidar com a validação do CNPJ ao perder o foco
   const handleCNPJBlur = async (event: React.FocusEvent<HTMLInputElement>) => {
     const cnpj = event.target.value;
-    await validateCNPJ(cnpj, form, setIsValid, setIsValidating);
-    
-    // Após a validação, atualizar os dados da empresa do localStorage
     try {
-      const storedData = localStorage.getItem('companyData');
-      if (storedData) {
-        setCompanyData(JSON.parse(storedData));
+      setApiError(null);
+      await validateCNPJ(cnpj, form, setIsValid, setIsValidating);
+      
+      // Após a validação, atualizar os dados da empresa do localStorage
+      try {
+        const storedData = localStorage.getItem('companyData');
+        if (storedData) {
+          setCompanyData(JSON.parse(storedData));
+        }
+      } catch (error) {
+        console.error('Erro ao carregar dados da empresa após validação:', error);
       }
-    } catch (error) {
-      console.error('Erro ao carregar dados da empresa após validação:', error);
+    } catch (error: any) {
+      // Se o erro contiver menção à instabilidade da API, capturamos para exibir um indicador
+      const errorMessage = error.message || '';
+      if (errorMessage.includes('instável') || 
+          errorMessage.includes('limite de requisições') || 
+          errorMessage.includes('não foi possível conectar') ||
+          errorMessage.includes('demorou muito')) {
+        setApiError(errorMessage);
+      }
     }
   };
 
@@ -81,6 +95,7 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
             <Label htmlFor="cnpj" className="block mb-2 font-medium flex items-center">
               <Building2 className="h-4 w-4 mr-2 text-orange-500" />
               CNPJ da empresa:
+              {apiError && <span className="ml-2 text-xs text-red-500">(API instável)</span>}
             </Label>
             <div className="relative">
               <FormControl>
@@ -97,8 +112,14 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
                 />
               </FormControl>
               <ValidationStatus isValidating={isValidating} isValid={isValid} />
+              {apiError && <ApiStatusIndicator isError={true} errorMessage={apiError} />}
             </div>
             <FormMessage />
+            {apiError && (
+              <p className="text-xs text-red-500 mt-1">
+                A Brasil API está instável no momento. Você ainda pode continuar preenchendo os dados manualmente.
+              </p>
+            )}
           </FormItem>
         )}
       />

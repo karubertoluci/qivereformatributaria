@@ -110,10 +110,33 @@ export const validateCNPJ = async (
     }
     
     return { companyData };
-  } catch (error) {
+  } catch (error: any) {
     setIsValid(false);
     console.error('Erro ao validar CNPJ:', error);
-    toast.error('Erro ao validar CNPJ. Verifique o número e tente novamente.');
+    
+    // Provide user-friendly error messages based on the specific error
+    const errorMessage = error.message || 'Erro ao validar CNPJ';
+    
+    // Handle specific API instability scenarios
+    if (errorMessage.includes('instável') || 
+        errorMessage.includes('limite de requisições') || 
+        errorMessage.includes('não foi possível conectar') ||
+        errorMessage.includes('demorou muito')) {
+      toast.error(errorMessage, {
+        description: 'Tente novamente mais tarde ou use outro CNPJ para testar.',
+        duration: 10000, // Show for longer
+        action: {
+          label: 'Entendi',
+          onClick: () => console.log('Toast dismissed')
+        },
+      });
+    } else {
+      // Generic error
+      toast.error('Erro ao validar CNPJ. Verifique o número e tente novamente.', {
+        description: errorMessage,
+      });
+    }
+    
     return null;
   } finally {
     setIsValidating(false);

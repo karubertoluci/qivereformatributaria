@@ -114,11 +114,26 @@ export const fetchCNPJData = async (cnpj: string): Promise<CNPJResponse> => {
 
     // Call the real API
     try {
-      const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${formattedCNPJ}`);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
+      const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${formattedCNPJ}`, {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
       
       if (!response.ok) {
         console.error(`Erro na API: ${response.status}`);
-        throw new Error(`Erro na API: ${response.status}`);
+        if (response.status === 429) {
+          throw new Error('Limite de requisições atingido. Tente novamente mais tarde.');
+        } else if (response.status === 404) {
+          throw new Error('CNPJ não encontrado na base de dados.');
+        } else if (response.status >= 500) {
+          throw new Error('O serviço da Brasil API está instável no momento. Tente novamente mais tarde.');
+        } else {
+          throw new Error(`Erro na API: ${response.status}`);
+        }
       }
       
       const data = await response.json();
@@ -128,8 +143,13 @@ export const fetchCNPJData = async (cnpj: string): Promise<CNPJResponse> => {
       localStorage.setItem('companyData', JSON.stringify(data));
       
       return data;
-    } catch (apiError) {
+    } catch (apiError: any) {
       console.error('Requisição para API falhou:', apiError);
+      
+      // Handle specific error types
+      if (apiError.name === 'AbortError') {
+        throw new Error('A requisição demorou muito para responder. A Brasil API pode estar instável no momento.');
+      }
       
       // If we're using mock data or if there's an error with the API
       if (useMockData) {
@@ -151,9 +171,16 @@ export const fetchCNPJData = async (cnpj: string): Promise<CNPJResponse> => {
         return randomMock;
       }
       
+      // Format error message for user display
+      const errorMessage = apiError.message || 'Erro ao buscar dados do CNPJ';
+      if (errorMessage.includes('fetch') || errorMessage.includes('network') || 
+          errorMessage.includes('Failed to fetch') || errorMessage.includes('ECONNREFUSED')) {
+        throw new Error('Não foi possível conectar com a Brasil API. Verifique sua conexão ou tente novamente mais tarde.');
+      }
+      
       throw apiError;
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Erro ao buscar dados do CNPJ:', error);
     throw error; // Propagate the error to display in the component
   }
