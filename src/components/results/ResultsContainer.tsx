@@ -1,7 +1,6 @@
 
 import React, { useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ResultsHeader from './ResultsHeader';
 import ResultsFooter from './layout/ResultsFooter';
 import OverviewTab from './tabs/OverviewTab';
@@ -14,6 +13,7 @@ import { FilterType, ViewMode } from '@/hooks/results/types';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '../ui/alert-dialog';
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import ResultsTabLayout from './layout/ResultsTabLayout';
 
 interface ResultsContainerProps {
   segment: BusinessSegment;
@@ -33,7 +33,8 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
     formData,
     hasCompanyData,
     positiveCount,
-    negativeCount
+    negativeCount,
+    highlights
   } = resultsData;
 
   useEffect(() => {
@@ -89,53 +90,52 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
         />
         
         <main className="my-8">
-          <Tabs 
-            defaultValue="overview" 
-            value={activeTab} 
-            onValueChange={(value) => setActiveTab(value as 'overview' | 'articles' | 'highlights')}
-            className="w-full"
+          <ResultsTabLayout
+            activeTab={activeTab}
+            onTabChange={(value) => setActiveTab(value as 'overview' | 'articles' | 'highlights')}
+            highlights={highlights}
           >
-            <TabsList className="mb-6">
-              <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-              <TabsTrigger value="articles">Artigos</TabsTrigger>
-              <TabsTrigger value="highlights">Destaques</TabsTrigger>
-            </TabsList>
+            {activeTab === 'overview' && (
+              <OverviewTab 
+                segment={segment}
+                companyData={formData}
+                hasCompanyData={hasCompanyData}
+                relevantArticles={resultsData.relevantArticles}
+                setExpandedArticleId={resultsData.setExpandedArticleId}
+              />
+            )}
             
-            <OverviewTab 
-              segment={segment}
-              companyData={formData}
-              hasCompanyData={hasCompanyData}
-              relevantArticles={resultsData.relevantArticles}
-              setExpandedArticleId={resultsData.setExpandedArticleId}
-            />
+            {activeTab === 'articles' && (
+              <ArticlesTab 
+                segment={segment}
+                filteredArticles={resultsData.filteredArticles}
+                relevantArticles={resultsData.relevantArticles}
+                expandedArticleId={resultsData.expandedArticleId}
+                setExpandedArticleId={resultsData.setExpandedArticleId}
+                highlights={resultsData.highlights}
+                handleAddHighlight={resultsData.handleAddHighlight}
+                handleRemoveHighlight={resultsData.handleRemoveHighlight}
+                topics={resultsData.topics}
+                articlesByTopic={resultsData.articlesByTopic}
+                viewMode={resultsData.viewMode as ViewMode}
+                setViewMode={resultsData.setViewMode as (mode: ViewMode) => void}
+                positiveCount={positiveCount}
+                negativeCount={negativeCount}
+                searchTerm={resultsData.searchTerm}
+                setSearchTerm={resultsData.setSearchTerm}
+                filterType={resultsData.filterType as FilterType}
+                setFilterType={resultsData.setFilterType as (type: FilterType) => void}
+              />
+            )}
             
-            <ArticlesTab 
-              segment={segment}
-              filteredArticles={resultsData.filteredArticles}
-              relevantArticles={resultsData.relevantArticles}
-              expandedArticleId={resultsData.expandedArticleId}
-              setExpandedArticleId={resultsData.setExpandedArticleId}
-              highlights={resultsData.highlights}
-              handleAddHighlight={resultsData.handleAddHighlight}
-              handleRemoveHighlight={resultsData.handleRemoveHighlight}
-              topics={resultsData.topics}
-              articlesByTopic={resultsData.articlesByTopic}
-              viewMode={resultsData.viewMode as ViewMode}
-              setViewMode={resultsData.setViewMode as (mode: ViewMode) => void}
-              positiveCount={positiveCount}
-              negativeCount={negativeCount}
-              searchTerm={resultsData.searchTerm}
-              setSearchTerm={resultsData.setSearchTerm}
-              filterType={resultsData.filterType as FilterType}
-              setFilterType={resultsData.setFilterType as (type: FilterType) => void}
-            />
-            
-            <HighlightsTab 
-              highlights={resultsData.highlights}
-              handleRemoveHighlight={resultsData.handleRemoveHighlight}
-              articles={resultsData.relevantArticles}
-            />
-          </Tabs>
+            {activeTab === 'highlights' && (
+              <HighlightsTab 
+                highlights={resultsData.highlights}
+                handleRemoveHighlight={resultsData.handleRemoveHighlight}
+                articles={resultsData.relevantArticles}
+              />
+            )}
+          </ResultsTabLayout>
         </main>
         
         <ResultsFooter />
