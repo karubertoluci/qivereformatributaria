@@ -2,6 +2,7 @@
 import React from 'react';
 import { FileText, Briefcase } from 'lucide-react';
 import { CompanyApiData, CompanyData, CNAEData } from '@/hooks/results/types';
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 
 interface CNAESectionProps {
   companyData: CompanyData;
@@ -61,21 +62,23 @@ const CNAESection: React.FC<CNAESectionProps> = ({
           </div>
           
           {cnaeSecundarios && cnaeSecundarios.length > 0 ? (
-            <div className="space-y-3 overflow-auto max-h-[400px] pr-1">
-              {cnaeSecundarios.map((cnae: CNAEData, i: number) => (
-                <div key={i} className="flex items-center justify-between border border-gray-100 p-3 rounded-md">
-                  <div className="px-2 py-1 bg-rose-50 rounded-md mr-2">
-                    <p className="font-semibold text-gray-800 text-sm">{cnae.codigo}</p>
-                  </div>
-                  <div className="flex-grow">
-                    <p className="text-gray-700 text-sm">{cnae.descricao}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <Table>
+              <TableBody>
+                {cnaeSecundarios.map((cnae: CNAEData, i: number) => (
+                  <TableRow key={i} className="border-b border-gray-100">
+                    <TableCell className="py-2 px-3 bg-rose-50 rounded-md w-24 font-semibold text-gray-800">
+                      {cnae.codigo}
+                    </TableCell>
+                    <TableCell className="py-2 pl-4 text-gray-700">
+                      {cnae.descricao}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           ) : (
             <div className="flex-grow flex items-center justify-center h-full border border-dashed rounded-lg border-gray-200 p-6">
-              <p className="text-gray-500 text-center">Não existem CNAEs secundários para esta empresa</p>
+              <p className="text-gray-500 text-center">Nenhum CNAE Secundário foi identificado.</p>
             </div>
           )}
         </div>
