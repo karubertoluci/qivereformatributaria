@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Building2, FileText, Briefcase, MapPin, Phone, Calendar, Info } from 'lucide-react';
 import { CompanyApiData } from '@/hooks/results/types';
@@ -89,7 +88,7 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({
               <p className="text-rose-500 font-medium">Endereço</p>
             </div>
             <div className="w-full text-right mt-2">
-              <p className="text-gray-800 leading-snug text-base font-medium">
+              <p className="text-gray-800 leading-snug font-medium text-base">
                 {company.endereco || `${company.logradouro || ''}, ${company.numero || ''}${company.complemento ? ', ' + company.complemento : ''}, ${company.bairro || ''}, ${company.municipio || ''} - ${company.uf || ''}, CEP: ${company.cep || ''}`}
               </p>
             </div>
