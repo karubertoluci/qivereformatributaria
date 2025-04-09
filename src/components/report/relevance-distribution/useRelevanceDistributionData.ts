@@ -17,6 +17,11 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
   const [bookData, setBookData] = useState<RelevanceBookData[]>([]);
   
   useEffect(() => {
+    if (!articles || !Array.isArray(articles)) {
+      console.warn('useRelevanceDistributionData: Invalid articles array', articles);
+      return;
+    }
+    
     // Define book metadata
     const booksMetadata = [
       { id: 'I', name: 'Livro I', description: 'CBS' },
@@ -25,53 +30,51 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
       { id: 'IV', name: 'Livro IV', description: 'Outras Disposições' }
     ];
     
-    // Initialize data structure
-    const initialBookData: RelevanceBookData[] = booksMetadata.map(book => ({
-      id: book.id,
-      name: book.name,
-      description: book.description,
-      irrelevante: 0,
-      poucoRelevante: 0,
-      moderadamenteRelevante: 0,
-      muitoRelevante: 0,
-      total: 0
-    }));
-    
-    // Process articles
-    articles.forEach(article => {
-      // Get the book ID based on article number
-      const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
-                         parseInt(article.id.replace(/\D/g, ''));
-      
-      let bookId: string;
-      if (articleNum <= 180) bookId = 'I';
-      else if (articleNum <= 300) bookId = 'II';
-      else if (articleNum <= 450) bookId = 'III';
-      else bookId = 'IV';
-      
-      // Get the book data object
-      const bookDataObj = initialBookData.find(book => book.id === bookId);
-      if (!bookDataObj) return;
-      
-      // Apply the relevance distribution: 
-      // 40% Irrelevante, 10% Pouco relevante, 40% Moderadamente relevante, 10% Muito relevante
-      const random = Math.random() * 100;
-      
-      // Increment the appropriate relevance category based on distribution
-      bookDataObj.total += 1;
-      
-      if (random < 40) {
-        bookDataObj.irrelevante += 1;
-      } else if (random < 50) {
-        bookDataObj.poucoRelevante += 1;
-      } else if (random < 90) {
-        bookDataObj.moderadamenteRelevante += 1;
-      } else {
-        bookDataObj.muitoRelevante += 1;
+    // Fixed data based on the image
+    const fixedBookData: RelevanceBookData[] = [
+      {
+        id: 'I',
+        name: 'Livro I',
+        description: 'CBS',
+        irrelevante: 2,
+        poucoRelevante: 5,
+        moderadamenteRelevante: 10,
+        muitoRelevante: 12,
+        total: 29
+      },
+      {
+        id: 'II',
+        name: 'Livro II',
+        description: 'IBS',
+        irrelevante: 2,
+        poucoRelevante: 5,
+        moderadamenteRelevante: 10,
+        muitoRelevante: 12,
+        total: 29
+      },
+      {
+        id: 'III',
+        name: 'Livro III',
+        description: 'IS',
+        irrelevante: 2,
+        poucoRelevante: 5,
+        moderadamenteRelevante: 10,
+        muitoRelevante: 12,
+        total: 29
+      },
+      {
+        id: 'IV',
+        name: 'Livro IV',
+        description: 'Outras Disposições',
+        irrelevante: 2,
+        poucoRelevante: 5,
+        moderadamenteRelevante: 10,
+        muitoRelevante: 12,
+        total: 29
       }
-    });
+    ];
     
-    setBookData(initialBookData);
+    setBookData(fixedBookData);
   }, [articles, segmentId]);
   
   return { bookData };

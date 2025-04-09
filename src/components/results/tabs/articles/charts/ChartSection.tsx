@@ -1,8 +1,7 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Article } from '@/data/articles';
 import { useIsMobile } from '@/hooks/use-mobile';
-import ArticlesPriorityChart from '@/components/ArticlesPriorityChart';
 import ChartExpandToggle from '../components/ChartExpandToggle';
 import BookDistributionChart from '@/components/report/BookDistributionChart';
 import FavorabilityRelevanceChart from '@/components/report/FavorabilityRelevanceChart';
@@ -27,6 +26,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
   const isMobile = useIsMobile();
   // Ensure we have a valid array
   const safeArticles = filteredArticles || [];
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
 
   return (
     <div className="bg-white rounded-lg border p-4 mb-6">
@@ -41,19 +41,30 @@ const ChartSection: React.FC<ChartSectionProps> = ({
       <div className={`overflow-x-auto transition-all duration-300 ${expanded ? 'max-h-[2000px]' : 'max-h-[1200px]'}`}>
         <div className={isMobile ? "min-w-[500px]" : ""}>
           <div className="space-y-6">
-            {/* 1. Book Distribution Chart */}
+            {/* 1. Distribuição de Artigos por Livro (Gráfico de Barras Empilhadas) */}
             <div className="mb-6">
-              <BookDistributionChart 
+              <RelevanceDistributionChart 
                 articles={safeArticles}
+                segmentId={segmentId}
                 onSelectBook={(bookId) => {
+                  setSelectedBookId(bookId);
                   if (bookId) {
                     // Find the first article of this book and select it
-                    const article = safeArticles.find(a => 
-                      a && a.metadata && a.metadata.bookId === bookId
-                    );
+                    const article = safeArticles.find(a => {
+                      if (!a || !a.metadata) return false;
+                      
+                      const articleNum = parseInt(a.number.replace(/\D/g, '')) || 
+                                       parseInt(a.id.replace(/\D/g, ''));
+                      
+                      if (bookId === 'I') return articleNum <= 180;
+                      if (bookId === 'II') return articleNum > 180 && articleNum <= 300;
+                      if (bookId === 'III') return articleNum > 300 && articleNum <= 450;
+                      return articleNum > 450;
+                    });
                     if (article) setExpandedArticleId(article.id);
                   }
                 }}
+                selectedBook={selectedBookId}
               />
             </div>
             
@@ -62,34 +73,37 @@ const ChartSection: React.FC<ChartSectionProps> = ({
               <FavorabilityRelevanceChart 
                 articles={safeArticles}
                 segmentId={segmentId}
-              />
-            </div>
-            
-            {/* Articles Priority Chart */}
-            <div className="mb-6">
-              <ArticlesPriorityChart 
-                articles={safeArticles}
-                segmentId={segmentId}
-                onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
+                bookId={selectedBookId}
               />
             </div>
             
             {/* Only show additional charts when expanded */}
             {expanded && (
               <>
+                {/* Book Distribution Chart */}
+                <div className="mb-6">
+                  <BookDistributionChart 
+                    articles={safeArticles}
+                    onSelectBook={(bookId) => {
+                      setSelectedBookId(bookId);
+                      if (bookId) {
+                        // Find the first article of this book and select it
+                        const article = safeArticles.find(a => 
+                          a && a.metadata && a.metadata.bookId === bookId
+                        );
+                        if (article) setExpandedArticleId(article.id);
+                      }
+                    }}
+                    selectedBook={selectedBookId}
+                  />
+                </div>
+                
                 {/* Impact Distribution Chart */}
                 <div className="mb-6">
                   <ImpactDistributionChart 
                     segmentId={segmentId}
                     articles={safeArticles}
-                  />
-                </div>
-                
-                {/* Relevance Distribution Chart */}
-                <div className="mb-6">
-                  <RelevanceDistributionChart 
-                    articles={safeArticles}
-                    segmentId={segmentId}
+                    bookId={selectedBookId}
                   />
                 </div>
               </>

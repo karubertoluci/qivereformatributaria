@@ -1,8 +1,6 @@
 
 import React from 'react';
 import { RelevanceBookData } from './useRelevanceDistributionData';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface RelevanceBookCardsProps {
   bookData: RelevanceBookData[];
@@ -23,68 +21,71 @@ const RelevanceBookCards: React.FC<RelevanceBookCardsProps> = ({
   colorScheme
 }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-      {bookData.map(book => (
-        <Card key={book.id} className={`border ${selectedBook === book.id ? 'border-2 border-primary' : 'border-muted'}`}>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-semibold">
-              Livro {book.id}: {book.description}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="py-2 text-sm">
-            <div className="space-y-1">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-1.5">
-                  <div 
-                    className="w-3 h-3 rounded-sm" 
-                    style={{ backgroundColor: colorScheme.irrelevante }}
-                  ></div>
-                  <span className="text-sm">Irrelevante</span>
-                </div>
-                <span className="font-semibold">{book.irrelevante}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-1.5">
-                  <div 
-                    className="w-3 h-3 rounded-sm" 
-                    style={{ backgroundColor: colorScheme.poucoRelevante }}
-                  ></div>
-                  <span>Pouco relevante</span>
-                </div>
-                <span className="font-semibold">{book.poucoRelevante}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-1.5">
-                  <div 
-                    className="w-3 h-3 rounded-sm" 
-                    style={{ backgroundColor: colorScheme.moderadamenteRelevante }}
-                  ></div>
-                  <span>Moderadamente relevante</span>
-                </div>
-                <span className="font-semibold">{book.moderadamenteRelevante}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-1.5">
-                  <div 
-                    className="w-3 h-3 rounded-sm"
-                    style={{ backgroundColor: colorScheme.muitoRelevante }}
-                  ></div>
-                  <span>Muito relevante</span>
-                </div>
-                <span className="font-semibold">{book.muitoRelevante}</span>
-              </div>
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+      {bookData.map((book) => (
+        <div 
+          key={book.id}
+          className={`bg-gray-50 p-3 rounded-lg border cursor-pointer hover:shadow transition-shadow
+            ${selectedBook === book.id ? 'ring-2 ring-primary shadow-sm' : ''}`}
+          onClick={() => onSelectBook(book.id)}
+        >
+          <div className="font-semibold mb-1">
+            {book.name}: {book.description}
+          </div>
+          
+          <div className="space-y-1 text-sm mb-2">
+            <div className="flex justify-between">
+              <span className="flex items-center">
+                <span 
+                  className="w-2 h-2 rounded-sm mr-1.5"
+                  style={{ backgroundColor: colorScheme.irrelevante }}
+                ></span>
+                Irrelevante
+              </span>
+              <span>{book.irrelevante}</span>
             </div>
-          </CardContent>
-          <CardFooter className="pt-1">
-            <Button 
-              variant={selectedBook === book.id ? "default" : "outline"} 
-              onClick={() => onSelectBook(book.id)} 
-              className="w-full text-sm"
-            >
-              {selectedBook === book.id ? 'Remover filtro' : 'Filtrar'}
-            </Button>
-          </CardFooter>
-        </Card>
+            <div className="flex justify-between">
+              <span className="flex items-center">
+                <span 
+                  className="w-2 h-2 rounded-sm mr-1.5"
+                  style={{ backgroundColor: colorScheme.poucoRelevante }}
+                ></span>
+                Pouco relevante
+              </span>
+              <span>{book.poucoRelevante}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="flex items-center">
+                <span 
+                  className="w-2 h-2 rounded-sm mr-1.5"
+                  style={{ backgroundColor: colorScheme.moderadamenteRelevante }}
+                ></span>
+                Moderadamente
+              </span>
+              <span>{book.moderadamenteRelevante}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="flex items-center">
+                <span 
+                  className="w-2 h-2 rounded-sm mr-1.5"
+                  style={{ backgroundColor: colorScheme.muitoRelevante }}
+                ></span>
+                Muito relevante
+              </span>
+              <span>{book.muitoRelevante}</span>
+            </div>
+          </div>
+          
+          <button 
+            className="w-full mt-1 text-xs py-1 px-2 bg-gray-100 hover:bg-gray-200 rounded text-center"
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelectBook(selectedBook === book.id ? null : book.id);
+            }}
+          >
+            Filtrar
+          </button>
+        </div>
       ))}
     </div>
   );

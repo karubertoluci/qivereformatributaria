@@ -32,8 +32,8 @@ const RelevanceChartLegend: React.FC<RelevanceChartLegendProps> = ({
         <div 
           key={item.key}
           className={`flex items-center gap-1.5 px-2 py-1 rounded-md cursor-pointer transition-colors
-            ${selectedRelevance === item.label ? 'bg-secondary border border-primary' : 'hover:bg-secondary/50'}`}
-          onClick={() => onSelectRelevance(item.label)}
+            ${selectedRelevance === item.label ? 'bg-secondary/80 border border-primary' : 'hover:bg-secondary/20'}`}
+          onClick={() => onSelectRelevance(selectedRelevance === item.label ? null : item.label)}
         >
           <div 
             className="w-3 h-3 rounded-sm" 

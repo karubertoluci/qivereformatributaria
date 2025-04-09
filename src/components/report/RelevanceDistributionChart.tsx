@@ -41,12 +41,12 @@ const RelevanceDistributionChart: React.FC<RelevanceDistributionChartProps> = ({
     }
   };
   
-  // Color mapping for relevance levels
+  // Color mapping for relevance levels - aligning with the image
   const colorScheme = {
-    muitoRelevante: '#10b981', // green
-    moderadamenteRelevante: '#f59e0b', // yellow
-    poucoRelevante: '#6b7280', // gray
-    irrelevante: '#d1d5db', // light gray
+    muitoRelevante: '#10b981', // verde
+    moderadamenteRelevante: '#eab308', // amarelo
+    poucoRelevante: '#6b7280', // cinza
+    irrelevante: '#d1d5db', // cinza claro
   };
 
   return (
