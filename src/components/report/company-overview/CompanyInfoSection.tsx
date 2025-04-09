@@ -36,23 +36,24 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({
             <p className="text-gray-800 text-base font-medium">{company.razaoSocial || company.razao_social || "Não informada"}</p>
           </div>
         </div>
-        
-        {/* Nome Fantasia (somente se for diferente da razão social) */}
-        {(company.nomeFantasia || company.nome_fantasia) && 
-         (company.nomeFantasia || company.nome_fantasia) !== (company.razaoSocial || company.razao_social) && (
-          <div className="flex items-start mt-2 pt-2 border-t border-gray-100">
+      </div>
+      
+      {/* Nome Fantasia - Agora em um box separado */}
+      {(company.nomeFantasia || company.nome_fantasia) && (
+        <div className="border rounded-lg p-4">
+          <div className="flex items-start">
             <div className="flex-shrink-0 mt-1">
-              <Store className="h-4 w-4 text-rose-400" />
+              <Store className="h-5 w-5 text-rose-500" />
             </div>
             <div className="ml-2 flex-grow">
-              <p className="text-rose-400 font-medium text-left text-sm">Nome Fantasia</p>
+              <p className="text-rose-500 font-medium text-left">Nome Fantasia</p>
             </div>
             <div className="flex-grow text-right">
-              <p className="text-gray-700 text-sm">{company.nomeFantasia || company.nome_fantasia}</p>
+              <p className="text-gray-800 text-base font-medium">{company.nomeFantasia || company.nome_fantasia}</p>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* CNPJ & Segmento in the same row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
