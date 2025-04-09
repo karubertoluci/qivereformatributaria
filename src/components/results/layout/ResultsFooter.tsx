@@ -102,7 +102,7 @@ const ResultsFooter: React.FC<ResultsFooterProps> = ({
           <p className="text-gray-400 text-sm">
             Relatório gerado pela Qive Reforma Tributária 2025
           </p>
-          <p className="mt-1 text-gray-500 text-xs">
+          <p className="mt-1 text-xs text-transparent">
             © {new Date().getFullYear()} Qive. Todos os direitos reservados.
           </p>
         </div>
