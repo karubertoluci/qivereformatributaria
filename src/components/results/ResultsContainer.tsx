@@ -37,6 +37,17 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
     highlights
   } = resultsData;
 
+  // Control body scroll when Results component mounts/unmounts
+  useEffect(() => {
+    // Disable body scroll when component mounts
+    document.body.style.overflow = 'hidden';
+    
+    // Re-enable body scroll when component unmounts
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   useEffect(() => {
     // Clear expanded article when changing tabs
     if (expandedArticleId) {
