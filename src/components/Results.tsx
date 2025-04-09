@@ -11,7 +11,7 @@ export interface ResultsProps {
 }
 
 const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
-  const { formData, refreshCompanyData } = useCompanyData();
+  const { formData, refreshCompanyData, hasCompanyData } = useCompanyData();
   
   // Check for CNPJ changes when component mounts
   useEffect(() => {
@@ -21,11 +21,17 @@ const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
   
   useEffect(() => {
     console.log('Company data in Results:', formData);
-  }, [formData]);
+    if (!hasCompanyData) {
+      toast.warning('Dados da empresa não disponíveis. Algumas informações podem estar incompletas.');
+    }
+  }, [formData, hasCompanyData]);
   
   return (
     <div className="flex flex-col min-h-screen print:bg-white">
-      <ResultsContainer segment={segment} onBackToSegments={onBackToSegments} />
+      <ResultsContainer 
+        segment={segment} 
+        onBackToSegments={onBackToSegments} 
+      />
     </div>
   );
 };

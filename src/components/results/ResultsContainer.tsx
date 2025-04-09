@@ -51,7 +51,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
 
   // Get company name from formData if available
   const companyName = hasCompanyData && formData?.companyData 
-    ? (formData.companyData.nome_fantasia || formData.companyData.nomeFantasia || '') 
+    ? (formData.companyData.nome_fantasia || formData.companyData.nomeFantasia || formData.companyData.razao_social || formData.companyData.razaoSocial || '') 
     : '';
 
   return (
@@ -61,6 +61,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
         positiveCount={positiveCount}
         negativeCount={negativeCount}
         companyName={companyName}
+        onBackToSegments={onBackToSegments}
       />
       
       <main className="my-8">

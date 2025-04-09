@@ -46,6 +46,7 @@ export const useCompanyData = () => {
           
           console.log('Formatted company data:', parsedFormData);
           setFormData(parsedFormData);
+          return true;
         }
       } else {
         // As a fallback, try loading just company data
@@ -58,13 +59,18 @@ export const useCompanyData = () => {
           setFormData({
             companyData
           });
+          return true;
         } else {
           console.log('No company data found in localStorage');
+          return false;
         }
       }
+      
+      return false;
     } catch (e) {
       console.error('Error loading company data from localStorage:', e);
       toast.error('Erro ao carregar dados da empresa');
+      return false;
     }
   }, []);
 

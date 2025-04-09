@@ -10,7 +10,7 @@ import CNAESection from './CNAESection';
 import NoCompanyData from './NoCompanyData';
 
 interface CompanyOverviewProps {
-  companyData: CompanyData | null;
+  companyData?: CompanyData | null;
   segment: BusinessSegment;
 }
 
@@ -31,7 +31,7 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
   const finalCompanyData = formData || propCompanyData;
   
   // Add a check for null/undefined companyData
-  if (!finalCompanyData) {
+  if (!finalCompanyData || !finalCompanyData.companyData) {
     return (
       <Card className="bg-white shadow-sm">
         <CompanyHeader />
@@ -41,8 +41,7 @@ const CompanyOverview: React.FC<CompanyOverviewProps> = ({
   }
 
   console.log('Rendering CompanyOverview with data:', finalCompanyData);
-  console.log('CNAEs Secundários:', finalCompanyData.companyData?.cnaeSecundarios);
-
+  
   return (
     <Card className="bg-white shadow-sm rounded-lg overflow-hidden border">
       <CompanyHeader />
