@@ -24,6 +24,11 @@ const FormDialog: React.FC<FormDialogProps> = ({
 }) => {
   console.log("FormDialog renderizado");
   
+  const handleSubmit = (data: FormValues) => {
+    console.log("Formulário enviado, fechando modal e iniciando carregamento");
+    onSubmit(data);
+  };
+  
   return (
     <DialogContent className="sm:max-w-2xl">
       <DialogHeader>
@@ -33,7 +38,7 @@ const FormDialog: React.FC<FormDialogProps> = ({
         </DialogDescription>
       </DialogHeader>
       
-      <CompanyInfoForm onSubmit={onSubmit} isLoading={isLoading} />
+      <CompanyInfoForm onSubmit={handleSubmit} isLoading={isLoading} />
     </DialogContent>
   );
 };

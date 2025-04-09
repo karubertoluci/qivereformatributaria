@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,15 +10,12 @@ import FormDialog from './search-form/FormDialog';
 import ReportLoadingDialog from './search-form/ReportLoadingDialog';
 import { businessSegments, BusinessSegment } from '@/data/segments';
 
-// Extend the BusinessSegment interface locally for component use
 interface SegmentWithUI extends BusinessSegment {
   icon?: React.ReactNode;
   keywords?: string[]; // Make keywords optional with a default fallback
 }
 
-// Helper function to get segment keywords
 const getSegmentKeywords = (segment: SegmentWithUI): string[] => {
-  // Return default keywords if none defined for backward compatibility
   return segment.keywords || [segment.name.toLowerCase()];
 };
 
@@ -38,7 +34,6 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
   
   console.log("Estado do modal no SearchForm:", isFormDialogOpen);
   
-  // Filtrar segmentos com base no termo de busca
   const filteredSegments = businessSegments.filter(segment => 
     segment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     getSegmentKeywords(segment as SegmentWithUI).some(keyword => 
@@ -54,26 +49,25 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
   const handleDialogSubmit = (formData: any) => {
     console.log("Form dialog submitted with data:", formData);
     
-    // Salvar dados no localStorage para uso posterior
     localStorage.setItem('formData', JSON.stringify(formData));
     
-    // Salvar dados do formulário para uso no diálogo de carregamento
     setFormData(formData);
     
-    // Fechar o diálogo do formulário e iniciar o carregamento
     closeFormDialog();
-    setIsLoading(true);
+    
+    setTimeout(() => {
+      setIsLoading(true);
+      console.log("Iniciando carregamento do relatório");
+    }, 100);
   };
   
   const handleLoadingComplete = () => {
     setLoadingCompleted(true);
     
-    // Selecionar segmento com base no CNAE ou na seleção direta
     if (activeTab === 'cnae' && formData?.companyData?.cnaePrincipal?.codigo) {
       console.log("Usando CNAE para submissão:", formData.companyData.cnaePrincipal.codigo);
       onCnaeSubmit(formData.companyData.cnaePrincipal.codigo);
     } else {
-      // Encontrar o segmento que corresponde ao CNAE na descrição da empresa ou escolher o primeiro segmento
       const selectedSegment = formData?.companyData?.cnaePrincipal?.descricao
         ? businessSegments.find(s => 
             getSegmentKeywords(s as SegmentWithUI).some(k => 
@@ -124,7 +118,6 @@ const SearchForm: React.FC<SearchFormProps> = ({ onCnaeSubmit, onSelectSegment }
                     onClick={() => handleSegmentSelection(segment)}
                   >
                     <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3">
-                      {/* Render a fallback icon if segment.icon doesn't exist */}
                       {(segment as SegmentWithUI).icon || <Building className="h-6 w-6 text-orange-500" />}
                     </div>
                     <h3 className="font-medium text-sm">{segment.name}</h3>

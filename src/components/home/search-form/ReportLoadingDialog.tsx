@@ -52,6 +52,8 @@ const ReportLoadingDialog: React.FC<ReportLoadingDialogProps> = ({
   useEffect(() => {
     if (!open) return;
     
+    console.log("Dialog de carregamento aberto, iniciando progresso");
+    
     // Reset progress when dialog opens
     setProgress(0);
     setStatusMessages([]);
@@ -118,6 +120,7 @@ const ReportLoadingDialog: React.FC<ReportLoadingDialogProps> = ({
         
         // Aguarda 2 segundos após completar antes de chamar onComplete
         setTimeout(() => {
+          console.log("Carregamento completo, chamando onComplete");
           onComplete();
         }, 2000);
       }, 500);
