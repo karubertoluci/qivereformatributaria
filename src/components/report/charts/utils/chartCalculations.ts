@@ -22,6 +22,12 @@ export interface PercentageData {
 }
 
 export const calculateRelevanceGroups = (filteredArticles: Article[], segmentId: string): RelevanceGroup[] => {
+  // Safety check for input
+  if (!filteredArticles || !Array.isArray(filteredArticles)) {
+    console.warn('calculateRelevanceGroups received invalid articles:', filteredArticles);
+    filteredArticles = [];
+  }
+  
   // Define relevance groups
   const groups: RelevanceGroup[] = [
     { name: 'Irrelevante', score: 0, positive: 0, negative: 0, neutral: 0, total: 0 },
@@ -45,8 +51,14 @@ export const calculateRelevanceGroups = (filteredArticles: Article[], segmentId:
   
   // Distribute articles according to target percentages
   filteredArticles.forEach(article => {
+    // Safety check for article impacts
+    if (!article.impacts || !Array.isArray(article.impacts)) {
+      console.warn('Article missing valid impacts array:', article);
+      return; // Skip this article
+    }
+    
     const segmentImpacts = article.impacts.filter(impact => 
-      impact.segments.includes(segmentId)
+      impact.segments && Array.isArray(impact.segments) && impact.segments.includes(segmentId)
     );
     
     if (segmentImpacts.length === 0) return;
@@ -138,7 +150,12 @@ export const checkForCriticalImpacts = (data: RelevanceGroup[]): boolean => {
 
 // Helper to filter articles by relevance level
 export const filterArticlesByRelevance = (articles: Article[], segmentId: string, relevanceLevel: string | null): Article[] => {
-  if (!relevanceLevel) return articles;
+  if (!relevanceLevel) return articles || [];
+  
+  // Safety check for articles
+  if (!articles || !Array.isArray(articles)) {
+    return [];
+  }
   
   // For consistent filtering, we need to apply the same distribution logic
   const totalArticles = articles.length;
@@ -153,8 +170,13 @@ export const filterArticlesByRelevance = (articles: Article[], segmentId: string
   let highRelevanceCount = 0;
   
   return articles.filter(article => {
+    // Check for valid impacts
+    if (!article.impacts || !Array.isArray(article.impacts)) {
+      return false;
+    }
+    
     const segmentImpacts = article.impacts.filter(impact => 
-      impact.segments.includes(segmentId)
+      impact.segments && Array.isArray(impact.segments) && impact.segments.includes(segmentId)
     );
     
     if (segmentImpacts.length === 0) return false;

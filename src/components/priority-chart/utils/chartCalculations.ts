@@ -18,9 +18,21 @@ export interface ArticlePriorityData {
 export const getArticlePriorityData = (articles: Article[], segmentId: string): ArticlePriorityData[] => {
   const result: ArticlePriorityData[] = [];
   
+  // Safety check for articles array
+  if (!articles || !Array.isArray(articles)) {
+    console.warn('getArticlePriorityData received invalid articles:', articles);
+    return [];
+  }
+  
   for (const article of articles) {
+    // Safety check for article and its impacts
+    if (!article || !article.impacts) {
+      console.warn('Invalid article or missing impacts:', article);
+      continue;
+    }
+    
     const segmentImpacts = article.impacts.filter(impact => 
-      impact.segments.includes(segmentId)
+      impact.segments && Array.isArray(impact.segments) && impact.segments.includes(segmentId)
     );
     
     if (segmentImpacts.length === 0) continue;
@@ -112,6 +124,8 @@ export const getArticlePriorityData = (articles: Article[], segmentId: string): 
       }
     }
     
+    const simplifiedText = article.simplifiedText || 'Texto não disponível';
+    
     result.push({
       id: article.id,
       number: article.number,
@@ -119,7 +133,7 @@ export const getArticlePriorityData = (articles: Article[], segmentId: string): 
       relevance,
       urgency,
       isNegative,
-      simplified: article.simplifiedText.substring(0, 120) + '...',
+      simplified: simplifiedText.substring(0, 120) + '...',
       relevanceCategory,
       impactType,
       impactLabel

@@ -53,7 +53,11 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
   negativeCount,
   neutralCount
 }) => {
-  const hasCriticalImpacts = filteredArticles.some(article => 
+  // Safeguard against undefined arrays
+  const safeFilteredArticles = filteredArticles || [];
+  const safeDisplayedArticles = displayedArticles || [];
+  
+  const hasCriticalImpacts = safeFilteredArticles.some(article => 
     article.impacts && article.impacts.some(impact => {
       if (typeof impact.severity === 'number') {
         return impact.severity >= 8;
@@ -65,7 +69,7 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
   );
 
   // If no articles match the filters
-  if (!filteredArticles.length) {
+  if (!safeFilteredArticles.length) {
     return <NoArticlesFound segment={segment} />;
   }
 
@@ -74,8 +78,8 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
       {/* Critical impacts warning if present */}
       <ImpactsSection 
         hasCriticalImpacts={hasCriticalImpacts}
-        relevantArticles={filteredArticles}
-        allArticles={filteredArticles}
+        relevantArticles={safeFilteredArticles}
+        allArticles={safeFilteredArticles}
         segmentId={segment.id}
         bookId={selectedBookFilter}
         relevanceFilter={null}
@@ -84,7 +88,7 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
       {/* View switcher (topics/table) */}
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-medium">
-          {filteredArticles.length} artigo{filteredArticles.length !== 1 ? 's' : ''} encontrado{filteredArticles.length !== 1 ? 's' : ''}
+          {safeFilteredArticles.length} artigo{safeFilteredArticles.length !== 1 ? 's' : ''} encontrado{safeFilteredArticles.length !== 1 ? 's' : ''}
         </h3>
         <ViewSwitcher viewMode={viewMode} setViewMode={setViewMode} />
       </div>
@@ -93,15 +97,19 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
       <div className="w-full">
         {viewMode === 'chart' ? (
           <ArticleCardList 
-            articles={displayedArticles}
+            articles={safeDisplayedArticles}
             segmentId={segment.id}
             highlights={highlights}
-            onAddHighlight={(text, color) => onAddHighlight(displayedArticles[0]?.id || '', text, color)}
+            onAddHighlight={(text, color) => {
+              if (safeDisplayedArticles.length > 0) {
+                onAddHighlight(safeDisplayedArticles[0]?.id || '', text, color);
+              }
+            }}
             onRemoveHighlight={onRemoveHighlight}
           />
         ) : (
           <ArticleTableView 
-            articles={displayedArticles}
+            articles={safeDisplayedArticles}
             expandedArticleId={expandedArticleId}
             setExpandedArticleId={setExpandedArticleId}
             highlights={highlights}

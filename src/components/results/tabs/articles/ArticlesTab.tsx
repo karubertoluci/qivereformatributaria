@@ -32,23 +32,23 @@ interface ArticlesTabProps {
 
 const ArticlesTab: React.FC<ArticlesTabProps> = ({ 
   segment, 
-  relevantArticles,
-  filteredArticles,
+  relevantArticles = [],
+  filteredArticles = [],
   expandedArticleId,
   setExpandedArticleId,
-  highlights,
+  highlights = [],
   handleAddHighlight,
   handleRemoveHighlight,
-  topics,
-  articlesByTopic,
+  topics = [],
+  articlesByTopic = {},
   viewMode,
   setViewMode,
-  positiveCount,
-  negativeCount,
-  searchTerm,
-  setSearchTerm,
-  filterType,
-  setFilterType
+  positiveCount = 0,
+  negativeCount = 0,
+  searchTerm = '',
+  setSearchTerm = () => {},
+  filterType = 'all',
+  setFilterType = () => {}
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(searchParams.get('book') || null);
@@ -78,19 +78,25 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
     return result;
   }, [filteredArticles, selectedBookFilter, selectedTitleFilter]);
 
-  // Calculate neutral count
-  const neutralCount = relevantArticles.filter(article => 
-    article.impacts.some(impact => impact.type === 'neutral' && impact.segments.includes(segment.id))
+  // Calculate neutral count safely
+  const neutralCount = (relevantArticles || []).filter(article => 
+    article.impacts && article.impacts.some(impact => 
+      impact.type === 'neutral' && impact.segments && impact.segments.includes(segment.id)
+    )
   ).length;
 
   // Extract book and title lists
   const books = useMemo(() => {
-    const allBooks = relevantArticles.map(article => article.metadata?.bookId || article.metadata?.livro).filter(Boolean);
+    const allBooks = (relevantArticles || []).map(article => 
+      article.metadata?.bookId || article.metadata?.livro
+    ).filter(Boolean);
     return Array.from(new Set(allBooks));
   }, [relevantArticles]);
   
   const titles = useMemo(() => {
-    const allTitles = relevantArticles.map(article => article.title).filter(Boolean);
+    const allTitles = (relevantArticles || []).map(article => 
+      article.title
+    ).filter(Boolean);
     return Array.from(new Set(allTitles));
   }, [relevantArticles]);
 
@@ -102,11 +108,11 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             positiveCount={positiveCount}
             negativeCount={negativeCount}
             neutralCount={neutralCount}
-            totalCount={relevantArticles.length}
-            searchTerm={searchTerm || ''}
-            setSearchTerm={setSearchTerm || (() => {})}
-            filterType={filterType || 'all'}
-            setFilterType={setFilterType || (() => {})}
+            totalCount={relevantArticles ? relevantArticles.length : 0}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            filterType={filterType}
+            setFilterType={setFilterType}
             viewMode={viewMode}
             setViewMode={setViewMode}
             selectedBookFilter={selectedBookFilter}
@@ -121,7 +127,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         <main className="md:col-span-9">
           <div className="flex flex-col space-y-6">
             <ChartSection 
-              filteredArticles={filteredArticles}
+              filteredArticles={filteredArticles || []}
               segmentId={segment.id}
               setExpandedArticleId={setExpandedArticleId}
               expanded={expanded}
@@ -129,7 +135,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             />
             
             <ArticlesContent 
-              filteredArticles={filteredArticles}
+              filteredArticles={filteredArticles || []}
               displayedArticles={displayedArticles}
               selectedBookFilter={selectedBookFilter}
               selectedTitleFilter={selectedTitleFilter}
