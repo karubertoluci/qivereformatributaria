@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -39,6 +40,9 @@
     
     --negative: 0 84.2% 60.2%;
     --negative-foreground: 210 40% 98%;
+
+    --rose: 350 100% 88%; /* Adicionando rose color */
+    --rose-foreground: 350 100% 60%;
   }
  
   .dark {
@@ -174,4 +178,13 @@ hr {
 *[style*="border-bottom-color"], 
 *[style*="border-bottom:"] {
   border-bottom-color: #e5e7eb !important;
+}
+
+/* Adicionar classes para gradientes consistentes */
+.header-gradient {
+  @apply bg-gradient-to-r from-rose-50 to-gray-100;
+}
+
+.card-gradient {
+  @apply bg-gradient-to-br from-card to-secondary/80 backdrop-blur-sm;
 }

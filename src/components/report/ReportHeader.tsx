@@ -28,7 +28,7 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
   };
   
   return (
-    <div className="flex flex-col space-y-4 mb-8 print:mb-6 pb-6 bg-white">
+    <div className="flex flex-col space-y-4 mb-8 print:mb-6 pb-6 bg-gradient-to-r from-rose-50 to-gray-100 rounded-lg p-4">
       <div className="flex items-center justify-between">
         {/* Logo */}
         <Link to="/">
@@ -42,7 +42,7 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
         {/* Centered text with truncation */}
         <div className="flex flex-col text-center mx-auto max-w-md sm:max-w-lg">
           <h2 className="text-xl font-bold flex items-center gap-2 justify-center">
-            <FileText className="h-4 w-4 shrink-0 text-primary" />
+            <FileText className="h-4 w-4 shrink-0 text-rose-500" />
             <span className="truncate">Relatório para {displayName}</span>
           </h2>
           <p className="text-sm text-muted-foreground">
@@ -63,7 +63,7 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
           
           <Button 
             size="sm"
-            className="flex items-center gap-1 h-8 px-2 sm:px-3 bg-orange-500 hover:bg-orange-600"
+            className="flex items-center gap-1 h-8 px-2 sm:px-3 bg-rose-500 hover:bg-rose-600"
           >
             <Download className="h-3 w-3" />
             <span className="hidden sm:inline text-xs">Baixar PDF</span>
