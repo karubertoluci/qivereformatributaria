@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { TabsContent } from '@/components/ui/tabs';
 import { Article } from '@/data/articles';
@@ -6,9 +5,8 @@ import { BusinessSegment } from '@/data/segments';
 import ArticlesFilters from './articles/filters/ArticlesFilters';
 import ArticlesContent from './articles/content/ArticlesContent';
 import ChartSection from './articles/charts/ChartSection';
-import { HighlightType } from '@/components/results/types';
+import { HighlightType, ViewMode, FilterType, Topic } from '@/components/results/types';
 import { useSearchParams } from 'react-router-dom';
-import { Topic } from '@/components/results/types';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -21,14 +19,14 @@ interface ArticlesTabProps {
   handleRemoveHighlight: (id: string) => void;
   topics: Topic[];
   articlesByTopic: Record<string, Article[]>;
-  viewMode: 'chart';
-  setViewMode: (mode: 'chart') => void;
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
   positiveCount: number;
   negativeCount: number;
   searchTerm?: string;
   setSearchTerm?: (term: string) => void;
-  filterType?: string;
-  setFilterType?: (type: any) => void;
+  filterType?: FilterType;
+  setFilterType?: (type: FilterType) => void;
 }
 
 const ArticlesTab: React.FC<ArticlesTabProps> = ({ 
@@ -65,11 +63,9 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
 
     if (selectedBookFilter) {
       result = result.filter(article => {
-        // Usar a propriedade metadata.bookId se disponível
         if (article.metadata?.bookId) {
           return article.metadata.bookId === selectedBookFilter;
         }
-        // Fallback para propriedade livro no metadata
         return article.metadata?.livro === selectedBookFilter;
       });
     }
@@ -84,7 +80,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   return (
     <TabsContent value="articles" className="pb-12">
       <div className="grid md:grid-cols-12 gap-6">
-        {/* Sidebar filters - 3 cols on desktop */}
         <aside className="md:col-span-3 md:sticky md:top-[80px] h-fit">
           <ArticlesFilters 
             articles={relevantArticles}
@@ -99,10 +94,8 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
           />
         </aside>
 
-        {/* Main content - 9 cols on desktop */}
         <main className="md:col-span-9">
           <div className="flex flex-col space-y-6">
-            {/* Chart section */}
             <ChartSection 
               filteredArticles={filteredArticles}
               segmentId={segment.id}
@@ -111,7 +104,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
               toggleExpanded={toggleExpanded}
             />
             
-            {/* Articles content */}
             <ArticlesContent 
               filteredArticles={filteredArticles}
               displayedArticles={displayedArticles}

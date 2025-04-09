@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Article } from '@/data/articles';
-import { HighlightType, Topic } from '@/components/results/types';
+import { HighlightType, Topic, ViewMode } from '@/components/results/types';
 import ArticleTopicsView from '@/components/results/ArticleTopicsView';
 import ArticleTableView from '@/components/results/ArticleTableView';
 import ViewSwitcher from '@/components/results/ViewSwitcher';
@@ -19,11 +19,11 @@ interface ArticlesContentProps {
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
   highlights: HighlightType[];
-  onAddHighlight: (articleId: string, text: string, color?: string) => void;
+  onAddHighlight: (articleId: string, text: string, color?: HighlightType['color']) => void;
   onRemoveHighlight: (id: string) => void;
   articlesByTopic: Record<string, Article[]>;
-  viewMode: 'chart' | 'table';
-  setViewMode: (mode: 'chart' | 'table') => void;
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
   topics: Topic[];
   segment: BusinessSegment;
 }

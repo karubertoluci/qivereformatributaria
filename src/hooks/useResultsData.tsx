@@ -1,12 +1,11 @@
+
 import { useState, useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
-import { Article, articles } from '@/data/articles';
-import { getArticlesByTopic } from '@/components/results/ArticlesByTopic';
-import { topics } from '@/components/results/ArticlesByTopic';
+import { Article } from '@/data/articles';
+import { getArticlesByTopic, topics } from '@/components/results/ArticlesByTopic';
 import { HighlightType, FilterType, ViewMode } from '@/components/results/types';
 import { useArticleData } from './article';
-import { useArticleFiltering } from './article';
-import { useTopics } from './article';
+import { CompanyData } from './results/types';
 
 export const useResultsData = (segment: BusinessSegment) => {
   const [expandedArticleId, setExpandedArticleId] = useState<string | null>(null);
@@ -35,7 +34,6 @@ export const useResultsData = (segment: BusinessSegment) => {
       const companyDataStr = localStorage.getItem('companyData');
       if (companyDataStr) {
         const companyData = JSON.parse(companyDataStr);
-        console.log('Dados da empresa carregados:', companyData);
         
         // Format the data to ensure consistency
         const formattedData: CompanyData = {
@@ -67,7 +65,6 @@ export const useResultsData = (segment: BusinessSegment) => {
         if (formDataStr) {
           const formDataObj = JSON.parse(formDataStr);
           setFormData(formDataObj);
-          console.log('Dados do formulário carregados:', formDataObj);
         }
       }
     } catch (e) {
@@ -75,6 +72,7 @@ export const useResultsData = (segment: BusinessSegment) => {
     }
   }, []);
   
+  // Carregar destaques do localStorage
   useEffect(() => {
     const savedHighlights = localStorage.getItem('highlights');
     if (savedHighlights) {
@@ -86,6 +84,7 @@ export const useResultsData = (segment: BusinessSegment) => {
     }
   }, []);
 
+  // Salvar destaques no localStorage quando mudarem
   useEffect(() => {
     localStorage.setItem('highlights', JSON.stringify(highlights));
   }, [highlights]);
@@ -94,9 +93,7 @@ export const useResultsData = (segment: BusinessSegment) => {
   
   const relevantArticles = segmentArticles.length > 0 
     ? segmentArticles 
-    : articles.filter(article => 
-        article.impacts.some(impact => impact.segments.includes(segment.id))
-      );
+    : [];
   
   const filteredArticles = relevantArticles
     .filter(article => 
@@ -124,7 +121,6 @@ export const useResultsData = (segment: BusinessSegment) => {
     setExpandedArticleId(articleId);
     
     if (viewMode === 'chart') {
-      // No need to change view mode since it's already 'chart'
       setTimeout(() => {
         const element = document.getElementById(`article-${articleId}`);
         if (element) {

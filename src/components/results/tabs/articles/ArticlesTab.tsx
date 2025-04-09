@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { TabsContent } from '@/components/ui/tabs';
 import { Article } from '@/data/articles';
@@ -6,9 +5,8 @@ import { BusinessSegment } from '@/data/segments';
 import ArticlesFilters from './filters/ArticlesFilters';
 import ArticlesContent from './content/ArticlesContent';
 import ChartSection from './charts/ChartSection';
-import { HighlightType } from '@/components/results/types';
+import { HighlightType, Topic, ViewMode, FilterType } from '@/components/results/types';
 import { useSearchParams } from 'react-router-dom';
-import { Topic } from '@/components/results/types';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -21,14 +19,14 @@ interface ArticlesTabProps {
   handleRemoveHighlight: (id: string) => void;
   topics: Topic[];
   articlesByTopic: Record<string, Article[]>;
-  viewMode: 'chart' | 'table'; // Fixed type to match what's used
-  setViewMode: (mode: 'chart' | 'table') => void; // Fixed type to match what's used
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
   positiveCount: number;
   negativeCount: number;
   searchTerm?: string;
   setSearchTerm?: (term: string) => void;
-  filterType?: string;
-  setFilterType?: (type: any) => void;
+  filterType?: FilterType;
+  setFilterType?: (type: FilterType) => void;
 }
 
 const ArticlesTab: React.FC<ArticlesTabProps> = ({ 
