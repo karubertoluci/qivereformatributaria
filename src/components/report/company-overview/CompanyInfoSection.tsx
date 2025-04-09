@@ -19,10 +19,10 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({
             <FileText className="h-5 w-5 text-rose-500" />
           </div>
           <div className="ml-2 flex-grow">
-            <p className="text-rose-500 font-medium">Razão Social</p>
+            <p className="text-rose-500 font-medium text-left">Razão Social</p>
           </div>
           <div className="flex-grow text-right">
-            <p className="font-semibold text-gray-800 text-lg">{companyData.razaoSocial || "NETSHOES"}</p>
+            <p className="text-gray-800 text-base font-medium">{companyData.razaoSocial || "NETSHOES"}</p>
           </div>
         </div>
       </div>
@@ -39,7 +39,7 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({
               <p className="text-rose-500 font-medium">CNPJ</p>
             </div>
             <div className="flex-grow text-right">
-              <p className="text-gray-800 font-bold text-base">{formatCNPJ(companyData.cnpj) || "03.560.235/0001-26"}</p>
+              <p className="text-gray-800 text-base font-medium">{formatCNPJ(companyData.cnpj) || "03.560.235/0001-26"}</p>
             </div>
           </div>
         </div>
@@ -54,7 +54,7 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({
               <p className="text-rose-500 font-medium">Segmento</p>
             </div>
             <div className="flex-grow text-right">
-              <p className="text-gray-800 font-bold text-base">{segment ? segment.name : "Comércio e Varejo"}</p>
+              <p className="text-gray-800 text-base font-medium">{segment ? segment.name : "Comércio e Varejo"}</p>
             </div>
           </div>
         </div>
@@ -70,7 +70,7 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({
             <p className="text-rose-500 font-medium text-left">Natureza Jurídica</p>
           </div>
           <div className="flex-grow text-right">
-            <p className="text-gray-800 font-bold text-base">{companyData.naturezaJuridica || "Sociedade Empresária Limitada"}</p>
+            <p className="text-gray-800 text-base font-medium">{companyData.naturezaJuridica || "Sociedade Empresária Limitada"}</p>
           </div>
         </div>
       </div>
@@ -85,7 +85,7 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({
             <p className="text-rose-500 font-medium">Endereço</p>
           </div>
           <div className="w-full text-right mt-2">
-            <p className="text-gray-800 leading-snug text-base font-bold">
+            <p className="text-gray-800 leading-snug text-base font-medium">
               {companyData.endereco || "Jardim Ivone, 17, Conj 131 Conj 132 Conj 133 Conj 134, Vila Mariana, São Paulo - SP, Cep: 04105020"}
             </p>
           </div>
