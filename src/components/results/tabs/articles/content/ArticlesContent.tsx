@@ -69,26 +69,26 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
     finalDisplayedArticles = finalDisplayedArticles.filter(article => {
       const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
       
-      if (filteredBookId === 'I') return articleNum <= 180;
-      if (filteredBookId === 'II') return articleNum > 180 && articleNum <= 300;
-      return articleNum > 300;
+      if (filteredBookId === 'I') return articleNum <= 200;
+      if (filteredBookId === 'II') return articleNum > 200 && articleNum <= 350;
+      return articleNum > 350;
     });
   }
   
   // Filter by relevance from chart selection
   if (filteredRelevance) {
-    // Implement relevance filtering logic similar to chart section
-    const total = finalDisplayedArticles.length;
+    // Implementation based on the article distribution
     const sortedArticles = [...finalDisplayedArticles].sort((a, b) => a.id.localeCompare(b.id));
+    const total = sortedArticles.length;
     
     if (filteredRelevance === 'Irrelevante') {
-      finalDisplayedArticles = sortedArticles.slice(0, Math.ceil(total * 0.25));
+      finalDisplayedArticles = sortedArticles.slice(0, Math.ceil(total * 0.2)); // 20%
     } else if (filteredRelevance === 'Pouco relevante') {
-      finalDisplayedArticles = sortedArticles.slice(Math.ceil(total * 0.25), Math.ceil(total * 0.5));
+      finalDisplayedArticles = sortedArticles.slice(Math.ceil(total * 0.2), Math.ceil(total * 0.4)); // 20%
     } else if (filteredRelevance === 'Moderadamente relevante') {
-      finalDisplayedArticles = sortedArticles.slice(Math.ceil(total * 0.5), Math.ceil(total * 0.75));
+      finalDisplayedArticles = sortedArticles.slice(Math.ceil(total * 0.4), Math.ceil(total * 0.9)); // 50%
     } else if (filteredRelevance === 'Muito relevante') {
-      finalDisplayedArticles = sortedArticles.slice(Math.ceil(total * 0.75));
+      finalDisplayedArticles = sortedArticles.slice(Math.ceil(total * 0.9)); // 10%
     }
   }
   

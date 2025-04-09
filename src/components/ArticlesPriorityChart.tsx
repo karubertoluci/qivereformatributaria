@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Article } from '@/data/articles';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -7,6 +8,7 @@ import { filterArticlesByRelevance } from './report/charts/utils/chartCalculatio
 import { getArticlePriorityData } from './priority-chart/utils/chartCalculations';
 import PriorityScatterChart from './priority-chart/PriorityScatterChart';
 import PriorityChartLegend from './priority-chart/PriorityChartLegend';
+
 interface ArticlesPriorityChartProps {
   articles: Article[];
   segmentId: string;
@@ -15,6 +17,7 @@ interface ArticlesPriorityChartProps {
   relevanceFilter?: string | null;
   selectedArticleId?: string | null;
 }
+
 const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
   articles,
   segmentId,
@@ -34,16 +37,30 @@ const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
   // Then filter by relevance if needed
   const finalFilteredArticles = relevanceFilter ? filterArticlesByRelevance(bookFilteredArticles, segmentId, relevanceFilter) : bookFilteredArticles;
   const data = getArticlePriorityData(finalFilteredArticles, segmentId);
+  
   const handleDotClick = (data: any) => {
     if (onSelectArticle) {
       onSelectArticle(data.id);
     }
   };
-  return <Card className="shadow-md">
+  
+  return (
+    <Card className="shadow-md">
       <CardHeader>
         <ChartHeader title="Prioridade de Artigos" description="Artigos por relevância e urgência" icon={<BookMarked className="h-5 w-5 text-primary" />} />
       </CardHeader>
-      
-    </Card>;
+      <CardContent className="pt-0 pb-6">
+        <div className="h-[400px] mb-2">
+          <PriorityScatterChart 
+            data={data} 
+            onDotClick={handleDotClick}
+            selectedArticleId={selectedArticleId}
+          />
+        </div>
+        <PriorityChartLegend />
+      </CardContent>
+    </Card>
+  );
 };
+
 export default ArticlesPriorityChart;

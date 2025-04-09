@@ -41,27 +41,26 @@ const ChartSection: React.FC<ChartSectionProps> = ({
         const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
                           parseInt(article.id.replace(/\D/g, ''));
         
-        if (selectedBookId === 'I') return articleNum <= 180;
-        if (selectedBookId === 'II') return articleNum > 180 && articleNum <= 300;
-        return articleNum > 300;
+        if (selectedBookId === 'I') return articleNum <= 200;
+        if (selectedBookId === 'II') return articleNum > 200 && articleNum <= 350;
+        return articleNum > 350;
       });
     }
     
-    // Apply relevance filter (if we had a way to determine relevance)
+    // Apply relevance filter
     if (selectedRelevance) {
       // This would need a proper implementation based on how relevance is determined
-      // For now, just assume 25% of articles in each relevance category
       const total = result.length;
       const sortedArticles = [...result].sort((a, b) => a.id.localeCompare(b.id));
       
       if (selectedRelevance === 'Irrelevante') {
-        result = sortedArticles.slice(0, Math.ceil(total * 0.25));
+        result = sortedArticles.slice(0, Math.ceil(total * 0.2)); // 20%
       } else if (selectedRelevance === 'Pouco relevante') {
-        result = sortedArticles.slice(Math.ceil(total * 0.25), Math.ceil(total * 0.5));
+        result = sortedArticles.slice(Math.ceil(total * 0.2), Math.ceil(total * 0.4)); // 20%
       } else if (selectedRelevance === 'Moderadamente relevante') {
-        result = sortedArticles.slice(Math.ceil(total * 0.5), Math.ceil(total * 0.75));
+        result = sortedArticles.slice(Math.ceil(total * 0.4), Math.ceil(total * 0.9)); // 50%
       } else if (selectedRelevance === 'Muito relevante') {
-        result = sortedArticles.slice(Math.ceil(total * 0.75));
+        result = sortedArticles.slice(Math.ceil(total * 0.9)); // 10%
       }
     }
     
@@ -115,9 +114,9 @@ const ChartSection: React.FC<ChartSectionProps> = ({
                       const articleNum = parseInt(a.number.replace(/\D/g, '')) || 
                                         parseInt(a.id.replace(/\D/g, ''));
                       
-                      if (bookId === 'I') return articleNum <= 180;
-                      if (bookId === 'II') return articleNum > 180 && articleNum <= 300;
-                      return articleNum > 300;
+                      if (bookId === 'I') return articleNum <= 200;
+                      if (bookId === 'II') return articleNum > 200 && articleNum <= 350;
+                      return articleNum > 350;
                     });
                     if (article) handleArticleSelect(article.id);
                   }
@@ -150,9 +149,9 @@ const ChartSection: React.FC<ChartSectionProps> = ({
                           const articleNum = parseInt(a.number.replace(/\D/g, '')) || 
                                           parseInt(a.id.replace(/\D/g, ''));
                           
-                          if (bookId === 'I') return articleNum <= 180;
-                          if (bookId === 'II') return articleNum > 180 && articleNum <= 300;
-                          return articleNum > 300;
+                          if (bookId === 'I') return articleNum <= 200;
+                          if (bookId === 'II') return articleNum > 200 && articleNum <= 350;
+                          return articleNum > 350;
                         });
                         if (article) handleArticleSelect(article.id);
                       }
