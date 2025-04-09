@@ -3,7 +3,7 @@ import React from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article } from '@/data/articles';
 import { Button } from '@/components/ui/button';
-import { Topic, HighlightType } from '../../types';
+import { HighlightType } from '@/components/results/types';
 import { toast } from 'sonner';
 import ArticleCardList from '@/components/article/ArticleCardList';
 import ImpactsSection from './components/ImpactsSection';
@@ -77,7 +77,7 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
         relevantArticles={displayedArticles}
         allArticles={filteredArticles}
         segmentId={segment.id}
-        bookId={selectedBookFilter || ''}
+        bookId={selectedBookFilter}
         relevanceFilter={null}
       />
       

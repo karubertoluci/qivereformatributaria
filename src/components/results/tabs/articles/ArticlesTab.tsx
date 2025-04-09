@@ -139,22 +139,16 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
         />
         
         <ArticlesContent 
-          filteredArticles={filteredArticles}
           displayedArticles={displayedArticles}
+          filteredArticles={filteredArticles}
           selectedBookFilter={selectedBookFilter}
           selectedTitleFilter={selectedTitleFilter}
           setSelectedBookFilter={setSelectedBookFilter}
           setSelectedTitleFilter={setSelectedTitleFilter}
-          expandedArticleId={expandedArticleId}
-          setExpandedArticleId={setExpandedArticleId}
+          segment={segment}
           highlights={highlights}
           onAddHighlight={handleAddHighlight}
           onRemoveHighlight={handleRemoveHighlight}
-          articlesByTopic={articlesByTopic}
-          viewMode={viewMode}
-          setViewMode={setViewMode}
-          topics={topics}
-          segment={segment}
           positiveCount={positiveCount}
           negativeCount={negativeCount}
           neutralCount={neutralCount}
