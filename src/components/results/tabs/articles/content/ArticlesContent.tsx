@@ -58,7 +58,8 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
   const safeDisplayedArticles = displayedArticles || [];
   
   const hasCriticalImpacts = safeFilteredArticles.some(article => 
-    article.impacts && article.impacts.some(impact => {
+    article.impacts && Array.isArray(article.impacts) && article.impacts.some(impact => {
+      if (!impact) return false;
       if (typeof impact.severity === 'number') {
         return impact.severity >= 8;
       } else if (typeof impact.severity === 'string') {
@@ -99,10 +100,10 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
           <ArticleCardList 
             articles={safeDisplayedArticles}
             segmentId={segment.id}
-            highlights={highlights}
+            highlights={highlights || []}
             onAddHighlight={(text, color) => {
-              if (safeDisplayedArticles.length > 0) {
-                onAddHighlight(safeDisplayedArticles[0]?.id || '', text, color);
+              if (safeDisplayedArticles.length > 0 && safeDisplayedArticles[0]) {
+                onAddHighlight(safeDisplayedArticles[0].id || '', text, color);
               }
             }}
             onRemoveHighlight={onRemoveHighlight}
@@ -112,7 +113,7 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
             articles={safeDisplayedArticles}
             expandedArticleId={expandedArticleId}
             setExpandedArticleId={setExpandedArticleId}
-            highlights={highlights}
+            highlights={highlights || []}
             onAddHighlight={onAddHighlight}
             onRemoveHighlight={onRemoveHighlight}
             segment={segment}

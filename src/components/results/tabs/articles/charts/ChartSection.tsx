@@ -25,6 +25,8 @@ const ChartSection: React.FC<ChartSectionProps> = ({
   toggleExpanded
 }) => {
   const isMobile = useIsMobile();
+  // Ensure we have a valid array
+  const safeArticles = filteredArticles || [];
 
   return (
     <div className="bg-white rounded-lg border p-4 mb-6">
@@ -39,24 +41,26 @@ const ChartSection: React.FC<ChartSectionProps> = ({
       <div className={`overflow-x-auto transition-all duration-300 ${expanded ? 'max-h-[2000px]' : 'max-h-[1200px]'}`}>
         <div className={isMobile ? "min-w-[500px]" : ""}>
           <div className="space-y-6">
-            {/* 1. Book Distribution Chart - The first requested chart */}
+            {/* 1. Book Distribution Chart */}
             <div className="mb-6">
               <BookDistributionChart 
-                articles={filteredArticles}
+                articles={safeArticles}
                 onSelectBook={(bookId) => {
                   if (bookId) {
                     // Find the first article of this book and select it
-                    const article = filteredArticles.find(a => a.metadata?.bookId === bookId);
+                    const article = safeArticles.find(a => 
+                      a && a.metadata && a.metadata.bookId === bookId
+                    );
                     if (article) setExpandedArticleId(article.id);
                   }
                 }}
               />
             </div>
             
-            {/* 2. Favorability Relevance Chart - The second requested chart */}
+            {/* 2. Favorability Relevance Chart */}
             <div className="mb-6">
               <FavorabilityRelevanceChart 
-                articles={filteredArticles}
+                articles={safeArticles}
                 segmentId={segmentId}
               />
             </div>
@@ -64,7 +68,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
             {/* Articles Priority Chart */}
             <div className="mb-6">
               <ArticlesPriorityChart 
-                articles={filteredArticles}
+                articles={safeArticles}
                 segmentId={segmentId}
                 onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
               />
@@ -77,14 +81,14 @@ const ChartSection: React.FC<ChartSectionProps> = ({
                 <div className="mb-6">
                   <ImpactDistributionChart 
                     segmentId={segmentId}
-                    articles={filteredArticles}
+                    articles={safeArticles}
                   />
                 </div>
                 
                 {/* Relevance Distribution Chart */}
                 <div className="mb-6">
                   <RelevanceDistributionChart 
-                    articles={filteredArticles}
+                    articles={safeArticles}
                     segmentId={segmentId}
                   />
                 </div>

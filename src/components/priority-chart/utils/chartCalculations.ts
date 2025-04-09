@@ -26,13 +26,13 @@ export const getArticlePriorityData = (articles: Article[], segmentId: string): 
   
   for (const article of articles) {
     // Safety check for article and its impacts
-    if (!article || !article.impacts) {
-      console.warn('Invalid article or missing impacts:', article);
+    if (!article || !article.impacts || !Array.isArray(article.impacts)) {
+      console.warn('Invalid article or missing impacts array:', article);
       continue;
     }
     
     const segmentImpacts = article.impacts.filter(impact => 
-      impact.segments && Array.isArray(impact.segments) && impact.segments.includes(segmentId)
+      impact && impact.segments && Array.isArray(impact.segments) && impact.segments.includes(segmentId)
     );
     
     if (segmentImpacts.length === 0) continue;
@@ -48,6 +48,8 @@ export const getArticlePriorityData = (articles: Article[], segmentId: string): 
     let hasNegative = false;
     
     segmentImpacts.forEach(impact => {
+      if (!impact) return;
+      
       if (impact.type === 'positive') {
         hasPositive = true;
         relevance += 15;
