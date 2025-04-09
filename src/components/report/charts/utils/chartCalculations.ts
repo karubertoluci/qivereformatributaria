@@ -1,4 +1,3 @@
-
 import { Article, ArticleImpact } from '@/data/articles';
 
 interface RelevanceGroup {
@@ -133,4 +132,12 @@ export const filterArticlesByRelevance = (articles: Article[], segmentId: string
     
     return false;
   });
+};
+
+export const checkForCriticalImpacts = (relevanceGroups: RelevanceGroup[]): boolean => {
+  // Check if any of the "Muito relevante" groups have critical impacts
+  return relevanceGroups.some(group => 
+    group.name === 'Muito relevante' && 
+    group.hasCritical === true
+  );
 };
