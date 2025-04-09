@@ -28,7 +28,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
   // Refresh company data when the tab is shown
   useEffect(() => {
     refreshCompanyData();
-  }, []);
+  }, [refreshCompanyData]);
   
   const handleSelectArticle = (articleId: string) => {
     setExpandedArticleId(articleId);
