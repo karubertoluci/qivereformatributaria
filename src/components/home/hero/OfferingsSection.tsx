@@ -55,11 +55,7 @@ const OfferingsSection = () => {
         </div>
       </div>
       
-      <div className="mt-12 text-center">
-        <Button onClick={handleOpenDialog} className="bg-[#FF4719] hover:bg-[#E53E15] text-white px-6 py-3 text-lg">
-          Gerar relatório personalizado
-        </Button>
-      </div>
+      
     </div>;
 };
 export default OfferingsSection;
