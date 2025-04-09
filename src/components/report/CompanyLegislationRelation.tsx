@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { BusinessSegment } from '@/data/segments';
-import { CompanyData } from '@/hooks/useResultsData';
+import { CompanyData } from '@/hooks/results/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import LegislationBooks from './LegislationBooks';
 import ImpactDistributionChart from './ImpactDistributionChart';
