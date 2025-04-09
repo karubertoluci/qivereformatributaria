@@ -11,7 +11,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
   return <Card>
       <CardHeader className="bg-gradient-to-r from-rose-50 to-white border-b">
         <CardTitle className="flex items-center gap-2 text-2xl font-semibold">
-          <FileText className="h-5 w-5 text-rose-500" />
+          
           A Reforma Tributária e o Segmento {segment.name}
         </CardTitle>
       </CardHeader>
