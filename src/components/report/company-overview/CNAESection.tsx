@@ -1,10 +1,13 @@
+
 import React from 'react';
 import { FileText, Briefcase } from 'lucide-react';
 import { CompanyApiData, CompanyData, CNAEData } from '@/hooks/results/types';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+
 interface CNAESectionProps {
   companyData: CompanyData;
 }
+
 const CNAESection: React.FC<CNAESectionProps> = ({
   companyData
 }) => {
@@ -19,7 +22,9 @@ const CNAESection: React.FC<CNAESectionProps> = ({
 
   // Get secondary CNAEs, with fallbacks for different API response formats
   const cnaeSecundarios = company.cnaeSecundarios || company.cnaes_secundarios || [];
-  return <div className="space-y-4">
+  
+  return (
+    <div className="space-y-4">
       {/* CNAE Principal */}
       <div className="border rounded-lg p-4">
         <div className="flex flex-col">
@@ -55,22 +60,30 @@ const CNAESection: React.FC<CNAESectionProps> = ({
             </div>
           </div>
           
-          {cnaeSecundarios && cnaeSecundarios.length > 0 ? <Table>
+          {cnaeSecundarios && cnaeSecundarios.length > 0 && cnaeSecundarios[0].codigo !== "0" ? (
+            <Table>
               <TableBody>
-                {cnaeSecundarios.map((cnae: CNAEData, i: number) => <TableRow key={i} className="border-b border-gray-100">
+                {cnaeSecundarios.map((cnae: CNAEData, i: number) => (
+                  <TableRow key={i} className="border-b border-gray-100">
                     <TableCell className="py-2 px-3 bg-rose-50 rounded-md w-24 font-semibold text-gray-800">
                       {cnae.codigo}
                     </TableCell>
                     <TableCell className="py-2 pl-4 text-gray-700 bg-zinc-50">
                       {cnae.descricao}
                     </TableCell>
-                  </TableRow>)}
+                  </TableRow>
+                ))}
               </TableBody>
-            </Table> : <div className="flex-grow flex items-center justify-center h-full border border-dashed rounded-lg border-gray-200 p-6">
+            </Table>
+          ) : (
+            <div className="flex-grow flex items-center justify-center h-full border border-dashed rounded-lg border-gray-200 p-6">
               <p className="text-gray-500 text-center">Nenhum CNAE Secundário foi identificado.</p>
-            </div>}
+            </div>
+          )}
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default CNAESection;
