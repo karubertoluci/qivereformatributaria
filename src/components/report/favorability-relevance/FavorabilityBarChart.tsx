@@ -1,10 +1,10 @@
 
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import { FavorabilityRelevanceData } from './useFavorabilityRelevanceData';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { RelevanceTotalData } from './useFavorabilityRelevanceData';
 
 interface FavorabilityBarChartProps {
-  chartData: FavorabilityRelevanceData[];
+  chartData: RelevanceTotalData[];
   selectedFavorability: string | null;
   onSelectFavorability: (favorability: string | null) => void;
 }
@@ -14,131 +14,64 @@ const FavorabilityBarChart: React.FC<FavorabilityBarChartProps> = ({
   selectedFavorability,
   onSelectFavorability
 }) => {
-  // Garantir que o chartData tenha entradas únicas por nível de relevância
-  const relevanceLevels = ['Irrelevante', 'Pouco Relevante', 'Moderadamente Relevante', 'Muito Relevante'];
-
-  // Primeiro vamos filtrar os dados para ter apenas um item por nível de relevância
-  const uniqueChartData = relevanceLevels.map(level => {
-    // Encontra todos os itens para este nível de relevância
-    const relevanceItems = chartData.filter(item => item.relevanceLevel === level);
-
-    // Se não há itens para este nível, criamos um com valores zero
-    if (relevanceItems.length === 0) {
-      return {
-        relevanceLevel: level,
-        favorable: 0,
-        neutral: 0,
-        unfavorable: 0,
-        name: level,
-        bookId: 'none',
-        total: 0,
-        favorablePercent: 0,
-        neutralPercent: 0,
-        unfavorablePercent: 0
-      };
+  const handleBarClick = (data: any) => {
+    const clickedBar = data.activePayload?.[0];
+    if (clickedBar) {
+      const dataKey = clickedBar.dataKey;
+      onSelectFavorability(selectedFavorability === dataKey ? null : dataKey);
     }
-
-    // Caso contrário, usamos o primeiro item
-    return relevanceItems[0];
-  });
-
-  // Custom legend that acts as a filter
-  const renderCustomLegend = () => {
-    return (
-      <div className="flex justify-center gap-4 mt-6 my-0 py-[7px] px-0">
-        {[
-          { key: 'favorable', label: 'Favorável', color: '#4ade80' },
-          { key: 'neutral', label: 'Neutro', color: '#d1d5db' },
-          { key: 'unfavorable', label: 'Desfavorável', color: '#ef4444' }
-        ].map(item => (
-          <div 
-            key={item.key} 
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md cursor-pointer transition-colors
-              ${selectedFavorability === item.key ? 'bg-secondary border border-primary' : 'hover:bg-secondary/50'}`}
-            onClick={() => onSelectFavorability(selectedFavorability === item.key ? null : item.key)}
-          >
-            <div 
-              className="w-3 h-3 rounded-sm" 
-              style={{ backgroundColor: item.color }}
-            />
-            <span className="text-sm">{item.label}</span>
-          </div>
-        ))}
-      </div>
-    );
   };
-
+  
   return (
-    <div className="space-y-2">
-      <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart 
-            data={uniqueChartData}
-            layout="vertical"
-            margin={{ top: 20, right: 30, left: 150, bottom: 20 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
-            <XAxis 
-              type="number" 
-              domain={[0, 100]} 
-              tickFormatter={value => `${value}%`}
-              tick={{ fill: '#64748b' }}
-              axisLine={{ stroke: '#e5e7eb' }}
-              tickLine={false}
-            />
-            <YAxis 
-              type="category" 
-              dataKey="relevanceLevel" 
-              width={150}
-              tick={{ fill: '#64748b' }}
-              axisLine={{ stroke: '#e5e7eb' }}
-              tickLine={false}
-            />
-            <Tooltip 
-              formatter={(value: number) => [`${value}%`, 'Percentual']}
-              labelFormatter={label => `${label}`}
-              contentStyle={{
-                borderRadius: '8px',
-                border: '1px solid #e2e8f0',
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
-              }}
-            />
-            {/* Hide the default legend as we'll use our custom one */}
-            <Legend content={() => null} />
-            
-            {/* Only render bars that aren't filtered out */}
-            {(!selectedFavorability || selectedFavorability === 'favorable') && 
-              <Bar 
-                dataKey="favorablePercent" 
-                stackId="a" 
-                name="favorable" 
-                fill="#4ade80" 
-                isAnimationActive={false} 
-              />
-            }
-            {(!selectedFavorability || selectedFavorability === 'neutral') && 
-              <Bar 
-                dataKey="neutralPercent" 
-                stackId="a" 
-                name="neutral" 
-                fill="#d1d5db" 
-                isAnimationActive={false} 
-              />
-            }
-            {(!selectedFavorability || selectedFavorability === 'unfavorable') && 
-              <Bar 
-                dataKey="unfavorablePercent" 
-                stackId="a" 
-                name="unfavorable" 
-                fill="#ef4444" 
-                isAnimationActive={false} 
-              />
-            }
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-      {renderCustomLegend()}
-    </div>
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart
+        data={chartData}
+        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+        onClick={handleBarClick}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="relevanceLevel" />
+        <YAxis />
+        <Tooltip 
+          formatter={(value, name) => {
+            let label = name;
+            if (name === 'favorable') label = 'Favorável';
+            if (name === 'neutral') label = 'Neutro';
+            if (name === 'unfavorable') label = 'Desfavorável';
+            return [`${value}%`, label];
+          }}
+        />
+        <Legend 
+          formatter={(value) => {
+            if (value === 'favorable') return 'Favorável';
+            if (value === 'neutral') return 'Neutro';
+            if (value === 'unfavorable') return 'Desfavorável';
+            return value;
+          }}
+        />
+        <Bar 
+          dataKey="favorable" 
+          name="favorable" 
+          fill="#4ade80" 
+          radius={[4, 4, 0, 0]}
+          fillOpacity={selectedFavorability === 'favorable' ? 1 : (selectedFavorability ? 0.3 : 0.8)}
+        />
+        <Bar 
+          dataKey="neutral" 
+          name="neutral" 
+          fill="#9ca3af" 
+          radius={[4, 4, 0, 0]}
+          fillOpacity={selectedFavorability === 'neutral' ? 1 : (selectedFavorability ? 0.3 : 0.8)}
+        />
+        <Bar 
+          dataKey="unfavorable" 
+          name="unfavorable" 
+          fill="#f87171" 
+          radius={[4, 4, 0, 0]}
+          fillOpacity={selectedFavorability === 'unfavorable' ? 1 : (selectedFavorability ? 0.3 : 0.8)}
+        />
+      </BarChart>
+    </ResponsiveContainer>
   );
 };
 

@@ -1,9 +1,8 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Clock, AlertCircle, HelpCircle } from 'lucide-react';
-import { useFavorabilityRelevanceData } from './favorability-relevance/useFavorabilityRelevanceData';
+import { useFavorabilityRelevanceData, RelevanceTotalData } from './favorability-relevance/useFavorabilityRelevanceData';
 import FavorabilityBarChart from './favorability-relevance/FavorabilityBarChart';
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -19,7 +18,7 @@ const FavorabilityRelevanceChart: React.FC<FavorabilityRelevanceChartProps> = ({
   bookId = 'I'
 }) => {
   const [selectedFavorability, setSelectedFavorability] = useState<string | null>(null);
-  const { bookData, relevanceTotals } = useFavorabilityRelevanceData(articles, segmentId, null);
+  const { relevanceTotals } = useFavorabilityRelevanceData(articles, segmentId, null);
   const bookName = bookId ? `Livro ${bookId}` : '';
   
   return (

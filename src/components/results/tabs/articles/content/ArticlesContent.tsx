@@ -33,30 +33,31 @@ interface ArticlesContentProps {
 }
 
 const ArticlesContent: React.FC<ArticlesContentProps> = ({
-  filteredArticles,
-  displayedArticles,
+  filteredArticles = [],
+  displayedArticles = [],
   selectedBookFilter,
   selectedTitleFilter,
   setSelectedBookFilter,
   setSelectedTitleFilter,
   expandedArticleId,
   setExpandedArticleId,
-  highlights,
+  highlights = [],
   onAddHighlight,
   onRemoveHighlight,
-  articlesByTopic,
+  articlesByTopic = {},
   viewMode,
   setViewMode,
-  topics,
+  topics = [],
   segment,
-  positiveCount,
-  negativeCount,
-  neutralCount
+  positiveCount = 0,
+  negativeCount = 0,
+  neutralCount = 0
 }) => {
-  // Safeguard against undefined arrays
-  const safeFilteredArticles = filteredArticles || [];
-  const safeDisplayedArticles = displayedArticles || [];
+  // Garantir arrays seguros
+  const safeFilteredArticles = Array.isArray(filteredArticles) ? filteredArticles : [];
+  const safeDisplayedArticles = Array.isArray(displayedArticles) ? displayedArticles : [];
   
+  // Verificar se há artigos críticos
   const hasCriticalImpacts = safeFilteredArticles.some(article => 
     article.impacts && Array.isArray(article.impacts) && article.impacts.some(impact => {
       if (!impact) return false;
@@ -69,14 +70,19 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
     })
   );
 
-  // If no articles match the filters
+  // Se não há artigos com os filtros aplicados
   if (!safeFilteredArticles.length) {
     return <NoArticlesFound segment={segment} />;
   }
 
+  // Mensagem sobre total de artigos encontrados
+  const totalMessage = safeDisplayedArticles.length === 1 
+    ? "1 artigo encontrado" 
+    : `${safeDisplayedArticles.length} artigos encontrados`;
+
   return (
     <div className="space-y-6">
-      {/* Critical impacts warning if present */}
+      {/* Alerta de impactos críticos se houver */}
       <ImpactsSection 
         hasCriticalImpacts={hasCriticalImpacts}
         relevantArticles={safeFilteredArticles}
@@ -86,15 +92,15 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
         relevanceFilter={null}
       />
       
-      {/* View switcher (topics/table) */}
+      {/* Alternador de visualização e contador de artigos */}
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-medium">
-          {safeFilteredArticles.length} artigo{safeFilteredArticles.length !== 1 ? 's' : ''} encontrado{safeFilteredArticles.length !== 1 ? 's' : ''}
+          {totalMessage}
         </h3>
         <ViewSwitcher viewMode={viewMode} setViewMode={setViewMode} />
       </div>
       
-      {/* Display articles in the selected view mode */}
+      {/* Exibir artigos no modo selecionado */}
       <div className="w-full">
         {viewMode === 'chart' ? (
           <ArticleCardList 

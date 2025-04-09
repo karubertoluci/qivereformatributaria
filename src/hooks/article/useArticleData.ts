@@ -43,7 +43,7 @@ export const useArticleData = (segment: BusinessSegment) => {
         if (livrosData && livrosData.length > 0) {
           console.log(`Encontrados ${livrosData.length} artigos na tabela livros_reforma`);
           
-          // Remover a limitação de artigos para mostrar todos os 545
+          // Mostrar todos os 545 artigos disponíveis
           const totalArticles = livrosData.length;
           console.log(`Processando todos os ${totalArticles} artigos disponíveis`);
           

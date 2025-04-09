@@ -3,6 +3,7 @@ import React from 'react';
 import { Article } from '@/data/articles';
 import ArticleCard from './ArticleCard';
 import { HighlightType } from '@/components/results/types';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface ArticleCardListProps {
   articles: Article[];
@@ -10,15 +11,35 @@ interface ArticleCardListProps {
   highlights?: HighlightType[];
   onAddHighlight?: (text: string, color: HighlightType['color']) => void;
   onRemoveHighlight?: (id: string) => void;
+  isLoading?: boolean;
 }
 
 const ArticleCardList: React.FC<ArticleCardListProps> = ({ 
-  articles, 
+  articles = [], 
   segmentId,
   highlights = [],
   onAddHighlight = () => {},
-  onRemoveHighlight = () => {}
+  onRemoveHighlight = () => {},
+  isLoading = false
 }) => {
+  // Safety check
+  if (!Array.isArray(articles)) {
+    console.warn('ArticleCardList received non-array articles:', articles);
+    articles = [];
+  }
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div key={i} className="space-y-3">
+            <Skeleton className="h-[200px] w-full rounded-lg" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {articles.length === 0 ? (
@@ -26,7 +47,7 @@ const ArticleCardList: React.FC<ArticleCardListProps> = ({
           <p className="text-gray-500">Nenhum artigo encontrado com os filtros aplicados.</p>
         </div>
       ) : (
-        articles.map(article => (
+        articles.map((article) => (
           <ArticleCard 
             key={article.id} 
             article={article} 
