@@ -40,7 +40,7 @@ export const useFavorabilityRelevanceData = (
       return;
     }
     
-    // Define relevance levels
+    // Define relevance levels in consistent format across components
     const relevanceLevels = ['Irrelevante', 'Pouco Relevante', 'Moderadamente Relevante', 'Muito Relevante'];
     
     // Initialize data structure for relevance totals
@@ -63,30 +63,51 @@ export const useFavorabilityRelevanceData = (
     
     // Count actual articles by relevance level and favorability
     articles.forEach(article => {
-      // Determine relevance category based on article number
-      const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
+      // Determine relevance category - first try from metadata
       let relevanceLevel;
       
-      if (articleNum % 10 < 2) {
-        relevanceLevel = 'Irrelevante'; // 20% of articles
-      } else if (articleNum % 10 < 4) {
-        relevanceLevel = 'Pouco Relevante'; // 20% of articles
-      } else if (articleNum % 10 < 9) {
-        relevanceLevel = 'Moderadamente Relevante'; // 50% of articles
+      if (article.metadata?.relevancia) {
+        // Map to our standard category names
+        const rawRelevance = article.metadata.relevancia;
+        if (rawRelevance.includes('Irrelevante')) relevanceLevel = 'Irrelevante';
+        else if (rawRelevance.includes('Pouco')) relevanceLevel = 'Pouco Relevante';
+        else if (rawRelevance.includes('Moderadamente')) relevanceLevel = 'Moderadamente Relevante';
+        else if (rawRelevance.includes('Muito')) relevanceLevel = 'Muito Relevante';
+        else relevanceLevel = 'Moderadamente Relevante'; // Default if unknown
       } else {
-        relevanceLevel = 'Muito Relevante'; // 10% of articles
+        // Determine relevance category based on article number
+        const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
+        
+        // Use the same distribution logic as in article cards
+        const randomRelevance = (articleNum % 100) / 100 * 100; // Create deterministic distribution
+        
+        if (randomRelevance < 40) {
+          relevanceLevel = 'Irrelevante'; // 40% of articles
+        } else if (randomRelevance < 50) {
+          relevanceLevel = 'Pouco Relevante'; // 10% of articles
+        } else if (randomRelevance < 90) {
+          relevanceLevel = 'Moderadamente Relevante'; // 40% of articles
+        } else {
+          relevanceLevel = 'Muito Relevante'; // 10% of articles
+        }
       }
       
-      // Determine favorability (using the same distribution as before for consistency)
-      const random = Math.random() * 100;
+      // Determine favorability - first try from metadata
       let favorability;
       
-      if (random < 40) {
-        favorability = 'favorable';
-      } else if (random < 60) {
-        favorability = 'neutral';
+      if (article.metadata?.impacto) {
+        const impacto = article.metadata.impacto;
+        if (impacto.includes('Favorável')) favorability = 'favorable';
+        else if (impacto.includes('Desfavorável')) favorability = 'unfavorable';
+        else favorability = 'neutral';
       } else {
-        favorability = 'unfavorable';
+        // Determine favorability from impacts
+        const hasPositive = article.impacts.some(impact => impact.type === 'positive');
+        const hasNegative = article.impacts.some(impact => impact.type === 'negative');
+        
+        if (hasPositive && !hasNegative) favorability = 'favorable';
+        else if (hasNegative) favorability = 'unfavorable';
+        else favorability = 'neutral';
       }
       
       // Increment counters

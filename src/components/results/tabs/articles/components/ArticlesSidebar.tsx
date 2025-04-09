@@ -51,8 +51,8 @@ const ArticlesSidebar: React.FC<ArticlesSidebarProps> = ({
         totalCount={totalCount}
         searchTerm={searchTerm || ''}
         setSearchTerm={setSearchTerm || (() => {})}
-        filterType={filterType as FilterType || 'all'}
-        setFilterType={setFilterType || (() => {})}
+        filterType={filterType as FilterType}
+        setFilterType={setFilterType}
         viewMode={viewMode as ViewMode}
         setViewMode={setViewMode}
         selectedBookFilter={selectedBookFilter}

@@ -66,7 +66,7 @@ const FavorabilityBarChart: React.FC<FavorabilityBarChartProps> = ({
         <Bar 
           dataKey="unfavorable" 
           name="unfavorable" 
-          fill="#f87171" 
+          fill="#ef4444" 
           radius={[4, 4, 0, 0]}
           fillOpacity={selectedFavorability === 'unfavorable' ? 1 : (selectedFavorability ? 0.3 : 0.8)}
         />

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Tooltip, Legend } from 'recharts';
 import { Article } from '@/data/articles';
@@ -41,11 +41,11 @@ const RelevanceDistributionChart: React.FC<RelevanceDistributionChartProps> = ({
     }
   };
   
-  // Color mapping for relevance levels - aligning with the image
+  // Color mapping for relevance levels - using the requested colors
   const colorScheme = {
     muitoRelevante: '#10b981', // verde
-    moderadamenteRelevante: '#eab308', // amarelo
-    poucoRelevante: '#6b7280', // cinza
+    moderadamenteRelevante: '#facc15', // amarelo
+    poucoRelevante: '#6b7280', // cinza escuro
     irrelevante: '#d1d5db', // cinza claro
   };
   

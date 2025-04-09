@@ -30,7 +30,7 @@ export const calculateRelevanceGroups = (filteredArticles: Article[], segmentId:
   
   console.log(`Calculating relevance groups for ${filteredArticles.length} articles`);
   
-  // Define relevance groups
+  // Define relevance groups with consistent naming across the application
   const groups: RelevanceGroup[] = [
     { name: 'Irrelevante', score: 0, positive: 0, negative: 0, neutral: 0, total: 0 },
     { name: 'Pouco relevante', score: 25, positive: 0, negative: 0, neutral: 0, total: 0 },
@@ -46,43 +46,57 @@ export const calculateRelevanceGroups = (filteredArticles: Article[], segmentId:
       return; // Skip this article
     }
     
-    // Determine relevance category based on article number - use same logic as in useRelevanceDistributionData
-    const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
-    const randomRelevance = (articleNum % 100) / 100 * 100; // Create deterministic distribution
+    // Get relevance from article metadata if available, otherwise calculate based on article number
+    let relevanceCategory = article.metadata?.relevancia;
     
-    let groupIndex;
+    if (!relevanceCategory) {
+      // Determine relevance category based on article number - consistent with card display
+      const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
+      const randomRelevance = (articleNum % 100) / 100 * 100; // Create deterministic distribution
+      
+      if (randomRelevance < 40) {
+        relevanceCategory = 'Irrelevante'; // 40% of articles
+      } else if (randomRelevance < 50) {
+        relevanceCategory = 'Pouco relevante'; // 10% of articles
+      } else if (randomRelevance < 90) {
+        relevanceCategory = 'Moderadamente relevante'; // 40% of articles
+      } else {
+        relevanceCategory = 'Muito relevante'; // 10% of articles
+      }
+    }
     
-    if (randomRelevance < 40) {
-      groupIndex = 0; // Irrelevante - 40% of articles
-    } else if (randomRelevance < 50) {
-      groupIndex = 1; // Pouco relevante - 10% of articles
-    } else if (randomRelevance < 90) {
-      groupIndex = 2; // Moderadamente relevante - 40% of articles
-    } else {
-      groupIndex = 3; // Muito relevante - 10% of articles
+    // Find the group index based on the relevance category
+    const groupIndex = groups.findIndex(g => g.name === relevanceCategory);
+    if (groupIndex === -1) {
+      console.warn(`Unknown relevance category: ${relevanceCategory}`);
+      return; // Skip this article
     }
     
     groups[groupIndex].total += 1;
     
-    // Count favorability based on article impacts
-    let hasPositive = false;
-    let hasNegative = false;
-    let hasNeutral = false;
+    // Count favorability based on article impacts or metadata
+    let impactType = article.metadata?.impacto;
     
-    article.impacts.forEach(impact => {
-      if (impact.type === 'positive') hasPositive = true;
-      else if (impact.type === 'negative') hasNegative = true;
-      else hasNeutral = true;
-    });
-    
-    if (hasPositive) groups[groupIndex].positive += 1;
-    if (hasNegative) groups[groupIndex].negative += 1;
-    if (hasNeutral) groups[groupIndex].neutral += 1;
-    
-    // If no specific impacts, default to neutral
-    if (!hasPositive && !hasNegative && !hasNeutral) {
-      groups[groupIndex].neutral += 1;
+    if (!impactType) {
+      let hasPositive = false;
+      let hasNegative = false;
+      let hasNeutral = false;
+      
+      article.impacts.forEach(impact => {
+        if (impact.type === 'positive') hasPositive = true;
+        else if (impact.type === 'negative') hasNegative = true;
+        else hasNeutral = true;
+      });
+      
+      if (hasNegative) impactType = 'Desfavorável';
+      else if (hasPositive) impactType = 'Favorável';
+      else impactType = 'Neutro';
     }
+    
+    // Increment counters based on impact type
+    if (impactType === 'Favorável') groups[groupIndex].positive += 1;
+    else if (impactType === 'Desfavorável') groups[groupIndex].negative += 1;
+    else groups[groupIndex].neutral += 1;
     
     // Check for critical impacts
     const hasCriticalImpact = article.impacts.some(impact => 
@@ -132,6 +146,12 @@ export const filterArticlesByRelevance = (articles: Article[], segmentId: string
   console.log(`Filtering ${articles.length} articles by relevance level: ${relevanceLevel}`);
   
   return articles.filter(article => {
+    // First check if the article has metadata with relevancia
+    if (article.metadata?.relevancia) {
+      return article.metadata.relevancia === relevanceLevel;
+    }
+    
+    // Fall back to the algorithm if no metadata
     const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
     const randomRelevance = (articleNum % 100) / 100 * 100; // Create deterministic distribution
     

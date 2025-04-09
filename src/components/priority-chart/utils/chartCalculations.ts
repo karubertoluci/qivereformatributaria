@@ -35,38 +35,66 @@ export const getArticlePriorityData = (articles: Article[], segmentId: string): 
       impact && impact.segments && Array.isArray(impact.segments) && impact.segments.includes(segmentId)
     );
     
-    // Determine impact type based on actual impacts in the article for this segment
-    let impactType: 'positive' | 'negative' | 'neutral' = 'neutral';
-    let impactLabel: 'Favorável' | 'Neutro' | 'Desfavorável' = 'Neutro';
+    // Determine impact type - first check metadata if available
+    let impactType: 'positive' | 'negative' | 'neutral';
+    let impactLabel: 'Favorável' | 'Neutro' | 'Desfavorável';
     
-    // Check for negative impact first (as it takes precedence in cards)
-    const hasNegativeImpact = segmentImpacts.some(impact => impact.type === 'negative');
-    const hasPositiveImpact = segmentImpacts.some(impact => impact.type === 'positive');
-    
-    if (hasNegativeImpact) {
-      impactType = 'negative';
-      impactLabel = 'Desfavorável';
-    } else if (hasPositiveImpact) {
-      impactType = 'positive';
-      impactLabel = 'Favorável';
+    if (article.metadata?.impacto) {
+      if (article.metadata.impacto.includes('Favorável')) {
+        impactType = 'positive';
+        impactLabel = 'Favorável';
+      } else if (article.metadata.impacto.includes('Desfavorável')) {
+        impactType = 'negative';
+        impactLabel = 'Desfavorável';
+      } else {
+        impactType = 'neutral';
+        impactLabel = 'Neutro';
+      }
     } else {
-      impactType = 'neutral';
-      impactLabel = 'Neutro';
+      // Check for negative impact first (as it takes precedence in cards)
+      const hasNegativeImpact = segmentImpacts.some(impact => impact.type === 'negative');
+      const hasPositiveImpact = segmentImpacts.some(impact => impact.type === 'positive');
+      
+      if (hasNegativeImpact) {
+        impactType = 'negative';
+        impactLabel = 'Desfavorável';
+      } else if (hasPositiveImpact) {
+        impactType = 'positive';
+        impactLabel = 'Favorável';
+      } else {
+        impactType = 'neutral';
+        impactLabel = 'Neutro';
+      }
     }
     
-    // Determine relevance category based on article number
-    // This creates a distribution that matches how articles are categorized
-    const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
+    // Determine relevance category - first check metadata if available
     let relevanceCategory: 'Irrelevante' | 'Pouco relevante' | 'Moderadamente relevante' | 'Muito relevante';
     
-    if (articleNum % 10 < 2) {
-      relevanceCategory = 'Irrelevante'; // 20% of articles
-    } else if (articleNum % 10 < 4) {
-      relevanceCategory = 'Pouco relevante'; // 20% of articles
-    } else if (articleNum % 10 < 9) {
-      relevanceCategory = 'Moderadamente relevante'; // 50% of articles
+    if (article.metadata?.relevancia) {
+      if (article.metadata.relevancia.includes('Irrelevante')) {
+        relevanceCategory = 'Irrelevante';
+      } else if (article.metadata.relevancia.includes('Pouco')) {
+        relevanceCategory = 'Pouco relevante';
+      } else if (article.metadata.relevancia.includes('Moderadamente')) {
+        relevanceCategory = 'Moderadamente relevante';
+      } else if (article.metadata.relevancia.includes('Muito')) {
+        relevanceCategory = 'Muito relevante';
+      } else {
+        relevanceCategory = 'Moderadamente relevante'; // Default if unknown
+      }
     } else {
-      relevanceCategory = 'Muito relevante'; // 10% of articles
+      // Determine based on article number - consistent with other components
+      const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
+      
+      if (articleNum % 10 < 2) {
+        relevanceCategory = 'Irrelevante'; // 20% of articles
+      } else if (articleNum % 10 < 4) {
+        relevanceCategory = 'Pouco relevante'; // 20% of articles
+      } else if (articleNum % 10 < 9) {
+        relevanceCategory = 'Moderadamente relevante'; // 50% of articles
+      } else {
+        relevanceCategory = 'Muito relevante'; // 10% of articles
+      }
     }
     
     // Calculate relevance score based on relevance category

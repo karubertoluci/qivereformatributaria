@@ -46,10 +46,11 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
     
     // Process each article to count by book and relevance
     articles.forEach(article => {
-      // Determine which book this article belongs to
-      let bookId = article.metadata?.bookId;
+      // Determine which book this article belongs to - first try using metadata
+      let bookId = article.metadata?.bookId || article.metadata?.livro;
       
       if (!bookId) {
+        // If no metadata, determine from article number
         const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
                           parseInt(article.id.replace(/\D/g, ''));
         
@@ -58,28 +59,40 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
         else bookId = 'III';
       }
       
+      // Normalize book ID (remove "Livro " prefix if present)
+      if (bookId.startsWith('Livro ')) {
+        bookId = bookId.replace('Livro ', '');
+      }
+      
       if (!bookCounts[bookId]) {
         console.warn(`Unknown book ID: ${bookId}`);
         return;
       }
       
-      // Determine relevance category based on article number
-      const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
-      
-      // Calculate relevance category using consistent logic - same as in article cards
+      // First check if article has relevance in metadata
       let relevanceCategory;
-      
-      // Use the same distribution logic as in ArticleHeader.tsx
-      const randomRelevance = (articleNum % 100) / 100 * 100; // Create deterministic distribution
-      
-      if (randomRelevance < 40) {
-        relevanceCategory = 'irrelevante'; // 40% of articles
-      } else if (randomRelevance < 50) {
-        relevanceCategory = 'poucoRelevante'; // 10% of articles
-      } else if (randomRelevance < 90) {
-        relevanceCategory = 'moderadamenteRelevante'; // 40% of articles
+      if (article.metadata?.relevancia) {
+        relevanceCategory = article.metadata.relevancia.toLowerCase();
+        
+        // Normalize relevance categories to match our keys
+        if (relevanceCategory.includes('pouco')) relevanceCategory = 'poucoRelevante';
+        else if (relevanceCategory.includes('moderadamente')) relevanceCategory = 'moderadamenteRelevante';
+        else if (relevanceCategory.includes('muito')) relevanceCategory = 'muitoRelevante';
+        else relevanceCategory = 'irrelevante';
       } else {
-        relevanceCategory = 'muitoRelevante'; // 10% of articles
+        // Calculate relevance category using consistent logic - same as in article cards
+        const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
+        const randomRelevance = (articleNum % 100) / 100 * 100; // Create deterministic distribution
+        
+        if (randomRelevance < 40) {
+          relevanceCategory = 'irrelevante'; // 40% of articles
+        } else if (randomRelevance < 50) {
+          relevanceCategory = 'poucoRelevante'; // 10% of articles
+        } else if (randomRelevance < 90) {
+          relevanceCategory = 'moderadamenteRelevante'; // 40% of articles
+        } else {
+          relevanceCategory = 'muitoRelevante'; // 10% of articles
+        }
       }
       
       // Increment counters
