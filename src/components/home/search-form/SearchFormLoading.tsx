@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReportLoadingDialog from './ReportLoadingDialog';
 
 interface SearchFormLoadingProps {
@@ -21,7 +21,7 @@ const SearchFormLoading: React.FC<SearchFormLoadingProps> = ({
   console.log("SearchFormLoading - companyData:", companyData);
   
   // Store company data in localStorage for use in reports
-  React.useEffect(() => {
+  useEffect(() => {
     if (isLoading && companyData) {
       try {
         // Store structured data with both company information and form data
@@ -36,6 +36,18 @@ const SearchFormLoading: React.FC<SearchFormLoadingProps> = ({
       }
     }
   }, [isLoading, companyData, companyName]);
+
+  // Ensure that onComplete is called even if the dialog is closed manually
+  useEffect(() => {
+    if (!isLoading && companyData) {
+      console.log("Loading completed, executing onComplete callback");
+      // Small timeout to ensure state updates have propagated
+      const timer = setTimeout(() => {
+        onComplete();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, companyData, onComplete]);
   
   return (
     <ReportLoadingDialog 

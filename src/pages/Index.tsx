@@ -18,6 +18,7 @@ const Index = () => {
     if (storedSegment) {
       try {
         const parsedSegment = JSON.parse(storedSegment);
+        console.log("Index: carregando segmento do localStorage:", parsedSegment.name);
         setSelectedSegment(parsedSegment);
       } catch (error) {
         console.error('Error parsing stored segment:', error);
@@ -28,7 +29,7 @@ const Index = () => {
   
   // Debug logs para acompanhar a mudança de estado
   useEffect(() => {
-    console.log("Index: selectedSegment mudou para:", selectedSegment);
+    console.log("Index: selectedSegment mudou para:", selectedSegment?.name || "null");
   }, [selectedSegment]);
   
   const handleDirectSegmentSelect = (segment: BusinessSegment | null) => {
@@ -37,6 +38,8 @@ const Index = () => {
       setSelectedSegment(segment);
       // Store in localStorage for persistence
       localStorage.setItem('selectedSegment', JSON.stringify(segment));
+      // Show success toast
+      toast.success(`Relatório para o segmento ${segment.name} está pronto!`);
     }
   };
 
@@ -66,7 +69,7 @@ const Index = () => {
             onSelectSegment={handleDirectSegmentSelect}
           />
         ) : (
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" key={selectedSegment.id}>
             <Results 
               segment={selectedSegment} 
               onBackToSegments={handleBackToHome} 
