@@ -3,7 +3,7 @@ import { fetchCNPJData } from '@/services/brasilApi';
 import { toast } from 'sonner';
 import { saveCnaeToSupabase } from './supabase-operations';
 import { UseFormReturn } from 'react-hook-form';
-import { FormValues } from '../../FormDialog';
+import { FormValues } from '../../types/companyData';
 
 /**
  * Validates a CNPJ by fetching its data from the API
