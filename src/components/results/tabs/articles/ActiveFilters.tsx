@@ -27,7 +27,7 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
   
   return (
     <div className="flex flex-wrap gap-2 mb-4">
-      {selectedBookFilter && (
+      {selectedBookFilter && selectedBookFilter !== 'all' && (
         <Badge 
           variant="secondary" 
           className="flex items-center gap-1 px-2 py-1"
@@ -44,7 +44,7 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
         </Badge>
       )}
       
-      {selectedTitleFilter && (
+      {selectedTitleFilter && selectedTitleFilter !== 'all' && (
         <Badge 
           variant="secondary" 
           className="flex items-center gap-1 px-2 py-1"

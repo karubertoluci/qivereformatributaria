@@ -62,7 +62,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   const displayedArticles = useMemo(() => {
     let result = filteredArticles;
 
-    if (selectedBookFilter) {
+    if (selectedBookFilter && selectedBookFilter !== 'all') {
       result = result.filter(article => {
         if (article.metadata?.bookId) {
           return article.metadata.bookId === selectedBookFilter;
@@ -71,7 +71,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
       });
     }
 
-    if (selectedTitleFilter) {
+    if (selectedTitleFilter && selectedTitleFilter !== 'all') {
       result = result.filter(article => article.title === selectedTitleFilter);
     }
 

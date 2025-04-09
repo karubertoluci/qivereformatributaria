@@ -81,7 +81,7 @@ const ArticlesFilters: React.FC<ArticlesFiltersProps> = ({
                 <SelectValue placeholder="Todos os livros" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os livros</SelectItem>
+                <SelectItem value="all">Todos os livros</SelectItem>
                 {books.map((book) => (
                   <SelectItem key={book} value={book}>
                     Livro {book}
@@ -106,7 +106,7 @@ const ArticlesFilters: React.FC<ArticlesFiltersProps> = ({
                 <SelectValue placeholder="Todos os títulos" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os títulos</SelectItem>
+                <SelectItem value="all">Todos os títulos</SelectItem>
                 {titles.map((title) => (
                   <SelectItem key={title} value={title}>
                     {title.length > 50 ? `${title.substring(0, 50)}...` : title}
