@@ -27,6 +27,9 @@ interface ArticlesContentProps {
   setViewMode: (mode: ViewMode) => void;
   topics: Topic[];
   segment: BusinessSegment;
+  positiveCount: number;
+  negativeCount: number;
+  neutralCount: number;
 }
 
 const ArticlesContent: React.FC<ArticlesContentProps> = ({
@@ -45,7 +48,10 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
   viewMode,
   setViewMode,
   topics,
-  segment
+  segment,
+  positiveCount,
+  negativeCount,
+  neutralCount
 }) => {
   const hasCriticalImpacts = filteredArticles.some(article => 
     article.impacts && article.impacts.some(impact => {
@@ -107,6 +113,6 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
       </div>
     </div>
   );
-}
+};
 
 export default ArticlesContent;

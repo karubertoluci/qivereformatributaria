@@ -1,23 +1,27 @@
 
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Book, ListFilter, X } from 'lucide-react';
+import { Book, FileText, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ActiveFiltersProps {
   selectedBookFilter: string | null;
-  setSelectedBookFilter: (bookId: string | null) => void;
-  showAllArticles: boolean;
-  setShowAllArticles: (show: boolean) => void;
+  selectedTitleFilter: string | null;
+  onClearBookFilter: () => void;
+  onClearTitleFilter: () => void;
+  bookName: string;
+  titleName: string;
 }
 
 const ActiveFilters: React.FC<ActiveFiltersProps> = ({
   selectedBookFilter,
-  setSelectedBookFilter,
-  showAllArticles,
-  setShowAllArticles
+  selectedTitleFilter,
+  onClearBookFilter,
+  onClearTitleFilter,
+  bookName,
+  titleName
 }) => {
-  if (!selectedBookFilter && !showAllArticles) {
+  if (!selectedBookFilter && !selectedTitleFilter) {
     return null;
   }
   
@@ -29,29 +33,29 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
           className="flex items-center gap-1 px-2 py-1"
         >
           <Book className="h-3.5 w-3.5 mr-1" />
-          Filtrando por Livro: {selectedBookFilter}
+          Filtrando por Livro: {bookName}
           <X 
             className="h-3.5 w-3.5 ml-1 cursor-pointer hover:text-destructive" 
             onClick={() => {
-              setSelectedBookFilter(null);
+              onClearBookFilter();
               toast.info("Filtro de livro removido");
             }}
           />
         </Badge>
       )}
       
-      {showAllArticles && (
+      {selectedTitleFilter && (
         <Badge 
           variant="secondary" 
           className="flex items-center gap-1 px-2 py-1"
         >
-          <ListFilter className="h-3.5 w-3.5 mr-1" />
-          Mostrando todos os 544 artigos
+          <FileText className="h-3.5 w-3.5 mr-1" />
+          Filtrando por Título: {titleName}
           <X 
             className="h-3.5 w-3.5 ml-1 cursor-pointer hover:text-destructive" 
             onClick={() => {
-              setShowAllArticles(false);
-              toast.info("Mostrando apenas artigos relevantes para seu segmento");
+              onClearTitleFilter();
+              toast.info("Filtro de título removido");
             }}
           />
         </Badge>

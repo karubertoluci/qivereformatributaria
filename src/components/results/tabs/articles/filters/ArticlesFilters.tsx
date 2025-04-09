@@ -1,47 +1,46 @@
 
 import React from 'react';
-import FilterBar from '../../../FilterBar';
-import { FilterType } from '../../../types';
-import { Article } from '@/data/articles';
-import { SetURLSearchParams } from 'react-router-dom';
+import FilterBar from '@/components/results/FilterBar';
+import ViewSwitcher from '@/components/results/ViewSwitcher';
+import { FilterType, ViewMode } from '@/components/results/types';
 
 interface ArticlesFiltersProps {
-  articles: Article[];
-  selectedBookFilter: string | null;
-  selectedTitleFilter: string | null;
-  setSelectedBookFilter: (bookId: string | null) => void;
-  setSelectedTitleFilter: (titleId: string | null) => void;
-  searchParams: URLSearchParams;
-  setSearchParams: SetURLSearchParams;
   positiveCount: number;
   negativeCount: number;
+  neutralCount: number;
+  totalCount: number;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  filterType: FilterType;
+  setFilterType: (type: FilterType) => void;
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
+  selectedBookFilter: string | null;
+  setSelectedBookFilter: (bookId: string | null) => void;
+  selectedTitleFilter: string | null;
+  setSelectedTitleFilter: (titleId: string | null) => void;
+  books: string[];
+  titles: string[];
 }
 
 const ArticlesFilters: React.FC<ArticlesFiltersProps> = ({
-  articles,
-  selectedBookFilter,
-  selectedTitleFilter,
-  setSelectedBookFilter,
-  setSelectedTitleFilter,
-  searchParams,
-  setSearchParams,
   positiveCount,
-  negativeCount
+  negativeCount,
+  neutralCount,
+  totalCount,
+  searchTerm,
+  setSearchTerm,
+  filterType,
+  setFilterType,
+  viewMode,
+  setViewMode,
+  selectedBookFilter,
+  setSelectedBookFilter,
+  selectedTitleFilter,
+  setSelectedTitleFilter,
+  books,
+  titles
 }) => {
-  // Calculate counts
-  const neutralCount = articles.filter(article => 
-    article.impacts.some(impact => impact.type === 'neutral')
-  ).length;
-  
-  const totalCount = articles.length;
-
-  // These props are currently not used in this component but would be needed
-  // for a complete implementation
-  const searchTerm = '';
-  const setSearchTerm = () => {};
-  const filterType = 'all' as FilterType;
-  const setFilterType = () => {};
-
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
       <FilterBar 
@@ -53,6 +52,11 @@ const ArticlesFilters: React.FC<ArticlesFiltersProps> = ({
         setSearchTerm={setSearchTerm}
         filterType={filterType}
         setFilterType={setFilterType}
+      />
+      
+      <ViewSwitcher 
+        viewMode={viewMode}
+        setViewMode={setViewMode}
       />
     </div>
   );

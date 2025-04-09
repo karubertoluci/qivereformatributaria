@@ -1,13 +1,14 @@
+
 import React, { useState, useMemo } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article, ArticleMetadata } from '@/data/articles';
-import ArticlesFilters from './components/ArticlesFilters';
-import ActiveFilters from './components/ActiveFilters';
+import ArticlesFilters from '../articles/filters/ArticlesFilters';
+import ActiveFilters from './ActiveFilters';
 import ArticlesContent from './content/ArticlesContent';
 import { useResultsData } from '@/hooks/results/useResultsData';
 import { ViewMode } from '@/components/results/types';
 import ResultsSummary from '@/components/results/ResultsSummary';
-import { useToast } from 'sonner';
+import { toast } from 'sonner';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -18,7 +19,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({ segment, results }) => {
   const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(null);
   const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('chart');
-  const { toast } = useToast();
   
   const books = useMemo(() => {
     const allBooks = results.relevantArticles.map(article => article.metadata?.bookId).filter(Boolean);
@@ -108,6 +108,8 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({ segment, results }) => {
         setSelectedTitleFilter={setSelectedTitleFilter}
         books={books}
         titles={titles}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
       />
       
       {/* Book/Title filters */}
@@ -138,6 +140,9 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({ segment, results }) => {
         setViewMode={setViewMode}
         topics={results.topics}
         segment={segment}
+        positiveCount={positiveCount}
+        negativeCount={negativeCount}
+        neutralCount={neutralCount}
       />
     </div>
   );

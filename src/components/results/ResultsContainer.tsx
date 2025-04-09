@@ -108,23 +108,7 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({ segment, onBackToSe
             {activeTab === 'articles' && (
               <ArticlesTab 
                 segment={segment}
-                filteredArticles={resultsData.filteredArticles}
-                relevantArticles={resultsData.relevantArticles}
-                expandedArticleId={resultsData.expandedArticleId}
-                setExpandedArticleId={resultsData.setExpandedArticleId}
-                highlights={resultsData.highlights}
-                handleAddHighlight={resultsData.handleAddHighlight}
-                handleRemoveHighlight={resultsData.handleRemoveHighlight}
-                topics={resultsData.topics}
-                articlesByTopic={resultsData.articlesByTopic}
-                viewMode={resultsData.viewMode as ViewMode}
-                setViewMode={resultsData.setViewMode as (mode: ViewMode) => void}
-                positiveCount={positiveCount}
-                negativeCount={negativeCount}
-                searchTerm={resultsData.searchTerm}
-                setSearchTerm={resultsData.setSearchTerm}
-                filterType={resultsData.filterType as FilterType}
-                setFilterType={resultsData.setFilterType as (type: FilterType) => void}
+                results={resultsData}
               />
             )}
             
