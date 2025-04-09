@@ -1,11 +1,9 @@
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BusinessSegment } from '@/data/segments';
 import { Button } from '@/components/ui/button';
 import { Share2, Download, X } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-
 interface ResultsHeaderProps {
   segment: BusinessSegment;
   positiveCount: number;
@@ -13,7 +11,6 @@ interface ResultsHeaderProps {
   companyName?: string;
   onCloseClick: () => void;
 }
-
 const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   segment,
   positiveCount,
@@ -22,36 +19,30 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   onCloseClick
 }) => {
   const [displayName, setDisplayName] = useState<string>(propCompanyName || "Empresa");
-  
   useEffect(() => {
     // Try to get company name from different sources in order of priority
     const storedCompanyName = localStorage.getItem('companyName');
     const companyData = localStorage.getItem('companyData');
     const formData = localStorage.getItem('formData');
-    
     if (propCompanyName) {
       setDisplayName(propCompanyName);
-    }
-    else if (storedCompanyName) {
+    } else if (storedCompanyName) {
       setDisplayName(storedCompanyName);
-    } 
-    else if (companyData) {
+    } else if (companyData) {
       try {
         const parsedData = JSON.parse(companyData);
         if (parsedData.razaoSocial || parsedData.razao_social || parsedData.nomeFantasia || parsedData.nome_fantasia) {
           // Consider both camelCase and snake_case keys
-          const name = parsedData.razaoSocial || parsedData.razao_social || 
-                       parsedData.nomeFantasia || parsedData.nome_fantasia;
+          const name = parsedData.razaoSocial || parsedData.razao_social || parsedData.nomeFantasia || parsedData.nome_fantasia;
           setDisplayName(name);
-          
+
           // Store it in localStorage for future reference
           localStorage.setItem('companyName', name);
         }
       } catch (error) {
         console.error('Erro ao analisar os dados da empresa:', error);
       }
-    }
-    else if (formData) {
+    } else if (formData) {
       try {
         const parsedFormData = JSON.parse(formData);
         if (parsedFormData.razaoSocial || parsedFormData.nome) {
@@ -63,27 +54,20 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
       }
     }
   }, [propCompanyName]);
-  
+
   // Function to get initials for Avatar
   const getInitials = (name: string): string => {
     if (!name) return '';
-    
     const words = name.trim().split(/\s+/);
-    
     if (words.length >= 2) {
       return (words[0][0] + words[1][0]).toUpperCase();
     }
-    
     return name.substring(0, 2).toUpperCase();
   };
-  
+
   // Truncate company name if longer than 20 characters
-  const truncatedName = displayName.length > 20 
-    ? `${displayName.substring(0, 20)}...` 
-    : displayName;
-  
-  return (
-    <div className="py-4 border-b border-gray-200 bg-white shadow-sm sticky top-0 z-10">
+  const truncatedName = displayName.length > 20 ? `${displayName.substring(0, 20)}...` : displayName;
+  return <div className="py-4 border-b border-gray-200 shadow-sm sticky top-0 z-10 bg-zinc-50">
       <div className="container mx-auto flex justify-between items-center font-lexend px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
@@ -117,19 +101,12 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
             <span className="hidden sm:inline text-xs">Baixar PDF</span>
           </Button>
           
-          <Button 
-            variant="outline" 
-            size="icon"
-            className="h-8 w-8 rounded-full" 
-            onClick={onCloseClick}
-          >
+          <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" onClick={onCloseClick}>
             <X className="h-4 w-4" />
             <span className="sr-only">Fechar</span>
           </Button>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default ResultsHeader;
