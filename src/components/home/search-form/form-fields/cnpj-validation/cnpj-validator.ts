@@ -17,12 +17,12 @@ export const validateCNPJ = async (
   form: UseFormReturn<FormValues>,
   setIsValid: (isValid: boolean | null) => void,
   setIsValidating: (isValidating: boolean) => void
-): Promise<void> => {
+) => {
   // Only validate if CNPJ has 14 digits (without formatting)
   const digits = cnpj.replace(/\D/g, '');
   if (digits.length !== 14) {
     setIsValid(null);
-    return;
+    return null;
   }
   
   setIsValidating(true);
@@ -70,13 +70,13 @@ export const validateCNPJ = async (
     
     // Store company data in localStorage for later use
     localStorage.setItem('companyData', JSON.stringify(companyData));
-    localStorage.setItem('companyName', data.razao_social);
+    localStorage.setItem('companyName', data.nome_fantasia || data.razao_social);
     
     // Set CNAE code in localStorage for segment mapping
     localStorage.setItem('cnae', cnaeCode);
     
-    // Auto-preencher o nome no formulário
-    form.setValue('nome', data.nome_fantasia || data.razao_social);
+    // Auto-fill the nome in the form (do NOT set this to the company name)
+    // Let the user enter their own name, not the company name
     
     // Save CNAE data to Supabase
     if (cnaeCode && data.cnae_fiscal_descricao) {
@@ -92,10 +92,13 @@ export const validateCNPJ = async (
     if (window.location.pathname.includes('/results/')) {
       window.location.reload();
     }
+    
+    return { companyData };
   } catch (error) {
     setIsValid(false);
     console.error('Erro ao validar CNPJ:', error);
     toast.error('Erro ao validar CNPJ. Verifique o número e tente novamente.');
+    return null;
   } finally {
     setIsValidating(false);
   }

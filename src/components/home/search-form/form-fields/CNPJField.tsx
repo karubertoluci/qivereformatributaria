@@ -38,9 +38,14 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
     const cnpj = event.target.value;
     const result = await validateCNPJ(cnpj, form, setIsValid, setIsValidating);
     
-    // Update company data if validation was successful and returned data
-    if (result && result.companyData) {
-      setCompanyData(result.companyData);
+    // After validation, refresh the company data from localStorage
+    try {
+      const storedData = localStorage.getItem('companyData');
+      if (storedData) {
+        setCompanyData(JSON.parse(storedData));
+      }
+    } catch (error) {
+      console.error('Error loading company data after validation:', error);
     }
   };
 
@@ -51,13 +56,13 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
   };
 
   // Get company name and segment (if available)
-  const companyName = companyData?.nome_fantasia || companyData?.razao_social || '';
+  const companyName = companyData?.nomeFantasia || companyData?.razao_social || '';
   const segment = companyData?.cnae_fiscal_descricao || '';
 
   return (
     <>
       {/* Company Card - shows only when company data is available */}
-      {companyData && <CompanyCard companyName={companyName} segment={segment} />}
+      {companyData && companyName && <CompanyCard companyName={companyName} segment={segment} />}
       
       <FormField
         control={form.control}

@@ -1,15 +1,26 @@
 
 import React from 'react';
 import { FileText, Briefcase } from 'lucide-react';
-import { CompanyData } from '@/hooks/results/types';
+import { CompanyApiData } from '@/hooks/results/types';
 
 interface CNAESectionProps {
-  companyData: CompanyData;
+  companyData: {
+    companyData?: CompanyApiData;
+  };
 }
 
 const CNAESection: React.FC<CNAESectionProps> = ({
   companyData
 }) => {
+  const company = companyData.companyData || {};
+  const cnaePrincipal = company.cnaePrincipal || 
+    (company.cnae_fiscal ? { 
+      codigo: company.cnae_fiscal.toString(), 
+      descricao: company.cnae_fiscal_descricao || '' 
+    } : null);
+    
+  const cnaeSecundarios = company.cnaeSecundarios || company.cnaes_secundarios || [];
+  
   return (
     <div className="space-y-4">
       {/* CNAE Principal */}
@@ -24,11 +35,13 @@ const CNAESection: React.FC<CNAESectionProps> = ({
           
           <div className="flex items-center justify-between">
             <div className="px-3 py-1.5 bg-rose-50 rounded-md mr-2">
-              <p className="text-gray-800 font-bold">{companyData.cnaePrincipal?.codigo || "Não disponível"}</p>
+              <p className="text-gray-800 font-bold">
+                {cnaePrincipal?.codigo || "Não disponível"}
+              </p>
             </div>
             <div className="flex-grow">
               <p className="text-gray-800 text-sm">
-                {companyData.cnaePrincipal?.descricao || "Descrição não disponível"}
+                {cnaePrincipal?.descricao || "Descrição não disponível"}
               </p>
             </div>
           </div>
@@ -45,9 +58,9 @@ const CNAESection: React.FC<CNAESectionProps> = ({
             </div>
           </div>
           
-          {companyData.cnaeSecundarios && companyData.cnaeSecundarios.length > 0 ? (
+          {cnaeSecundarios && cnaeSecundarios.length > 0 ? (
             <div className="space-y-3 overflow-auto max-h-[400px] pr-1">
-              {companyData.cnaeSecundarios.map((cnae, i) => (
+              {cnaeSecundarios.map((cnae, i) => (
                 <div key={i} className="flex items-center justify-between border border-gray-100 p-3 rounded-md">
                   <div className="px-2 py-1 bg-rose-50 rounded-md mr-2">
                     <p className="font-semibold text-gray-800 text-sm">{cnae.codigo}</p>
