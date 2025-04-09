@@ -55,16 +55,20 @@ export interface CompanyData {
   cnaeSecundarios?: Array<CNAEData>;
 }
 
+// Adding these type definitions that were missing
+export type FilterType = 'all' | 'positive' | 'negative' | 'neutral';
+export type ViewMode = 'chart' | 'table';
+
 // ResultsData interface used by components that display the report
 export interface ResultsData {
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filterType: 'all' | 'positive' | 'negative' | 'neutral';
-  setFilterType: (type: 'all' | 'positive' | 'negative' | 'neutral') => void;
-  viewMode: 'chart' | 'table';
-  setViewMode: (mode: 'chart' | 'table') => void;
+  filterType: FilterType;
+  setFilterType: (type: FilterType) => void;
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
   activeTab: string;
   setActiveTab: (tab: any) => void;
   formData: CompanyData | null;
