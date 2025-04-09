@@ -23,10 +23,17 @@ const SearchFormLoading: React.FC<SearchFormLoadingProps> = ({
   // Store company data in localStorage for use in reports
   React.useEffect(() => {
     if (isLoading && companyData) {
-      localStorage.setItem('formData', JSON.stringify({
-        companyName,
-        companyData
-      }));
+      try {
+        // Store structured data with both company information and form data
+        localStorage.setItem('formData', JSON.stringify({
+          companyName,
+          companyData
+        }));
+        
+        console.log("Company data saved to localStorage");
+      } catch (error) {
+        console.error("Error saving company data to localStorage:", error);
+      }
     }
   }, [isLoading, companyData, companyName]);
   

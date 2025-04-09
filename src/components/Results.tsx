@@ -2,7 +2,6 @@
 import React, { useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import ResultsContainer from './results/ResultsContainer';
-import { forceArticleRefresh } from '@/utils/cacheUtils';
 import { toast } from 'sonner';
 import { useCompanyData } from '@/hooks/results/useCompanyData';
 

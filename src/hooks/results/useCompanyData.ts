@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { CompanyData } from './types';
+import { toast } from 'sonner';
 
 export const useCompanyData = () => {
   const [formData, setFormData] = useState<CompanyData | null>(null);
@@ -8,13 +9,13 @@ export const useCompanyData = () => {
   // Load company data from localStorage as a callback function
   const refreshCompanyData = useCallback(() => {
     try {
-      console.log('Atualizando dados da empresa do localStorage');
+      console.log('Updating company data from localStorage');
       
       // First try to load from formData (combined personal and company data)
       const formDataStr = localStorage.getItem('formData');
       if (formDataStr) {
         const parsedFormData = JSON.parse(formDataStr);
-        console.log('Dados do formulário carregados:', parsedFormData);
+        console.log('Form data loaded:', parsedFormData);
         
         // Set form data including both personal and company information
         setFormData(parsedFormData);
@@ -36,16 +37,19 @@ export const useCompanyData = () => {
         const companyDataStr = localStorage.getItem('companyData');
         if (companyDataStr) {
           const companyData = JSON.parse(companyDataStr);
-          console.log('Dados da empresa carregados:', companyData);
+          console.log('Company data loaded:', companyData);
           
           // Format the data to ensure consistency
           setFormData({
             companyData
           });
+        } else {
+          console.log('No company data found in localStorage');
         }
       }
     } catch (e) {
-      console.error('Erro ao carregar dados da empresa do localStorage:', e);
+      console.error('Error loading company data from localStorage:', e);
+      toast.error('Erro ao carregar dados da empresa');
     }
   }, []);
 

@@ -133,7 +133,7 @@ const ReportLoadingDialog: React.FC<ReportLoadingDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md w-[90vw] max-h-[80vh] overflow-hidden">
+      <DialogContent className="sm:max-w-md w-[90vw] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-center">Gerando seu relatório personalizado</DialogTitle>
         </DialogHeader>
@@ -144,7 +144,7 @@ const ReportLoadingDialog: React.FC<ReportLoadingDialogProps> = ({
             <p className="text-xs text-gray-500 text-right mt-1">{progress}%</p>
           </div>
           
-          <div className="space-y-4 max-h-[40vh] overflow-auto pr-2">
+          <div className="space-y-4 max-h-[40vh] overflow-y-auto pr-2">
             {statusMessages.map((status, index) => (
               <div key={index} className="flex items-center space-x-3">
                 <div className={`flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full ${status.completed ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-500'}`}>

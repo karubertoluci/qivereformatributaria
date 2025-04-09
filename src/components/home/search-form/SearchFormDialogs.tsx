@@ -6,6 +6,7 @@ import { FormValues } from './types/companyData';
 import SearchFormLoading from './SearchFormLoading';
 import { useFormDialogContext } from '../FormDialogContext';
 import { BusinessSegment } from '@/data/segments';
+import { toast } from 'sonner';
 
 interface SearchFormDialogsProps {
   onSubmit: (data: FormValues) => void;
@@ -55,6 +56,7 @@ const SearchFormDialogs: React.FC<SearchFormDialogsProps> = ({
         ) || businessSegments[0]; // Default to first segment if no match
         
         console.log("Selecting segment after loading:", foundSegment);
+        toast.success(`Relatório para ${formData.companyData?.nomeFantasia || formData.companyData?.razaoSocial || "empresa"} está pronto!`);
         onSelectSegment(foundSegment);
       });
     }
