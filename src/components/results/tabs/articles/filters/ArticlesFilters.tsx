@@ -1,20 +1,12 @@
-
 import React from 'react';
 import FilterBar from '@/components/results/FilterBar';
 import ViewSwitcher from '@/components/results/ViewSwitcher';
 import { FilterType, ViewMode } from '@/components/results/types';
 import { Button } from '@/components/ui/button';
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Book, Search, Tag } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-
 interface ArticlesFiltersProps {
   positiveCount: number;
   negativeCount: number;
@@ -33,7 +25,6 @@ interface ArticlesFiltersProps {
   books: string[];
   titles: string[];
 }
-
 const ArticlesFilters: React.FC<ArticlesFiltersProps> = ({
   positiveCount,
   negativeCount,
@@ -52,139 +43,73 @@ const ArticlesFilters: React.FC<ArticlesFiltersProps> = ({
   books,
   titles
 }) => {
-  return (
-    <div className="bg-white p-4 rounded-lg border mb-6">
+  return <div className="bg-white p-4 rounded-lg border mb-6">
       <div className="flex flex-col space-y-4">
         <div className="flex items-center justify-between mb-2">
           <h3 className="font-medium text-lg">Filtros</h3>
-          <div className="flex items-center">
-            <Label className="mr-2">Visualização</Label>
-            <ViewSwitcher 
-              viewMode={viewMode}
-              setViewMode={setViewMode}
-            />
-          </div>
+          
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           <div className="md:col-span-4">
             <div className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Buscar artigos..."
-                className="pl-8 w-full"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+              <Input placeholder="Buscar artigos..." className="pl-8 w-full" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
             </div>
           </div>
           
           <div className="md:col-span-8">
-            <div className="flex flex-wrap gap-2">
-              <Button
-                size="sm"
-                variant={filterType === 'all' ? "default" : "outline"}
-                onClick={() => setFilterType('all')}
-              >
-                Todos ({totalCount})
-              </Button>
-              <Button
-                size="sm"
-                variant={filterType === 'positive' ? "default" : "outline"}
-                onClick={() => setFilterType('positive')}
-              >
-                Positivos ({positiveCount})
-              </Button>
-              <Button
-                size="sm"
-                variant={filterType === 'negative' ? "default" : "outline"}
-                onClick={() => setFilterType('negative')}
-              >
-                Negativos ({negativeCount})
-              </Button>
-              {neutralCount > 0 && (
-                <Button
-                  size="sm"
-                  variant={filterType === 'neutral' ? "default" : "outline"}
-                  onClick={() => setFilterType('neutral')}
-                >
-                  Neutros ({neutralCount})
-                </Button>
-              )}
-            </div>
+            
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {books.length > 0 && (
-            <div>
+          {books.length > 0 && <div>
               <Label className="text-sm font-medium flex items-center gap-1.5 mb-1.5">
                 <Book className="h-4 w-4" />
                 Filtrar por Livro
               </Label>
-              <Select
-                value={selectedBookFilter || "all"}
-                onValueChange={(value) => setSelectedBookFilter(value === "all" ? null : value)}
-              >
+              <Select value={selectedBookFilter || "all"} onValueChange={value => setSelectedBookFilter(value === "all" ? null : value)}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Todos os livros" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todos os livros</SelectItem>
-                  {books.map((book) => (
-                    <SelectItem key={book} value={book}>
+                  {books.map(book => <SelectItem key={book} value={book}>
                       Livro {book}
-                    </SelectItem>
-                  ))}
+                    </SelectItem>)}
                 </SelectContent>
               </Select>
-            </div>
-          )}
+            </div>}
 
-          {titles.length > 0 && (
-            <div>
+          {titles.length > 0 && <div>
               <Label className="text-sm font-medium flex items-center gap-1.5 mb-1.5">
                 <Tag className="h-4 w-4" />
                 Filtrar por Título
               </Label>
-              <Select
-                value={selectedTitleFilter || "all"}
-                onValueChange={(value) => setSelectedTitleFilter(value === "all" ? null : value)}
-              >
+              <Select value={selectedTitleFilter || "all"} onValueChange={value => setSelectedTitleFilter(value === "all" ? null : value)}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Todos os títulos" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todos os títulos</SelectItem>
-                  {titles.map((title) => (
-                    <SelectItem key={title} value={title}>
+                  {titles.map(title => <SelectItem key={title} value={title}>
                       {title.length > 50 ? `${title.substring(0, 50)}...` : title}
-                    </SelectItem>
-                  ))}
+                    </SelectItem>)}
                 </SelectContent>
               </Select>
-            </div>
-          )}
+            </div>}
         </div>
 
-        {(selectedBookFilter || selectedTitleFilter) && selectedBookFilter !== "all" || selectedTitleFilter !== "all" && (
-          <div className="flex justify-end">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setSelectedBookFilter(null);
-                setSelectedTitleFilter(null);
-              }}
-              className="mt-2"
-            >
+        {(selectedBookFilter || selectedTitleFilter) && selectedBookFilter !== "all" || selectedTitleFilter !== "all" && <div className="flex justify-end">
+            <Button variant="outline" size="sm" onClick={() => {
+          setSelectedBookFilter(null);
+          setSelectedTitleFilter(null);
+        }} className="mt-2">
               Limpar filtros
             </Button>
-          </div>
-        )}
+          </div>}
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default ArticlesFilters;
