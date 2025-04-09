@@ -54,7 +54,7 @@ const ArticleCardList: React.FC<ArticleCardListProps> = ({
               article={article} 
               segmentId={segmentId}
               highlights={highlights}
-              onAddHighlight={onAddHighlight}
+              onAddHighlight={(text, color) => onAddHighlight(article.id, text, color)}
               onRemoveHighlight={onRemoveHighlight}
             />
           ))
