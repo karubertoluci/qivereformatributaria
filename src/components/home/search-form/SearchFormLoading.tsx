@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReportLoadingDialog from './ReportLoadingDialog';
 
 interface SearchFormLoadingProps {
@@ -19,6 +19,16 @@ const SearchFormLoading: React.FC<SearchFormLoadingProps> = ({
 }) => {
   console.log("SearchFormLoading - isLoading:", isLoading);
   console.log("SearchFormLoading - companyData:", companyData);
+  
+  // Store company data in localStorage for use in reports
+  React.useEffect(() => {
+    if (isLoading && companyData) {
+      localStorage.setItem('formData', JSON.stringify({
+        companyName,
+        companyData
+      }));
+    }
+  }, [isLoading, companyData, companyName]);
   
   return (
     <ReportLoadingDialog 

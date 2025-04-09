@@ -5,16 +5,21 @@ import SearchFormButton from './SearchFormButton';
 import SearchFormDialogs from './SearchFormDialogs';
 import { FormValues } from './types/companyData';
 import { useFormSubmit } from './hooks/useFormSubmit';
+import { BusinessSegment } from '@/data/segments';
 
-const SearchForm: React.FC = () => {
+interface SearchFormProps {
+  onSelectSegment?: (segment: BusinessSegment | null) => void;
+}
+
+const SearchForm: React.FC<SearchFormProps> = ({ onSelectSegment }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { closeFormDialog } = useFormDialogContext();
   const { handleSubmit, isSubmitting } = useFormSubmit();
 
   const onSubmit = async (data: FormValues) => {
-    console.log("SearchForm: Formulário submetido, preparando para mostrar carregamento");
+    console.log("SearchForm: Form submitted, preparing to show loading");
     
-    // Processa o formulário sem fechar o modal de carregamento
+    // Process the form without closing the loading modal
     handleSubmit(data);
   };
 
@@ -23,7 +28,8 @@ const SearchForm: React.FC = () => {
       <SearchFormDialogs 
         onSubmit={onSubmit} 
         isLoading={isLoading} 
-        setIsLoading={setIsLoading} 
+        setIsLoading={setIsLoading}
+        onSelectSegment={onSelectSegment || (() => {})}
       />
       
       <div className="flex flex-col items-center justify-center py-6 gap-6">

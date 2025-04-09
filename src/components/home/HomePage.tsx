@@ -21,9 +21,9 @@ const HomePage: React.FC<HomePageProps> = ({
 }) => {
   // Load previous state from localStorage if it exists (for persistence between page refreshes)
   useEffect(() => {
-    // Limpar dados anteriores quando a página carrega
+    // Clear previous data when the page loads
     localStorage.removeItem('companyData');
-    // Também removemos dados de artigos do segmento para garantir que serão buscados novamente
+    // Also remove segment article data to ensure they will be fetched again
     localStorage.removeItem('segmentArticles');
   }, []);
 
@@ -33,7 +33,9 @@ const HomePage: React.FC<HomePageProps> = ({
       <Hero />
       
       {/* Search form in focus */}
-      <SearchForm />
+      <div className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full -mt-12 relative z-10">
+        <SearchForm onSelectSegment={onSelectSegment} />
+      </div>
       
       {/* Second floor: Explanation about the reform */}
       <HowItWorks />

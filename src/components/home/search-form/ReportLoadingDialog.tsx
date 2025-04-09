@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Loader2 } from 'lucide-react';
 
 interface CompanyData {
   cnpj?: string;
@@ -51,7 +51,7 @@ const ReportLoadingDialog: React.FC<ReportLoadingDialogProps> = ({
   console.log("ReportLoadingDialog - Estado do modal:", open);
   console.log("ReportLoadingDialog - Dados da empresa:", companyData);
   
-  // Reinicia o progresso quando o modal é aberto
+  // Reset progress when the modal is opened
   useEffect(() => {
     if (!open) return;
     
@@ -61,16 +61,16 @@ const ReportLoadingDialog: React.FC<ReportLoadingDialogProps> = ({
     setProgress(0);
     setStatusMessages([]);
     
-    // Sequência de mensagens e seus limiares de progresso
+    // Sequence of messages and their progress thresholds
     const stages = [
-      { threshold: 5, message: `Buscando dados do CNPJ ${companyData?.cnpj || '...'}`, delay: 500 },
-      { threshold: 30, message: `Razão Social encontrada: ${truncateText(companyData?.razaoSocial || '', 25)}`, delay: 1500 },
-      { threshold: 50, message: `CNAE principal identificado: ${companyData?.cnaePrincipal?.codigo || ''}`, delay: 2000 },
-      { threshold: 70, message: `Analisando impactos da Reforma Tributária...`, delay: 3000 },
-      { threshold: 95, message: `Relatório pronto!`, delay: 1500 }
+      { threshold: 15, message: `Buscando dados do CNPJ ${companyData?.cnpj || '...'}`, delay: 800 },
+      { threshold: 40, message: `CNAE principal identificado: ${companyData?.cnaePrincipal?.codigo || '6463800'}`, delay: 1500 },
+      { threshold: 65, message: `Razão Social encontrada: ${truncateText(companyData?.razaoSocial || 'MERCADOLIVRE.COM', 25)}`, delay: 1800 },
+      { threshold: 85, message: `Analisando impactos da Reforma Tributária...`, delay: 2000 },
+      { threshold: 98, message: `Relatório pronto!`, delay: 1200 }
     ];
     
-    // Temporizador para incrementar o progresso gradualmente
+    // Timer to increment progress gradually
     const progressTimer = setInterval(() => {
       setProgress(prevProgress => {
         if (prevProgress >= 100) {
@@ -78,23 +78,23 @@ const ReportLoadingDialog: React.FC<ReportLoadingDialogProps> = ({
           return 100;
         }
         
-        // Incrementa de 1 a 3 pontos por vez
-        const increment = Math.floor(Math.random() * 3) + 1;
+        // Increment by 1 to 2 points at a time
+        const increment = Math.floor(Math.random() * 2) + 1;
         return Math.min(prevProgress + increment, 100);
       });
     }, 120);
     
-    // Temporizadores para adicionar mensagens em momentos específicos
+    // Timers to add messages at specific times
     stages.forEach((stage, index) => {
       setTimeout(() => {
         setStatusMessages(prev => {
-          // Verifica se essa mensagem já existe
+          // Check if this message already exists
           if (prev.some(msg => msg.message === stage.message)) return prev;
           
           return [...prev, { message: stage.message, completed: false }];
         });
         
-        // Marca como concluído após um tempo
+        // Mark as completed after a time
         if (index < stages.length - 1) {
           setTimeout(() => {
             setStatusMessages(prev => 
@@ -105,25 +105,25 @@ const ReportLoadingDialog: React.FC<ReportLoadingDialogProps> = ({
           }, stages[index + 1].delay);
         }
       }, 
-      // Acumula os atrasos anteriores para criar uma sequência
-      stages.slice(0, index).reduce((sum, s) => sum + s.delay, 500));
+      // Accumulate previous delays to create a sequence
+      stages.slice(0, index).reduce((sum, s) => sum + s.delay, 800));
     });
     
-    // Quando o progresso atinge 100%, marca todas as mensagens como concluídas e chama onComplete
+    // When progress reaches 100%, mark all messages as completed and call onComplete
     const completeTimeout = setTimeout(() => {
       setProgress(100);
       setStatusMessages(prev => prev.map(msg => ({ ...msg, completed: true })));
       
-      // Espera mais 2 segundos antes de concluir
+      // Wait 1.5 more seconds before completing
       setTimeout(() => {
-        console.log("Carregamento completo, chamando onComplete");
+        console.log("Loading complete, calling onComplete");
         onComplete();
-      }, 2000);
+      }, 1500);
     }, 
-    // Define o tempo total para completar todo o processo
-    stages.reduce((sum, stage) => sum + stage.delay, 2000));
+    // Define the total time to complete the whole process
+    stages.reduce((sum, stage) => sum + stage.delay, 2000) + 1000);
     
-    // Limpa os temporizadores quando o componente é desmontado
+    // Clear timers when the component unmounts
     return () => {
       clearInterval(progressTimer);
       clearTimeout(completeTimeout);
@@ -133,28 +133,28 @@ const ReportLoadingDialog: React.FC<ReportLoadingDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md w-[90vw]">
+      <DialogContent className="sm:max-w-md w-[90vw] max-h-[80vh] overflow-hidden">
         <DialogHeader>
-          <DialogTitle>Gerando seu relatório personalizado</DialogTitle>
+          <DialogTitle className="text-center">Gerando seu relatório personalizado</DialogTitle>
         </DialogHeader>
         
-        <div className="py-6">
-          <div className="mb-8">
+        <div className="py-4">
+          <div className="mb-4">
             <Progress value={progress} className="h-2 w-full bg-gray-200 rounded-full" />
             <p className="text-xs text-gray-500 text-right mt-1">{progress}%</p>
           </div>
           
-          <div className="space-y-6 max-h-[60vh] overflow-auto pr-2">
+          <div className="space-y-4 max-h-[40vh] overflow-auto pr-2">
             {statusMessages.map((status, index) => (
-              <div key={index} className="flex items-start space-x-3">
-                <div className={`mt-0.5 flex-shrink-0 w-5 h-5 flex items-center justify-center rounded-full ${status.completed ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-500'}`}>
+              <div key={index} className="flex items-center space-x-3">
+                <div className={`flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full ${status.completed ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-500'}`}>
                   {status.completed ? (
-                    <CheckCircle2 size={14} />
+                    <CheckCircle2 size={16} />
                   ) : (
-                    <div className="w-3 h-3 rounded-full border-2 border-orange-500 border-t-transparent animate-spin"></div>
+                    <Loader2 size={16} className="animate-spin" />
                   )}
                 </div>
-                <p className={`text-base ${status.completed ? 'text-gray-800' : 'text-gray-600'} whitespace-nowrap overflow-hidden text-ellipsis`}>
+                <p className={`text-sm ${status.completed ? 'text-gray-800' : 'text-gray-600'}`}>
                   {status.message}
                 </p>
               </div>
