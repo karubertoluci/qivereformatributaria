@@ -18,16 +18,42 @@ const SearchFormDialogs: React.FC<SearchFormDialogsProps> = ({
   setIsLoading 
 }) => {
   const { isFormDialogOpen, closeFormDialog } = useFormDialogContext();
+  const [formData, setFormData] = React.useState<FormValues | null>(null);
+  const [loadingCompleted, setLoadingCompleted] = React.useState(false);
+  
+  const handleDialogSubmit = (data: FormValues) => {
+    console.log("SearchFormDialogs: Form submitted, preparing to show loading");
+    setFormData(data);
+    closeFormDialog();
+    
+    // Pequeno delay para garantir que o modal do formulário fechou completamente
+    setTimeout(() => {
+      setIsLoading(true);
+      console.log("SearchFormDialogs: Starting loading");
+      
+      // Processa o formulário
+      onSubmit(data);
+    }, 300);
+  };
+  
+  const handleLoadingComplete = () => {
+    setLoadingCompleted(true);
+    setIsLoading(false);
+    console.log("SearchFormDialogs: Loading completed");
+  };
 
   return (
     <>
       <Dialog open={isFormDialogOpen} onOpenChange={closeFormDialog}>
-        <FormDialog onSubmit={onSubmit} isLoading={isLoading} />
+        <FormDialog onSubmit={handleDialogSubmit} isLoading={isLoading} />
       </Dialog>
       
       <SearchFormLoading 
         isLoading={isLoading} 
         onLoadingChange={setIsLoading}
+        onComplete={handleLoadingComplete}
+        companyName={formData?.nome || ""}
+        companyData={formData?.companyData}
       />
     </>
   );

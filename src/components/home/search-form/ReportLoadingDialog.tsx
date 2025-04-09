@@ -51,7 +51,7 @@ const ReportLoadingDialog: React.FC<ReportLoadingDialogProps> = ({
   console.log("ReportLoadingDialog - Estado do modal:", open);
   console.log("ReportLoadingDialog - Dados da empresa:", companyData);
   
-  // Atualiza o progresso e as mensagens de status com atraso simulado
+  // Reinicia o progresso quando o modal é aberto
   useEffect(() => {
     if (!open) return;
     
@@ -61,6 +61,7 @@ const ReportLoadingDialog: React.FC<ReportLoadingDialogProps> = ({
     setProgress(0);
     setStatusMessages([]);
     
+    // Sequência de mensagens e seus limiares de progresso
     const stages = [
       { threshold: 5, message: `Buscando dados do CNPJ ${companyData?.cnpj || '...'}`, delay: 500 },
       { threshold: 30, message: `Razão Social encontrada: ${truncateText(companyData?.razaoSocial || '', 25)}`, delay: 1500 },
@@ -69,72 +70,66 @@ const ReportLoadingDialog: React.FC<ReportLoadingDialogProps> = ({
       { threshold: 95, message: `Relatório pronto!`, delay: 1500 }
     ];
     
-    // Função para incrementar o progresso gradualmente
-    const incrementProgress = () => {
-      setProgress((prevProgress) => {
-        // Se já chegamos a 100%, pare de incrementar
-        if (prevProgress >= 100) return 100;
+    // Temporizador para incrementar o progresso gradualmente
+    const progressTimer = setInterval(() => {
+      setProgress(prevProgress => {
+        if (prevProgress >= 100) {
+          clearInterval(progressTimer);
+          return 100;
+        }
         
-        // Incrementa em 1 a 3 pontos aleatoriamente
+        // Incrementa de 1 a 3 pontos por vez
         const increment = Math.floor(Math.random() * 3) + 1;
         return Math.min(prevProgress + increment, 100);
       });
-    };
+    }, 120);
     
-    // Inicia o timer para incrementar o progresso
-    const progressTimer = setInterval(incrementProgress, 100);
-    
-    // Monitora os estágios de carregamento
-    const checkStages = () => {
-      stages.forEach((stage, index) => {
-        if (progress >= stage.threshold) {
-          setTimeout(() => {
-            setStatusMessages(prev => {
-              // Verifica se a mensagem já existe para não duplicar
-              if (!prev.some(msg => msg.message === stage.message)) {
-                return [
-                  ...prev,
-                  { message: stage.message, completed: progress >= (stages[index + 1]?.threshold || 100) }
-                ];
-              }
-              
-              // Atualiza o status de "completado" para mensagens existentes
-              return prev.map(msg => 
-                msg.message === stage.message 
-                  ? { ...msg, completed: progress >= (stages[index + 1]?.threshold || 100) } 
-                  : msg
-              );
-            });
-          }, stage.delay);
-        }
-      });
-    };
-    
-    // Verifica estágios a cada avanço no progresso
-    const stageTimer = setInterval(checkStages, 200);
-    
-    // Quando atingir 100%, aguarde mais alguns segundos antes de fechar
-    if (progress >= 100) {
+    // Temporizadores para adicionar mensagens em momentos específicos
+    stages.forEach((stage, index) => {
       setTimeout(() => {
-        clearInterval(progressTimer);
-        clearInterval(stageTimer);
-        // Garante que todas as mensagens apareçam como completas
-        setStatusMessages(prev => prev.map(msg => ({ ...msg, completed: true })));
+        setStatusMessages(prev => {
+          // Verifica se essa mensagem já existe
+          if (prev.some(msg => msg.message === stage.message)) return prev;
+          
+          return [...prev, { message: stage.message, completed: false }];
+        });
         
-        // Aguarda 2 segundos após completar antes de chamar onComplete
-        setTimeout(() => {
-          console.log("Carregamento completo, chamando onComplete");
-          onComplete();
-        }, 2000);
-      }, 500);
-    }
+        // Marca como concluído após um tempo
+        if (index < stages.length - 1) {
+          setTimeout(() => {
+            setStatusMessages(prev => 
+              prev.map(msg => 
+                msg.message === stage.message ? { ...msg, completed: true } : msg
+              )
+            );
+          }, stages[index + 1].delay);
+        }
+      }, 
+      // Acumula os atrasos anteriores para criar uma sequência
+      stages.slice(0, index).reduce((sum, s) => sum + s.delay, 500));
+    });
     
-    // Limpa os timers quando o componente for desmontado
+    // Quando o progresso atinge 100%, marca todas as mensagens como concluídas e chama onComplete
+    const completeTimeout = setTimeout(() => {
+      setProgress(100);
+      setStatusMessages(prev => prev.map(msg => ({ ...msg, completed: true })));
+      
+      // Espera mais 2 segundos antes de concluir
+      setTimeout(() => {
+        console.log("Carregamento completo, chamando onComplete");
+        onComplete();
+      }, 2000);
+    }, 
+    // Define o tempo total para completar todo o processo
+    stages.reduce((sum, stage) => sum + stage.delay, 2000));
+    
+    // Limpa os temporizadores quando o componente é desmontado
     return () => {
       clearInterval(progressTimer);
-      clearInterval(stageTimer);
+      clearTimeout(completeTimeout);
+      stages.forEach((_, i) => clearTimeout(i));
     };
-  }, [open, progress, companyData, companyName, onComplete]);
+  }, [open, companyData, companyName, onComplete]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

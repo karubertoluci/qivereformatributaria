@@ -14,17 +14,8 @@ const SearchForm: React.FC = () => {
   const onSubmit = async (data: FormValues) => {
     console.log("SearchForm: Formulário submetido, preparando para mostrar carregamento");
     
-    // Fecha o modal do formulário primeiro
-    closeFormDialog();
-    
-    // Pequeno delay para garantir que o modal do formulário fechou completamente
-    setTimeout(() => {
-      setIsLoading(true);
-      console.log("SearchForm: Iniciando carregamento do relatório");
-      
-      // Agora processa o formulário
-      handleSubmit(data);
-    }, 300);
+    // Processa o formulário sem fechar o modal de carregamento
+    handleSubmit(data);
   };
 
   return (

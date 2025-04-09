@@ -1,26 +1,33 @@
 
-import React from 'react';
-import { Dialog } from '@/components/ui/dialog';
-import LoadingDialog from './LoadingDialog';
+import React, { useEffect } from 'react';
+import ReportLoadingDialog from './ReportLoadingDialog';
 
 interface SearchFormLoadingProps {
   isLoading: boolean;
   onLoadingChange: (isLoading: boolean) => void;
+  onComplete: () => void;
+  companyName: string;
+  companyData?: any;
 }
 
 const SearchFormLoading: React.FC<SearchFormLoadingProps> = ({ 
   isLoading, 
-  onLoadingChange 
+  onLoadingChange,
+  onComplete,
+  companyName,
+  companyData
 }) => {
+  console.log("SearchFormLoading - isLoading:", isLoading);
+  console.log("SearchFormLoading - companyData:", companyData);
+  
   return (
-    <Dialog open={isLoading} onOpenChange={(open) => onLoadingChange(open)}>
-      <LoadingDialog 
-        open={isLoading} 
-        onOpenChange={() => onLoadingChange(false)} 
-        progress={50} 
-        companyName="Sua empresa" 
-      />
-    </Dialog>
+    <ReportLoadingDialog 
+      open={isLoading} 
+      onOpenChange={(open) => onLoadingChange(open)}
+      onComplete={onComplete}
+      companyName={companyName}
+      companyData={companyData}
+    />
   );
 };
 
