@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { HighlightType } from '@/components/results/types';
 import { toast } from 'sonner';
 import ArticleCardList from '@/components/article/ArticleCardList';
-import ImpactsSection from './components/ImpactsSection';
+import ImpactsSection from '@/components/results/tabs/articles/components/ImpactsSection';
 
 interface ArticlesContentProps {
   displayedArticles: Article[];
