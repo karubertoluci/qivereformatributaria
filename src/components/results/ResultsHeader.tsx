@@ -119,12 +119,12 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
           
           <Button 
             variant="outline" 
-            size="sm"
-            className="flex items-center gap-1 h-8 px-2 sm:px-3" 
+            size="icon"
+            className="h-8 w-8 rounded-full" 
             onClick={onCloseClick}
           >
             <X className="h-4 w-4" />
-            <span className="hidden sm:inline text-xs">Fechar</span>
+            <span className="sr-only">Fechar</span>
           </Button>
         </div>
       </div>
