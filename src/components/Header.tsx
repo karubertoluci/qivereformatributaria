@@ -1,9 +1,11 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link, useLocation } from 'react-router-dom';
 import { useFormDialogContext } from './home/FormDialogContext';
 import { Menu, X } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+
 const Header = () => {
   const location = useLocation();
   const {
@@ -11,11 +13,13 @@ const Header = () => {
   } = useFormDialogContext();
   const isMobile = useIsMobile();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
+
   return <header className="bg-white border-b font-lexend">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between bg-slate-50">
+      <div className="container mx-auto px-4 py-4 flex items-center justify-between bg-white">
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img src="/lovable-uploads/ac430354-112a-4ea8-a199-de19527f88ca.png" alt="Qive Reforma Tributária" className="h-8 md:h-12" />
@@ -77,4 +81,5 @@ const Header = () => {
         </div>}
     </header>;
 };
+
 export default Header;

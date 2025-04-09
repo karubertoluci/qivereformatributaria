@@ -22,7 +22,7 @@ const ChartHeader: React.FC<ChartHeaderProps> = ({
   useGradient = false
 }) => {
   return (
-    <div className={`flex flex-row items-start justify-between ${useGradient ? 'header-gradient p-4 rounded-t-lg' : ''}`}>
+    <div className={`flex flex-row items-start justify-between ${useGradient ? 'bg-white p-4 rounded-t-lg' : ''}`}>
       <div>
         <CardTitle className="text-xl flex items-center gap-2">
           {icon && (

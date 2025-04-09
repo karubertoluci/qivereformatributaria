@@ -18,9 +18,9 @@ const ResultsTabLayout: React.FC<ResultsTabLayoutProps> = ({
   onTabChange
 }) => {
   return (
-    <div className="bg-gray-50">
+    <div className="bg-white">
       <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-        <div className="border-b border-gray-200 flex justify-center bg-gray-50">
+        <div className="border-b border-gray-200 flex justify-center bg-gray-100">
           <TabsList className="bg-transparent justify-center p-0 h-16 rounded-none border-b-0 max-w-xl mx-auto gap-2">
             <TabsTrigger 
               value="overview" 
