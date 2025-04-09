@@ -5,7 +5,7 @@ import { Article } from '@/data/articles';
 import { getArticlesByTopic, topics } from '@/components/results/ArticlesByTopic';
 import { HighlightType, FilterType, ViewMode } from '@/components/results/types';
 import { useArticleData } from './article';
-// Removed the CompanyData import to avoid conflict with the local declaration
+import { useCompanyData } from './results/useCompanyData';
 
 export const useResultsData = (segment: BusinessSegment) => {
   const [expandedArticleId, setExpandedArticleId] = useState<string | null>(null);
@@ -15,7 +15,9 @@ export const useResultsData = (segment: BusinessSegment) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'articles' | 'highlights'>('overview');
   const [highlights, setHighlights] = useState<HighlightType[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [formData, setFormData] = useState<CompanyData | null>(null);
+  
+  // Use the company data hook to access company information
+  const { formData, hasCompanyData } = useCompanyData();
   
   // Use the article data hook to fetch articles from Supabase
   const { segmentArticles, isLoading, error: fetchError } = useArticleData(segment);
@@ -26,51 +28,6 @@ export const useResultsData = (segment: BusinessSegment) => {
       setError(fetchError);
     }
   }, [fetchError]);
-  
-  // Carregar os dados da empresa do localStorage
-  useEffect(() => {
-    try {
-      // First try to load from companyData (from API)
-      const companyDataStr = localStorage.getItem('companyData');
-      if (companyDataStr) {
-        const companyData = JSON.parse(companyDataStr);
-        
-        // Format the data to ensure consistency
-        const formattedData: CompanyData = {
-          cnpj: companyData.cnpj,
-          razaoSocial: companyData.razaoSocial || companyData.razao_social,
-          nomeFantasia: companyData.nomeFantasia || companyData.nome_fantasia || companyData.razaoSocial || companyData.razao_social,
-          endereco: companyData.endereco,
-          cnaePrincipal: companyData.cnaePrincipal || {
-            codigo: companyData.cnae_fiscal?.toString() || '',
-            descricao: companyData.cnae_fiscal_descricao || ''
-          },
-          cnaeSecundarios: companyData.cnaeSecundarios || companyData.cnaes_secundarios || [],
-          situacaoCadastral: companyData.situacaoCadastral || companyData.situacao_cadastral,
-          dataSituacaoCadastral: companyData.dataSituacaoCadastral || companyData.data_situacao_cadastral,
-          naturezaJuridica: companyData.naturezaJuridica || companyData.natureza_juridica,
-          capitalSocial: companyData.capitalSocial || companyData.capital_social,
-          porte: companyData.porte,
-          telefone: companyData.telefone || companyData.ddd_telefone_1,
-          original: companyData.original || companyData
-        };
-        
-        setFormData(formattedData);
-        
-        // Set company name in localStorage for easy access by other components
-        localStorage.setItem('companyName', formattedData.razaoSocial || '');
-      } else {
-        // Fallback to formData for backwards compatibility
-        const formDataStr = localStorage.getItem('formData');
-        if (formDataStr) {
-          const formDataObj = JSON.parse(formDataStr);
-          setFormData(formDataObj);
-        }
-      }
-    } catch (e) {
-      console.error('Erro ao carregar dados da empresa do localStorage:', e);
-    }
-  }, []);
   
   // Carregar destaques do localStorage
   useEffect(() => {
@@ -88,8 +45,6 @@ export const useResultsData = (segment: BusinessSegment) => {
   useEffect(() => {
     localStorage.setItem('highlights', JSON.stringify(highlights));
   }, [highlights]);
-  
-  const hasCompanyData = formData !== null;
   
   const relevantArticles = segmentArticles.length > 0 
     ? segmentArticles 
@@ -171,29 +126,4 @@ export const useResultsData = (segment: BusinessSegment) => {
     handleAddHighlight,
     handleRemoveHighlight
   };
-};
-
-// Define CompanyData type locally instead of importing it
-export type CompanyData = {
-  nome?: string;
-  cargo?: string;
-  cnpj?: string;
-  razaoSocial?: string;
-  nomeFantasia?: string;
-  endereco?: string;
-  cnaePrincipal?: {
-    codigo: string;
-    descricao: string;
-  };
-  cnaeSecundarios?: {
-    codigo: string;
-    descricao: string;
-  }[];
-  situacaoCadastral?: string;
-  dataSituacaoCadastral?: string;
-  naturezaJuridica?: string;
-  capitalSocial?: number;
-  porte?: string;
-  telefone?: string;
-  original?: any; // Dados originais da API
 };
