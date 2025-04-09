@@ -64,7 +64,14 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
     let result = filteredArticles;
 
     if (selectedBookFilter) {
-      result = result.filter(article => article.bookId === selectedBookFilter);
+      result = result.filter(article => {
+        // Usar a propriedade metadata.bookId se disponível
+        if (article.metadata?.bookId) {
+          return article.metadata.bookId === selectedBookFilter;
+        }
+        // Fallback para propriedade bookId legada se existir
+        return article.metadata?.livro === selectedBookFilter;
+      });
     }
 
     if (selectedTitleFilter) {
