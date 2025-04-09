@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Article } from '@/data/articles';
-import { Button } from '../ui/button';
 import { 
   Dialog,
   DialogContent,
@@ -30,7 +29,7 @@ const ArticleCardSummary: React.FC<ArticleCardSummaryProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="w-full text-sm text-blue-600 hover:underline text-left">
+        <button className="w-full text-sm text-blue-600 hover:underline text-left mt-auto">
           Ver detalhes do artigo
         </button>
       </DialogTrigger>

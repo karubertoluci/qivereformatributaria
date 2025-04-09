@@ -89,9 +89,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   
   return (
     <Card className={cn("shadow-sm hover:shadow transition-shadow duration-200 mb-4", borderClass)}>
-      <CardContent className="p-4">
+      <CardContent className="p-4 flex flex-col gap-2">
         {/* 1. Topo do card: Article number + Book */}
-        <div className="flex justify-between items-center text-xs text-gray-600 font-medium mb-2">
+        <div className="flex justify-between items-center text-xs text-gray-600 font-medium">
           <span className="flex items-center gap-1">
             <FileText className="h-3 w-3" />
             Art. {article.number || 'N/A'}
@@ -103,12 +103,12 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         </div>
         
         {/* 2. Bloco principal: Article text */}
-        <p className="line-clamp-3 text-sm text-gray-800 mb-2">
+        <p className="line-clamp-3 text-sm text-gray-800">
           {article.simplifiedText || 'Sem texto disponível'}
         </p>
         
         {/* 3. Badges: Impact and relevance */}
-        <div className="flex gap-2 text-xs mb-2">
+        <div className="flex gap-2 text-xs">
           <Badge 
             variant={impactType === 'positive' ? 'default' : impactType === 'negative' ? 'destructive' : 'secondary'} 
             className={impactType === 'positive' ? 'bg-green-500 text-xs py-0.5' : 
@@ -125,18 +125,19 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         
         {/* 4. Título: Article title */}
         {article.metadata?.titulo && (
-          <p className="text-xs text-gray-500 line-clamp-2 mb-3">
+          <p className="text-xs text-gray-500 line-clamp-2">
             {article.metadata.titulo}
           </p>
         )}
         
         {/* 5. CTA: View article details */}
-        <button 
-          onClick={() => {}}
-          className="w-full text-sm text-blue-600 hover:underline mt-auto text-left"
-        >
-          Ver detalhes do artigo
-        </button>
+        <ArticleCardSummary 
+          article={article} 
+          segmentId={segmentId} 
+          highlights={highlights}
+          onAddHighlight={handleAddHighlight}
+          onRemoveHighlight={onRemoveHighlight}
+        />
       </CardContent>
     </Card>
   );
