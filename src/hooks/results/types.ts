@@ -1,4 +1,3 @@
-
 // If this file doesn't exist, we'll create it with proper type definitions
 export interface CNAEData {
   codigo: string;
@@ -7,35 +6,34 @@ export interface CNAEData {
 
 export interface CompanyApiData {
   cnpj?: string;
+  razaoSocial?: string;
   razao_social?: string;
+  nomeFantasia?: string;
   nome_fantasia?: string;
-  cnae_fiscal?: number;
-  cnae_fiscal_descricao?: string;
-  cnaes_secundarios?: Array<CNAEData>;
-  situacao_cadastral?: string;
-  data_situacao_cadastral?: string;
-  natureza_juridica?: string;
+  endereco?: string;
   logradouro?: string;
   numero?: string;
   complemento?: string;
   bairro?: string;
-  cep?: string;
-  uf?: string;
   municipio?: string;
-  ddd_telefone_1?: string;
+  uf?: string;
+  cep?: string;
+  situacaoCadastral?: string;
+  situacao_cadastral?: string;
+  dataSituacaoCadastral?: string;
+  data_situacao_cadastral?: string;
+  naturezaJuridica?: string;
+  natureza_juridica?: string;
+  capitalSocial?: number;
   capital_social?: number;
   porte?: string;
-  // For alternate naming conventions
-  razaoSocial?: string;
-  nomeFantasia?: string;
-  cnaePrincipal?: CNAEData;
-  cnaeSecundarios?: Array<CNAEData>;
-  situacaoCadastral?: string;
-  dataSituacaoCadastral?: string;
-  naturezaJuridica?: string;
-  endereco?: string;
-  capitalSocial?: number;
   telefone?: string;
+  ddd_telefone_1?: string;
+  cnae_fiscal?: number;
+  cnae_fiscal_descricao?: string;
+  cnaePrincipal?: CNAEData;
+  cnaeSecundarios?: CNAEData[];
+  cnaes_secundarios?: CNAEData[];
 }
 
 export interface PersonalData {
@@ -48,12 +46,13 @@ export interface PersonalData {
 }
 
 export interface CompanyData {
-  companyData?: CompanyApiData;
-  // Including necessary properties that will be accessed directly
-  nomeFantasia?: string;
-  razaoSocial?: string;
-  cnaeSecundarios?: Array<CNAEData>;
+  nome?: string;
+  cargo?: string;
+  email?: string;
+  telefone?: string;
   cnpj?: string;
+  possuiContaQive?: boolean;
+  companyData?: CompanyApiData;
 }
 
 // Adding these type definitions that were missing

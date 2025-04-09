@@ -44,6 +44,13 @@ export const validateCNPJ = async (
       razaoSocial: data.razao_social,
       nomeFantasia: data.nome_fantasia || data.razao_social,
       endereco: `${data.logradouro}, ${data.numero}${data.complemento ? ', ' + data.complemento : ''}, ${data.bairro}, ${data.municipio} - ${data.uf}, CEP: ${data.cep}`,
+      logradouro: data.logradouro,
+      numero: data.numero,
+      complemento: data.complemento,
+      bairro: data.bairro,
+      municipio: data.municipio,
+      uf: data.uf,
+      cep: data.cep,
       cnaePrincipal: {
         codigo: cnaeCode,
         descricao: data.cnae_fiscal_descricao,
@@ -58,8 +65,17 @@ export const validateCNPJ = async (
       capitalSocial: data.capital_social,
       porte: data.porte,
       telefone: data.ddd_telefone_1,
-      // Preservando dados originais para compatibilidade
-      original: data
+      // Preserving original data for compatibility
+      razao_social: data.razao_social,
+      nome_fantasia: data.nome_fantasia,
+      cnae_fiscal: data.cnae_fiscal,
+      cnae_fiscal_descricao: data.cnae_fiscal_descricao,
+      cnaes_secundarios: data.cnaes_secundarios,
+      situacao_cadastral: data.situacao_cadastral,
+      data_situacao_cadastral: data.data_situacao_cadastral,
+      natureza_juridica: data.natureza_juridica,
+      capital_social: data.capital_social,
+      ddd_telefone_1: data.ddd_telefone_1
     };
     
     console.log('Dados da empresa formatados:', companyData);

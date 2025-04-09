@@ -32,15 +32,18 @@ export const useCompanyData = () => {
             localStorage.setItem('companyName', companyName);
           }
           
+          // Format CNAE data for consistency
+          const companyData = parsedFormData.companyData;
+          
           // Create properly formatted CNAE arrays if they don't exist
-          if (!parsedFormData.companyData.cnaeSecundarios && parsedFormData.companyData.cnaes_secundarios) {
-            parsedFormData.companyData.cnaeSecundarios = parsedFormData.companyData.cnaes_secundarios;
+          if (!companyData.cnaeSecundarios && companyData.cnaes_secundarios) {
+            parsedFormData.companyData.cnaeSecundarios = companyData.cnaes_secundarios;
           }
           
-          if (!parsedFormData.companyData.cnaePrincipal && parsedFormData.companyData.cnae_fiscal) {
+          if (!companyData.cnaePrincipal && companyData.cnae_fiscal) {
             parsedFormData.companyData.cnaePrincipal = {
-              codigo: parsedFormData.companyData.cnae_fiscal.toString(),
-              descricao: parsedFormData.companyData.cnae_fiscal_descricao || ''
+              codigo: companyData.cnae_fiscal.toString(),
+              descricao: companyData.cnae_fiscal_descricao || ''
             };
           }
           
@@ -53,9 +56,20 @@ export const useCompanyData = () => {
         const companyDataStr = localStorage.getItem('companyData');
         if (companyDataStr) {
           const companyData = JSON.parse(companyDataStr);
-          console.log('Company data loaded:', companyData);
+          console.log('Company data loaded:', companyDataStr);
           
           // Format the data to ensure consistency
+          if (companyData.cnae_fiscal && !companyData.cnaePrincipal) {
+            companyData.cnaePrincipal = {
+              codigo: companyData.cnae_fiscal.toString(),
+              descricao: companyData.cnae_fiscal_descricao || ''
+            };
+          }
+          
+          if (companyData.cnaes_secundarios && !companyData.cnaeSecundarios) {
+            companyData.cnaeSecundarios = companyData.cnaes_secundarios;
+          }
+          
           setFormData({
             companyData
           });
