@@ -55,14 +55,22 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
     form.setValue('cnpj', formatted);
   };
 
-  // Get company name and segment (if available)
-  const companyName = companyData?.nomeFantasia || companyData?.razao_social || '';
+  // Get company name, segment, and CNPJ (if available)
+  const companyName = companyData?.nomeFantasia || companyData?.nome_fantasia || companyData?.razao_social || '';
   const segment = companyData?.cnae_fiscal_descricao || '';
+  const cnpj = companyData?.cnpj || form.getValues('cnpj') || '';
 
   return (
     <>
-      {/* Company Card - shows only when company data is available */}
-      {companyData && companyName && <CompanyCard companyName={companyName} segment={segment} />}
+      {/* Company Card - shows when loading or when company data is available */}
+      {(isValidating || (companyData && companyName)) && (
+        <CompanyCard 
+          companyName={companyName} 
+          segment={segment} 
+          cnpj={cnpj}
+          isLoading={isValidating} 
+        />
+      )}
       
       <FormField
         control={form.control}
