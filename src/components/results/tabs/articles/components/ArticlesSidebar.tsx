@@ -1,6 +1,7 @@
 
 import React from 'react';
 import ArticlesFilters from '@/components/results/tabs/articles/filters/ArticlesFilters';
+import { FilterType, ViewMode } from '@/components/results/types';
 
 interface ArticlesSidebarProps {
   positiveCount: number;
@@ -9,10 +10,10 @@ interface ArticlesSidebarProps {
   totalCount: number;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filterType: string;
-  setFilterType: (type: any) => void;
-  viewMode: string;
-  setViewMode: (mode: any) => void;
+  filterType: FilterType;
+  setFilterType: (type: FilterType) => void;
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
   selectedBookFilter: string | null;
   setSelectedBookFilter: (bookId: string | null) => void;
   selectedTitleFilter: string | null;
@@ -50,9 +51,9 @@ const ArticlesSidebar: React.FC<ArticlesSidebarProps> = ({
         totalCount={totalCount}
         searchTerm={searchTerm || ''}
         setSearchTerm={setSearchTerm || (() => {})}
-        filterType={filterType || 'all'}
+        filterType={filterType as FilterType || 'all'}
         setFilterType={setFilterType || (() => {})}
-        viewMode={viewMode}
+        viewMode={viewMode as ViewMode}
         setViewMode={setViewMode}
         selectedBookFilter={selectedBookFilter}
         setSelectedBookFilter={(bookId) => {
