@@ -6,8 +6,6 @@ import { Article } from '@/data/articles';
 import { CompanyData } from '@/hooks/useResultsData';
 import CompanyOverview from '@/components/report/CompanyOverview';
 import ReformOverview from '@/components/report/ReformOverview';
-import ImpactDistributionChart from '@/components/report/ImpactDistributionChart';
-import RelevanceDistributionChart from '@/components/report/RelevanceDistributionChart';
 
 interface OverviewTabProps {
   segment: BusinessSegment;
@@ -33,16 +31,14 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
       
       <ReformOverview segment={segment} />
       
-      <div className="grid md:grid-cols-2 gap-6">
-        <ImpactDistributionChart 
-          segmentId={segment.id}
-          articles={relevantArticles}
-        />
-        
-        <RelevanceDistributionChart 
-          articles={relevantArticles}
-          segmentId={segment.id}
-        />
+      {/* Link para redirecionar para a aba de artigos */}
+      <div className="flex justify-center mt-8">
+        <button
+          onClick={() => document.querySelector('[value="articles"]')?.dispatchEvent(new Event('click'))}
+          className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
+        >
+          Ver artigos e visualizações detalhadas
+        </button>
       </div>
     </TabsContent>
   );

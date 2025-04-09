@@ -7,6 +7,8 @@ import ArticlesPriorityChart from '@/components/ArticlesPriorityChart';
 import ChartExpandToggle from '../components/ChartExpandToggle';
 import LegislationBooks from '@/components/report/LegislationBooks';
 import FavorabilityRelevanceChart from '@/components/report/FavorabilityRelevanceChart';
+import ImpactDistributionChart from '@/components/report/ImpactDistributionChart';
+import RelevanceDistributionChart from '@/components/report/RelevanceDistributionChart';
 
 interface ChartSectionProps {
   filteredArticles: Article[];
@@ -35,7 +37,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
         />
       </div>
 
-      <div className={`overflow-x-auto transition-all duration-300 ${expanded ? 'max-h-[1500px]' : 'max-h-[300px]'}`}>
+      <div className={`overflow-x-auto transition-all duration-300 ${expanded ? 'max-h-[2000px]' : 'max-h-[300px]'}`}>
         <div className={isMobile ? "min-w-[500px]" : ""}>
           <div className="space-y-6">
             {/* Articles Priority Chart */}
@@ -44,6 +46,22 @@ const ChartSection: React.FC<ChartSectionProps> = ({
                 articles={filteredArticles}
                 segmentId={segmentId}
                 onSelectArticle={(articleId) => setExpandedArticleId(articleId)}
+              />
+            </div>
+            
+            {/* Impact Distribution Chart - Moved from Overview */}
+            <div className="mb-6">
+              <ImpactDistributionChart 
+                segmentId={segmentId}
+                articles={filteredArticles}
+              />
+            </div>
+            
+            {/* Relevance Distribution Chart - Moved from Overview */}
+            <div className="mb-6">
+              <RelevanceDistributionChart 
+                articles={filteredArticles}
+                segmentId={segmentId}
               />
             </div>
             
