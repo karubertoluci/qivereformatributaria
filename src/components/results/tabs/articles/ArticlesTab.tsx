@@ -21,8 +21,8 @@ interface ArticlesTabProps {
   handleRemoveHighlight: (id: string) => void;
   topics: Topic[];
   articlesByTopic: Record<string, Article[]>;
-  viewMode: 'chart';
-  setViewMode: (mode: 'chart') => void;
+  viewMode: 'chart' | 'table'; // Fixed type to match what's used
+  setViewMode: (mode: 'chart' | 'table') => void; // Fixed type to match what's used
   positiveCount: number;
   negativeCount: number;
   searchTerm?: string;
@@ -65,11 +65,11 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
 
     if (selectedBookFilter) {
       result = result.filter(article => {
-        // Usar a propriedade metadata.bookId se disponível
+        // Use metadata.bookId if available
         if (article.metadata?.bookId) {
           return article.metadata.bookId === selectedBookFilter;
         }
-        // Fallback para propriedade livro no metadata
+        // Fallback to livro property in metadata
         return article.metadata?.livro === selectedBookFilter;
       });
     }

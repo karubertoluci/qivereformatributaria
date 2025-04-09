@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Article } from '@/data/articles';
-import { ViewMode, HighlightType, Topic } from '@/components/results/types';
+import { HighlightType, Topic } from '@/components/results/types';
 import ArticleTopicsView from '@/components/results/ArticleTopicsView';
 import ArticleTableView from '@/components/results/ArticleTableView';
 import ViewSwitcher from '@/components/results/ViewSwitcher';
@@ -12,18 +12,18 @@ import { BusinessSegment } from '@/data/segments';
 interface ArticlesContentProps {
   filteredArticles: Article[];
   displayedArticles: Article[];
-  selectedBookFilter: string;
-  selectedTitleFilter: string;
-  setSelectedBookFilter: (value: string) => void;
-  setSelectedTitleFilter: (value: string) => void;
+  selectedBookFilter: string | null;
+  selectedTitleFilter: string | null;
+  setSelectedBookFilter: (value: string | null) => void;
+  setSelectedTitleFilter: (value: string | null) => void;
   expandedArticleId: string | null;
   setExpandedArticleId: (id: string | null) => void;
   highlights: HighlightType[];
   onAddHighlight: (articleId: string, text: string, color?: string) => void;
   onRemoveHighlight: (id: string) => void;
   articlesByTopic: Record<string, Article[]>;
-  viewMode: ViewMode;
-  setViewMode: (mode: ViewMode) => void;
+  viewMode: 'chart' | 'table';
+  setViewMode: (mode: 'chart' | 'table') => void;
   topics: Topic[];
   segment: BusinessSegment;
 }

@@ -16,18 +16,10 @@ const Results: React.FC<ResultsProps> = ({ segment, onBackToSegments }) => {
   
   // Check for CNPJ changes when component mounts
   useEffect(() => {
-    console.log('Results montado - atualizando dados da empresa');
+    console.log('Results mounted - updating company data');
     refreshCompanyData();
   }, [refreshCompanyData]);
   
-  const handleRefresh = () => {
-    forceArticleRefresh(segment.id);
-    refreshCompanyData();
-    toast.info("Atualizando dados dos artigos...");
-    // Recarregar a página para forçar a busca de novos dados
-    window.location.reload();
-  };
-
   return (
     <div className="flex flex-col min-h-screen print:bg-white">
       <ResultsContainer segment={segment} onBackToSegments={onBackToSegments} />

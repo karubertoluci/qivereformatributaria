@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route, useParams, Navigate } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header';
@@ -28,15 +28,6 @@ const ResultsPage = () => {
 };
 
 function App() {
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "system");
-  
-  useEffect(() => {
-    document.documentElement.setAttribute(
-      "data-theme",
-      localStorage.getItem("theme") || "system"
-    );
-  }, [theme]);
-
   return (
     <FormDialogProvider>
       <BrowserRouter>

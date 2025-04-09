@@ -49,7 +49,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
               />
             </div>
             
-            {/* Impact Distribution Chart - Moved from Overview */}
+            {/* Impact Distribution Chart */}
             <div className="mb-6">
               <ImpactDistributionChart 
                 segmentId={segmentId}
@@ -57,7 +57,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
               />
             </div>
             
-            {/* Relevance Distribution Chart - Moved from Overview */}
+            {/* Relevance Distribution Chart */}
             <div className="mb-6">
               <RelevanceDistributionChart 
                 articles={filteredArticles}

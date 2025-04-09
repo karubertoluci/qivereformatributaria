@@ -1,27 +1,43 @@
 
-export type Topic = {
+import { Article } from "@/data/articles";
+
+export type FilterType = 'all' | 'positive' | 'negative' | 'neutral';
+export type ViewMode = 'chart' | 'table';
+export type HighlightColor = 'yellow' | 'green' | 'blue' | 'purple' | 'pink';
+
+export interface HighlightType {
+  id: string;
+  articleId: string;
+  text: string;
+  color: HighlightColor;
+}
+
+export interface Topic {
   id: string;
   name: string;
-  description: string;
-  articleCount?: number;
-  importance?: number;
-};
+  description?: string;
+  count: number;
+}
 
-export type CommentType = {
-  id: string;
-  text: string;
-  timestamp: string;
+export interface ArticleStat {
   articleId: string;
-};
+  title: string;
+  relevance: number;
+  impact: number;
+  favorability: 'positive' | 'negative' | 'neutral';
+}
 
-export type HighlightType = {
+export interface ImpactData {
+  name: string;
+  favorable: number;
+  unfavorable: number;
+  neutral: number;
+}
+
+export interface BookData {
   id: string;
-  text: string;
-  color: 'yellow' | 'green' | 'blue' | 'pink';
-  articleId: string;
-};
-
-export type ViewMode = 'chart';
-export type FilterType = 'all' | 'positive' | 'negative' | 'neutral';
-export type FavorabilityType = 'Favorável' | 'Neutro' | 'Desfavorável';
-export type RelevanceType = 'Irrelevante' | 'Pouco relevante' | 'Moderadamente relevante' | 'Muito relevante';
+  name: string;
+  articles: Article[];
+  count: number;
+  color: string;
+}

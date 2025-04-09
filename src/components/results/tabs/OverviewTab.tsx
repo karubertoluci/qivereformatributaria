@@ -31,7 +31,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
       
       <ReformOverview segment={segment} />
       
-      {/* Link para redirecionar para a aba de artigos */}
+      {/* Link to redirect to articles tab */}
       <div className="flex justify-center mt-8">
         <button
           onClick={() => document.querySelector('[value="articles"]')?.dispatchEvent(new Event('click'))}
