@@ -2,13 +2,16 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BusinessSegment } from '@/data/segments';
 import { Info, FileText } from 'lucide-react';
+
 interface ReformOverviewProps {
   segment: BusinessSegment;
 }
+
 const ReformOverview: React.FC<ReformOverviewProps> = ({
   segment
 }) => {
-  return <Card>
+  return (
+    <Card>
       <CardHeader className="bg-gradient-to-r from-rose-50 to-white border-b">
         <CardTitle className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-rose-500" />
@@ -16,85 +19,91 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-6">
-        <div className="space-y-6">
-          <div className="mb-4">
-            <h3 className="text-lg font-medium mb-2 text-left">Visão Geral da Reforma Tributária</h3>
-            <p className="text-muted-foreground text-left">
-              A Reforma Tributária (PEC 45/2023) representa uma das maiores mudanças no sistema tributário 
-              brasileiro nas últimas décadas. Seu objetivo principal é simplificar a tributação sobre 
-              o consumo, substituindo cinco tributos (PIS, Cofins, IPI, ICMS e ISS) por um Imposto sobre 
-              Valor Agregado (IVA) dual: a CBS (Contribuição sobre Bens e Serviços) federal e o IBS 
-              (Imposto sobre Bens e Serviços) estadual/municipal.
-            </p>
-          </div>
-          
-          <div className="p-4 bg-rose-50 rounded-lg flex gap-3">
-            <Info className="h-5 w-5 text-rose-500 flex-shrink-0 mt-1" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-6">
             <div>
-              <h4 className="font-medium text-left">Principais mudanças:</h4>
-              <ul className="list-disc list-inside space-y-1 mt-2 text-sm">
-                <li>Substituição de cinco tributos por um sistema IVA dual</li>
-                <li>Cobrança do imposto no destino (onde ocorre o consumo), não na origem</li>
-                <li>Não-cumulatividade plena (créditos amplos de insumos)</li>
-                <li>Alíquota padrão nacional estimada entre 25% e 27%</li>
-                <li>Cashback para famílias de baixa renda</li>
-                <li>Criação de regimes diferenciados para setores específicos</li>
-                <li>Período de transição de 8 anos (2026-2033)</li>
-              </ul>
+              <h3 className="text-lg font-medium mb-2 text-left">Visão Geral da Reforma Tributária</h3>
+              <p className="text-muted-foreground text-left">
+                A Reforma Tributária (PEC 45/2023) representa uma das maiores mudanças no sistema tributário 
+                brasileiro nas últimas décadas. Seu objetivo principal é simplificar a tributação sobre 
+                o consumo, substituindo cinco tributos (PIS, Cofins, IPI, ICMS e ISS) por um Imposto sobre 
+                Valor Agregado (IVA) dual: a CBS (Contribuição sobre Bens e Serviços) federal e o IBS 
+                (Imposto sobre Bens e Serviços) estadual/municipal.
+              </p>
+            </div>
+            
+            <div className="p-4 bg-rose-50 rounded-lg flex gap-3">
+              <Info className="h-5 w-5 text-rose-500 flex-shrink-0 mt-1" />
+              <div>
+                <h4 className="font-medium text-left">Principais mudanças:</h4>
+                <ul className="list-disc list-inside space-y-1 mt-2 text-sm">
+                  <li>Substituição de cinco tributos por um sistema IVA dual</li>
+                  <li>Cobrança do imposto no destino (onde ocorre o consumo), não na origem</li>
+                  <li>Não-cumulatividade plena (créditos amplos de insumos)</li>
+                  <li>Alíquota padrão nacional estimada entre 25% e 27%</li>
+                  <li>Cashback para famílias de baixa renda</li>
+                  <li>Criação de regimes diferenciados para setores específicos</li>
+                  <li>Período de transição de 8 anos (2026-2033)</li>
+                </ul>
+              </div>
             </div>
           </div>
           
-          <div className="mt-4">
-            <h3 className="text-lg font-medium mb-2 text-left">Impacto no Segmento {segment.name}</h3>
-            <p className="text-muted-foreground text-left">
-              {getSegmentImpacts(segment.id)}
-            </p>
-          </div>
-          
-          <div className="p-4 border rounded-lg bg-secondary/10 mt-4">
-            <h4 className="font-medium mb-2 text-left">Cronograma de Implementação</h4>
-            <div className="space-y-3">
-              <div className="flex gap-3">
-                <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
-                  2023-2024
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-medium mb-2 text-left">Impacto no Segmento {segment.name}</h3>
+              <p className="text-muted-foreground text-left">
+                {getSegmentImpacts(segment.id)}
+              </p>
+            </div>
+            
+            <div className="p-4 border rounded-lg bg-secondary/10">
+              <h4 className="font-medium mb-3 text-left">Cronograma de Implementação</h4>
+              <div className="space-y-3">
+                <div className="flex gap-3">
+                  <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
+                    2023-2024
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-left">Aprovação legislativa e regulamentação inicial</p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm text-left">Aprovação legislativa e regulamentação inicial</p>
+                
+                <div className="flex gap-3">
+                  <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
+                    2025
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-left">Teste do sistema (opcional)</p>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="flex gap-3">
-                <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
-                  2025
+                
+                <div className="flex gap-3">
+                  <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
+                    2026-2032
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-left">Início do período de transição, com alíquotas sendo gradualmente ajustadas</p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm text-left">Teste do sistema (opcional)</p>
-                </div>
-              </div>
-              
-              <div className="flex gap-3">
-                <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
-                  2026-2032
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm text-left">Início do período de transição, com alíquotas sendo gradualmente ajustadas</p>
-                </div>
-              </div>
-              
-              <div className="flex gap-3">
-                <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
-                  2033
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm text-left">Implementação completa do novo sistema</p>
+                
+                <div className="flex gap-3">
+                  <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
+                    2033
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-left">Implementação completa do novo sistema</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </CardContent>
-    </Card>;
+    </Card>
+  );
 };
+
 function getSegmentImpacts(segmentId: string): string {
   const impactsBySegment: Record<string, string> = {
     comercio_varejo: "Para empresas do comércio varejista, a reforma trará várias mudanças significativas, incluindo a possibilidade de créditos amplos na cadeia produtiva e a eliminação da cumulatividade tributária. No entanto, a elevação das alíquotas pode pressionar margens, exigindo ajustes de preços. O setor poderá se beneficiar da simplificação fiscal e redução de custos de conformidade.",
@@ -110,4 +119,5 @@ function getSegmentImpacts(segmentId: string): string {
   };
   return impactsBySegment[segmentId] || "Este segmento terá impactos diversos com a reforma tributária, incluindo a substituição do sistema atual por um IVA dual, mudanças na forma de apuração de créditos e adaptação a novas regras de compliance fiscal. É importante analisar detalhadamente cada artigo para entender os efeitos específicos para seu negócio.";
 }
+
 export default ReformOverview;
