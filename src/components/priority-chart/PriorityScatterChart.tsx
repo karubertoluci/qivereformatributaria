@@ -58,8 +58,10 @@ const PriorityScatterChart: React.FC<PriorityScatterChartProps> = ({ data, onDot
               y={0}
               width={10}
               height={10}
-              fill={entry.isNegative ? "#ef4444" : "#4ade80"}
-              stroke={entry.isNegative ? "#dc2626" : "#22c55e"}
+              fill={entry.impactType === 'positive' ? "#4ade80" : 
+                    entry.impactType === 'negative' ? "#ef4444" : "#9ca3af"}
+              stroke={entry.impactType === 'positive' ? "#22c55e" : 
+                      entry.impactType === 'negative' ? "#dc2626" : "#6b7280"}
               strokeWidth={1}
               style={{ cursor: 'pointer' }}
             />

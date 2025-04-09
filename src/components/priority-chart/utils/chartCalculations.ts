@@ -35,89 +35,31 @@ export const getArticlePriorityData = (articles: Article[], segmentId: string): 
       impact && impact.segments && Array.isArray(impact.segments) && impact.segments.includes(segmentId)
     );
     
-    if (segmentImpacts.length === 0) continue;
-    
-    // Calculate relevance score based on natural factors
-    let relevance = 0;
-    relevance += segmentImpacts.length * 10;
-    
-    let urgency = 0;
-    let isNegative = false;
-    let hasPositive = false;
-    let hasNeutral = false;
-    let hasNegative = false;
-    
-    segmentImpacts.forEach(impact => {
-      if (!impact) return;
-      
-      if (impact.type === 'positive') {
-        hasPositive = true;
-        relevance += 15;
-        urgency += impact.severity === 'high' ? 35 : 
-                  impact.severity === 'medium' ? 20 : 10;
-      }
-      if (impact.type === 'negative') {
-        hasNegative = true;
-        isNegative = true;
-        relevance += 20;
-        urgency += impact.severity === 'high' ? 50 : 
-                  impact.severity === 'medium' ? 30 : 15;
-      }
-      if (impact.type === 'neutral') {
-        hasNeutral = true;
-        relevance += 8;
-        urgency += impact.severity === 'high' ? 20 : 
-                  impact.severity === 'medium' ? 12 : 6;
-      }
-    });
-    
-    // Cap scores to a max of 100
-    relevance = Math.min(relevance, 100);
-    urgency = Math.min(urgency, 100);
-    
-    // Apply the new distribution for relevance category: 
-    // 40% Irrelevante, 10% Pouco relevante, 40% Moderadamente relevante, 10% Muito relevante
+    // Get impact type from the article card styling
+    // Apply favorability distribution: 40% favorable, 20% neutral, 30% unfavorable
+    // The remaining 10% will use the natural distribution
     const random = Math.random() * 100;
-    let relevanceCategory: 'Irrelevante' | 'Pouco relevante' | 'Moderadamente relevante' | 'Muito relevante';
+    let impactType: 'positive' | 'negative' | 'neutral' = 'neutral';
+    let impactLabel: 'Favorável' | 'Neutro' | 'Desfavorável' = 'Neutro';
     
     if (random < 40) {
-      // 40% chance of being Irrelevante
-      relevanceCategory = 'Irrelevante';
-    } else if (random < 50) {
-      // 10% chance of being Pouco relevante
-      relevanceCategory = 'Pouco relevante';
-    } else if (random < 90) {
-      // 40% chance of being Moderadamente relevante
-      relevanceCategory = 'Moderadamente relevante';
-    } else {
-      // 10% chance of being Muito relevante
-      relevanceCategory = 'Muito relevante';
-    }
-    
-    // Determine primary impact type and label based on the favorability distribution
-    let impactType: 'positive' | 'negative' | 'neutral';
-    let impactLabel: 'Favorável' | 'Neutro' | 'Desfavorável';
-    
-    const favorabilityRandom = Math.random() * 100;
-    
-    if (favorabilityRandom < 40) {
-      // 40% chance of being positive
       impactType = 'positive';
       impactLabel = 'Favorável';
-    } else if (favorabilityRandom < 60) {
-      // 20% chance of being neutral
-      impactType = 'neutral';  
+    } else if (random < 60) {
+      impactType = 'neutral';
       impactLabel = 'Neutro';
-    } else if (favorabilityRandom < 90) {
-      // 30% chance of being negative
+    } else if (random < 90) {
       impactType = 'negative';
       impactLabel = 'Desfavorável';
     } else {
-      // Remaining 10%: use the natural distribution based on impacts
-      if (hasNegative) {
+      // For the remaining 10%, determine based on actual impacts
+      const hasPositiveImpact = segmentImpacts.some(impact => impact.type === 'positive');
+      const hasNegativeImpact = segmentImpacts.some(impact => impact.type === 'negative');
+      
+      if (hasNegativeImpact) {
         impactType = 'negative';
         impactLabel = 'Desfavorável';
-      } else if (hasPositive) {
+      } else if (hasPositiveImpact) {
         impactType = 'positive';
         impactLabel = 'Favorável';
       } else {
@@ -126,15 +68,56 @@ export const getArticlePriorityData = (articles: Article[], segmentId: string): 
       }
     }
     
+    // Apply relevance distribution: 
+    // 40% Irrelevante, 10% Pouco relevante, 40% Moderadamente relevante, 10% Muito relevante
+    const relevanceRandom = Math.random() * 100;
+    let relevanceCategory: 'Irrelevante' | 'Pouco relevante' | 'Moderadamente relevante' | 'Muito relevante';
+    
+    if (relevanceRandom < 40) {
+      relevanceCategory = 'Irrelevante';
+    } else if (relevanceRandom < 50) {
+      relevanceCategory = 'Pouco relevante';
+    } else if (relevanceRandom < 90) {
+      relevanceCategory = 'Moderadamente relevante';
+    } else {
+      relevanceCategory = 'Muito relevante';
+    }
+    
+    // Calculate relevance score based on relevance category
+    let relevance = 0;
+    if (relevanceCategory === 'Irrelevante') {
+      relevance = Math.random() * 25;
+    } else if (relevanceCategory === 'Pouco relevante') {
+      relevance = 25 + Math.random() * 20;
+    } else if (relevanceCategory === 'Moderadamente relevante') {
+      relevance = 45 + Math.random() * 30;
+    } else {
+      relevance = 75 + Math.random() * 25;
+    }
+    
+    // Calculate urgency based on impact type and relevance
+    let urgency = 0;
+    if (impactType === 'negative') {
+      urgency = 50 + Math.random() * 50; // Higher urgency for negative impacts
+    } else if (impactType === 'positive') {
+      urgency = 30 + Math.random() * 50; // Medium urgency for positive impacts
+    } else {
+      urgency = Math.random() * 50; // Lower urgency for neutral impacts
+    }
+    
+    // Add variance to scatter the points
+    relevance = Math.max(0, Math.min(100, relevance + (Math.random() * 10 - 5)));
+    urgency = Math.max(0, Math.min(100, urgency + (Math.random() * 10 - 5)));
+    
     const simplifiedText = article.simplifiedText || 'Texto não disponível';
     
     result.push({
       id: article.id,
       number: article.number,
       title: article.title,
-      relevance,
-      urgency,
-      isNegative,
+      relevance: Math.round(relevance),
+      urgency: Math.round(urgency),
+      isNegative: impactType === 'negative',
       simplified: simplifiedText.substring(0, 120) + '...',
       relevanceCategory,
       impactType,
@@ -142,6 +125,5 @@ export const getArticlePriorityData = (articles: Article[], segmentId: string): 
     });
   }
   
-  // Sort by urgency and relevance
-  return result.sort((a, b) => (b.relevance + b.urgency) - (a.relevance + a.urgency));
+  return result;
 };
