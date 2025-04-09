@@ -87,32 +87,34 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
       </div>
       
       {/* Display articles in the selected view mode */}
-      {viewMode === 'chart' ? (
-        <ArticleTopicsView 
-          filteredArticles={filteredArticles}
-          articlesByTopic={articlesByTopic}
-          expandedArticleId={expandedArticleId}
-          setExpandedArticleId={setExpandedArticleId}
-          highlights={highlights}
-          onAddHighlight={onAddHighlight}
-          onRemoveHighlight={onRemoveHighlight}
-          topics={topics}
-          segmentId={segment.id}
-          onSelectArticle={onSelectArticle}
-        />
-      ) : (
-        <ArticleTableView 
-          articles={displayedArticles}
-          expandedArticleId={expandedArticleId}
-          setExpandedArticleId={setExpandedArticleId}
-          highlights={highlights}
-          onAddHighlight={onAddHighlight}
-          onRemoveHighlight={onRemoveHighlight}
-          segment={segment}
-        />
-      )}
+      <div className="w-full">
+        {viewMode === 'chart' ? (
+          <ArticleTopicsView 
+            filteredArticles={filteredArticles}
+            articlesByTopic={articlesByTopic}
+            expandedArticleId={expandedArticleId}
+            setExpandedArticleId={setExpandedArticleId}
+            highlights={highlights}
+            onAddHighlight={onAddHighlight}
+            onRemoveHighlight={onRemoveHighlight}
+            topics={topics}
+            segmentId={segment.id}
+            onSelectArticle={onSelectArticle}
+          />
+        ) : (
+          <ArticleTableView 
+            articles={displayedArticles}
+            expandedArticleId={expandedArticleId}
+            setExpandedArticleId={setExpandedArticleId}
+            highlights={highlights}
+            onAddHighlight={onAddHighlight}
+            onRemoveHighlight={onRemoveHighlight}
+            segment={segment}
+          />
+        )}
+      </div>
     </div>
   );
-};
+}
 
 export default ArticlesContent;

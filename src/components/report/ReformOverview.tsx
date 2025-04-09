@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BusinessSegment } from '@/data/segments';
@@ -33,8 +32,8 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
       </CardHeader>
       <CardContent className="pt-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-6">
-            <div>
+          <div className="space-y-6 h-full flex flex-col">
+            <div className="flex-shrink-0">
               <h3 className="text-lg font-medium mb-2 text-left">Visão Geral da Reforma Tributária</h3>
               <p className="text-muted-foreground text-left">
                 A Reforma Tributária (PEC 45/2023) representa uma das maiores mudanças no sistema tributário 
@@ -45,11 +44,11 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
               </p>
             </div>
             
-            <div className="p-4 bg-rose-50 rounded-lg h-full flex flex-col">
+            <div className="p-4 bg-rose-50 rounded-lg flex-grow flex flex-col">
               <h4 className="font-medium text-left flex items-center gap-2 mb-3">
                 Principais mudanças:
               </h4>
-              <ul className="space-y-2 mt-2 text-sm flex-grow">
+              <ul className="space-y-2 text-sm flex-grow">
                 <li className="flex items-start gap-2 text-left">
                   <Replace className="h-4 w-4 text-rose-500 flex-shrink-0 mt-1" />
                   <span>Substituição de cinco tributos por um sistema IVA dual</span>
@@ -82,15 +81,15 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
             </div>
           </div>
           
-          <div className="space-y-6">
-            <div>
+          <div className="space-y-6 h-full flex flex-col">
+            <div className="flex-shrink-0">
               <h3 className="text-lg font-medium mb-2 text-left">Impacto no Segmento {segment.name}</h3>
               <p className="text-muted-foreground text-left">
                 {getSegmentImpacts(segment.id)}
               </p>
             </div>
             
-            <div className="p-4 border rounded-lg bg-secondary/10 h-full flex flex-col">
+            <div className="p-4 border rounded-lg bg-secondary/10 flex-grow flex flex-col">
               <h4 className="font-medium mb-3 text-left">Cronograma de Implementação</h4>
               <div className="space-y-3 flex-grow">
                 <div className="flex gap-3">
