@@ -11,9 +11,9 @@ interface ReformOverviewProps {
 const ReformOverview: React.FC<ReformOverviewProps> = ({ segment }) => {
   return (
     <Card>
-      <CardHeader className="bg-gradient-to-r from-orange-50 to-transparent">
+      <CardHeader className="bg-gradient-to-r from-rose-50 to-transparent border-b">
         <CardTitle className="flex items-center gap-2">
-          <FileText className="h-5 w-5 text-orange-500" />
+          <FileText className="h-5 w-5 text-rose-500" />
           A Reforma Tributária e o Segmento {segment.name}
         </CardTitle>
       </CardHeader>
@@ -30,8 +30,8 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({ segment }) => {
             </p>
           </div>
           
-          <div className="p-4 bg-orange-50 rounded-lg flex gap-3">
-            <Info className="h-5 w-5 text-orange-500 flex-shrink-0 mt-1" />
+          <div className="p-4 bg-rose-50 rounded-lg flex gap-3">
+            <Info className="h-5 w-5 text-rose-500 flex-shrink-0 mt-1" />
             <div>
               <h4 className="font-medium">Principais mudanças:</h4>
               <ul className="list-disc list-inside space-y-1 mt-2 text-sm">
@@ -57,7 +57,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({ segment }) => {
             <h4 className="font-medium mb-2">Cronograma de Implementação</h4>
             <div className="space-y-3">
               <div className="flex gap-3">
-                <div className="bg-primary/20 text-primary font-medium px-3 py-1 rounded-md w-24 text-center">
+                <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
                   2023-2024
                 </div>
                 <div className="flex-1">
@@ -66,7 +66,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({ segment }) => {
               </div>
               
               <div className="flex gap-3">
-                <div className="bg-primary/20 text-primary font-medium px-3 py-1 rounded-md w-24 text-center">
+                <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
                   2025
                 </div>
                 <div className="flex-1">
@@ -75,7 +75,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({ segment }) => {
               </div>
               
               <div className="flex gap-3">
-                <div className="bg-primary/20 text-primary font-medium px-3 py-1 rounded-md w-24 text-center">
+                <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
                   2026-2032
                 </div>
                 <div className="flex-1">
@@ -84,7 +84,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({ segment }) => {
               </div>
               
               <div className="flex gap-3">
-                <div className="bg-primary/20 text-primary font-medium px-3 py-1 rounded-md w-24 text-center">
+                <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
                   2033
                 </div>
                 <div className="flex-1">

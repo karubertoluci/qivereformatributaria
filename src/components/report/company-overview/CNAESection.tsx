@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Store, FileText } from 'lucide-react';
 import { CompanyData } from '@/hooks/results/types';

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FileText, Store, MapPin } from 'lucide-react';
 import { CompanyData } from '@/hooks/results/types';
