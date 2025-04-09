@@ -46,8 +46,20 @@ const ReportLoadingDialog: React.FC<ReportLoadingDialogProps> = ({
     }
   }, [open, onComplete]);
   
+  // Certifique-se de que temos um callback válido
+  const handleOpenChange = (isOpen: boolean) => {
+    console.log("Dialog openChange:", isOpen);
+    onOpenChange(isOpen);
+    
+    // Se o diálogo estiver sendo fechado manualmente, garantimos que o callback é chamado
+    if (!isOpen && open) {
+      console.log("Dialog fechado manualmente, chamando onComplete");
+      onComplete();
+    }
+  };
+  
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle>Processando informações</DialogTitle>

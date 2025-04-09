@@ -5,10 +5,12 @@ import HomePage from '@/components/home/HomePage';
 import Results from '@/components/Results';
 import Header from '@/components/Header';
 import { AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
 
 const Index = () => {
   const [selectedSegment, setSelectedSegment] = useState<BusinessSegment | null>(null);
   const [cnae, setCnae] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
   
   // Check if we have a previously selected segment in localStorage
   useEffect(() => {
@@ -23,6 +25,11 @@ const Index = () => {
       }
     }
   }, []);
+  
+  // Debug logs para acompanhar a mudança de estado
+  useEffect(() => {
+    console.log("Index: selectedSegment mudou para:", selectedSegment);
+  }, [selectedSegment]);
   
   const handleDirectSegmentSelect = (segment: BusinessSegment | null) => {
     if (segment) {
