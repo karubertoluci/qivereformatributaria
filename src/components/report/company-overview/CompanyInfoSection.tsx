@@ -1,18 +1,17 @@
-
 import React from 'react';
 import { FileText, Store, MapPin } from 'lucide-react';
 import { CompanyData } from '@/hooks/results/types';
 import { BusinessSegment } from '@/data/segments';
 import { formatCNPJ } from './utils';
-
 interface CompanyInfoSectionProps {
   companyData: CompanyData;
   segment: BusinessSegment;
 }
-
-const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({ companyData, segment }) => {
-  return (
-    <div className="space-y-4">
+const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({
+  companyData,
+  segment
+}) => {
+  return <div className="space-y-4">
       {/* Razão Social */}
       <div className="border rounded-lg p-4">
         <div className="flex items-start">
@@ -40,7 +39,7 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({ companyData, se
               <p className="text-rose-500 font-medium">CNPJ</p>
             </div>
             <div className="flex-grow text-right">
-              <p className="font-semibold text-gray-800">{formatCNPJ(companyData.cnpj) || "03.560.235/0001-26"}</p>
+              <p className="text-gray-800 font-bold text-base">{formatCNPJ(companyData.cnpj) || "03.560.235/0001-26"}</p>
             </div>
           </div>
         </div>
@@ -55,7 +54,7 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({ companyData, se
               <p className="text-rose-500 font-medium">Segmento</p>
             </div>
             <div className="flex-grow text-right">
-              <p className="font-semibold text-gray-800">{segment ? segment.name : "Comércio e Varejo"}</p>
+              <p className="text-gray-800 font-bold text-base">{segment ? segment.name : "Comércio e Varejo"}</p>
             </div>
           </div>
         </div>
@@ -68,10 +67,10 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({ companyData, se
             <FileText className="h-5 w-5 text-rose-500" />
           </div>
           <div className="ml-2 flex-grow">
-            <p className="text-rose-500 font-medium">Natureza Jurídica</p>
+            <p className="text-rose-500 font-medium text-left">Natureza Jurídica</p>
           </div>
           <div className="flex-grow text-right">
-            <p className="font-semibold text-gray-800">{companyData.naturezaJuridica || "Sociedade Empresária Limitada"}</p>
+            <p className="text-gray-800 font-bold text-base">{companyData.naturezaJuridica || "Sociedade Empresária Limitada"}</p>
           </div>
         </div>
       </div>
@@ -86,14 +85,12 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({ companyData, se
             <p className="text-rose-500 font-medium">Endereço</p>
           </div>
           <div className="w-full text-right mt-2">
-            <p className="font-medium text-gray-800 text-sm leading-snug">
+            <p className="text-gray-800 leading-snug text-base font-bold">
               {companyData.endereco || "Jardim Ivone, 17, Conj 131 Conj 132 Conj 133 Conj 134, Vila Mariana, São Paulo - SP, Cep: 04105020"}
             </p>
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default CompanyInfoSection;
