@@ -87,7 +87,7 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
           articles={displayedArticles}
           segmentId={segment.id}
           highlights={highlights}
-          onAddHighlight={(articleId, text, color) => onAddHighlight(articleId, text, color as HighlightColor)}
+          onAddHighlight={(articleId, text, color) => onAddHighlight(articleId, text, color)}
           onRemoveHighlight={onRemoveHighlight}
         />
       </div>
