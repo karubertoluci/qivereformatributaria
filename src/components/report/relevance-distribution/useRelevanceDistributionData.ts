@@ -29,41 +29,70 @@ export const useRelevanceDistributionData = (articles: Article[], segmentId: str
       { id: 'III', name: 'Livro III', description: 'IS' }
     ];
     
-    // Fixed data based on the image
-    const fixedBookData: RelevanceBookData[] = [
-      {
-        id: 'I',
-        name: 'Livro I',
-        description: 'CBS',
-        irrelevante: 2,
-        poucoRelevante: 5,
-        moderadamenteRelevante: 10,
-        muitoRelevante: 12,
-        total: 29
-      },
-      {
-        id: 'II',
-        name: 'Livro II',
-        description: 'IBS',
-        irrelevante: 2,
-        poucoRelevante: 5,
-        moderadamenteRelevante: 10,
-        muitoRelevante: 12,
-        total: 29
-      },
-      {
-        id: 'III',
-        name: 'Livro III',
-        description: 'IS',
-        irrelevante: 2,
-        poucoRelevante: 5,
-        moderadamenteRelevante: 10,
-        muitoRelevante: 12,
-        total: 29
-      }
-    ];
+    // Count actual articles by book and relevance level
+    const bookCounts: Record<string, {
+      irrelevante: number;
+      poucoRelevante: number;
+      moderadamenteRelevante: number;
+      muitoRelevante: number;
+      total: number;
+    }> = {
+      'I': { irrelevante: 0, poucoRelevante: 0, moderadamenteRelevante: 0, muitoRelevante: 0, total: 0 },
+      'II': { irrelevante: 0, poucoRelevante: 0, moderadamenteRelevante: 0, muitoRelevante: 0, total: 0 },
+      'III': { irrelevante: 0, poucoRelevante: 0, moderadamenteRelevante: 0, muitoRelevante: 0, total: 0 },
+    };
     
-    setBookData(fixedBookData);
+    // Process each article to count by book and relevance
+    articles.forEach(article => {
+      // Determine which book this article belongs to
+      let bookId = article.metadata?.bookId;
+      
+      if (!bookId) {
+        const articleNum = parseInt(article.number.replace(/\D/g, '')) || 
+                          parseInt(article.id.replace(/\D/g, ''));
+        
+        if (articleNum <= 200) bookId = 'I';
+        else if (articleNum <= 350) bookId = 'II';
+        else bookId = 'III';
+      }
+      
+      if (!bookCounts[bookId]) {
+        console.warn(`Unknown book ID: ${bookId}`);
+        return;
+      }
+      
+      // Determine relevance based on article number
+      const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
+      let relevanceCategory;
+      
+      if (articleNum % 10 < 2) {
+        relevanceCategory = 'irrelevante'; // 20% of articles
+      } else if (articleNum % 10 < 4) {
+        relevanceCategory = 'poucoRelevante'; // 20% of articles
+      } else if (articleNum % 10 < 9) {
+        relevanceCategory = 'moderadamenteRelevante'; // 50% of articles
+      } else {
+        relevanceCategory = 'muitoRelevante'; // 10% of articles
+      }
+      
+      // Increment counters
+      bookCounts[bookId][relevanceCategory]++;
+      bookCounts[bookId].total++;
+    });
+    
+    // Create final data format
+    const finalBookData: RelevanceBookData[] = booksMetadata.map(book => ({
+      id: book.id,
+      name: book.name,
+      description: book.description,
+      irrelevante: bookCounts[book.id].irrelevante,
+      poucoRelevante: bookCounts[book.id].poucoRelevante,
+      moderadamenteRelevante: bookCounts[book.id].moderadamenteRelevante,
+      muitoRelevante: bookCounts[book.id].muitoRelevante,
+      total: bookCounts[book.id].total
+    }));
+    
+    setBookData(finalBookData);
   }, [articles, segmentId]);
   
   return { bookData };

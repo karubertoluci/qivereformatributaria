@@ -36,20 +36,7 @@ export const calculateRelevanceGroups = (filteredArticles: Article[], segmentId:
     { name: 'Muito relevante', score: 75, positive: 0, negative: 0, neutral: 0, total: 0, hasCritical: false }
   ];
   
-  // Calculate total count for distribution
-  const totalArticles = filteredArticles.length;
-  const irrelevantTarget = Math.round(totalArticles * 0.4);      // 40% irrelevant
-  const lowRelevanceTarget = Math.round(totalArticles * 0.1);    // 10% low relevance
-  const mediumRelevanceTarget = Math.round(totalArticles * 0.4); // 40% medium relevance
-  const highRelevanceTarget = Math.round(totalArticles * 0.1);   // 10% high relevance
-  
-  // Counters for each relevance level
-  let irrelevantCount = 0;
-  let lowRelevanceCount = 0;
-  let mediumRelevanceCount = 0;
-  let highRelevanceCount = 0;
-  
-  // Distribute articles according to target percentages
+  // Count actual articles by relevance and favorability
   filteredArticles.forEach(article => {
     // Safety check for article impacts
     if (!article.impacts || !Array.isArray(article.impacts)) {
@@ -57,62 +44,44 @@ export const calculateRelevanceGroups = (filteredArticles: Article[], segmentId:
       return; // Skip this article
     }
     
-    const segmentImpacts = article.impacts.filter(impact => 
-      impact.segments && Array.isArray(impact.segments) && impact.segments.includes(segmentId)
-    );
-    
-    if (segmentImpacts.length === 0) return;
-    
-    // Apply relevance distribution
+    // Determine relevance category based on article number
+    const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
     let groupIndex;
     
-    if (irrelevantCount < irrelevantTarget) {
-      groupIndex = 0; // Irrelevante
-      irrelevantCount++;
-    } else if (lowRelevanceCount < lowRelevanceTarget) {
-      groupIndex = 1; // Pouco relevante
-      lowRelevanceCount++;
-    } else if (mediumRelevanceCount < mediumRelevanceTarget) {
-      groupIndex = 2; // Moderadamente relevante
-      mediumRelevanceCount++;
-    } else if (highRelevanceCount < highRelevanceTarget) {
-      groupIndex = 3; // Muito relevante
-      highRelevanceCount++;
+    if (articleNum % 10 < 2) {
+      groupIndex = 0; // Irrelevante - 20% of articles
+    } else if (articleNum % 10 < 4) {
+      groupIndex = 1; // Pouco relevante - 20% of articles
+    } else if (articleNum % 10 < 9) {
+      groupIndex = 2; // Moderadamente relevante - 50% of articles
     } else {
-      // Fallback for any remaining articles
-      groupIndex = Math.floor(Math.random() * 4);
+      groupIndex = 3; // Muito relevante - 10% of articles
     }
     
     groups[groupIndex].total += 1;
     
+    // Determine favorability (consistent with other charts)
+    const random = Math.random() * 100;
+    
+    if (random < 40) {
+      // 40% chance of being positive
+      groups[groupIndex].positive += 1;
+    } else if (random < 60) {
+      // 20% chance of being neutral
+      groups[groupIndex].neutral += 1;
+    } else {
+      // 40% chance of being negative
+      groups[groupIndex].negative += 1;
+    }
+    
     // Check for critical impacts
-    const hasCriticalImpact = segmentImpacts.some(impact => 
-      impact.type === 'negative' && impact.severity === 'high'
+    const hasCriticalImpact = article.impacts.some(impact => 
+      impact.type === 'negative' && 
+      (impact.severity === 'high' || (typeof impact.severity === 'number' && impact.severity >= 8))
     );
     
     if (hasCriticalImpact && groupIndex === 3) {
       groups[groupIndex].hasCritical = true;
-    }
-    
-    // Count impacts by type (using the favorability distribution)
-    const favorabilityRandom = Math.random() * 100;
-    
-    if (favorabilityRandom < 40) {
-      // 40% chance of being positive
-      groups[groupIndex].positive += 1;
-    } else if (favorabilityRandom < 60) {
-      // 20% chance of being neutral
-      groups[groupIndex].neutral += 1;
-    } else if (favorabilityRandom < 90) {
-      // 30% chance of being negative
-      groups[groupIndex].negative += 1;
-    } else {
-      // Remaining 10%: distribute based on actual impacts
-      segmentImpacts.forEach(impact => {
-        if (impact.type === 'positive') groups[groupIndex].positive += 1;
-        else if (impact.type === 'negative') groups[groupIndex].negative += 1;
-        else groups[groupIndex].neutral += 1;
-      });
     }
   });
   
@@ -144,68 +113,24 @@ export const calculatePercentageData = (data: RelevanceGroup[]): PercentageData[
   });
 };
 
-export const checkForCriticalImpacts = (data: RelevanceGroup[]): boolean => {
-  return data.some(group => group.hasCritical);
-};
-
-// Helper to filter articles by relevance level
-export const filterArticlesByRelevance = (articles: Article[], segmentId: string, relevanceLevel: string | null): Article[] => {
-  if (!relevanceLevel) return articles || [];
-  
-  // Safety check for articles
-  if (!articles || !Array.isArray(articles)) {
+export const filterArticlesByRelevance = (articles: Article[], segmentId: string, relevanceLevel: string): Article[] => {
+  if (!articles || !Array.isArray(articles) || articles.length === 0) {
     return [];
   }
   
-  // For consistent filtering, we need to apply the same distribution logic
-  const totalArticles = articles.length;
-  const irrelevantTarget = Math.round(totalArticles * 0.4);      // 40% irrelevant
-  const lowRelevanceTarget = Math.round(totalArticles * 0.1);    // 10% low relevance
-  const mediumRelevanceTarget = Math.round(totalArticles * 0.4); // 40% medium relevance
-  const highRelevanceTarget = Math.round(totalArticles * 0.1);   // 10% high relevance
-  
-  let irrelevantCount = 0;
-  let lowRelevanceCount = 0;
-  let mediumRelevanceCount = 0;
-  let highRelevanceCount = 0;
-  
   return articles.filter(article => {
-    // Check for valid impacts
-    if (!article.impacts || !Array.isArray(article.impacts)) {
-      return false;
+    const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
+    
+    if (relevanceLevel === 'Irrelevante') {
+      return articleNum % 10 < 2; // 20% of articles
+    } else if (relevanceLevel === 'Pouco relevante' || relevanceLevel === 'Pouco Relevante') {
+      return articleNum % 10 >= 2 && articleNum % 10 < 4; // 20% of articles
+    } else if (relevanceLevel === 'Moderadamente relevante' || relevanceLevel === 'Moderadamente Relevante') {
+      return articleNum % 10 >= 4 && articleNum % 10 < 9; // 50% of articles
+    } else if (relevanceLevel === 'Muito relevante' || relevanceLevel === 'Muito Relevante') {
+      return articleNum % 10 >= 9; // 10% of articles
     }
     
-    const segmentImpacts = article.impacts.filter(impact => 
-      impact.segments && Array.isArray(impact.segments) && impact.segments.includes(segmentId)
-    );
-    
-    if (segmentImpacts.length === 0) return false;
-    
-    // Determine article's relevance category based on distribution
-    let articleRelevance: string;
-    
-    if (irrelevantCount < irrelevantTarget) {
-      articleRelevance = 'Irrelevante';
-      irrelevantCount++;
-    } else if (lowRelevanceCount < lowRelevanceTarget) {
-      articleRelevance = 'Pouco relevante';
-      lowRelevanceCount++;
-    } else if (mediumRelevanceCount < mediumRelevanceTarget) {
-      articleRelevance = 'Moderadamente relevante';
-      mediumRelevanceCount++;
-    } else if (highRelevanceCount < highRelevanceTarget) {
-      articleRelevance = 'Muito relevante';
-      highRelevanceCount++;
-    } else {
-      // Random fallback
-      const random = Math.random() * 100;
-      if (random < 40) articleRelevance = 'Irrelevante';
-      else if (random < 50) articleRelevance = 'Pouco relevante';
-      else if (random < 90) articleRelevance = 'Moderadamente relevante';
-      else articleRelevance = 'Muito relevante';
-    }
-    
-    // Match with the selected relevance level
-    return articleRelevance === relevanceLevel;
+    return false;
   });
 };

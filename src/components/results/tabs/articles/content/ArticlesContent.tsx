@@ -67,29 +67,38 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
   // Filter by book from chart selection if different than sidebar filter
   if (filteredBookId && (!selectedBookFilter || filteredBookId !== selectedBookFilter)) {
     finalDisplayedArticles = finalDisplayedArticles.filter(article => {
-      const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
+      // Get book ID from article metadata or calculate from article number
+      let articleBookId = article.metadata?.bookId;
       
-      if (filteredBookId === 'I') return articleNum <= 200;
-      if (filteredBookId === 'II') return articleNum > 200 && articleNum <= 350;
-      return articleNum > 350;
+      if (!articleBookId) {
+        const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
+        
+        if (articleNum <= 200) articleBookId = 'I';
+        else if (articleNum <= 350) articleBookId = 'II';
+        else articleBookId = 'III';
+      }
+      
+      return articleBookId === filteredBookId;
     });
   }
   
   // Filter by relevance from chart selection
   if (filteredRelevance) {
-    // Implementation based on the article distribution
-    const sortedArticles = [...finalDisplayedArticles].sort((a, b) => a.id.localeCompare(b.id));
-    const total = sortedArticles.length;
-    
-    if (filteredRelevance === 'Irrelevante') {
-      finalDisplayedArticles = sortedArticles.slice(0, Math.ceil(total * 0.2)); // 20%
-    } else if (filteredRelevance === 'Pouco relevante') {
-      finalDisplayedArticles = sortedArticles.slice(Math.ceil(total * 0.2), Math.ceil(total * 0.4)); // 20%
-    } else if (filteredRelevance === 'Moderadamente relevante') {
-      finalDisplayedArticles = sortedArticles.slice(Math.ceil(total * 0.4), Math.ceil(total * 0.9)); // 50%
-    } else if (filteredRelevance === 'Muito relevante') {
-      finalDisplayedArticles = sortedArticles.slice(Math.ceil(total * 0.9)); // 10%
-    }
+    finalDisplayedArticles = finalDisplayedArticles.filter(article => {
+      const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
+      
+      if (filteredRelevance === 'Irrelevante') {
+        return articleNum % 10 < 2; // 20% of articles
+      } else if (filteredRelevance === 'Pouco relevante' || filteredRelevance === 'Pouco Relevante') {
+        return articleNum % 10 >= 2 && articleNum % 10 < 4; // 20% of articles
+      } else if (filteredRelevance === 'Moderadamente relevante' || filteredRelevance === 'Moderadamente Relevante') {
+        return articleNum % 10 >= 4 && articleNum % 10 < 9; // 50% of articles
+      } else if (filteredRelevance === 'Muito relevante' || filteredRelevance === 'Muito Relevante') {
+        return articleNum % 10 >= 9; // 10% of articles
+      }
+      
+      return false;
+    });
   }
   
   // Verificar se há artigos críticos
