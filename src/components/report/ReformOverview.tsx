@@ -10,7 +10,10 @@ import {
   Percent, 
   HandCoins,
   ScrollText,
-  Clock
+  Clock,
+  Calendar,
+  Check,
+  ArrowDown
 } from 'lucide-react';
 
 interface ReformOverviewProps {
@@ -91,7 +94,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
               <h4 className="font-medium mb-3 text-left">Cronograma de Implementação</h4>
               <div className="space-y-3">
                 <div className="flex gap-3">
-                  <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
+                  <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center flex-shrink-0">
                     2023-2024
                   </div>
                   <div className="flex-1">
@@ -100,7 +103,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
                 </div>
                 
                 <div className="flex gap-3">
-                  <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
+                  <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center flex-shrink-0">
                     2025
                   </div>
                   <div className="flex-1">
@@ -109,7 +112,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
                 </div>
                 
                 <div className="flex gap-3">
-                  <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
+                  <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center flex-shrink-0">
                     2026-2032
                   </div>
                   <div className="flex-1">
@@ -118,7 +121,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
                 </div>
                 
                 <div className="flex gap-3">
-                  <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
+                  <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center flex-shrink-0">
                     2033
                   </div>
                   <div className="flex-1">
