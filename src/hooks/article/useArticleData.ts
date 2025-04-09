@@ -45,24 +45,55 @@ export const useArticleData = (segment: BusinessSegment) => {
           
           // Formatar todos os artigos da tabela livros_reforma
           const formattedArticles = livrosData.map((item: any) => {
-            // Create a random distribution for books based on article ID
-            const articleId = parseInt(item.id);
+            // Determinar o livro com base no campo livro do banco de dados
             let bookId;
             
-            // Store the original livro value for display purposes
+            // Armazenar o valor original do livro para exibição
             const originalLivro = item.livro;
             
-            // Create our own distribution where:
-            // 30% of articles in Book I
-            // 40% of articles in Book II
-            // 30% of articles in Book III
-            const randomVal = articleId % 10;
-            if (randomVal < 3) {
-              bookId = 'I';
-            } else if (randomVal < 7) {
-              bookId = 'II';
+            // Extrair o número romano do livro
+            if (originalLivro) {
+              const match = originalLivro.match(/LIVRO\s+([IVX]+)/i);
+              if (match && match[1]) {
+                bookId = match[1]; // Apenas o numeral romano
+              } else {
+                // Se não conseguir extrair, usar ID do artigo para distribuição
+                const articleId = parseInt(item.id);
+                const randomVal = articleId % 10;
+                if (randomVal < 3) {
+                  bookId = 'I';
+                } else if (randomVal < 7) {
+                  bookId = 'II';
+                } else {
+                  bookId = 'III';
+                }
+              }
             } else {
-              bookId = 'III';
+              // Criar distribuição aleatória com base no ID do artigo se não houver livro
+              const articleId = parseInt(item.id);
+              const randomVal = articleId % 10;
+              if (randomVal < 3) {
+                bookId = 'I';
+              } else if (randomVal < 7) {
+                bookId = 'II';
+              } else {
+                bookId = 'III';
+              }
+            }
+            
+            // Determinação da relevância baseada no ID do artigo
+            const articleId = parseInt(item.id);
+            let relevancia;
+            const randomRelevance = articleId % 10;
+            
+            if (randomRelevance < 2) {
+              relevancia = 'irrelevante';
+            } else if (randomRelevance < 4) {
+              relevancia = 'poucoRelevante';
+            } else if (randomRelevance < 8) {
+              relevancia = 'moderadamenteRelevante';
+            } else {
+              relevancia = 'muitoRelevante';
             }
             
             return {
@@ -86,7 +117,8 @@ export const useArticleData = (segment: BusinessSegment) => {
                 titulo: item.titulo,
                 capitulo: item.capitulo,
                 secao: item.secao,
-                subsecao: item.subsecao
+                subsecao: item.subsecao,
+                relevancia: relevancia // Adicionar relevância no metadata
               }
             };
           });
