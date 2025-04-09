@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useFormDialogContext } from '../FormDialogContext';
 import SearchFormButton from './SearchFormButton';
 import SearchFormDialogs from './SearchFormDialogs';
-import { FormValues } from './FormDialog';
+import { FormValues } from './types/companyData';
 import { useFormSubmit } from './hooks/useFormSubmit';
 
 const SearchForm: React.FC = () => {

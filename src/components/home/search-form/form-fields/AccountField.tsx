@@ -2,7 +2,7 @@
 import React from 'react';
 import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
 import { UseFormReturn } from 'react-hook-form';
-import { FormValues } from '../FormDialog';
+import { FormValues } from '../types/companyData';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { CheckCircle } from 'lucide-react';

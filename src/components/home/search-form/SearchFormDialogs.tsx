@@ -2,7 +2,7 @@
 import React from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import FormDialog from './FormDialog';
-import { FormValues } from './FormDialog';
+import { FormValues } from './types/companyData';
 import SearchFormLoading from './SearchFormLoading';
 import { useFormDialogContext } from '../FormDialogContext';
 

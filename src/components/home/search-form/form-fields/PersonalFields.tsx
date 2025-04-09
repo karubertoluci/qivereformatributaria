@@ -4,7 +4,7 @@ import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/f
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { UseFormReturn } from 'react-hook-form';
-import { FormValues } from '../FormDialog';
+import { FormValues } from '../types/companyData';
 import { User, BadgeCheck } from 'lucide-react';
 
 interface PersonalFieldsProps {

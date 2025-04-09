@@ -3,7 +3,8 @@ import React, { useEffect } from 'react';
 import { Form } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { formSchema, FormValues } from './FormDialog';
+import { formSchema } from './schemas/formSchema';
+import { FormValues } from './types/companyData';
 
 // Import the field components
 import CNPJField from './form-fields/CNPJField';
