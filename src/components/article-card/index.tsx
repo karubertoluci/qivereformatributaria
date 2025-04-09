@@ -2,7 +2,7 @@
 import React from 'react';
 import { Article } from '@/data/articles';
 import { HighlightType } from '@/components/results/types';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { FileText, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -39,10 +39,10 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   let impactLabel = '';
   
   if (impactType === 'positive') {
-    borderClass = 'border-l-4 border-l-green-500'; // Favorável
+    borderClass = 'border-l-4 border-l-green-500'; 
     impactLabel = 'Favorável';
   } else if (impactType === 'negative') {
-    borderClass = 'border-l-4 border-l-red-500'; // Desfavorável
+    borderClass = 'border-l-4 border-l-red-500'; 
     impactLabel = 'Desfavorável';
   } else {
     impactLabel = 'Neutro';
@@ -89,54 +89,54 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   
   return (
     <Card className={cn("shadow-sm hover:shadow transition-shadow duration-200 mb-4", borderClass)}>
-      <CardHeader className="pb-2 pt-3 px-4">
-        <div className="flex justify-between items-start">
-          {/* Simplified article number */}
-          <div className="text-base font-medium flex items-center gap-1.5">
-            <FileText className="h-4 w-4 text-muted-foreground" />
+      <CardContent className="p-4">
+        {/* 1. Topo do card: Article number + Book */}
+        <div className="flex justify-between items-center text-xs text-gray-600 font-medium mb-2">
+          <span className="flex items-center gap-1">
+            <FileText className="h-3 w-3" />
             Art. {article.number || 'N/A'}
-          </div>
-          
-          {/* Badge group (favorability and relevance) */}
-          <div className="flex gap-1.5">
-            <Badge 
-              variant={impactType === 'positive' ? 'default' : impactType === 'negative' ? 'destructive' : 'secondary'} 
-              className={impactType === 'positive' ? 'bg-green-500 text-xs py-0.5' : 
-                        impactType === 'negative' ? 'bg-red-500 text-xs py-0.5' : 
-                        'text-xs py-0.5'}
-            >
-              {impactLabel}
-            </Badge>
-            
-            <Badge variant="outline" className={`text-xs py-0.5 ${relevanceColor}`}>
-              {relevanceText}
-            </Badge>
-          </div>
+          </span>
+          <span className="flex items-center gap-1">
+            <BookOpen className="h-3 w-3" />
+            {getSimplifiedBook()}
+          </span>
         </div>
         
-        {/* Book and Title (subtitle section) */}
-        <div className="mt-1.5 flex flex-col text-xs text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <BookOpen className="h-3.5 w-3.5 flex-shrink-0" />
-            <span>{getSimplifiedBook()}</span>
-          </div>
+        {/* 2. Bloco principal: Article text */}
+        <p className="line-clamp-3 text-sm text-gray-800 mb-2">
+          {article.simplifiedText || 'Sem texto disponível'}
+        </p>
+        
+        {/* 3. Badges: Impact and relevance */}
+        <div className="flex gap-2 text-xs mb-2">
+          <Badge 
+            variant={impactType === 'positive' ? 'default' : impactType === 'negative' ? 'destructive' : 'secondary'} 
+            className={impactType === 'positive' ? 'bg-green-500 text-xs py-0.5' : 
+                      impactType === 'negative' ? 'bg-red-500 text-xs py-0.5' : 
+                      'text-xs py-0.5'}
+          >
+            {impactLabel}
+          </Badge>
           
-          {article.metadata?.titulo && (
-            <p className="line-clamp-2 mt-0.5 text-left">
-              {article.metadata.titulo}
-            </p>
-          )}
+          <Badge variant="outline" className={`text-xs py-0.5 ${relevanceColor}`}>
+            {relevanceText}
+          </Badge>
         </div>
-      </CardHeader>
-      
-      <CardContent className="pt-0 px-4 pb-4">
-        <ArticleCardSummary 
-          article={article} 
-          segmentId={segmentId}
-          highlights={articleHighlights}
-          onAddHighlight={handleAddHighlight}
-          onRemoveHighlight={onRemoveHighlight}
-        />
+        
+        {/* 4. Título: Article title */}
+        {article.metadata?.titulo && (
+          <p className="text-xs text-gray-500 line-clamp-2 mb-3">
+            {article.metadata.titulo}
+          </p>
+        )}
+        
+        {/* 5. CTA: View article details */}
+        <button 
+          onClick={() => {}}
+          className="w-full text-sm text-blue-600 hover:underline mt-auto text-left"
+        >
+          Ver detalhes do artigo
+        </button>
       </CardContent>
     </Card>
   );
