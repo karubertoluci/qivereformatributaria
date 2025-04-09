@@ -39,7 +39,7 @@ export const safelyStoreInCache = (key: string, data: any): boolean => {
     localStorage.setItem(key, jsonData);
     return true;
   } catch (error) {
-    console.warn(`Não foi possível armazenar "${key}" no localStorage: ${error}`);
+    console.warn(`Não foi possível armazenar "${key}" no localStorage:`, error);
     return false;
   }
 };
