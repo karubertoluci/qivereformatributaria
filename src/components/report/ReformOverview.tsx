@@ -11,7 +11,7 @@ interface ReformOverviewProps {
 const ReformOverview: React.FC<ReformOverviewProps> = ({ segment }) => {
   return (
     <Card>
-      <CardHeader className="bg-gradient-to-r from-rose-50 to-gray-100 border-b">
+      <CardHeader className="bg-gradient-to-r from-rose-50 to-white border-b">
         <CardTitle className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-rose-500" />
           A Reforma Tributária e o Segmento {segment.name}

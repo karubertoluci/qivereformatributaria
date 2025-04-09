@@ -182,7 +182,7 @@ hr {
 
 /* Adicionar classes para gradientes consistentes */
 .header-gradient {
-  @apply bg-gradient-to-r from-rose-50 to-gray-100;
+  @apply bg-gradient-to-r from-rose-50 to-white;
 }
 
 .card-gradient {
