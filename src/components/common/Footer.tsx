@@ -34,7 +34,7 @@ const Footer = () => {
           
           {/* Coluna 2: Links Úteis */}
           <div className="flex flex-col">
-            <h3 className="text-white font-bold mb-4">Links Úteis</h3>
+            <h3 className="text-white font-bold mb-4 text-center">Links Úteis</h3>
             <ul className="space-y-2">
               <li>
                 <Link to="/" className="text-gray-400 hover:text-[#FF4719] text-sm transition-colors">
@@ -61,7 +61,7 @@ const Footer = () => {
           
           {/* Coluna 3: IA e Análises */}
           <div className="flex flex-col">
-            <h3 className="text-white font-bold mb-4">Inteligência Artificial</h3>
+            <h3 className="text-white font-bold mb-4 text-left">Inteligência Artificial</h3>
             <div className="space-y-4">
               <div className="flex items-start gap-2">
                 <Info className="h-4 w-4 text-[#FF4719] mt-0.5 flex-shrink-0" />
@@ -86,7 +86,7 @@ const Footer = () => {
           
           {/* Coluna 4: Fale com Especialista */}
           <div className="flex flex-col">
-            <h3 className="text-white font-bold mb-4">Suporte</h3>
+            <h3 className="text-white font-bold mb-4 text-left">Suporte</h3>
             <div className="mb-4">
               <button onClick={openFormDialog} className="bg-[#FF4719] hover:bg-[#e5340a] text-white px-6 py-3 rounded text-sm inline-block transition-colors w-full sm:w-auto">
                 Fale com Especialista
