@@ -12,6 +12,13 @@ export interface HighlightType {
   color: HighlightColor;
 }
 
+export interface CommentType {
+  id: string;
+  text: string;
+  timestamp: string;
+  articleId: string;
+}
+
 export interface Topic {
   id: string;
   name: string;

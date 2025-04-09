@@ -42,7 +42,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   // Filter highlights for this article
   const articleHighlights = highlights.filter(h => h.articleId === article.id);
 
-  // Identificar o tipo principal de impacto para o card
+  // Identify the main impact type for the card
   const segmentImpacts = article.impacts.filter(impact => 
     impact.segments.includes(segmentId)
   );

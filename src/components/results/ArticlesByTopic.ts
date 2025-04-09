@@ -7,40 +7,45 @@ export const topics: Topic[] = [
   { 
     id: "cbs", 
     name: "CBS - Contribuição sobre Bens e Serviços", 
-    description: "Nova contribuição federal que substituirá PIS e COFINS" 
+    description: "Nova contribuição federal que substituirá PIS e COFINS",
+    count: 0
   },
   { 
     id: "ibs", 
     name: "IBS - Imposto sobre Bens e Serviços", 
-    description: "Novo imposto que substituirá ICMS e ISS" 
+    description: "Novo imposto que substituirá ICMS e ISS",
+    count: 0
   },
   { 
     id: "creditos", 
     name: "Créditos Tributários", 
-    description: "Sistema de aproveitamento de créditos tributários" 
+    description: "Sistema de aproveitamento de créditos tributários",
+    count: 0
   },
   { 
     id: "aliquotas", 
     name: "Alíquotas e Regimes Especiais", 
-    description: "Alíquotas diferenciadas e regimes especiais de tributação" 
+    description: "Alíquotas diferenciadas e regimes especiais de tributação",
+    count: 0
   },
   { 
     id: "transicao", 
     name: "Regras de Transição", 
-    description: "Períodos e regras para transição ao novo sistema tributário" 
+    description: "Períodos e regras para transição ao novo sistema tributário",
+    count: 0
   }
 ];
 
-// Função para classificar artigos por tópico
+// Function to classify articles by topic and update topic counts
 export const getArticlesByTopic = (articleList: Article[]): Record<string, Article[]> => {
   const result: Record<string, Article[]> = {};
   
-  // Inicializa com tópicos vazios
+  // Initialize with empty topics
   topics.forEach(topic => {
     result[topic.id] = [];
   });
   
-  // Classificação simplificada por palavras-chave no título ou texto
+  // Simple classification by keywords in title or text
   articleList.forEach(article => {
     const text = (article.title + article.simplifiedText).toLowerCase();
     
@@ -55,9 +60,14 @@ export const getArticlesByTopic = (articleList: Article[]): Record<string, Artic
     } else if (text.includes("transição") || text.includes("vigência")) {
       result.transicao.push(article);
     } else {
-      // Coloca no tópico CBS por padrão se não encontrar correspondência
+      // Default to CBS topic if no match found
       result.cbs.push(article);
     }
+  });
+  
+  // Update topic counts
+  topics.forEach(topic => {
+    topic.count = result[topic.id].length;
   });
   
   return result;

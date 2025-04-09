@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { BusinessSegment } from '@/data/segments';
 import { Article, articles } from '@/data/articles';
 import { getArticlesByTopic } from '@/components/results/ArticlesByTopic';
 import { topics } from '@/components/results/ArticlesByTopic';
-import { CommentType, HighlightType, FilterType, ViewMode } from '@/components/results/types';
+import { HighlightType, FilterType, ViewMode } from '@/components/results/types';
 import { useArticleData } from './article';
 import { useArticleFiltering } from './article';
 import { useTopics } from './article';
