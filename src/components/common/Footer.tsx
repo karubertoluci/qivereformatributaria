@@ -27,7 +27,7 @@ const Footer = () => {
             <div className="mb-4">
               <img src="/lovable-uploads/2ac8d537-e09f-4306-8031-760de63c5583.png" alt="Qive Logo" className="h-12" />
             </div>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-400 text-left">
               &copy; {new Date().getFullYear()} Qive Reforma Tributária - Todos os direitos reservados
             </p>
           </div>
