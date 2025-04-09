@@ -45,21 +45,21 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
           </div>
           
           <div className="mt-4">
-            <h3 className="text-lg font-medium mb-2">Impacto no Segmento {segment.name}</h3>
-            <p className="text-muted-foreground">
+            <h3 className="text-lg font-medium mb-2 text-left">Impacto no Segmento {segment.name}</h3>
+            <p className="text-muted-foreground text-left">
               {getSegmentImpacts(segment.id)}
             </p>
           </div>
           
           <div className="p-4 border rounded-lg bg-secondary/10 mt-4">
-            <h4 className="font-medium mb-2">Cronograma de Implementação</h4>
+            <h4 className="font-medium mb-2 text-left">Cronograma de Implementação</h4>
             <div className="space-y-3">
               <div className="flex gap-3">
                 <div className="bg-rose-500/20 text-rose-700 font-medium px-3 py-1 rounded-md w-24 text-center">
                   2023-2024
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm">Aprovação legislativa e regulamentação inicial</p>
+                  <p className="text-sm text-left">Aprovação legislativa e regulamentação inicial</p>
                 </div>
               </div>
               
@@ -68,7 +68,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
                   2025
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm">Teste do sistema (opcional)</p>
+                  <p className="text-sm text-left">Teste do sistema (opcional)</p>
                 </div>
               </div>
               
@@ -77,7 +77,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
                   2026-2032
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm">Início do período de transição, com alíquotas sendo gradualmente ajustadas</p>
+                  <p className="text-sm text-left">Início do período de transição, com alíquotas sendo gradualmente ajustadas</p>
                 </div>
               </div>
               
@@ -86,7 +86,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
                   2033
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm">Implementação completa do novo sistema</p>
+                  <p className="text-sm text-left">Implementação completa do novo sistema</p>
                 </div>
               </div>
             </div>
