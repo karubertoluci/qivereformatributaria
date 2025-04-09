@@ -20,50 +20,51 @@ const CNPJField: React.FC<CNPJFieldProps> = ({ form }) => {
   const [isValid, setIsValid] = useState<boolean | null>(null);
   const [companyData, setCompanyData] = useState<any>(null);
   
-  // Check for company data in localStorage when component mounts
+  // Verificar dados da empresa no localStorage quando o componente monta
   useEffect(() => {
     try {
       const storedData = localStorage.getItem('companyData');
       if (storedData) {
         const parsedData = JSON.parse(storedData);
+        console.log('Dados da empresa carregados do localStorage:', parsedData);
         setCompanyData(parsedData);
       }
     } catch (error) {
-      console.error('Error loading company data:', error);
+      console.error('Erro ao carregar dados da empresa:', error);
     }
   }, []);
 
-  // Handle CNPJ validation on blur
+  // Lidar com a validação do CNPJ ao perder o foco
   const handleCNPJBlur = async (event: React.FocusEvent<HTMLInputElement>) => {
     const cnpj = event.target.value;
-    const result = await validateCNPJ(cnpj, form, setIsValid, setIsValidating);
+    await validateCNPJ(cnpj, form, setIsValid, setIsValidating);
     
-    // After validation, refresh the company data from localStorage
+    // Após a validação, atualizar os dados da empresa do localStorage
     try {
       const storedData = localStorage.getItem('companyData');
       if (storedData) {
         setCompanyData(JSON.parse(storedData));
       }
     } catch (error) {
-      console.error('Error loading company data after validation:', error);
+      console.error('Erro ao carregar dados da empresa após validação:', error);
     }
   };
 
   const handleCNPJChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Format CNPJ as user types
+    // Formatar CNPJ enquanto o usuário digita
     const formatted = formatCNPJInput(event.target.value);
     form.setValue('cnpj', formatted);
   };
 
-  // Get company name, segment, and CNPJ (if available)
+  // Obter nome da empresa, segmento e CNPJ (se disponível)
   const companyName = companyData?.nomeFantasia || companyData?.nome_fantasia || companyData?.razao_social || '';
   const segment = companyData?.cnae_fiscal_descricao || '';
   const cnpj = companyData?.cnpj || form.getValues('cnpj') || '';
 
   return (
     <>
-      {/* Company Card - shows when loading or when company data is available */}
-      {(isValidating || (companyData && companyName)) && (
+      {/* Cartão da empresa - mostra durante carregamento ou quando dados estão disponíveis */}
+      {(isValidating || companyData) && (
         <CompanyCard 
           companyName={companyName} 
           segment={segment} 
