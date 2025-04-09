@@ -1,8 +1,9 @@
+
 export interface ArticleImpact {
   type: 'positive' | 'negative' | 'neutral';
   description: string;
   segments: string[];
-  severity?: 'low' | 'medium' | 'high' | 'critical';
+  severity?: 'low' | 'medium' | 'high' | 'critical' | number;
 }
 
 export interface ArticleMetadata {
@@ -16,6 +17,9 @@ export interface ArticleMetadata {
   impactType?: 'positive' | 'negative' | 'neutral';
   livro?: string;
   titulo?: string;
+  // Add the missing properties
+  relevancia?: string;
+  impacto?: string;
 }
 
 export interface Article {
