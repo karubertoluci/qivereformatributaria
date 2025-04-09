@@ -36,7 +36,7 @@ const CNAESection: React.FC<CNAESectionProps> = ({
       </div>
       
       {/* CNAEs Secundários */}
-      <div className="border rounded-lg p-4 h-full">
+      <div className="border rounded-lg p-4 h-full min-h-[180px]">
         <div className="flex flex-col h-full">
           <div className="flex items-center mb-2">
             <FileText className="h-5 w-5 text-rose-500" />
@@ -59,7 +59,7 @@ const CNAESection: React.FC<CNAESectionProps> = ({
               ))}
             </div>
           ) : (
-            <div className="flex-grow flex items-center justify-center py-8">
+            <div className="flex-grow flex items-center justify-center h-24">
               <p className="text-gray-500">CNAEs secundários não localizados</p>
             </div>
           )}
