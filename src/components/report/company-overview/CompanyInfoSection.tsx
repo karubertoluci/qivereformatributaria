@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { FileText, Store, MapPin, Phone, Calendar, Info } from 'lucide-react';
+import { Building2, FileText, Briefcase, MapPin, Phone, Calendar, Info } from 'lucide-react';
 import { CompanyApiData } from '@/hooks/results/types';
 import { BusinessSegment } from '@/data/segments';
 import { formatCNPJ } from './utils';
@@ -22,7 +23,7 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({
       <div className="border rounded-lg p-4">
         <div className="flex items-start">
           <div className="flex-shrink-0 mt-1">
-            <Store className="h-5 w-5 text-rose-500" />
+            <Building2 className="h-5 w-5 text-rose-500" />
           </div>
           <div className="ml-2 flex-grow">
             <p className="text-rose-500 font-medium text-left">Razão Social</p>
@@ -37,7 +38,7 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({
       {(company.nomeFantasia || company.nome_fantasia) && <div className="border rounded-lg p-4">
           <div className="flex items-start">
             <div className="flex-shrink-0 mt-1">
-              <Store className="h-5 w-5 text-rose-500" />
+              <Building2 className="h-5 w-5 text-rose-500" />
             </div>
             <div className="ml-2 flex-grow">
               <p className="text-rose-500 font-medium text-left">Nome Fantasia</p>
@@ -67,7 +68,7 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({
       <div className="border rounded-lg p-4">
         <div className="flex items-start">
           <div className="flex-shrink-0 mt-1">
-            <Store className="h-5 w-5 text-rose-500" />
+            <Briefcase className="h-5 w-5 text-rose-500" />
           </div>
           <div className="ml-2 flex-grow">
             <p className="text-rose-500 font-medium text-left">Segmento</p>

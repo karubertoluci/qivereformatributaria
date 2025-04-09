@@ -1,17 +1,22 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BusinessSegment } from '@/data/segments';
-import { FileText, Replace, MapPin, ReceiptText, Percent, HandCoins, ScrollText, Clock, Calendar, Check, ArrowDown } from 'lucide-react';
+import { FileText, Replace, MapPin, ReceiptText, Percent, HandCoins, ScrollText, Clock, Calendar, Check, ArrowDown, Briefcase } from 'lucide-react';
+
 interface ReformOverviewProps {
   segment: BusinessSegment;
 }
+
 const ReformOverview: React.FC<ReformOverviewProps> = ({
   segment
 }) => {
   return <Card>
       <CardHeader className="bg-gradient-to-r from-rose-50 to-white border-b">
         <CardTitle className="flex items-center gap-2 text-2xl font-semibold">
-          
+          <div className="bg-rose-100 p-1.5 rounded-md">
+            <Briefcase className="h-6 w-6 text-rose-500" />
+          </div>
           A Reforma Tributária e o Segmento {segment.name}
         </CardTitle>
       </CardHeader>
@@ -119,6 +124,7 @@ const ReformOverview: React.FC<ReformOverviewProps> = ({
       </CardContent>
     </Card>;
 };
+
 function getSegmentImpacts(segmentId: string): string {
   const impactsBySegment: Record<string, string> = {
     comercio_varejo: "Para empresas do comércio varejista, a reforma trará várias mudanças significativas, incluindo a possibilidade de créditos amplos na cadeia produtiva e a eliminação da cumulatividade tributária. No entanto, a elevação das alíquotas pode pressionar margens, exigindo ajustes de preços. O setor poderá se beneficiar da simplificação fiscal e redução de custos de conformidade.",
@@ -134,4 +140,5 @@ function getSegmentImpacts(segmentId: string): string {
   };
   return impactsBySegment[segmentId] || "Este segmento terá impactos diversos com a reforma tributária, incluindo a substituição do sistema atual por um IVA dual, mudanças na forma de apuração de créditos e adaptação a novas regras de compliance fiscal. É importante analisar detalhadamente cada artigo para entender os efeitos específicos para seu negócio.";
 }
+
 export default ReformOverview;
