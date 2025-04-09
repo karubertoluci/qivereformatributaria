@@ -134,7 +134,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         <ArticleCardSummary 
           article={article} 
           segmentId={segmentId} 
-          highlights={highlights}
+          highlights={articleHighlights}
           onAddHighlight={handleAddHighlight}
           onRemoveHighlight={onRemoveHighlight}
         />
