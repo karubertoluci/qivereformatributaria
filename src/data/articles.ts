@@ -1,4 +1,3 @@
-
 export interface ArticleImpact {
   type: 'positive' | 'negative' | 'neutral';
   description: string;
@@ -15,7 +14,8 @@ export interface ArticleMetadata {
   subsection?: string;
   relevanceScore?: number;
   impactType?: 'positive' | 'negative' | 'neutral';
-  livro?: string; // Adding the livro property that was missing
+  livro?: string;
+  titulo?: string;
 }
 
 export interface Article {
@@ -53,7 +53,9 @@ export const articles: Article[] = [
       title: 'NORMAS GERAIS',
       chapter: 'Disposições Preliminares',
       relevanceScore: 25,
-      impactType: 'neutral'
+      impactType: 'neutral',
+      livro: 'CBS',
+      titulo: 'NORMAS GERAIS'
     }
   },
   {
@@ -69,7 +71,9 @@ export const articles: Article[] = [
     metadata: {
       bookId: 'I',
       relevanceScore: 85,
-      impactType: 'negative'
+      impactType: 'negative',
+      livro: 'CBS',
+      titulo: 'FATO GERADOR DA CBS'
     }
   },
   {
@@ -85,7 +89,9 @@ export const articles: Article[] = [
     metadata: {
       bookId: 'I',
       relevanceScore: 75,
-      impactType: 'positive'
+      impactType: 'positive',
+      livro: 'CBS',
+      titulo: 'NÃO INCIDÊNCIA DA CBS'
     }
   },
   {
@@ -101,7 +107,9 @@ export const articles: Article[] = [
     metadata: {
       bookId: 'I',
       relevanceScore: 40,
-      impactType: 'neutral'
+      impactType: 'neutral',
+      livro: 'CBS',
+      titulo: 'BASE DE CÁLCULO DA CBS'
     }
   },
   {
@@ -116,7 +124,9 @@ export const articles: Article[] = [
     metadata: {
       bookId: 'I',
       relevanceScore: 15,
-      impactType: 'neutral'
+      impactType: 'neutral',
+      livro: 'CBS',
+      titulo: 'CONTRIBUINTES DA CBS'
     }
   },
   {
