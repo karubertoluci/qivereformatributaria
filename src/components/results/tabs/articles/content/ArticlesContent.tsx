@@ -8,6 +8,7 @@ import ViewSwitcher from '@/components/results/ViewSwitcher';
 import NoArticlesFound from '@/components/results/NoArticlesFound';
 import ImpactsSection from '../components/ImpactsSection';
 import { BusinessSegment } from '@/data/segments';
+import ArticleCardList from '@/components/article/ArticleCardList';
 
 interface ArticlesContentProps {
   filteredArticles: Article[];
@@ -62,10 +63,6 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
     return <NoArticlesFound segment={segment} />;
   }
 
-  const onSelectArticle = (id: string | null) => {
-    setExpandedArticleId(id);
-  };
-
   return (
     <div className="space-y-6">
       {/* Critical impacts warning if present */}
@@ -89,17 +86,12 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
       {/* Display articles in the selected view mode */}
       <div className="w-full">
         {viewMode === 'chart' ? (
-          <ArticleTopicsView 
-            filteredArticles={filteredArticles}
-            articlesByTopic={articlesByTopic}
-            expandedArticleId={expandedArticleId}
-            setExpandedArticleId={setExpandedArticleId}
-            highlights={highlights}
-            onAddHighlight={onAddHighlight}
-            onRemoveHighlight={onRemoveHighlight}
-            topics={topics}
+          <ArticleCardList 
+            articles={displayedArticles}
             segmentId={segment.id}
-            onSelectArticle={onSelectArticle}
+            highlights={highlights}
+            onAddHighlight={(text, color) => onAddHighlight(displayedArticles[0]?.id || '', text, color)}
+            onRemoveHighlight={onRemoveHighlight}
           />
         ) : (
           <ArticleTableView 

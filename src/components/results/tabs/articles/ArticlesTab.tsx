@@ -1,137 +1,145 @@
 import React, { useState, useMemo } from 'react';
-import { TabsContent } from '@/components/ui/tabs';
-import { Article } from '@/data/articles';
 import { BusinessSegment } from '@/data/segments';
-import ArticlesFilters from './filters/ArticlesFilters';
+import { Article, ArticleMetadata } from '@/data/articles';
+import ArticlesFilters from './components/ArticlesFilters';
+import ActiveFilters from './components/ActiveFilters';
 import ArticlesContent from './content/ArticlesContent';
-import ChartSection from './charts/ChartSection';
-import { HighlightType, Topic, ViewMode, FilterType } from '@/components/results/types';
-import { useSearchParams } from 'react-router-dom';
+import { useResultsData } from '@/hooks/results/useResultsData';
+import { ViewMode } from '@/components/results/types';
+import ResultsSummary from '@/components/results/ResultsSummary';
+import { useToast } from 'sonner';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
-  relevantArticles: Article[];
-  filteredArticles: Article[];
-  expandedArticleId: string | null;
-  setExpandedArticleId: (id: string | null) => void;
-  highlights: HighlightType[];
-  handleAddHighlight: (articleId: string, text: string, color?: HighlightType['color']) => void;
-  handleRemoveHighlight: (id: string) => void;
-  topics: Topic[];
-  articlesByTopic: Record<string, Article[]>;
-  viewMode: ViewMode;
-  setViewMode: (mode: ViewMode) => void;
-  positiveCount: number;
-  negativeCount: number;
-  searchTerm?: string;
-  setSearchTerm?: (term: string) => void;
-  filterType?: FilterType;
-  setFilterType?: (type: FilterType) => void;
+  results: ReturnType<typeof useResultsData>;
 }
 
-const ArticlesTab: React.FC<ArticlesTabProps> = ({ 
-  segment, 
-  relevantArticles,
-  filteredArticles,
-  expandedArticleId,
-  setExpandedArticleId,
-  highlights,
-  handleAddHighlight,
-  handleRemoveHighlight,
-  topics,
-  articlesByTopic,
-  viewMode,
-  setViewMode,
-  positiveCount,
-  negativeCount,
-  searchTerm,
-  setSearchTerm,
-  filterType,
-  setFilterType
-}) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(searchParams.get('book') || null);
-  const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(searchParams.get('title') || null);
-  const [expanded, setExpanded] = useState<boolean>(false);
-
-  const toggleExpanded = () => {
-    setExpanded(!expanded);
+const ArticlesTab: React.FC<ArticlesTabProps> = ({ segment, results }) => {
+  const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(null);
+  const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>('chart');
+  const { toast } = useToast();
+  
+  const books = useMemo(() => {
+    const allBooks = results.relevantArticles.map(article => article.metadata?.bookId).filter(Boolean);
+    return Array.from(new Set(allBooks)) as string[];
+  }, [results.relevantArticles]);
+  
+  const titles = useMemo(() => {
+    const allTitles = results.relevantArticles.map(article => article.metadata?.titulo).filter(Boolean);
+    return Array.from(new Set(allTitles)) as string[];
+  }, [results.relevantArticles]);
+  
+  const getBookName = (bookId: string) => {
+    const article = results.relevantArticles.find(article => article.metadata?.bookId === bookId);
+    return article?.metadata?.bookId || '';
   };
-
+  
+  const getTitleName = (titleId: string) => {
+    const article = results.relevantArticles.find(article => article.metadata?.titulo === titleId);
+    return article?.metadata?.titulo || '';
+  };
+  
   const displayedArticles = useMemo(() => {
-    let result = filteredArticles;
-
+    let articles = [...results.filteredArticles];
+    
     if (selectedBookFilter) {
-      result = result.filter(article => {
-        // Use metadata.bookId if available
-        if (article.metadata?.bookId) {
-          return article.metadata.bookId === selectedBookFilter;
-        }
-        // Fallback to livro property in metadata
-        return article.metadata?.livro === selectedBookFilter;
-      });
+      articles = articles.filter(article => article.metadata?.bookId === selectedBookFilter);
     }
-
+    
     if (selectedTitleFilter) {
-      result = result.filter(article => article.title === selectedTitleFilter);
+      articles = articles.filter(article => article.metadata?.titulo === selectedTitleFilter);
     }
+    
+    return articles;
+  }, [results.filteredArticles, selectedBookFilter, selectedTitleFilter]);
 
-    return result;
-  }, [filteredArticles, selectedBookFilter, selectedTitleFilter]);
+  const positiveCount = displayedArticles.filter(article => 
+    article.impacts.some(impact => impact.type === 'positive' && impact.segments.includes(segment.id))
+  ).length;
+  
+  const negativeCount = displayedArticles.filter(article => 
+    article.impacts.some(impact => impact.type === 'negative' && impact.segments.includes(segment.id))
+  ).length;
+  
+  const neutralCount = displayedArticles.filter(article => 
+    article.impacts.some(impact => impact.type === 'neutral' && impact.segments.includes(segment.id))
+  ).length;
+
+  const searchTerm = results.searchTerm;
+  const setSearchTerm = results.setSearchTerm;
+  const filterType = results.filterType;
+  const setFilterType = results.setFilterType;
+
+  if (results.error) {
+    return (
+      <div className="text-red-500">
+        Erro ao carregar os artigos: {results.error}
+      </div>
+    );
+  }
+
+  if (results.isLoading) {
+    return <div>Carregando artigos...</div>;
+  }
 
   return (
-    <TabsContent value="articles" className="pb-12">
-      <div className="grid md:grid-cols-12 gap-6">
-        {/* Sidebar filters - 3 cols on desktop */}
-        <aside className="md:col-span-3 md:sticky md:top-[80px] h-fit">
-          <ArticlesFilters 
-            articles={relevantArticles}
-            selectedBookFilter={selectedBookFilter}
-            selectedTitleFilter={selectedTitleFilter}
-            setSelectedBookFilter={setSelectedBookFilter}
-            setSelectedTitleFilter={setSelectedTitleFilter}
-            searchParams={searchParams}
-            setSearchParams={setSearchParams}
-            positiveCount={positiveCount}
-            negativeCount={negativeCount}
-          />
-        </aside>
-
-        {/* Main content - 9 cols on desktop */}
-        <main className="md:col-span-9">
-          <div className="flex flex-col space-y-6">
-            {/* Chart section */}
-            <ChartSection 
-              filteredArticles={filteredArticles}
-              segmentId={segment.id}
-              setExpandedArticleId={setExpandedArticleId}
-              expanded={expanded}
-              toggleExpanded={toggleExpanded}
-            />
-            
-            {/* Articles content */}
-            <ArticlesContent 
-              filteredArticles={filteredArticles}
-              displayedArticles={displayedArticles}
-              selectedBookFilter={selectedBookFilter}
-              selectedTitleFilter={selectedTitleFilter}
-              setSelectedBookFilter={setSelectedBookFilter}
-              setSelectedTitleFilter={setSelectedTitleFilter}
-              expandedArticleId={expandedArticleId}
-              setExpandedArticleId={setExpandedArticleId}
-              highlights={highlights}
-              onAddHighlight={handleAddHighlight}
-              onRemoveHighlight={handleRemoveHighlight}
-              topics={topics}
-              articlesByTopic={articlesByTopic}
-              viewMode={viewMode}
-              setViewMode={setViewMode}
-              segment={segment}
-            />
-          </div>
-        </main>
-      </div>
-    </TabsContent>
+    <div className="space-y-6">
+      <ResultsSummary 
+        totalArticles={results.relevantArticles.length}
+        positiveCount={positiveCount}
+        negativeCount={negativeCount}
+        neutralCount={neutralCount}
+        segmentName={segment.name}
+      />
+      
+      <ArticlesFilters 
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        filterType={filterType}
+        setFilterType={setFilterType}
+        positiveCount={positiveCount}
+        negativeCount={negativeCount}
+        neutralCount={neutralCount}
+        totalCount={results.relevantArticles.length}
+        selectedBookFilter={selectedBookFilter}
+        setSelectedBookFilter={setSelectedBookFilter}
+        selectedTitleFilter={selectedTitleFilter}
+        setSelectedTitleFilter={setSelectedTitleFilter}
+        books={books}
+        titles={titles}
+      />
+      
+      {/* Book/Title filters */}
+      <ActiveFilters 
+        selectedBookFilter={selectedBookFilter}
+        selectedTitleFilter={selectedTitleFilter}
+        onClearBookFilter={() => setSelectedBookFilter(null)}
+        onClearTitleFilter={() => setSelectedTitleFilter(null)}
+        bookName={getBookName(selectedBookFilter || '')}
+        titleName={getTitleName(selectedTitleFilter || '')}
+      />
+      
+      {/* This is where our grid layout will be shown */}
+      <ArticlesContent 
+        filteredArticles={results.filteredArticles}
+        displayedArticles={displayedArticles}
+        selectedBookFilter={selectedBookFilter}
+        selectedTitleFilter={selectedTitleFilter}
+        setSelectedBookFilter={setSelectedBookFilter}
+        setSelectedTitleFilter={setSelectedTitleFilter}
+        expandedArticleId={results.expandedArticleId}
+        setExpandedArticleId={results.setExpandedArticleId}
+        highlights={results.highlights}
+        onAddHighlight={results.handleAddHighlight}
+        onRemoveHighlight={results.handleRemoveHighlight}
+        articlesByTopic={results.articlesByTopic}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        topics={results.topics}
+        segment={segment}
+      />
+    </div>
   );
 };
 
