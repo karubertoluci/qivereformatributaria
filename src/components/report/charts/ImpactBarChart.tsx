@@ -4,21 +4,34 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import ChartTooltipContent from './ChartTooltipContent';
 import { PercentageData } from './utils/chartCalculations';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { toast } from 'sonner';
 
 interface ImpactBarChartProps {
   data: PercentageData[];
   onRelevanceFilter?: (relevanceLevel: string | null) => void;
+  selectedRelevance?: string | null;
 }
 
-const ImpactBarChart: React.FC<ImpactBarChartProps> = ({ data, onRelevanceFilter }) => {
-  const [selectedRelevance, setSelectedRelevance] = useState<string | null>(null);
-
-  // Handle relevance filter selection
-  const handleRelevanceSelect = (value: string) => {
-    const newValue = value === selectedRelevance ? null : value;
-    setSelectedRelevance(newValue);
-    if (onRelevanceFilter) {
+const ImpactBarChart: React.FC<ImpactBarChartProps> = ({ 
+  data, 
+  onRelevanceFilter,
+  selectedRelevance 
+}) => {
+  // Handle bar click to filter by relevance
+  const handleBarClick = (entry: any) => {
+    if (!onRelevanceFilter) return;
+    
+    // Get relevance level from the clicked bar
+    if (entry && entry.payload && entry.payload.name) {
+      const relevanceLevel = entry.payload.name;
+      const newValue = relevanceLevel === selectedRelevance ? null : relevanceLevel;
+      
       onRelevanceFilter(newValue);
+      if (newValue) {
+        toast.info(`Filtrando por ${relevanceLevel}`);
+      } else {
+        toast.info("Filtro de relevância removido");
+      }
     }
   };
 
@@ -47,6 +60,7 @@ const ImpactBarChart: React.FC<ImpactBarChartProps> = ({ data, onRelevanceFilter
             data={allLevelsData}
             layout="vertical"
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+            onClick={handleBarClick}
           >
             <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
             <XAxis 
@@ -81,15 +95,34 @@ const ImpactBarChart: React.FC<ImpactBarChartProps> = ({ data, onRelevanceFilter
               iconSize={10}
               wrapperStyle={{ paddingTop: '10px' }}
             />
-            <Bar dataKey="favorable" stackId="a" name="favorable" fill="#4ade80" />
-            <Bar dataKey="neutral" stackId="a" name="neutral" fill="#d1d5db" />
+            <Bar dataKey="favorable" stackId="a" name="favorable" fill="#4ade80">
+              {allLevelsData.map((entry, index) => (
+                <Cell 
+                  key={`favorable-cell-${index}`}
+                  stroke={entry.name === selectedRelevance ? '#000' : 'transparent'}
+                  strokeWidth={entry.name === selectedRelevance ? 1 : 0}
+                  className="cursor-pointer"
+                />
+              ))}
+            </Bar>
+            <Bar dataKey="neutral" stackId="a" name="neutral" fill="#d1d5db">
+              {allLevelsData.map((entry, index) => (
+                <Cell 
+                  key={`neutral-cell-${index}`}
+                  stroke={entry.name === selectedRelevance ? '#000' : 'transparent'}
+                  strokeWidth={entry.name === selectedRelevance ? 1 : 0}
+                  className="cursor-pointer"
+                />
+              ))}
+            </Bar>
             <Bar dataKey="unfavorable" stackId="a" name="unfavorable">
               {allLevelsData.map((entry, index) => (
                 <Cell 
-                  key={`cell-${index}`}
+                  key={`unfavorable-cell-${index}`}
                   fill={entry.hasCritical ? '#dc2626' : '#ef4444'} // Vermelho mais brilhante para impactos críticos
-                  strokeWidth={entry.hasCritical ? 1 : 0}
-                  stroke="#000"
+                  stroke={entry.name === selectedRelevance ? '#000' : 'transparent'}
+                  strokeWidth={entry.name === selectedRelevance ? 1 : 0}
+                  className="cursor-pointer"
                 />
               ))}
             </Bar>
@@ -101,7 +134,7 @@ const ImpactBarChart: React.FC<ImpactBarChartProps> = ({ data, onRelevanceFilter
       {onRelevanceFilter && (
         <div className="mt-4">
           <p className="text-sm font-medium mb-2">Filtrar por nível de relevância:</p>
-          <ToggleGroup type="single" value={selectedRelevance || ''} onValueChange={handleRelevanceSelect}>
+          <ToggleGroup type="single" value={selectedRelevance || ''} onValueChange={(value) => onRelevanceFilter(value || null)}>
             {relevanceLevels.map((levelName) => (
               <ToggleGroupItem key={levelName} value={levelName} variant="outline" size="sm"
                 className={`text-xs border-muted ${selectedRelevance === levelName ? 'bg-primary/20' : ''}`}>

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Article } from '@/data/articles';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { BookMarked } from 'lucide-react';
@@ -15,6 +15,7 @@ interface ArticlesPriorityChartProps {
   onSelectArticle?: (articleId: string) => void;
   bookId?: string | null;
   relevanceFilter?: string | null;
+  selectedArticleId?: string | null;
 }
 
 const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
@@ -22,7 +23,8 @@ const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
   segmentId,
   onSelectArticle,
   bookId,
-  relevanceFilter
+  relevanceFilter,
+  selectedArticleId
 }) => {
   // First filter by book if bookId is provided
   const bookFilteredArticles = bookId ? articles.filter(article => {
@@ -53,7 +55,11 @@ const ArticlesPriorityChart: React.FC<ArticlesPriorityChartProps> = ({
       </CardHeader>
       <CardContent>
         <div className="h-[300px]">
-          <PriorityScatterChart data={data} onDotClick={handleDotClick} />
+          <PriorityScatterChart 
+            data={data} 
+            onDotClick={handleDotClick}
+            selectedArticleId={selectedArticleId}
+          />
         </div>
         <PriorityChartLegend />
       </CardContent>

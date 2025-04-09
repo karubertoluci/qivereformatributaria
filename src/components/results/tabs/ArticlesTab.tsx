@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { TabsContent } from '@/components/ui/tabs';
 import { Article } from '@/data/articles';
 import { BusinessSegment } from '@/data/segments';
@@ -8,6 +8,7 @@ import ArticlesContent from './articles/content/ArticlesContent';
 import ChartSection from './articles/charts/ChartSection';
 import { HighlightType, ViewMode, FilterType, Topic } from '@/components/results/types';
 import { useSearchParams } from 'react-router-dom';
+import ActiveFilters from './articles/ActiveFilters';
 
 interface ArticlesTabProps {
   segment: BusinessSegment;
@@ -54,9 +55,24 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
   const [selectedBookFilter, setSelectedBookFilter] = useState<string | null>(searchParams.get('book') || null);
   const [selectedTitleFilter, setSelectedTitleFilter] = useState<string | null>(searchParams.get('title') || null);
   const [expanded, setExpanded] = useState<boolean>(false);
+  const [chartBookFilter, setChartBookFilter] = useState<string | null>(null);
+  const [chartRelevanceFilter, setChartRelevanceFilter] = useState<string | null>(null);
+
+  // Make the sidebar filter and chart filter work together
+  useEffect(() => {
+    if (chartBookFilter && chartBookFilter !== selectedBookFilter) {
+      setSelectedBookFilter(chartBookFilter);
+    }
+  }, [chartBookFilter]);
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
+  };
+
+  // Handle chart filter changes
+  const handleChartFilterChange = (bookId: string | null, relevanceLevel: string | null) => {
+    setChartBookFilter(bookId);
+    setChartRelevanceFilter(relevanceLevel);
   };
 
   const displayedArticles = useMemo(() => {
@@ -94,6 +110,10 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
     return Array.from(new Set(allTitles));
   }, [relevantArticles]);
 
+  // Get the displayed book and title names for ActiveFilters
+  const bookName = selectedBookFilter ? `Livro ${selectedBookFilter}` : '';
+  const titleName = selectedTitleFilter && titles.find(t => t === selectedTitleFilter) || '';
+
   return (
     <TabsContent value="articles" className="pb-12">
       <div className="grid md:grid-cols-12 gap-6">
@@ -110,7 +130,10 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
             viewMode={viewMode}
             setViewMode={setViewMode}
             selectedBookFilter={selectedBookFilter}
-            setSelectedBookFilter={setSelectedBookFilter}
+            setSelectedBookFilter={(bookId) => {
+              setSelectedBookFilter(bookId);
+              setChartBookFilter(bookId); // Sync with chart filter
+            }}
             selectedTitleFilter={selectedTitleFilter}
             setSelectedTitleFilter={setSelectedTitleFilter}
             books={books}
@@ -120,6 +143,20 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
 
         <main className="md:col-span-9">
           <div className="flex flex-col space-y-6">
+            <ActiveFilters 
+              selectedBookFilter={selectedBookFilter}
+              selectedTitleFilter={selectedTitleFilter}
+              onClearBookFilter={() => {
+                setSelectedBookFilter(null);
+                setChartBookFilter(null); // Sync with chart filter
+              }}
+              onClearTitleFilter={() => setSelectedTitleFilter(null)}
+              bookName={bookName}
+              titleName={titleName}
+              relevanceFilter={chartRelevanceFilter}
+              onClearRelevanceFilter={() => setChartRelevanceFilter(null)}
+            />
+            
             <ChartSection 
               filteredArticles={filteredArticles}
               segmentId={segment.id}
@@ -148,6 +185,8 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({
               positiveCount={positiveCount}
               negativeCount={negativeCount}
               neutralCount={neutralCount}
+              filteredBookId={chartBookFilter}
+              filteredRelevance={chartRelevanceFilter}
             />
           </div>
         </main>

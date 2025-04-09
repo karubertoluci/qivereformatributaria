@@ -65,6 +65,7 @@ const ImpactDistributionChart: React.FC<ImpactDistributionChartProps> = ({
         <ImpactBarChart 
           data={percentageData} 
           onRelevanceFilter={onRelevanceFilter}
+          selectedRelevance={selectedRelevance}
         />
       </CardContent>
     </Card>

@@ -30,6 +30,8 @@ interface ArticlesContentProps {
   positiveCount: number;
   negativeCount: number;
   neutralCount: number;
+  filteredBookId?: string | null;
+  filteredRelevance?: string | null;
 }
 
 const ArticlesContent: React.FC<ArticlesContentProps> = ({
@@ -51,11 +53,44 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
   segment,
   positiveCount = 0,
   negativeCount = 0,
-  neutralCount = 0
+  neutralCount = 0,
+  filteredBookId,
+  filteredRelevance
 }) => {
   // Garantir arrays seguros
   const safeFilteredArticles = Array.isArray(filteredArticles) ? filteredArticles : [];
   const safeDisplayedArticles = Array.isArray(displayedArticles) ? displayedArticles : [];
+  
+  // Apply additional filters from charts if they exist
+  let finalDisplayedArticles = safeDisplayedArticles;
+  
+  // Filter by book from chart selection if different than sidebar filter
+  if (filteredBookId && (!selectedBookFilter || filteredBookId !== selectedBookFilter)) {
+    finalDisplayedArticles = finalDisplayedArticles.filter(article => {
+      const articleNum = parseInt(article.number.replace(/\D/g, '')) || parseInt(article.id.replace(/\D/g, ''));
+      
+      if (filteredBookId === 'I') return articleNum <= 180;
+      if (filteredBookId === 'II') return articleNum > 180 && articleNum <= 300;
+      return articleNum > 300;
+    });
+  }
+  
+  // Filter by relevance from chart selection
+  if (filteredRelevance) {
+    // Implement relevance filtering logic similar to chart section
+    const total = finalDisplayedArticles.length;
+    const sortedArticles = [...finalDisplayedArticles].sort((a, b) => a.id.localeCompare(b.id));
+    
+    if (filteredRelevance === 'Irrelevante') {
+      finalDisplayedArticles = sortedArticles.slice(0, Math.ceil(total * 0.25));
+    } else if (filteredRelevance === 'Pouco relevante') {
+      finalDisplayedArticles = sortedArticles.slice(Math.ceil(total * 0.25), Math.ceil(total * 0.5));
+    } else if (filteredRelevance === 'Moderadamente relevante') {
+      finalDisplayedArticles = sortedArticles.slice(Math.ceil(total * 0.5), Math.ceil(total * 0.75));
+    } else if (filteredRelevance === 'Muito relevante') {
+      finalDisplayedArticles = sortedArticles.slice(Math.ceil(total * 0.75));
+    }
+  }
   
   // Verificar se há artigos críticos
   const hasCriticalImpacts = safeFilteredArticles.some(article => 
@@ -71,14 +106,14 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
   );
 
   // Se não há artigos com os filtros aplicados
-  if (!safeFilteredArticles.length) {
+  if (!finalDisplayedArticles.length) {
     return <NoArticlesFound segment={segment} />;
   }
 
   // Mensagem sobre total de artigos encontrados
-  const totalMessage = safeDisplayedArticles.length === 1 
+  const totalMessage = finalDisplayedArticles.length === 1 
     ? "1 artigo encontrado" 
-    : `${safeDisplayedArticles.length} artigos encontrados`;
+    : `${finalDisplayedArticles.length} artigos encontrados`;
 
   return (
     <div className="space-y-6 w-full">
@@ -88,8 +123,8 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
         relevantArticles={safeFilteredArticles}
         allArticles={safeFilteredArticles}
         segmentId={segment.id}
-        bookId={selectedBookFilter}
-        relevanceFilter={null}
+        bookId={selectedBookFilter || filteredBookId}
+        relevanceFilter={filteredRelevance}
       />
       
       {/* Alternador de visualização e contador de artigos */}
@@ -104,19 +139,19 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
       <div className="w-full">
         {viewMode === 'chart' ? (
           <ArticleCardList 
-            articles={safeDisplayedArticles}
+            articles={finalDisplayedArticles}
             segmentId={segment.id}
             highlights={highlights || []}
             onAddHighlight={(text, color) => {
-              if (safeDisplayedArticles.length > 0 && safeDisplayedArticles[0] && safeDisplayedArticles[0].id) {
-                onAddHighlight(safeDisplayedArticles[0].id, text, color);
+              if (finalDisplayedArticles.length > 0 && finalDisplayedArticles[0] && finalDisplayedArticles[0].id) {
+                onAddHighlight(finalDisplayedArticles[0].id, text, color);
               }
             }}
             onRemoveHighlight={onRemoveHighlight}
           />
         ) : viewMode === 'table' ? (
           <ArticleTableView 
-            articles={safeDisplayedArticles}
+            articles={finalDisplayedArticles}
             expandedArticleId={expandedArticleId}
             setExpandedArticleId={setExpandedArticleId}
             segment={segment}
@@ -134,7 +169,7 @@ const ArticlesContent: React.FC<ArticlesContentProps> = ({
             onAddHighlight={(text, color, articleId) => onAddHighlight(articleId, text, color)}
             onRemoveHighlight={onRemoveHighlight}
             segmentId={segment.id}
-            filteredArticles={safeDisplayedArticles}
+            filteredArticles={finalDisplayedArticles}
             onSelectArticle={(id) => setExpandedArticleId(id)}
           />
         )}

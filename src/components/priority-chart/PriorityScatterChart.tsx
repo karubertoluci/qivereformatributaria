@@ -9,7 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   ZAxis,
-  Legend
+  Rectangle
 } from 'recharts';
 import { ArticlePriorityData } from './utils/chartCalculations';
 import PriorityChartTooltip from './PriorityChartTooltip';
@@ -17,9 +17,38 @@ import PriorityChartTooltip from './PriorityChartTooltip';
 interface PriorityScatterChartProps {
   data: ArticlePriorityData[];
   onDotClick: (data: ArticlePriorityData) => void;
+  selectedArticleId?: string | null;
 }
 
-const PriorityScatterChart: React.FC<PriorityScatterChartProps> = ({ data, onDotClick }) => {
+const PriorityScatterChart: React.FC<PriorityScatterChartProps> = ({ 
+  data, 
+  onDotClick,
+  selectedArticleId
+}) => {
+  const renderShape = (props: any) => {
+    const { cx, cy, payload } = props;
+    
+    const isSelected = selectedArticleId === payload.id;
+    const fill = payload.impactType === 'positive' ? "#4ade80" : 
+                 payload.impactType === 'negative' ? "#ef4444" : "#9ca3af";
+    const stroke = payload.impactType === 'positive' ? "#22c55e" : 
+                   payload.impactType === 'negative' ? "#dc2626" : "#6b7280";
+                   
+    return (
+      <Rectangle
+        x={cx - 5}
+        y={cy - 5}
+        width={10}
+        height={10}
+        fill={fill}
+        stroke={isSelected ? "#000" : stroke}
+        strokeWidth={isSelected ? 2 : 1}
+        style={{ cursor: 'pointer' }}
+        onClick={() => onDotClick(payload)}
+      />
+    );
+  };
+  
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
@@ -41,32 +70,15 @@ const PriorityScatterChart: React.FC<PriorityScatterChartProps> = ({ data, onDot
         <ZAxis range={[60, 60]} />
         <Tooltip 
           cursor={{ strokeDasharray: '3 3' }}
-          formatter={(value, name) => [value, name === 'relevance' ? 'Relevância' : 'Urgência']}
           content={<PriorityChartTooltip />}
         />
-        <Legend />
         <Scatter 
           name="Artigos" 
           data={data} 
+          shape={renderShape}
           fill="#8884d8" 
           onClick={onDotClick}
-        >
-          {data.map((entry, index) => (
-            <rect
-              key={`cell-${index}`}
-              x={0}
-              y={0}
-              width={10}
-              height={10}
-              fill={entry.impactType === 'positive' ? "#4ade80" : 
-                    entry.impactType === 'negative' ? "#ef4444" : "#9ca3af"}
-              stroke={entry.impactType === 'positive' ? "#22c55e" : 
-                      entry.impactType === 'negative' ? "#dc2626" : "#6b7280"}
-              strokeWidth={1}
-              style={{ cursor: 'pointer' }}
-            />
-          ))}
-        </Scatter>
+        />
       </ScatterChart>
     </ResponsiveContainer>
   );

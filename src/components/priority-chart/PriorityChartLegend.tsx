@@ -1,27 +1,70 @@
 
 import React from 'react';
 
-const PriorityChartLegend: React.FC = () => {
+const PriorityChartLegend = () => {
   return (
-    <div className="mt-2 p-2 bg-muted/50 rounded-md border border-muted text-xs">
-      <p className="text-center mb-1 font-medium">Como interpretar:</p>
-      <div className="grid grid-cols-3 gap-2">
-        <div>
-          <span className="inline-block w-2 h-2 bg-green-500 rounded-sm mr-1"></span>
-          <strong>Verde:</strong> Favorável
+    <div className="flex flex-col space-y-2 mt-4">
+      <div className="flex items-center justify-between">
+        <div className="flex gap-6">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-[#4ade80]"></div>
+            <span className="text-xs">Favorável</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-[#ef4444]"></div>
+            <span className="text-xs">Desfavorável</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-[#9ca3af]"></div>
+            <span className="text-xs">Neutro</span>
+          </div>
         </div>
-        <div>
-          <span className="inline-block w-2 h-2 bg-gray-400 rounded-sm mr-1"></span>
-          <strong>Cinza:</strong> Neutro
-        </div>
-        <div>
-          <span className="inline-block w-2 h-2 bg-red-500 rounded-sm mr-1"></span>
-          <strong>Vermelho:</strong> Desfavorável
+        <div className="text-xs text-muted-foreground">
+          Clique nos pontos para visualizar detalhes do artigo
         </div>
       </div>
-      <p className="mt-2 text-center text-muted-foreground">
-        Priorize a leitura dos artigos localizados no canto superior direito
-      </p>
+      
+      <div className="grid grid-cols-2 gap-4 pt-2">
+        <div className="flex flex-col space-y-1">
+          <div className="text-xs font-medium">Relevância:</div>
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+            <span className="text-xs">0-25: Irrelevante</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
+            <span className="text-xs">25-45: Pouco relevante</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+            <span className="text-xs">45-75: Moderadamente relevante</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
+            <span className="text-xs">75-100: Muito relevante</span>
+          </div>
+        </div>
+        
+        <div className="flex flex-col space-y-1">
+          <div className="text-xs font-medium">Urgência:</div>
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+            <span className="text-xs">0-25: Baixa</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
+            <span className="text-xs">25-50: Média</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+            <span className="text-xs">50-75: Alta</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
+            <span className="text-xs">75-100: Crítica</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

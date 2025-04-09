@@ -1,65 +1,69 @@
 
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Book, FileText, X } from 'lucide-react';
-import { toast } from 'sonner';
+import { Filter, X } from 'lucide-react';
 
 interface ActiveFiltersProps {
   selectedBookFilter: string | null;
   selectedTitleFilter: string | null;
-  onClearBookFilter: () => void;
-  onClearTitleFilter: () => void;
+  relevanceFilter?: string | null;
   bookName: string;
   titleName: string;
+  onClearBookFilter: () => void;
+  onClearTitleFilter: () => void;
+  onClearRelevanceFilter?: () => void;
 }
 
 const ActiveFilters: React.FC<ActiveFiltersProps> = ({
   selectedBookFilter,
   selectedTitleFilter,
+  relevanceFilter,
+  bookName,
+  titleName,
   onClearBookFilter,
   onClearTitleFilter,
-  bookName,
-  titleName
+  onClearRelevanceFilter
 }) => {
-  if ((!selectedBookFilter && !selectedTitleFilter) || 
-      (selectedBookFilter === 'all' && (!selectedTitleFilter || selectedTitleFilter === 'all')) || 
-      (selectedTitleFilter === 'all' && (!selectedBookFilter || selectedBookFilter === 'all'))) {
+  // If there are no active filters, return null
+  if (!selectedBookFilter && !selectedTitleFilter && !relevanceFilter) {
     return null;
   }
-  
+
   return (
     <div className="flex flex-wrap gap-2 mb-4">
-      {selectedBookFilter && selectedBookFilter !== 'all' && (
+      {selectedBookFilter && (
         <Badge 
-          variant="secondary" 
-          className="flex items-center gap-1 px-2 py-1"
+          variant="outline" 
+          className="flex items-center gap-1 cursor-pointer hover:bg-secondary"
+          onClick={onClearBookFilter}
         >
-          <Book className="h-3.5 w-3.5 mr-1" />
-          Filtrando por Livro: {bookName}
-          <X 
-            className="h-3.5 w-3.5 ml-1 cursor-pointer hover:text-destructive" 
-            onClick={() => {
-              onClearBookFilter();
-              toast.info("Filtro de livro removido");
-            }}
-          />
+          <Filter className="h-3 w-3 mr-1" />
+          {bookName}
+          <X className="h-3 w-3 ml-1" />
         </Badge>
       )}
       
-      {selectedTitleFilter && selectedTitleFilter !== 'all' && (
+      {selectedTitleFilter && (
         <Badge 
-          variant="secondary" 
-          className="flex items-center gap-1 px-2 py-1"
+          variant="outline" 
+          className="flex items-center gap-1 cursor-pointer hover:bg-secondary"
+          onClick={onClearTitleFilter}
         >
-          <FileText className="h-3.5 w-3.5 mr-1" />
-          Filtrando por Título: {titleName}
-          <X 
-            className="h-3.5 w-3.5 ml-1 cursor-pointer hover:text-destructive" 
-            onClick={() => {
-              onClearTitleFilter();
-              toast.info("Filtro de título removido");
-            }}
-          />
+          <Filter className="h-3 w-3 mr-1" />
+          Título: {titleName.length > 30 ? titleName.substring(0, 30) + '...' : titleName}
+          <X className="h-3 w-3 ml-1" />
+        </Badge>
+      )}
+      
+      {relevanceFilter && onClearRelevanceFilter && (
+        <Badge 
+          variant="outline" 
+          className="flex items-center gap-1 cursor-pointer hover:bg-secondary"
+          onClick={onClearRelevanceFilter}
+        >
+          <Filter className="h-3 w-3 mr-1" />
+          Relevância: {relevanceFilter}
+          <X className="h-3 w-3 ml-1" />
         </Badge>
       )}
     </div>

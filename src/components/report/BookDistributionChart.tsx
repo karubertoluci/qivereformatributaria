@@ -64,7 +64,7 @@ const BookDistributionChart: React.FC<BookDistributionChartProps> = ({
           onBarClick={handleBarClick} 
         />
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
           {data.map((book) => (
             <BookCard
               key={book.bookId}
